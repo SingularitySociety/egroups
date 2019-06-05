@@ -1,0 +1,42 @@
+
+
+/users/{userId}
+    name: string
+    created: date
+    lastAccessed: date
+
+/admins/{groupId}
+    /owners/{userId}
+        create: date
+    /admins/{userId}
+        created: date
+    /mentors/{userId}
+        created: date
+
+/groups/{groupId}
+    created: date
+    name: string
+    /members/{userId}
+        created: date
+        name: string  ###
+        lastAccessed: date
+    /channels/{channelId}
+        created: date
+        name: string
+        /messages/{messageId}
+            created: date
+            message: string
+            user: {
+                userId: userId
+                name: sttring ###
+            }
+            editted: boolean
+    /events/{eventId}
+        name: string
+        date: date
+        /attendees/{userId}
+            name: string ###
+            accepted: boolean
+            attended: boolean
+
+
