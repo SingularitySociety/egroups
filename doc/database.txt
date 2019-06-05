@@ -2,7 +2,7 @@ userId: Globally unique, assigned by Firebase
 groupId: Globally unique, auto generated 
 groupName: Globally unique, chosen by the owner
 entityId: Unique within a group across channelId, eventId and articleId
-priviledge: access right (5:owner, 4:admin, 3:teacher, 2:subscriber, 1:member, 0:guest)
+privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:guest)
 
 /users/{userId}
     created: date
@@ -18,12 +18,12 @@ priviledge: access right (5:owner, 4:admin, 3:teacher, 2:subscriber, 1:member, 0
     groupName: string
     logo: string
     banner: string
-    priviledges: {
+    privileges: {
         membership: {
             closed: boolean
         }
         invitation: {
-            priviledge: number
+            privilege: number
         }
         channel: {
             privilege: number
@@ -37,7 +37,7 @@ priviledge: access right (5:owner, 4:admin, 3:teacher, 2:subscriber, 1:member, 0
     },
     /members/{userId}
         created: date (duplicated)
-        priviledge: number (duplicated)
+        privilege: number (duplicated)
         name: string
         lastAccessed: date
         desciption: string
