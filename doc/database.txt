@@ -32,7 +32,10 @@ privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:g
             privilege: number
         }
         article: {
-            privilege: number
+            page: number
+            blog: number
+            annoucemnt: number
+            news: number
         }
     },
     /members/{userId}
@@ -74,6 +77,8 @@ privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:g
         date: date
         onwer: userId
         privilege: number
+        address: string
+        url: string
         capacity: number
         /attendees/{userId}
             created: date
@@ -86,7 +91,9 @@ privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:g
         owner: userId
         type: string # "news", "blog", "announcement", "page"
         privilege: number
+        comment: number
         sections: [sectionId, ...]
+        comments: [sectionId, ...]
         /authors/{userId}
             name: string ###
         /sections/{sectionId}
@@ -95,6 +102,7 @@ privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:g
             video: string
             type: string
             updated: date
+            
             
 
 
