@@ -1,28 +1,31 @@
 
 
 /users/{userId}
-    name: string
     created: date
     lastAccessed: date
 
-/admins/{groupId}
-    /owners/{userId}
-        create: date
-    /admins/{userId}
-        created: date
-    /mentors/{userId}
-        created: date
+/groupnames/{groupName}
+    groupId: string
 
 /groups/{groupId}
     created: date
     name: string
+    /controls/{entityId}  (channelId, eventId, articleId)
+        required: number
+
+    /levels/{userId}
+        level: number (0:owner, 1:admin, 2:mentor, 3:subscriber, 4:member, 5:guest)
+
     /members/{userId}
         created: date
-        name: string  ###
+        name: string ###
         lastAccessed: date
+
     /channels/{channelId}
         created: date
         name: string
+        owner: userId
+        control: number
         /messages/{messageId}
             created: date
             message: string
@@ -32,11 +35,27 @@
             }
             editted: boolean
     /events/{eventId}
-        name: string
+        title: string
+        description: string
         date: date
+        onwer: userId
+        control: number
         /attendees/{userId}
             name: string ###
             accepted: boolean
             attended: boolean
+    /articles/{articleId}
+        title: string
+        owner: userId
+        control: number
+        /authors/{userId}
+            name: string ###
+        /sectios/{sectionId}
+            text: string
+            image: string
+            type: string
+            updated: date
+            
+
 
 
