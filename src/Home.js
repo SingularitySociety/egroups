@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Header from './Header';
-import { Typography } from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
+import theme2 from './theme2';
 
 const styles = theme => ({
   root: {
@@ -18,7 +19,7 @@ const styles = theme => ({
 });
 
 function ComplexGrid(props) {
-  const { classes, user } = props;
+  const { classes, user, joinGroup } = props;
   return (
     <React.Fragment>
       <Header user={user} />
@@ -27,6 +28,7 @@ function ComplexGrid(props) {
           <Typography component="h2" variant="h5" gutterBottom>
             Welcome to Firebase Starter Kit! 
           </Typography>
+          <Button onClick={()=>joinGroup({id:123, theme:theme2})}>Join</Button>
           </Grid>
       </Grid>
     </React.Fragment>

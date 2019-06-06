@@ -60,7 +60,7 @@ render() {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" className={classes.grow}>
-              Firebase Rocks!
+              Yet Another Collaboration Tool
             </Typography>
             {
                 (user) ?

@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-import theme from './theme';
+import themeApp from './theme';
 import Home from './Home';
 import About from './About';
 import Login from './Login';
@@ -46,14 +46,19 @@ class App extends React.Component {
   updateWindowDimensions() {
     this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
+  joinGroup = (group) => {
+    this.setState({group:group});
+  }
 
   render() {
+    const { group } = this.state;
     const params = { user:this.state.user, db:db };
+    const theme = (group && group.theme) || themeApp;
     return (
       <MuiThemeProvider theme={theme}>
         <CssBaseline />
         <Router>
-          <Route exact path="/" render={(props) => <Home {...props} {...params} />} />
+          <Route exact path="/" render={(props) => <Home {...props} {...params} joinGroup={this.joinGroup} />} />
           <Route exact path="/about" render={(props) => <About {...props} {...params} />} />
           <Route exact path="/login" render={(props) => <Login {...props} {...params} />} />
           <Route exact path="/login/cmd/:encoded" render={(props) => <Login {...props} {...params} />} />
