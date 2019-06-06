@@ -21,12 +21,13 @@ const styles = theme => ({
 });
 
 class GroupHome extends React.Component {
-  state = {};
+  state = {group:{}};
   componentDidMount() {
     const { match:{params:{groupId}} } = this.props;
     const group = {
       groupId:groupId,
-      theme: (groupId==="foo") ? themeFoo : themeBar
+      theme: (groupId==="foo") ? themeFoo : themeBar,
+      title: (groupId==="foo") ? "Singularity Society" : "Fire Start Up",
     }
     this.setState({group:group});
   }
@@ -36,7 +37,7 @@ class GroupHome extends React.Component {
     const { group } = this.state;
     return (
       <MuiThemeProvider theme={(group && group.theme) || theme}>
-        <Header user={user} groupId={groupId} />
+        <Header user={user} groupId={groupId} group={group} />
         <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
             <Grid className={classes.caption}>
             <Typography component="h2" variant="h5" gutterBottom>

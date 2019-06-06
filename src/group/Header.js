@@ -50,7 +50,7 @@ class MyAppBar extends React.Component {
   };
 
 render() {
-    const { classes, user, login, groupId } = this.props;
+    const { classes, user, login, groupId, group } = this.props;
 
     return (
       <div className={classes.root}>
@@ -60,7 +60,7 @@ render() {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" className={classes.grow}>
-              Group Home
+              {group.title}
             </Typography>
             <Button color="inherit" component={Link} to="/">Exit</Button>
             {

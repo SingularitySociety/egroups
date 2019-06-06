@@ -29,6 +29,7 @@ function ComplexGrid(props) {
             Welcome to Firebase Starter Kit! 
           </Typography>
           <Button component={Link} to="/g/foo">Foo</Button>
+          <Button component={Link} to="/g/bar">Bar</Button>
           </Grid>
       </Grid>
     </React.Fragment>
