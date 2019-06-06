@@ -62,6 +62,7 @@ render() {
             <Typography variant="h6" color="inherit" className={classes.grow}>
               Group Home
             </Typography>
+            <Button color="inherit" component={Link} to="/">Exit</Button>
             {
                 (user) ?
                 <Button color="inherit" onClick={this.logout}>Logout</Button>
