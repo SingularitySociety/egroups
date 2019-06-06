@@ -4,7 +4,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Header from './Header';
 import { Typography, MuiThemeProvider } from '@material-ui/core';
-import theme from './theme';
+import theme from '../theme';
+import themeBar from './themeBar';
+import themeFoo from './themeFoo';
 
 const styles = theme => ({
   root: {
@@ -19,13 +21,21 @@ const styles = theme => ({
 });
 
 class GroupHome extends React.Component {
+  state = {};
   componentDidMount() {
+    const { match:{params:{groupId}} } = this.props;
+    const group = {
+      groupId:groupId,
+      theme: (groupId==="foo") ? themeFoo : themeBar
+    }
+    this.setState({group:group});
   }
 
   render() {
     const { classes, user, match:{params:{groupId}} } = this.props;
+    const { group } = this.state;
     return (
-      <MuiThemeProvider theme={theme}>
+      <MuiThemeProvider theme={(group && group.theme) || theme}>
         <Header user={user} groupId={groupId} />
         <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
             <Grid className={classes.caption}>
