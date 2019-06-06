@@ -4,6 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import themeApp from './theme';
 import Home from './Home';
+import Group from './group/Home';
 import About from './About';
 import Login from './Login';
 import Decoder from './Decoder';
@@ -58,7 +59,8 @@ class App extends React.Component {
       <MuiThemeProvider theme={theme}>
         <CssBaseline />
         <Router>
-          <Route exact path="/" render={(props) => <Home {...props} {...params} joinGroup={this.joinGroup} />} />
+          <Route exact path="/" render={(props) => <Home {...props} {...params} />} />
+          <Route exact path="/g/:groupId" render={(props) => <Group {...props} {...params} joinGroup={this.joinGroup} />} />
           <Route exact path="/about" render={(props) => <About {...props} {...params} />} />
           <Route exact path="/login" render={(props) => <Login {...props} {...params} />} />
           <Route exact path="/login/cmd/:encoded" render={(props) => <Login {...props} {...params} />} />
