@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Header from './Header';
-import { Typography } from '@material-ui/core';
+import { Typography, MuiThemeProvider } from '@material-ui/core';
 import theme from './theme';
 
 const styles = theme => ({
@@ -25,16 +25,16 @@ class GroupHome extends React.Component {
   render() {
     const { classes, user } = this.props;
     return (
-      <React.Fragment>
+      <MuiThemeProvider theme={theme}>
         <Header user={user} />
         <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
             <Grid className={classes.caption}>
             <Typography component="h2" variant="h5" gutterBottom>
-              Welcome to Firebase Starter Kit! 
+              Welcome to Group Home! 
             </Typography>
             </Grid>
         </Grid>
-      </React.Fragment>
+      </MuiThemeProvider>
     );
   }
 }
