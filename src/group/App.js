@@ -23,10 +23,10 @@ class GroupHome extends React.Component {
   }
 
   render() {
-    const { classes, user } = this.props;
+    const { classes, user, match:{params:{groupId}} } = this.props;
     return (
       <MuiThemeProvider theme={theme}>
-        <Header user={user} />
+        <Header user={user} groupId={groupId} />
         <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
             <Grid className={classes.caption}>
             <Typography component="h2" variant="h5" gutterBottom>

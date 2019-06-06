@@ -50,7 +50,7 @@ class MyAppBar extends React.Component {
   };
 
 render() {
-    const { classes, user, login } = this.props;
+    const { classes, user, login, groupId } = this.props;
 
     return (
       <div className={classes.root}>
@@ -72,12 +72,12 @@ render() {
         </AppBar>
         <Drawer open={this.state.drawer} onClose={this.handleClose}>
           <List>
-            <ListItem button to="/" component={Link}>
+            <ListItem button to={"/g/"+groupId} component={Link}>
               <ListItemIcon><HomeIcon /></ListItemIcon>
-              <ListItemText primary="Home" />
+              <ListItemText primary="Group Home" />
             </ListItem>
             <Divider />
-            <ListItem button to="/about" component={Link}>
+            <ListItem button to={"/g/"+groupId+"/about"} component={Link}>
               <ListItemIcon><InfoIcon /></ListItemIcon>
               <ListItemText primary="About" />
             </ListItem>
