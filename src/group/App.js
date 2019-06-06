@@ -34,6 +34,9 @@ class GroupHome extends React.Component {
 
   render() {
     const { classes, user, match:{params:{groupId}} } = this.props;
+    if (groupId.length < 3) {
+      return null;
+    }
     const { group } = this.state;
     return (
       <MuiThemeProvider theme={(group && group.theme) || theme}>

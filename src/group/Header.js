@@ -66,18 +66,18 @@ render() {
             {
                 (user) ?
                 <Button color="inherit" onClick={this.logout}>Logout</Button>
-                : <Button color="inherit" to={login || "/login"} component={Link}>Login</Button>
+                : <Button color="inherit" to={login || "/a/login"} component={Link}>Login</Button>
             }
           </Toolbar>
         </AppBar>
         <Drawer open={this.state.drawer} onClose={this.handleClose}>
           <List>
-            <ListItem button to={"/g/"+groupId} component={Link}>
+            <ListItem button to={"/"+groupId} component={Link}>
               <ListItemIcon><HomeIcon /></ListItemIcon>
               <ListItemText primary="Group Home" />
             </ListItem>
             <Divider />
-            <ListItem button to={"/g/"+groupId+"/about"} component={Link}>
+            <ListItem button to={"/"+groupId+"/about"} component={Link}>
               <ListItemIcon><InfoIcon /></ListItemIcon>
               <ListItemText primary="About" />
             </ListItem>

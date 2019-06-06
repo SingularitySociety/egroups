@@ -28,8 +28,8 @@ function ComplexGrid(props) {
           <Typography component="h2" variant="h5" gutterBottom>
             Welcome to Firebase Starter Kit! 
           </Typography>
-          <Button component={Link} to="/g/foo">Foo</Button>
-          <Button component={Link} to="/g/bar">Bar</Button>
+          <Button component={Link} to="/foo">Foo</Button>
+          <Button component={Link} to="/bar">Bar</Button>
           </Grid>
       </Grid>
     </React.Fragment>

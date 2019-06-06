@@ -55,9 +55,9 @@ class App extends React.Component {
         <CssBaseline />
         <Router>
           <Route exact path="/" render={(props) => <Home {...props} {...params} />} />
-          <Route exact path="/g/:groupId" render={(props) => <Group {...props} {...params} joinGroup={this.joinGroup} />} />
-          <Route exact path="/g/:groupId/:sectionId" render={(props) => <Group {...props} {...params} joinGroup={this.joinGroup} />} />
-          <Route exact path="/g/:group/:sectionId/:pageId" render={(props) => <Group {...props} {...params} joinGroup={this.joinGroup} />} />
+          <Route exact path="/:groupId" render={(props) => <Group {...props} {...params} joinGroup={this.joinGroup} />} />
+          <Route exact path="/:groupId/:sectionId" render={(props) => <Group {...props} {...params} joinGroup={this.joinGroup} />} />
+          <Route exact path="/:group/:sectionId/:pageId" render={(props) => <Group {...props} {...params} joinGroup={this.joinGroup} />} />
           <Route exact path="/a/about" render={(props) => <About {...props} {...params} />} />
           <Route exact path="/a/login" render={(props) => <Login {...props} {...params} />} />
           <Route exact path="/a/login/cmd/:encoded" render={(props) => <Login {...props} {...params} />} />
