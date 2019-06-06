@@ -50,7 +50,7 @@ class Login extends React.Component {
       const { match } = this.props;
       const { target, encoded } = match.params;
       if (encoded) {
-        return <Redirect to={"/decode/"+encoded} />
+        return <Redirect to={"/a/decode/"+encoded} />
       } else if (target) {
         return <Redirect to={"/"+target} />
       }

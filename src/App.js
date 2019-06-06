@@ -58,13 +58,13 @@ class App extends React.Component {
           <Route exact path="/g/:groupId" render={(props) => <Group {...props} {...params} joinGroup={this.joinGroup} />} />
           <Route exact path="/g/:groupId/:sectionId" render={(props) => <Group {...props} {...params} joinGroup={this.joinGroup} />} />
           <Route exact path="/g/:group/:sectionId/:pageId" render={(props) => <Group {...props} {...params} joinGroup={this.joinGroup} />} />
-          <Route exact path="/about" render={(props) => <About {...props} {...params} />} />
-          <Route exact path="/login" render={(props) => <Login {...props} {...params} />} />
-          <Route exact path="/login/cmd/:encoded" render={(props) => <Login {...props} {...params} />} />
-          <Route exact path="/login/target/:target" render={(props) => <Login {...props} {...params} />} />
+          <Route exact path="/a/about" render={(props) => <About {...props} {...params} />} />
+          <Route exact path="/a/login" render={(props) => <Login {...props} {...params} />} />
+          <Route exact path="/a/login/cmd/:encoded" render={(props) => <Login {...props} {...params} />} />
+          <Route exact path="/a/login/target/:target" render={(props) => <Login {...props} {...params} />} />
           { // We need to mount the Decoder component only after the user info became available.
             (this.state.user) ?
-              <Route exact path="/decode/:encoded" render={(props) => <Decoder {...props} {...params} />} />
+              <Route exact path="/a/decode/:encoded" render={(props) => <Decoder {...props} {...params} />} />
               : "" 
           }
         </Router>

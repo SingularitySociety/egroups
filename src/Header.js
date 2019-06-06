@@ -65,7 +65,7 @@ render() {
             {
                 (user) ?
                 <Button color="inherit" onClick={this.logout}>Logout</Button>
-                : <Button color="inherit" to={login || "/login"} component={Link}>Login</Button>
+                : <Button color="inherit" to={login || "/a/login"} component={Link}>Login</Button>
             }
           </Toolbar>
         </AppBar>
@@ -76,7 +76,7 @@ render() {
               <ListItemText primary="Home" />
             </ListItem>
             <Divider />
-            <ListItem button to="/about" component={Link}>
+            <ListItem button to="/a/about" component={Link}>
               <ListItemIcon><InfoIcon /></ListItemIcon>
               <ListItemText primary="About" />
             </ListItem>
