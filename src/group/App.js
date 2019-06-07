@@ -29,13 +29,10 @@ class GroupHome extends React.Component {
       return;
     }
 
-    const groupId = groupName;
-    /*
     const snap2 = await db.doc("groupNames/" + groupName).get();
     console.log(snap2);
     const groupId = snap2.data().groupId;
-    */
-    console.log("groupId=", groupId);
+    console.log("groupId$$"+groupId+"$$");
     const snapshot = await db.doc("groups/" + groupId).get();
     console.log(snapshot);
     const group = snapshot.data();
