@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
+const styles = theme => ({
+});
+
 class Foo extends React.Component {
     render() {
         return <p>Group List</p>
