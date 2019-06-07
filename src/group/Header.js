@@ -63,8 +63,9 @@ render() {
               {group.title}
             </Typography>
             {
-              !member &&
-              <Button color="inherit" component={Link} to={group.groupName + "/join"}>Join</Button>
+              member ?
+              <Button color="inherit" component={Link} to={"/" + group.groupName + "/account"}>Account</Button>
+              : <Button color="inherit" component={Link} to={"/" + group.groupName + "/join"}>Join</Button>
             }
             {
                 (user) ?

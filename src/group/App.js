@@ -11,6 +11,7 @@ import Home from './Home';
 import About from './About';
 import User from './User';
 import Join from './Join';
+import Account from './Account';
 
 const colorMap = { blue, pink, red, green};
 
@@ -18,7 +19,7 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     padding: theme.spacing(1),
-    paddingTop: theme.spacing(1),
+    paddingTop: theme.spacing(3),
   },
   main: {
     width: theme.spacing(98),
@@ -45,11 +46,14 @@ class GroupHome extends React.Component {
     }*/
   }
 
-  userDidMount = async () => {
-    console.log("userDidMount");
+  memberDidUpdate = async () => {
+    console.log("memberDidUpdate");
     const { user } = this.props;
     const member = (await this.refGroup.collection("members").doc(user.uid).get()).data();
     this.setState({member:member})
+  }
+  userDidMount = () => {
+    this.memberDidUpdate();
   }
   userWillUnmount = () => {
     console.log("userWillUnmount");
@@ -84,7 +88,8 @@ class GroupHome extends React.Component {
             <Grid item className={classes.main}>
               <Route exact path={`/${group.groupName}`} render={(props) => <Home {...props} {...params} />} />
               <Route exact path={`/${group.groupName}/about`} render={(props) => <About {...props} {...params} />} />
-              <Route exact path={`/${group.groupName}/join`} render={(props) => <Join {...props} {...params} />} />
+              <Route exact path={`/${group.groupName}/join`} render={(props) => <Join {...props} {...params} memberDidUpdate={this.memberDidUpdate} />} />
+              <Route exact path={`/${group.groupName}/account`} render={(props) => <Account {...props} {...params} memberDidUpdate={this.memberDidUpdate} />} />
             </Grid>
         </Grid>
       </MuiThemeProvider>
