@@ -3,9 +3,13 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Header from './Header';
-import { Typography, MuiThemeProvider } from '@material-ui/core';
+import { MuiThemeProvider } from '@material-ui/core';
 import { blue, pink, red, green } from '@material-ui/core/colors';
 import { createMuiTheme } from '@material-ui/core/styles';
+import { Route } from 'react-router-dom';
+import Home from './Home';
+import About from './About';
+
 
 const colorMap = { blue, pink, red, green};
 
@@ -56,9 +60,8 @@ class GroupHome extends React.Component {
         <Header user={user} groupId={group.groupId} group={group} />
         <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
             <Grid className={classes.caption}>
-            <Typography component="h2" variant="h5" gutterBottom>
-              Welcome to Group Home! 
-            </Typography>
+              <Route exact path={`/${group.groupName}`} component={Home} />
+              <Route exact path={`/${group.groupName}/about`} component={About} />
             </Grid>
         </Grid>
       </MuiThemeProvider>
