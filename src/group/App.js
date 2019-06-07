@@ -48,8 +48,12 @@ class GroupHome extends React.Component {
 
   memberDidUpdate = async () => {
     console.log("memberDidUpdate");
-    const { user } = this.props;
+    const { user, db } = this.props;
+    const { group } = this.state;
     const member = (await this.refGroup.collection("members").doc(user.uid).get()).data();
+    const privilege = (await db.doc(`groups/${group.groupId}/privileges/${user.uid}`).get()).data();
+    member.privilege = (privilege && privilege.value) || 1;
+    console.log(member);
     this.setState({member:member})
   }
   userDidMount = () => {
@@ -82,7 +86,7 @@ class GroupHome extends React.Component {
     
     return (
       <MuiThemeProvider theme={theme}>
-        { user && <User userDidMount={this.userDidMount} userWillUnmount={this.userWillUnmount}/> }
+        { user && <User user={user} db={db} group={group} userDidMount={this.userDidMount} userWillUnmount={this.userWillUnmount}/> }
         <Header user={user} groupId={group.groupId} group={group} login={loginUrl} member={member}/>
         <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
             <Grid item className={classes.main}>

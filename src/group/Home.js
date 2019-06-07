@@ -1,21 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
+import Channels from './Channels';
 
 const styles = theme => ({
   welcome: {
-    marginTop: theme.spacing(9),
+    marginTop: theme.spacing(0),
   }
 });
 
 class Home extends React.Component {
   render() {
-      const { group, classes } = this.props;
-      return (
-        <Typography component="h2" variant="h5" gutterBottom className={classes.welcome}>
-          Welcome to {group.title}
-        </Typography>
+      const { user, db, member, group } = this.props;
+      return (<div>
+        <Channels db={db} group={group} user={user} member={member}/>
+        </div>
       )
   }
 }
