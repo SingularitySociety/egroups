@@ -29,24 +29,9 @@ class GroupHome extends React.Component {
       return;
     }
 
-    const snap2 = await db.doc("groupNames/" + groupName).get();
-    console.log(snap2);
-    const groupId = snap2.data().groupId;
-    console.log("groupId$$"+groupId+"$$");
-    const snapshot = await db.doc("groups/" + groupId).get();
-    console.log(snapshot);
-    const group = snapshot.data();
-    console.log(group)
+    const groupId = (await db.doc("groupNames/" + groupName).get()).data().groupId;
+    const group = (await db.doc("groups/" + groupId).get()).data();
     group.groupId = groupId;
-
-    /*
-    // HACK
-    const group = {
-      groupId:groupId,
-      theme: (groupId==="foo") ? themeFoo : themeBar,
-      title: (groupId==="foo") ? "Singularity Society" : "Fire Start Up",
-    }
-    */
     this.setState({group:group, groupId:groupId});
   }
 

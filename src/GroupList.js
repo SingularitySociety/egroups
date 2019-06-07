@@ -19,7 +19,6 @@ class GroupList extends React.Component {
         group.groupId = doc.id;
         groups.push(group);
     });
-    console.log(groups);
     this.setState({groups:groups});
   }
   render() {
@@ -27,7 +26,6 @@ class GroupList extends React.Component {
         { 
             this.state.groups.map((group)=> {
                 return <li key={group.groupId}>
-                    { console.log(group) ? "" : "" }
                     <Link  to={"/" + group.groupName}>{group.title}</Link>
                 </li>
             })
