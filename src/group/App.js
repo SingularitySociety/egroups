@@ -10,6 +10,7 @@ import { Route } from 'react-router-dom';
 import Home from './Home';
 import About from './About';
 import User from './User';
+import Join from './Join';
 
 const colorMap = { blue, pink, red, green};
 
@@ -17,12 +18,11 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     padding: theme.spacing(1),
-    paddingTop: theme.spacing(10),
+    paddingTop: theme.spacing(1),
   },
-  caption: {
-    textAlign: "center",
-    width: "100%",
-  },
+  main: {
+    width: theme.spacing(98),
+  }
 });
 
 class GroupHome extends React.Component {
@@ -58,7 +58,7 @@ class GroupHome extends React.Component {
 
   render() {
     const { classes, user, db } = this.props;
-    const { group } = this.state;
+    const { group, member } = this.state;
     if (!group) {
       return null;
     }
@@ -79,11 +79,12 @@ class GroupHome extends React.Component {
     return (
       <MuiThemeProvider theme={theme}>
         { user && <User userDidMount={this.userDidMount} userWillUnmount={this.userWillUnmount}/> }
-        <Header user={user} groupId={group.groupId} group={group} login={loginUrl} />
+        <Header user={user} groupId={group.groupId} group={group} login={loginUrl} member={member}/>
         <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
-            <Grid className={classes.caption}>
+            <Grid item className={classes.main}>
               <Route exact path={`/${group.groupName}`} render={(props) => <Home {...props} {...params} />} />
               <Route exact path={`/${group.groupName}/about`} render={(props) => <About {...props} {...params} />} />
+              <Route exact path={`/${group.groupName}/join`} render={(props) => <Join {...props} {...params} />} />
             </Grid>
         </Grid>
       </MuiThemeProvider>

@@ -63,7 +63,7 @@ render() {
               {group.title}
             </Typography>
             {
-              user && !member &&
+              !member &&
               <Button color="inherit" component={Link} to={group.groupName + "/join"}>Join</Button>
             }
             {

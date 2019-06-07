@@ -4,13 +4,16 @@ import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 
 const styles = theme => ({
+  welcome: {
+    marginTop: theme.spacing(9),
+  }
 });
 
 class Home extends React.Component {
   render() {
-      const { group } = this.props;
+      const { group, classes } = this.props;
       return (
-        <Typography component="h2" variant="h5" gutterBottom>
+        <Typography component="h2" variant="h5" gutterBottom className={classes.welcome}>
           Welcome to {group.title}
         </Typography>
       )
