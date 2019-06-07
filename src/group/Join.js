@@ -26,6 +26,13 @@ class Join extends React.Component {
             In order to join {group.title}, please create your account by choosing Login first.
         </Typography>
     }
+    if (!(group && group.privileges && group.privileges.membership && group.privileges.membership.open)) {
+        return <div>
+            <Typography>This community is invitation only.</Typography>
+            <Button variant="contained" onClick={this.handleJoin}>Try to Join</Button>
+        </div>
+
+    }
     return <div>
             <Typography>This community is open to public. Feel free to join anytime.</Typography>
             <Button variant="contained" onClick={this.handleJoin}>Join</Button>
