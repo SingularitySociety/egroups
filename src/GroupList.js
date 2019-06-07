@@ -27,6 +27,7 @@ class GroupList extends React.Component {
         { 
             this.state.groups.map((group)=> {
                 return <li key={group.groupId}>
+                    { console.log(group) ? "" : "" }
                     <Link  to={"/" + group.groupId}>{group.title}</Link>
                 </li>
             })
