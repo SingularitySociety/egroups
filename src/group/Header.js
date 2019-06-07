@@ -50,7 +50,7 @@ class MyAppBar extends React.Component {
   };
 
 render() {
-    const { classes, user, login, group } = this.props;
+    const { classes, user, login, group, member } = this.props;
 
     return (
       <div className={classes.root}>
@@ -62,7 +62,10 @@ render() {
             <Typography variant="h6" color="inherit" className={classes.grow}>
               {group.title}
             </Typography>
-            <Button color="inherit" component={Link} to="/">Exit</Button>
+            {
+              user && !member &&
+              <Button color="inherit" component={Link} to={group.groupName + "/join"}>Join</Button>
+            }
             {
                 (user) ?
                 <Button color="inherit" onClick={this.logout}>Logout</Button>
@@ -72,6 +75,10 @@ render() {
         </AppBar>
         <Drawer open={this.state.drawer} onClose={this.handleClose}>
           <List>
+            <ListItem button to={"/"} component={Link}>
+              <ListItemIcon><HomeIcon /></ListItemIcon>
+              <ListItemText primary="Exit" />
+            </ListItem>
             <ListItem button to={"/"+group.groupName} component={Link}>
               <ListItemIcon><HomeIcon /></ListItemIcon>
               <ListItemText primary="Group Home" />
