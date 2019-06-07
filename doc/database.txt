@@ -25,7 +25,7 @@ privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:g
     }
     privileges: {
         membership: {
-            closed: boolean
+            open: boolean
         }
         invitation: {
             privilege: number

@@ -12,6 +12,7 @@ service cloud.firestore {
     }
 		match /groups/{groupId}/members/{userId} {
     	allow read;
+      allow create: if request.auth.uid == userId;
     }
 
     match /{document=**} {
