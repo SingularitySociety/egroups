@@ -10,16 +10,14 @@ class Decoder extends React.Component {
   state={ redirect:null }
 
   async componentDidMount() {
-    const { user, db, match:{params:{encoded}} } = this.props;
+    const { user, match:{params:{encoded}} } = this.props;
     const params = JSON.parse(decodeURIComponent(encoded));
 
     // App specific code should be written here. This is just a sample. 
-    if (params.cmd === "something") {
-      // do something using the data given in params. 
-      const { foo, bar, url } = params; 
-      console.log(foo, bar, user, db); // to eliminate warning 
-      //await do.something();
-      this.setState({redirect:url});
+    if (params.cmd === "redirect") {
+      const { path } = params; 
+      console.log("redirecting to", path, "as", user.displayName);
+      this.setState({redirect:path});
     }
   }
 

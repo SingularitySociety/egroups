@@ -56,9 +56,13 @@ class GroupHome extends React.Component {
       }
     });
     const params = { user, group, db };
+    const cmd = { cmd:"redirect", path:window.location.pathname };
+    const str = JSON.stringify(cmd);
+    const loginUrl = "/a/login/cmd/"+encodeURIComponent(str);
+    
     return (
       <MuiThemeProvider theme={theme}>
-        <Header user={user} groupId={group.groupId} group={group} />
+        <Header user={user} groupId={group.groupId} group={group} login={loginUrl} />
         <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
             <Grid className={classes.caption}>
               <Route exact path={`/${group.groupName}`} render={(props) => <Home {...props} {...params} />} />
