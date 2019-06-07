@@ -11,7 +11,9 @@ class Decoder extends React.Component {
 
   async componentDidMount() {
     const { user, match:{params:{encoded}} } = this.props;
-    const params = JSON.parse(decodeURIComponent(encoded));
+    const str = decodeURIComponent(encoded);
+    console.log(str);
+    const params = JSON.parse(str);
 
     // App specific code should be written here. This is just a sample. 
     if (params.cmd === "redirect") {

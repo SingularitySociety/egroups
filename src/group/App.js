@@ -9,7 +9,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { Route } from 'react-router-dom';
 import Home from './Home';
 import About from './About';
-
+import User from './User';
 
 const colorMap = { blue, pink, red, green};
 
@@ -26,22 +26,34 @@ const styles = theme => ({
 });
 
 class GroupHome extends React.Component {
-  state = {group:null};
+  state = {group:null, member:null};
   async componentDidMount() {
     const { db, match:{params:{groupName}} } = this.props;
     if (groupName.length < 3) {
       return;
     }
 
-    try {
+    //try {
       const groupId = (await db.doc("groupNames/" + groupName).get()).data().groupId;
-      const group = (await db.doc("groups/" + groupId).get()).data();
+      this.refGroup = db.doc("groups/" + groupId);
+      const group = (await this.refGroup.get()).data();
       group.groupId = groupId;
       console.log("GroupHoume for "+groupName);
       this.setState({group:group, groupId:groupId});
-    } catch(e) {
+    /*} catch(e) {
       window.location.pathname = "/";
-    }
+    }*/
+  }
+
+  userDidMount = async () => {
+    console.log("userDidMount");
+    const { user } = this.props;
+    const member = (await this.refGroup.collection("members").doc(user.uid).get()).data();
+    this.setState({member:member})
+  }
+  userWillUnmount = () => {
+    console.log("userWillUnmount");
+    this.setState({member:null})
   }
 
   render() {
@@ -66,6 +78,7 @@ class GroupHome extends React.Component {
     
     return (
       <MuiThemeProvider theme={theme}>
+        { user && <User userDidMount={this.userDidMount} userWillUnmount={this.userWillUnmount}/> }
         <Header user={user} groupId={group.groupId} group={group} login={loginUrl} />
         <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
             <Grid className={classes.caption}>
