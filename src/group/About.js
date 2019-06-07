@@ -7,7 +7,8 @@ const styles = theme => ({
 
 class About extends React.Component {
     render() {
-        return <p>Group About</p>
+        const { group } = this.props;
+        return <p>{ group.description }</p>
     }
 }
 

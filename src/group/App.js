@@ -41,7 +41,7 @@ class GroupHome extends React.Component {
   }
 
   render() {
-    const { classes, user } = this.props;
+    const { classes, user, db } = this.props;
     const { group } = this.state;
     if (!group) {
       return null;
@@ -55,13 +55,14 @@ class GroupHome extends React.Component {
         secondary: colorMap[group.theme.primary],
       }
     });
+    const params = { user, group, db };
     return (
       <MuiThemeProvider theme={theme}>
         <Header user={user} groupId={group.groupId} group={group} />
         <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
             <Grid className={classes.caption}>
-              <Route exact path={`/${group.groupName}`} component={Home} />
-              <Route exact path={`/${group.groupName}/about`} component={About} />
+              <Route exact path={`/${group.groupName}`} render={(props) => <Home {...props} {...params} />} />
+              <Route exact path={`/${group.groupName}/about`} render={(props) => <About {...props} {...params} />} />
             </Grid>
         </Grid>
       </MuiThemeProvider>

@@ -6,9 +6,10 @@ const styles = theme => ({
 });
 
 class Home extends React.Component {
-    render() {
-        return <p>Group Home</p>
-    }
+  render() {
+      const { group } = this.props;
+      return <p>Welcome to {group.title}</p>
+  }
 }
 
 Home.propTypes = {
