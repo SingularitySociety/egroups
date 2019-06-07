@@ -19,6 +19,10 @@ privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:g
     groupName: string
     logo: string
     banner: string
+    theme: {
+        primary: string
+        secondary: string
+    }
     privileges: {
         membership: {
             closed: boolean
@@ -49,8 +53,11 @@ privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:g
         notification: {
             channels:boolean,
             articles:boolean,
+            events:boolean,
         }
         /subscriptions/{channelId}
+            favorite: boolean
+            notification: boolean
 
     /privileges/{userId}
         value: number (5:owner, 4:admin, 3:teacher, 2:subscriber, 1:member)
@@ -76,7 +83,7 @@ privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:g
                 name: string ###
             }
             editted: boolean
-        /subscribers/{userId}
+        /subscribers/{userId} ### Auto Updated
             notification: boolen
 
     /events/{eventId}

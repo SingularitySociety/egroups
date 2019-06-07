@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Header from './Header';
 import { Typography, Button } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import GroupList from './GroupList';
 
 const styles = theme => ({
   root: {
@@ -19,7 +20,7 @@ const styles = theme => ({
 });
 
 function ComplexGrid(props) {
-  const { classes, user } = props;
+  const { classes, user, db } = props;
   return (
     <React.Fragment>
       <Header user={user} />
@@ -30,6 +31,7 @@ function ComplexGrid(props) {
           </Typography>
           <Button component={Link} to="/foo">Foo</Button>
           <Button component={Link} to="/bar">Bar</Button>
+          <GroupList user={user} db={db} />
           </Grid>
       </Grid>
     </React.Fragment>
