@@ -17,7 +17,8 @@ class Decoder extends React.Component {
     if (params.cmd === "redirect") {
       const { path } = params; 
       console.log("redirecting to", path, "as", user.displayName);
-      this.setState({redirect:path});
+      //this.setState({redirect:path});
+      window.location.pathname = path;
     }
   }
 
