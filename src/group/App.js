@@ -32,6 +32,7 @@ class GroupHome extends React.Component {
     const groupId = (await db.doc("groupNames/" + groupName).get()).data().groupId;
     const group = (await db.doc("groups/" + groupId).get()).data();
     group.groupId = groupId;
+    console.log("GroupHoume for "+groupName);
     this.setState({group:group, groupId:groupId});
   }
 

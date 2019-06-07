@@ -26,7 +26,7 @@ function ComplexGrid(props) {
       <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
           <Grid className={classes.caption}>
           <Typography component="h2" variant="h5" gutterBottom>
-            Welcome to Firebase Starter Kit! 
+            List of registered communities. 
           </Typography>
           <GroupList user={user} db={db} />
           </Grid>
