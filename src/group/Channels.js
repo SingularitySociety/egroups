@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 import CreateNew from './CreateNew';
@@ -36,16 +35,14 @@ class Channels extends React.Component {
     });
   }
   render() {
-    const { classes } = this.props;
     return <div>
-      <Typography component="h2" variant="h6" gutterBottom className={classes.welcome}>
-        Channels
-      </Typography>
       <CreateNew createNew={ this.createChannel }/>
       <div>
-        { this.state.list.map((channel)=>{
-          return <div key={channel.channelId}>{channel.title}</div>
-        })}
+        {
+          this.state.list.map((channel)=>{
+            return <div key={channel.channelId}>{channel.title}</div>
+          })
+        }
       </div>
     </div>
   }
