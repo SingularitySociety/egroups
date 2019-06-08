@@ -81,21 +81,21 @@ class GroupHome extends React.Component {
         secondary: colorMap[group.theme.primary],
       }
     });
-    const params = { user, group, db };
+    const context = { user, group, db, member };
     const cmd = { cmd:"redirect", path:window.location.pathname };
     const str = JSON.stringify(cmd);
     const loginUrl = "/a/login/cmd/"+encodeURIComponent(str);
     
     return (
       <MuiThemeProvider theme={theme}>
-        { user && <User user={user} db={db} group={group} userDidMount={this.userDidMount} userWillUnmount={this.userWillUnmount}/> }
-        <Header user={user} groupId={group.groupId} group={group} login={loginUrl} member={member}/>
+        { user && <User {...context} userDidMount={this.userDidMount} userWillUnmount={this.userWillUnmount}/> }
+        <Header login={loginUrl} {...context} />
         <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
             <Grid item className={classes.main}>
-              <Route exact path={`/${group.groupName}`} render={(props) => <Home {...props} {...params} />} />
-              <Route exact path={`/${group.groupName}/about`} render={(props) => <About {...props} {...params} />} />
-              <Route exact path={`/${group.groupName}/join`} render={(props) => <Join {...props} {...params} memberDidUpdate={this.memberDidUpdate} />} />
-              <Route exact path={`/${group.groupName}/account`} render={(props) => <Account {...props} {...params} memberDidUpdate={this.memberDidUpdate} />} />
+              <Route exact path={`/${group.groupName}`} render={(props) => <Home {...props} {...context} />} />
+              <Route exact path={`/${group.groupName}/about`} render={(props) => <About {...props} {...context} />} />
+              <Route exact path={`/${group.groupName}/join`} render={(props) => <Join {...props} {...context} memberDidUpdate={this.memberDidUpdate} />} />
+              <Route exact path={`/${group.groupName}/account`} render={(props) => <Account {...props} {...context} memberDidUpdate={this.memberDidUpdate} />} />
             </Grid>
         </Grid>
       </MuiThemeProvider>

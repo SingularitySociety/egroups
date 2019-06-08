@@ -19,7 +19,7 @@ class Account extends React.Component {
         return <div>
             <Typography>You may leave this community anytime.</Typography>
             <Button variant="contained" onClick={this.handleLeave}>Leave</Button>
-            </div>
+        </div>
     }
 }
 

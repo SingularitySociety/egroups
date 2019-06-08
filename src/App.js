@@ -4,7 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import theme from './theme';
 import Home from './Home';
-import Group from './group/App';
+import Group from './group/Group';
 import About from './About';
 import Login from './Login';
 import Decoder from './Decoder';

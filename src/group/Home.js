@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Channels from './Channels';
+import { Typography } from '@material-ui/core';
 
 const styles = theme => ({
   welcome: {
@@ -12,15 +13,20 @@ const styles = theme => ({
 class Home extends React.Component {
   render() {
       const { user, db, member, group } = this.props;
-      return (<div>
-        <Channels db={db} group={group} user={user} member={member}/>
+      const context = { user, group, db, member };
+      return (
+        <div>
+          <Typography component="h2" variant="h6" gutterBottom>
+            Channels
+          </Typography>
+          <Channels {...context}/>
         </div>
       )
   }
 }
 
 Home.propTypes = {
-    classes: PropTypes.object.isRequired,
-  };
+  classes: PropTypes.object.isRequired,
+};
   
 export default withStyles(styles)(Home);

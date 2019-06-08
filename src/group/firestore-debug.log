@@ -1,0 +1,42 @@
+API endpoint: http://[::1]:8080
+API endpoint: http://127.0.0.1:8080
+If you are using a library that supports the FIRESTORE_EMULATOR_HOST environment variable, run:
+
+   export FIRESTORE_EMULATOR_HOST=[::1]:8080,127.0.0.1:8080
+
+Dev App Server is now running.
+
+Jun 08, 2019 4:43:37 PM io.gapi.emulators.grpc.GrpcServer$3 operationComplete
+INFO: Adding handler(s) to newly registered Channel.
+Jun 08, 2019 4:43:37 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+Jun 08, 2019 4:43:37 PM io.gapi.emulators.grpc.GrpcServer$3 operationComplete
+INFO: Adding handler(s) to newly registered Channel.
+Jun 08, 2019 4:43:37 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+Jun 08, 2019 4:43:37 PM io.gapi.emulators.grpc.GrpcServer$3 operationComplete
+INFO: Adding handler(s) to newly registered Channel.
+Jun 08, 2019 4:43:37 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+Jun 08, 2019 4:43:37 PM com.google.cloud.datastore.emulator.impl.util.WrappedStreamObserver onError
+INFO: operation failed: 
+Null value error. for 'create' @ L14, false for 'create' @ L43
+Jun 08, 2019 4:43:38 PM com.google.cloud.datastore.emulator.impl.util.WrappedStreamObserver onError
+INFO: operation failed: 
+false for 'create' @ L14, false for 'create' @ L43
+Jun 08, 2019 4:43:38 PM com.google.cloud.datastore.emulator.impl.util.WrappedStreamObserver onError
+INFO: operation failed: 
+false for 'create' @ L20, false for 'create' @ L43
+Jun 08, 2019 4:43:38 PM com.google.cloud.datastore.emulator.impl.util.WrappedStreamObserver onError
+INFO: operation failed: 
+false for 'update' @ L20, false for 'update' @ L43
+Jun 08, 2019 4:43:38 PM com.google.cloud.datastore.emulator.impl.util.WrappedStreamObserver onError
+INFO: operation failed: 
+false for 'create' @ L16, false for 'create' @ L43
+Jun 08, 2019 4:43:38 PM com.google.cloud.datastore.emulator.impl.util.WrappedStreamObserver onError
+INFO: operation failed: 
+false for 'update' @ L16, false for 'update' @ L43
+*** shutting down gRPC server since JVM is shutting down
+*** shutting down gRPC server since JVM is shutting down
+*** server shut down
+*** server shut down
