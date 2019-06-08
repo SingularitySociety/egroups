@@ -12,6 +12,13 @@ service cloud.firestore {
     }
     match /users/{userId} {
       allow read, create, update, delete: if request.auth.uid == userId;
+      match /private/{anything=**} {
+        allow read, write: if request.auth.uid == userId;
+      }
+      match /public/{anything=**} {
+        allow read: if request.auth.uid != null;
+        allow write: if request.auth.uid == userId;
+      }
     }
 		match /groupNames/{groupName} {
     	allow read;

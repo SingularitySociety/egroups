@@ -38,3 +38,23 @@ Your app is ready to be deployed!
 ### `firebase deploy`
 
 Deploys the app to the Firebase cloud. You need to run "npm run build" before the deployment.
+
+### Firestore Rule test
+
+Install firestore emulator
+
+```
+firebase setup:emulators:firestore
+```
+
+Run firestore emulator
+
+```
+firebase serve --only firestore
+```
+
+Run firestore test
+
+```
+npm run mocha
+```
