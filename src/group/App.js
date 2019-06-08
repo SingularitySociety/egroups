@@ -47,13 +47,15 @@ class GroupHome extends React.Component {
   }
 
   memberDidUpdate = async () => {
-    console.log("memberDidUpdate");
     const { user, db } = this.props;
+    console.log("memberDidUpdate", user && user.uid);
     const { group } = this.state;
     const member = (await this.refGroup.collection("members").doc(user.uid).get()).data();
-    const privilege = (await db.doc(`groups/${group.groupId}/privileges/${user.uid}`).get()).data();
-    member.privilege = (privilege && privilege.value) || 1;
-    console.log(member);
+    if (member) {
+      const privilege = (await db.doc(`groups/${group.groupId}/privileges/${user.uid}`).get()).data();
+      member.privilege = (privilege && privilege.value) || 1;
+    }
+    console.log("member:", member);
     this.setState({member:member})
   }
   userDidMount = () => {
