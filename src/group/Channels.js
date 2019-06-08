@@ -1,19 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography, IconButton, Button, TextField } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import { Typography } from '@material-ui/core';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
+import CreateNew from './CreateNew';
 
 const styles = theme => ({
-  button: {
-    margin: theme.spacing(1)
-  }
 });
 
 class Channels extends React.Component {
-  state = { list:[], creating:false, value:"" }
+  state = { list:[] }
   componentDidMount() {
     const { db, group } = this.props;
     this.detacher = db.collection(`groups/${group.groupId}/channels`).orderBy("created", "desc").onSnapshot((snapshot) => {
@@ -30,43 +27,21 @@ class Channels extends React.Component {
   componentWillUnmount() {
     this.detacher();
   }
-  createChannel = async (e) => {
-    e.preventDefault();
-    console.log("createChannel:", this.state.value)
+  createChannel = async (title) => {
+    console.log("createChannel:", title)
     const { db, group } = this.props;
     db.collection(`groups/${group.groupId}/channels`).add({
-      title: this.state.value,
+      title,
       created: firebase.firestore.FieldValue.serverTimestamp()
     });
-    this.setCreatingFlag(false);
-  }
-  setCreatingFlag = (creating) => {
-    this.setState({creating, value:""})
-  }
-  onChange = (e) => {
-    let value = e.target.value;
-    this.setState({value});
   }
   render() {
     const { classes } = this.props;
-    const { creating, value } = this.state;
     return <div>
       <Typography component="h2" variant="h6" gutterBottom className={classes.welcome}>
         Channels
       </Typography>
-        { creating ?
-          <form>
-            <TextField onChange={this.onChange} value={value} autoFocus 
-              variant="outlined" label="Channel Name" />
-            <Button variant="contained" color="primary" className={classes.button} disabled={ value.length < 3 }
-              onClick={this.createChannel} type="submit">Create</Button>
-            <Button variant="contained" className={classes.button} onClick={()=>this.setCreatingFlag(false)}>Cancel</Button>
-          </form>
-          : 
-          <IconButton variant="contained" onClick={()=>this.setCreatingFlag(true)}>
-            <AddIcon />
-          </IconButton>
-      }
+      <CreateNew createNew={ this.createChannel }/>
       <div>
         { this.state.list.map((channel)=>{
           return <div key={channel.channelId}>{channel.title}</div>

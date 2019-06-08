@@ -1,10 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography, IconButton, Button, TextField } from '@material-ui/core';
+import { IconButton, Button, TextField } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 
 const styles = theme => ({
+    button: {
+        margin: theme.spacing(1)
+    }
 });
 
 class CreateNew extends React.Component {
@@ -19,16 +22,22 @@ class CreateNew extends React.Component {
         let value = e.target.value;
         this.setState({value});
     }
+    onSubmit = (e) => {
+        e.preventDefault();
+        this.setCreatingFlag(false);
+        this.props.createNew(this.state.value);
+    }
     
     render() {
+        const { classes } = this.props;
+        const { value, creating } = this.state;
         if (creating) {
-            const { createNew } = this.props;
             return (
                 <form>
                 <TextField onChange={this.onChange} value={value} autoFocus 
                   variant="outlined" label="Channel Name" />
                 <Button variant="contained" color="primary" className={classes.button} disabled={ value.length < 3 }
-                  onClick={createNew} type="submit">Create</Button>
+                  onClick={this.onSubmit} type="submit">Create</Button>
                 <Button variant="contained" className={classes.button} onClick={()=>this.setCreatingFlag(false)}>Cancel</Button>
               </form>
             );
