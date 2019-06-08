@@ -8,7 +8,7 @@ service cloud.firestore {
       return groupInfo(groupId).privileges.membership.open == true;
     }
     function userPrivilege(groupId, userId) {
-      return get(/databases/$(database)/documents/groups/$(groupId)/members/$(userId)).data.value;
+      return get(/databases/$(database)/documents/groups/$(groupId)/privileges/$(userId)).data.value;
     }
     match /users/{userId} {
       allow read, create, update, delete: if request.auth.uid == userId;
@@ -30,7 +30,7 @@ service cloud.firestore {
 		match /groups/{groupId}/channels/{channelId} {
     	allow read;
       allow write: if request.auth.uid != null 
-                && groupInfo(groupId).privileges.channel.create <= userPrivilege(request.auth.uid); 
+          && groupInfo(groupId).privileges.channel.create <= userPrivilege(groupId, request.auth.uid);
     }
     match /{document=**} {
       allow read, write: if false;
