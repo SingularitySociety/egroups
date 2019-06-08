@@ -3,15 +3,20 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, IconButton, Button, TextField } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import * as firebase from "firebase/app";
+import "firebase/firestore";
 
 const styles = theme => ({
+  button: {
+    margin: theme.spacing(1)
+  }
 });
 
 class Channels extends React.Component {
   state = { list:[], creating:false, value:"" }
   componentDidMount() {
     const { db, group } = this.props;
-    this.detacher = db.collection(`groups/${group.groupId}/channels`).onSnapshot((snapshot) => {
+    this.detacher = db.collection(`groups/${group.groupId}/channels`).orderBy("created", "desc").onSnapshot((snapshot) => {
       console.log("onSnapshot")
       const list = [];
       snapshot.forEach((doc)=>{
@@ -29,7 +34,8 @@ class Channels extends React.Component {
     e.preventDefault();
     const { db, group } = this.props;
     db.collection(`groups/${group.groupId}/channels`).add({
-      title: this.state.value
+      title: this.state.value,
+      created: firebase.firestore.FieldValue.serverTimestamp()
     });
     this.setCreatingFlag(false);
   }
@@ -49,9 +55,11 @@ class Channels extends React.Component {
       </Typography>
         { creating ?
           <form>
-            <TextField onChange={this.onChange} value={value} autoFocus />
-            <Button variant="contained" onClick={this.createChannel} type="submit">Create</Button>
-            <Button variant="contained" onClick={()=>this.setCreatingFlag(false)}>Cancel</Button>
+            <TextField onChange={this.onChange} value={value} autoFocus onBlur={()=>this.setCreatingFlag(false)}
+              variant="outlined" label="Channel Name" />
+            <Button variant="contained" color="primary" className={classes.button} disabled={ value.length < 3 }
+              onClick={this.createChannel} type="submit">Create</Button>
+            <Button variant="contained" className={classes.button} onClick={()=>this.setCreatingFlag(false)}>Cancel</Button>
           </form>
           : 
           <IconButton variant="contained" onClick={()=>this.setCreatingFlag(true)}>
