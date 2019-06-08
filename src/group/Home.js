@@ -12,8 +12,10 @@ const styles = theme => ({
 class Home extends React.Component {
   render() {
       const { user, db, member, group } = this.props;
-      return (<div>
-        <Channels db={db} group={group} user={user} member={member}/>
+      const context = { user, group, db, member };
+      return (
+        <div>
+          <Channels {...context}/>
         </div>
       )
   }
