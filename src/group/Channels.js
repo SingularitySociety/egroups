@@ -32,6 +32,7 @@ class Channels extends React.Component {
   }
   createChannel = async (e) => {
     e.preventDefault();
+    console.log("createChannel:", this.state.value)
     const { db, group } = this.props;
     db.collection(`groups/${group.groupId}/channels`).add({
       title: this.state.value,
@@ -55,7 +56,7 @@ class Channels extends React.Component {
       </Typography>
         { creating ?
           <form>
-            <TextField onChange={this.onChange} value={value} autoFocus onBlur={()=>this.setCreatingFlag(false)}
+            <TextField onChange={this.onChange} value={value} autoFocus 
               variant="outlined" label="Channel Name" />
             <Button variant="contained" color="primary" className={classes.button} disabled={ value.length < 3 }
               onClick={this.createChannel} type="submit">Create</Button>
