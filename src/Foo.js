@@ -6,13 +6,13 @@ const styles = theme => ({
 });
 
 class Foo extends React.Component {
-    render() {
-        return <p>Group List</p>
-    }
+  render() {
+    return <p>Something Here</p>
+  }
 }
 
 Foo.propTypes = {
-    classes: PropTypes.object.isRequired,
-  };
+  classes: PropTypes.object.isRequired,
+};
   
 export default withStyles(styles)(Foo);
