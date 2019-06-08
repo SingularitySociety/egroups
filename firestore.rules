@@ -23,7 +23,7 @@ service cloud.firestore {
     }
 		match /groups/{groupId}/channels/{channelId} {
     	allow read;
-      allow write; // #### DEVELOPMENT ####
+      allow write: if request.auth.uid != null; // #### DEVELOPMENT ####
     }
     match /{document=**} {
       allow read, write: if false;
