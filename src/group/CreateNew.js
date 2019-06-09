@@ -29,9 +29,21 @@ class CreateNew extends React.Component {
     }
     
     render() {
-        const { classes } = this.props;
+        const { classes, multiline } = this.props;
         const { value, creating } = this.state;
         if (creating) {
+            if (multiline) {
+                return (
+                    <form>
+                    <TextField onChange={this.onChange} value={value} autoFocus 
+                      variant="outlined" label="Channel Name" 
+                      multiline={true} rows={2} rowsMax={6} />
+                    <Button variant="contained" color="primary" className={classes.button} disabled={ value.length < 3 }
+                      onClick={this.onSubmit} type="submit">Create</Button>
+                    <Button variant="contained" className={classes.button} onClick={()=>this.setCreatingFlag(false)}>Cancel</Button>
+                  </form>
+                );
+            }
             return (
                 <form>
                 <TextField onChange={this.onChange} value={value} autoFocus 
