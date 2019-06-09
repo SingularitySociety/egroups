@@ -21,6 +21,7 @@ jobs:
       - run:
           name: run firestore emulator
           # command: firebase serve --only firestore
+          # https://stackoverflow.com/questions/54274835/firestore-emulator-fails-to-start-when-run-inside-docker
           command: java -jar $HOME/.cache/firebase/emulators/cloud-firestore-emulator-v1.4.6.jar --host=127.0.0.1
           background: true
       - run:
