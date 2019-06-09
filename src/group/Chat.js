@@ -5,6 +5,7 @@ import { Typography } from '@material-ui/core';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 import CreateNew from './CreateNew';
+import AccessDenied from './AccessDenied';
 
 const styles = theme => ({
 });
@@ -53,6 +54,9 @@ class Chat extends React.Component {
     }
     const canRead = ((member && member.privilege) || 0) >= channel.read;
     const canWrite = ((member && member.privilege) || 0) >= channel.write;
+    if (!canRead) {
+      return <AccessDenied />
+    }
     return (<div>
       <Typography component="h2" variant="h5" gutterBottom>
         { channel.title }
