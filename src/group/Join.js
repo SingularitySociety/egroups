@@ -8,6 +8,9 @@ import "firebase/firestore";
 const styles = theme => ({
     login: {
         marginTop: theme.spacing(9),
+    },
+    button: {
+        margin: theme.spacing(1)
     }
 });
 
@@ -28,15 +31,22 @@ class Join extends React.Component {
   render() {
     const { user, classes, group } = this.props;
     const { error } = this.state;
+    const title = <Typography component="h2" variant="h6" gutterBottom>
+                    Community Membership
+                  </Typography>;
     if (!user) {
-        return <Typography variant="h5" className={classes.login}>
-            In order to join {group.title}, please create your account by choosing Login first.
-        </Typography>
+        return <div>
+            {title}
+            <Typography >
+                In order to join {group.title}, please create your account by choosing Login first.
+            </Typography>
+        </div>
     }
     if (!(group && group.privileges && group.privileges.membership && group.privileges.membership.open)) {
         return <div>
+            {title}
             <Typography>This community is invitation only.</Typography>
-            <Button variant="contained" onClick={this.handleJoin}>Try to Join</Button>
+            <Button variant="contained" onClick={this.handleJoin} className={classes.button}>Try to Join</Button>
             {
                 error && <p style={{color:"red"}}>{error}</p>
             }
@@ -44,8 +54,9 @@ class Join extends React.Component {
 
     }
     return <div>
+            {title}
             <Typography>This community is open to public. Feel free to join anytime.</Typography>
-            <Button variant="contained" onClick={this.handleJoin}>Join</Button>
+            <Button variant="contained" onClick={this.handleJoin} className={classes.button}>Join</Button>
         </div>
   }
 }
