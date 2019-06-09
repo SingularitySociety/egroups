@@ -36,7 +36,7 @@ service cloud.firestore {
     }
 		match /groups/{groupId}/channels/{channelId} {
     	allow read;
-      allow write: if request.auth.uid != null 
+      allow create: if request.auth.uid != null 
           && groupInfo(groupId).privileges.channel.create <= userPrivilege(groupId, request.auth.uid);
     }
     match /{document=**} {
