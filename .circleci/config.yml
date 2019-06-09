@@ -20,7 +20,8 @@ jobs:
           command: firebase setup:emulators:firestore
       - run:
           name: run firestore emulator
-          command: firebase serve --only firestore
+          # command: firebase serve --only firestore
+          command: java -jar $HOME/.cache/firebase/emulators/cloud-firestore-emulator-v1.4.6.jar --host=127.0.0.1
           background: true
       - run:
           name: npm install
