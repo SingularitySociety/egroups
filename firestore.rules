@@ -10,6 +10,9 @@ service cloud.firestore {
     function userPrivilege(groupId, userId) {
       return get(/databases/$(database)/documents/groups/$(groupId)/privileges/$(userId)).data.value;
     }
+    function isGroupAdmin(groupId, userId) {
+      return userPrivilege(groupId, userId) >= 4;
+    }
     match /users/{userId} {
       allow read, create, update, delete: if request.auth.uid == userId;
       match /private/{anything=**} {
@@ -22,9 +25,10 @@ service cloud.firestore {
     }
 		match /groupNames/{groupName} {
     	allow read;
-    }
+   }
 		match /groups/{groupId} {
-    	allow read;
+    	allow read, create;
+      allow update, delete: if isGroupAdmin(groupId, request.auth.uid);
     }
 		match /groups/{groupId}/members/{userId} {
     	allow read;
