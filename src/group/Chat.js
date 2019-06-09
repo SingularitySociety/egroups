@@ -7,23 +7,36 @@ const styles = theme => ({
 });
 
 class Chat extends React.Component {
-  state = {channel:{}}
+  state = {channel:{}, messages:[]}
   async componentDidMount() {
     const { db, group, match:{params:{channelId}} } = this.props;
     console.log(channelId);
     const ref = db.doc(`groups/${group.groupId}/channels/${channelId}`);
     const channel = (await ref.get()).data();
-    console.log(channel);
-    this.setState({channel:channel})
+    this.setState({channel});
+    this.detacher = ref.collection("messages").onSnapshot((snapshot)=>{
+      const messages=[];
+      snapshot.forEach((doc) => {
+        const message = doc.data();
+        message.messageId = doc.id;
+        messages.push(message);
+      })
+      this.setState({messages});
+    });
   }
-    render() {
-      const { channel } = this.state;
-      return (
-        <Typography component="h2" variant="h5" gutterBottom>
-          { channel.title }
-        </Typography>
-      )
-    }
+
+  componentWillUnmount() {
+    this.detacher && this.detacher();
+  }
+
+  render() {
+    const { channel } = this.state;
+    return (
+      <Typography component="h2" variant="h5" gutterBottom>
+        { channel.title }
+      </Typography>
+    )
+  }
 }
 
 Chat.propTypes = {

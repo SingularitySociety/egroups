@@ -39,6 +39,11 @@ service cloud.firestore {
       allow create: if request.auth.uid != null 
           && groupInfo(groupId).privileges.channel.create <= userPrivilege(groupId, request.auth.uid);
     }
+		match /groups/{groupId}/channels/{channelId}/messages/{messageId} {
+      allow read: if request.auth.uid != null 
+          && groupInfo(groupId).privileges.channel.create <= userPrivilege(groupId, request.auth.uid);
+      // TEMPORARY implementation
+    }
     match /{document=**} {
       allow read, write: if false;
     }
