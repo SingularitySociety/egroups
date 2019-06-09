@@ -73,8 +73,11 @@ class GroupHome extends React.Component {
   }
 
   render() {
-    const { classes, user, db } = this.props;
+    const { classes, user, db, match:{params:{groupName}} } = this.props;
     const { group, member } = this.state;
+    if (groupName.length < 3) {
+      return "";
+    }
     if (!group) {
       return <Processing />;
     }
