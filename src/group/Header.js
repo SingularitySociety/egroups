@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import AccountIcon from '@material-ui/icons/AccountCircle';
 import { Link } from 'react-router-dom';
 import * as firebase from "firebase/app";
 import "firebase/auth";
@@ -64,7 +65,7 @@ render() {
             </Typography>
             {
               member ?
-              <Button color="inherit" component={Link} to={"/" + group.groupName + "/account"}>Account</Button>
+              <IconButton color="inherit" component={Link} to={"/" + group.groupName + "/account"}><AccountIcon /></IconButton>
               : <Button color="inherit" component={Link} to={"/" + group.groupName + "/join"}>Join</Button>
             }
             {
