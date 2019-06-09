@@ -13,6 +13,7 @@ import User from './User';
 import Join from './Join';
 import Account from './Account';
 import Processing from '../Processing';
+import Chat from './Chat';
 
 const colorMap = { blue, pink, red, green};
 
@@ -97,6 +98,7 @@ class GroupHome extends React.Component {
               <Route exact path={`/${group.groupName}/about`} render={(props) => <About {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/join`} render={(props) => <Join {...props} {...context} memberDidUpdate={this.memberDidUpdate} />} />
               <Route exact path={`/${group.groupName}/account`} render={(props) => <Account {...props} {...context} memberDidUpdate={this.memberDidUpdate} />} />
+              <Route exact path={`/${group.groupName}/ch/:channelId`} render={(props) => <Chat {...props} {...context} />} />
             </Grid>
         </Grid>
       </MuiThemeProvider>

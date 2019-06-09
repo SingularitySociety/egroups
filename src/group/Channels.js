@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 import CreateNew from './CreateNew';
+import Channel from './Channel';
 
 const styles = theme => ({
 });
@@ -43,7 +44,7 @@ class Channels extends React.Component {
       <div>
         {
           this.state.list.map((channel)=>{
-            return <div key={channel.channelId}>{channel.title}</div>
+            return <Channel key={channel.channelId} channel={channel} group={group} />
           })
         }
       </div>
