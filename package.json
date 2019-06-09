@@ -17,7 +17,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "mocha": "mocha --require @babel/register"
+    "mocha": "mocha --require @babel/register --recursive"
   },
   "eslintConfig": {
     "extends": "react-app"
