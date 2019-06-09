@@ -14,6 +14,7 @@ class Chat extends React.Component {
     const ref = db.doc(`groups/${group.groupId}/channels/${channelId}`);
     const channel = (await ref.get()).data();
     this.setState({channel});
+    console.log(channel);
     this.detacher = ref.collection("messages").onSnapshot((snapshot)=>{
       const messages=[];
       snapshot.forEach((doc) => {
@@ -31,6 +32,8 @@ class Chat extends React.Component {
 
   render() {
     const { channel } = this.state;
+    const { member } = this.props;
+    const canAccessChannel = ((member && member.privilege) || 0) >= ((channel && channel.privilege) || 1);
     return (
       <Typography component="h2" variant="h5" gutterBottom>
         { channel.title }

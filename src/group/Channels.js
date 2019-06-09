@@ -29,10 +29,13 @@ class Channels extends React.Component {
   }
   createChannel = async (title) => {
     console.log("createChannel:", title)
-    const { db, group } = this.props;
+    const { db, group, user } = this.props;
     db.collection(`groups/${group.groupId}/channels`).add({
       title,
-      created: firebase.firestore.FieldValue.serverTimestamp()
+      created: firebase.firestore.FieldValue.serverTimestamp(),
+      owner: user.uid,
+      read: group.privileges.channel.read || 1, // default is members only
+      write: group.privileges.channel.write || 1, // default is members only
     });
   }
   render() {

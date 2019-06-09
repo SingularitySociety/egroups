@@ -28,13 +28,15 @@ privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:g
             open: boolean
         }
         invitation: {
-            privilege: number
+            create: number
         }
         channel: {
-            privilege: number
+            create: number,
+            read: number, // default
+            write: number, // default
         }
         event: {
-            privilege: number
+            create: number
         }
         article: {
             page: number
@@ -74,7 +76,8 @@ privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:g
         created: date
         title: string
         owner: userId
-        privilege: number
+        read: number
+        write: number
         /messages/{messageId}
             created: date
             message: string
@@ -91,7 +94,8 @@ privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:g
         description: string
         date: date
         onwer: userId
-        privilege: number
+        read: number
+        write: number
         address: string
         url: string
         capacity: number
@@ -105,8 +109,9 @@ privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:g
         title: string
         owner: userId
         type: string # "news", "blog", "announcement", "page"
-        privilege: number
-        comment: number
+        read: number 
+        write: number // edit
+        comments: number
         sections: [sectionId, ...]
         comments: [sectionId, ...]
         /authors/{userId}
