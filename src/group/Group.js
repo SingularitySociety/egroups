@@ -12,6 +12,7 @@ import About from './About';
 import User from './User';
 import Join from './Join';
 import Account from './Account';
+import Processing from '../Processing';
 
 const colorMap = { blue, pink, red, green};
 
@@ -70,7 +71,7 @@ class GroupHome extends React.Component {
     const { classes, user, db } = this.props;
     const { group, member } = this.state;
     if (!group) {
-      return null;
+      return <Processing />;
     }
     const theme = createMuiTheme({
       typography: {
