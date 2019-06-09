@@ -65,7 +65,8 @@ class Chat extends React.Component {
       { messages.map((message)=>{
         return <div key={message.messageId}>{message.message}</div>
       }) }
-      { canWrite && <CreateNew createNew={ this.postMessgae } multiline={true} /> }
+      { canWrite && <CreateNew createNew={ this.postMessgae } 
+          action="Post" label="Message" multiline={true} /> }
       </div>
     </div>)
   }
