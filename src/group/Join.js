@@ -18,9 +18,12 @@ class Join extends React.Component {
   state = { error:null };
   handleJoin = async () => {
     const { db, user, group } = this.props;
-    const refMember = db.doc("groups/" + group.groupId + "/members/" + user.uid);
+    const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
     try {
-        await refMember.set({ lastAccessed: firebase.firestore.FieldValue.serverTimestamp()}, {merge:true});
+        await refMember.set({ 
+            created: firebase.firestore.FieldValue.serverTimestamp(),
+            displayName: user.displayName
+        }, {merge:true});
         this.props.memberDidUpdate();
         window.location.pathname = "/" + group.groupName + "/account";
     } catch(e) {

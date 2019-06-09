@@ -14,6 +14,8 @@ import Join from './Join';
 import Account from './Account';
 import Processing from '../Processing';
 import Chat from './Chat';
+import * as firebase from "firebase/app";
+import "firebase/firestore";
 
 const colorMap = { blue, pink, red, green};
 
@@ -52,10 +54,12 @@ class GroupHome extends React.Component {
     const { user, db } = this.props;
     console.log("memberDidUpdate", user && user.uid);
     const { group } = this.state;
-    const member = (await this.refGroup.collection("members").doc(user.uid).get()).data();
+    const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
+    const member = (await refMember.get()).data();
     if (member) {
       const privilege = (await db.doc(`groups/${group.groupId}/privileges/${user.uid}`).get()).data();
       member.privilege = (privilege && privilege.value) || 1;
+      await refMember.set({lastAccessed:firebase.firestore.FieldValue.serverTimestamp()}, {merge:true})
     }
     console.log("member:", member);
     this.setState({member:member})
