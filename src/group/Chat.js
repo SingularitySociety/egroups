@@ -6,6 +6,7 @@ import * as firebase from "firebase/app";
 import "firebase/firestore";
 import CreateNew from './CreateNew';
 import AccessDenied from './AccessDenied';
+import Message from './Message';
 
 const styles = theme => ({
 });
@@ -41,7 +42,7 @@ class Chat extends React.Component {
     await this.refMessages.add({
       created: firebase.firestore.FieldValue.serverTimestamp(),
       message,
-      userid: user.uid,
+      userId: user.uid,
       userName: member.displayName
     });
   }
@@ -63,7 +64,7 @@ class Chat extends React.Component {
       </Typography>
       <div>
       { messages.map((message)=>{
-        return <div key={message.messageId}>{message.message}</div>
+        return <Message key={message.messageId} message={message} />
       }) }
       { canWrite && <CreateNew createNew={ this.postMessgae } 
           action="Post" label="Message" multiline={true} /> }
