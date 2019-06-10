@@ -19,8 +19,16 @@ export const memberDidCreate = functions.firestore.document('groups/{groupId}/me
     });
   });
 
-  export const memberDidDelete = functions.firestore.document('groups/{groupId}/members/{userId}')
-    .onDelete((snapshot, context)=>{
-      const { groupId, userId } = context.params;
-      return admin.firestore().doc("/groups/" + groupId + "/privileges/" + userId).delete();
-    });
+export const memberDidDelete = functions.firestore.document('groups/{groupId}/members/{userId}')
+  .onDelete((snapshot, context)=>{
+    const { groupId, userId } = context.params;
+    return admin.firestore().doc("/groups/" + groupId + "/privileges/" + userId).delete();
+  });
+
+export const messageDidCreate = functions.firestore.document('groups/{groupId}/channels/{channelId}/messages/{messageId}')
+  .onCreate((snapshot, context)=>{
+    const { groupId, channelId } = context.params;
+    return admin.firestore().doc(`/groups/${groupId}/channels/${channelId}`).set({
+      updated: new Date()
+    }, {merge:true});
+  });
