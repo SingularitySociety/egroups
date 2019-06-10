@@ -12,7 +12,7 @@ const styles = theme => ({
 });
 
 class Chat extends React.Component {
-  state = {channel:{}, messages:[]}
+  state = {channel:null, messages:[]}
   async componentDidMount() {
     const { db, group, match:{params:{channelId}} } = this.props;
     console.log(channelId);
