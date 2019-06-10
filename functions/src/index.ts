@@ -28,7 +28,9 @@ export const memberDidDelete = functions.firestore.document('groups/{groupId}/me
 export const messageDidCreate = functions.firestore.document('groups/{groupId}/channels/{channelId}/messages/{messageId}')
   .onCreate((snapshot, context)=>{
     const { groupId, channelId } = context.params;
+    const newValue = snapshot.data();
+    // We need to use newValue.created. Otherwise, the person who wrote that message will have an older last access date. 
     return admin.firestore().doc(`/groups/${groupId}/channels/${channelId}`).set({
-      updated: new Date()
+      updated: (newValue && newValue.created) || new Date()
     }, {merge:true});
   });
