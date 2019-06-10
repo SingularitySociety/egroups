@@ -32,7 +32,7 @@ class Chat extends React.Component {
       const {user, db} = this.props; // DO NOT MOVE to TOP 
       if (user) {
         const channels = {};
-        channels[channelId] = { l:firebase.firestore.FieldValue.serverTimestamp() };
+        channels[channelId] = { l:new Date() }; // NOT firebase.firestore.FieldValue.serverTimestamp()
         db.doc(`groups/${group.groupId}/members/${user.uid}/private/history`).set({
           channels
         }, {merge:true})
