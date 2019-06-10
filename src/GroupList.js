@@ -12,7 +12,7 @@ class GroupList extends React.Component {
   state = { groups:[] };
   async componentDidMount() {
     const { db } = this.props;
-    const ref = db.collection("groups");
+    const ref = db.collection("groups").where("groupName", ">", "");
     const snapshot = await ref.get();
     //console.log(snapshot);
     const groups = [];
@@ -28,7 +28,7 @@ class GroupList extends React.Component {
     console.log("createNew", value);
     const { db, user } = this.props;
     db.collection("groups").add(
-      { title:value, owner:user.uid, displayName:user.displayName } // HACK: see groupDidCreate cloud function
+      { title:value, owner:user.uid, ownerName:user.displayName } // HACK: see groupDidCreate cloud function
     )
   }
   render() {

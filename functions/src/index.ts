@@ -23,7 +23,7 @@ export const groupDidCreate = functions.firestore.document('groups/{groupId}')
     // The owner becomes a member automatically. memberDidCreate will automatically create the privilege for the owner. 
     return db.doc(`/groups/${groupId}/members/${userId}`).set({
       created: new Date(),
-      displayName: (newValue && newValue.displayName) || "admin",
+      displayName: (newValue && newValue.ownerName) || "admin",
     });
   });
 
