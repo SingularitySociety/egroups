@@ -25,9 +25,9 @@ class GroupList extends React.Component {
 
   createNew = (value) => {
     console.log("createNew", value);
-    const { db } = this.props;
+    const { db, user } = this.props;
     db.collection("groups").add(
-      { title:value }
+      { title:value, owner:user.uid } // HACK: see groupDidCreate cloud function
     )
   }
   render() {

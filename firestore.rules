@@ -28,11 +28,13 @@ service cloud.firestore {
     	allow read;
     }
 		match /groups/{groupId} {
-    	allow read, create;
+    	allow read;
+      allow create: if request.auth.uid != null;
     }
 		match /groups/{groupId}/members/{userId} {
     	allow read;
       allow create: if request.auth.uid == userId && groupIsOpen(groupId);
+      allow create: if request.auth.uid == userId && exists(/databases/$(database)/documents/groups/$(groupId)/owners/$(userId));
       allow delete, update: if request.auth.uid == userId;
     }
     match /groups/{groupId}/members/{userId}/private/{itemId} {

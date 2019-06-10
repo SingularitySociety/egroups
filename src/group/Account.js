@@ -18,12 +18,14 @@ class Account extends React.Component {
         this.props.memberDidUpdate();
         window.location.pathname = "/" + group.groupName;
     }
+
     
     render() {
-        const { classes, group, user } = this.props;
+        const { classes, group, user, member } = this.props;
         if (!user) {
             return <Redirect to={`/${group.groupName}`} />
         }
+        console.log(member);
         return <div>
           <Typography component="h2" variant="h6" gutterBottom>
             Account

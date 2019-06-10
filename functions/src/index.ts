@@ -10,12 +10,25 @@ export const helloWorld = functions.https.onRequest((request, response) => {
   response.send("Hello from Firebase!");
 });
 
-export const memberDidCreate = functions.firestore.document('groups/{groupId}/members/{userId}')
+export const groupDidCreate = functions.firestore.document('groups/{groupId}')
   .onCreate((snapshot, context)=>{
-    const { groupId, userId } = context.params;
-    return admin.firestore().doc("/groups/" + groupId + "/privileges/" + userId).set({
-      value: 1, // member
+    const { groupId } = context.params;
+    console.log(context);
+    const newValue = snapshot.data(); // this is a hack because I can't access context.auth.uid for some reason
+    const userId = newValue && newValue.owner;
+    return admin.firestore().doc("/groups/" + groupId + "/owners/" + userId).set({
       created: new Date()
+    });
+  });
+
+export const memberDidCreate = functions.firestore.document('groups/{groupId}/members/{userId}')
+  .onCreate(async (snapshot, context)=>{
+    const { groupId, userId } = context.params;
+    const db = admin.firestore();
+    const owner = (await db.doc(`/groups/${groupId}/owners/${userId}`).get()).data();
+    return db.doc("/groups/" + groupId + "/privileges/" + userId).set({
+      value: owner ? 0x2000000 : 1, // owner or member
+      created: new Date(),
     });
   });
 
