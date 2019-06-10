@@ -11,7 +11,7 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/groups/$(groupId)/privileges/$(userId)).data.value;
     }
     function isGroupAdmin(groupId, userId) {
-      return userPrivilege(groupId, userId) >= 4;
+      return userPrivilege(groupId, userId) >= 4 || groupInfo(groupId).uid == userId;
     }
     match /users/{userId} {
       allow read, create, update, delete: if request.auth.uid == userId;
@@ -36,7 +36,7 @@ service cloud.firestore {
       allow delete, update: if request.auth.uid == userId;
     }
 		match /groups/{groupId}/privileges/{userId} {
-    	allow read;
+    	allow read, create:  if isGroupAdmin(groupId, request.auth.uid);
     }
 		match /groups/{groupId}/channels/{channelId} {
     	allow read;

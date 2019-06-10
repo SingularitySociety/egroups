@@ -23,8 +23,12 @@ describe("Group app", () => {
   it("should create group", async () => {
     const db = test_helper.authedApp({ uid: "alice" });
     const alice_group = db.doc("groups/alice_group");
-    const bob_db = test_helper.authedApp({ uid: "bob" });
+    const alice_group_priv = db.doc("groups/alice_group/privileges/alice_group");
 
+    const bob_db = test_helper.authedApp({ uid: "bob" });
+    const bob_alice_group = bob_db.doc("groups/alice_group");
+    const bob_alice_group_priv = bob_db.doc("groups/alice_group/privileges/bob");
+    
     await firebase.assertSucceeds(alice_group.set({
       created: FieldValue.serverTimestamp(),
       uid: "alice",
@@ -35,9 +39,21 @@ describe("Group app", () => {
       logo: "",
       banner: "",
     }));
+    await firebase.assertSucceeds(alice_group_priv.set({
+      created: FieldValue.serverTimestamp(),
+      value: 5,
+    }));
+
+    await firebase.assertFails(bob_alice_group_priv.set({
+      created: FieldValue.serverTimestamp(),
+      value: 5,
+    }));
     
     await firebase.assertSucceeds(alice_group.get());
-    await firebase.assertSucceeds(bob_db.doc("groups/alice_group").get());
+    await firebase.assertSucceeds(alice_group.update({"aa": "bb"}));
+
+    await firebase.assertSucceeds(bob_alice_group.get());
+    await firebase.assertFails(bob_alice_group.update({"bb": "dd"}));
 
   });
 
