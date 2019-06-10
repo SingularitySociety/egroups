@@ -29,8 +29,8 @@ class App extends React.Component {
             const refUser = db.collection("users").doc(user.uid);
             var newValue = { lastAccessed:firebase.firestore.FieldValue.serverTimestamp() };
             const doc = (await refUser.get()).data();
-            if (!doc || !doc.name) {
-              newValue.name = user.displayName;
+            if (!doc || !doc.displayName) {
+              newValue.displayName = user.displayName;
             }
             await refUser.set(newValue, { merge: true });
           }
