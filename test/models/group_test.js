@@ -18,9 +18,10 @@ const db = authedApp({ uid: "alice" });
 
 class Dinotrux {
   // instance is document
-  constructor(data = {}, keys = null) {
+  constructor(data = {}, keys = null, exists = false) {
     this.data = data;
-    this.keys = keys || [this.getTableName()];
+    this.keys = keys;
+    this.exists = exists;
   }
 
   // public instance methods
@@ -33,6 +34,12 @@ class Dinotrux {
     const data = doc.data();
     return this.updateData(data);
   }
+  async create(data) {
+    if (this.exists) {
+      throw new Error("can't create");
+    }
+    // todo
+  }
   async update(data) {
     const ref = this.getRef();
     ref.update(data);
@@ -43,11 +50,18 @@ class Dinotrux {
     await ref.set(data);
     return this.updateData(data);
   }
-  // todo delete
+  async del() {
+    if (!this.exists) {
+      throw new Error("can't delete");
+    }
+    // todo delete
+  }
   getData() {
     return this.data;
   }
-  
+  exists() {
+    return this.exists;
+  }
   // private methods
   updateData(data) {
     data.id = this.id();
@@ -62,10 +76,6 @@ class Dinotrux {
     const keys = this.keys.concat([this.data.id])
     return this.constructor.getPath(keys);
   }
-  getTableName() {
-    return this.constructor.getTableName();
-  }
-  
   // class methods
 
   // public
@@ -73,7 +83,7 @@ class Dinotrux {
     const doc = await db.doc(this.getPath(keys)).get();
     const data = doc.data();
     data.id = doc.id;
-    return new this(data, keys);
+    return new this(data, keys, true);
   }
   static async create() { 
     const args = Object.values(arguments);
@@ -84,10 +94,7 @@ class Dinotrux {
     
     const ret = await db.collection(path).add(data);
     data.id = ret.id;
-    return new this(data, keys)
-  }
-  static paths() {
-    return [this.getTableName()];
+    return new this(data, keys, true)
   }
   // method chains
   // need keys if collection is not on root.
@@ -108,22 +115,28 @@ class Dinotrux {
       snapshot.forEach((doc)=>{
         const data = doc.data();
         data.id = doc.id;
-        list.push(new this(data, keys));
+        list.push(new this(data, keys, true));
       });
       callback(list);
     });
   }
 
   // private
-  static getClassName() {
-    return this.name;
+  static getPathFromTableName() {
+    return this.name.match(/[A-Z][a-z0-9]+/g).map((a) => a.toLowerCase());
   }
-  static getTableName() {
-    return this.getClassName().toLowerCase();
+  static paths() {
+    return this.getPathFromTableName();
   }
   static getPath(keys) {
+    // just root case, accept empty key
     if (keys === null || keys === undefined || keys.length === 0) {
-      return this.getTableName();
+      const paths = this.paths();
+      if (paths.length === 1) {
+        return paths[0];
+      } else {
+        throw new Error("key is empty");
+      }
     }
     const new_keys = keys.slice();
     const ret = this.paths().reduce((paths, elem) => {
@@ -140,22 +153,19 @@ class Dinotrux {
 
 // models
 class Groups extends Dinotrux {
-  constructor(data, keys) {
-    super(data, keys)
-  }
   // no paths define. then path is from class name. path is /groups/{keys[0]}
   isOpen() {
     return this.data.privileges.membership.open
   }
 }
 class GroupTest extends Dinotrux {
-  constructor(data, keys) {
-    super(data, keys)
-  }
   static paths() {
     // path is /groups/{keys[0]}/test/{keys[1]}
     return ["groups", "test"]
   }
+}
+
+class GroupPathTest extends Dinotrux {
 }
 
 before(async () => {
@@ -169,6 +179,22 @@ describe("ORM app", () => {
   it("require users to log in before creating and reading a profile", async () => {
     await firebase.clearFirestoreData({ projectId });
 
+    // getPathFromTableName
+    Groups.getPathFromTableName().should.members(['groups'])
+    GroupPathTest.getPathFromTableName().should.members([ 'group', 'path', 'test' ]);
+
+    // paths
+    Groups.paths().should.members(['groups'])
+    GroupTest.paths().should.members(['groups', 'test'])
+    GroupPathTest.paths().should.members([ 'group', 'path', 'test' ]);
+
+    Groups.getPath().should.equal('groups')
+    Groups.getPath(["hello"]).should.equal('groups/hello')
+    GroupTest.getPath(["1"]).should.equal('groups/1/test')
+    GroupTest.getPath(["1", "2"]).should.equal('groups/1/test/2')
+    GroupPathTest.getPath(["1", "2"]).should.equal('group/1/path/2/test')
+    GroupPathTest.getPath(["1", "2", "3"]).should.equal('group/1/path/2/test/3')
+    
     const detacher_groups = Groups.all().orderBy("created", "desc").onSnapshot((groups) => {
       groups.forEach((group) => {
         group.isOpen().should.equal(true);
