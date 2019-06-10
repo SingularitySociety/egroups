@@ -5,6 +5,9 @@ import { IconButton, Button, TextField } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 
 const styles = theme => ({
+    form: {
+        marginTop: theme.spacing(1)
+    },
     button: {
         margin: theme.spacing(1)
     },
@@ -46,7 +49,7 @@ class CreateNew extends React.Component {
         if (creating) {
             if (multiline) {
                 return (
-                    <form>
+                    <form className={classes.form}>
                     <TextField onChange={this.onChange} value={value} autoFocus 
                       variant="outlined" label={label || "Channel Name"} 
                       multiline={true} rows={2} rowsMax={6} className={classes.multiline}
@@ -58,7 +61,7 @@ class CreateNew extends React.Component {
                 );
             }
             return (
-                <form>
+                <form className={classes.form}>
                 <TextField onChange={this.onChange} value={value} autoFocus 
                   variant="outlined" label="Channel Name" />
                 <Button variant="contained" color="primary" className={classes.button} disabled={ value.length < 3 }
@@ -77,6 +80,7 @@ class CreateNew extends React.Component {
 
 CreateNew.propTypes = {
     classes: PropTypes.object.isRequired,
+    createNew: PropTypes.func.isRequired,
   };
   
 export default withStyles(styles)(CreateNew);

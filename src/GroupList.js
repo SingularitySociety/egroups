@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
+import CreateNew from './group/CreateNew';
 
 const styles = theme => ({
 });
@@ -21,15 +22,24 @@ class GroupList extends React.Component {
     });
     this.setState({groups:groups});
   }
+
+  createNew = (value) => {
+    console.log("createNew", value);
+    const { db } = this.props;
+    db.collection("groups").add(
+      { title:value }
+    )
+  }
   render() {
     return <div>
         { 
             this.state.groups.map((group)=> {
                 return <div key={group.groupId}>
-                    <Link  to={"/" + group.groupName}>{group.title}</Link>
+                    <Link  to={"/" + (group.groupName || group.groupId)}>{group.title}</Link>
                 </div>
             })
         }
+        <CreateNew label="Group Name" createNew={this.createNew} />
     </div>
   }
 }

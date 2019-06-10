@@ -39,7 +39,8 @@ class GroupHome extends React.Component {
     }
 
     //try {
-      const groupId = (await db.doc("groupNames/" + groupName).get()).data().groupId;
+      const data = (await db.doc("groupNames/" + groupName).get()).data();
+      const groupId = (data && data.groupId) || groupName;
       this.refGroup = db.doc("groups/" + groupId);
       const group = (await this.refGroup.get()).data();
       group.groupId = groupId;
@@ -95,8 +96,8 @@ class GroupHome extends React.Component {
           useNextVariants: true,
       },
       palette: {
-        primary: colorMap[group.theme.primary],
-        secondary: colorMap[group.theme.primary],
+        primary: colorMap[(group.theme && group.theme.primary) || "blue"],
+        secondary: colorMap[(group.theme && group.theme.primary) || "blue"],
       }
     });
     const context = { user, group, db, member, history };
