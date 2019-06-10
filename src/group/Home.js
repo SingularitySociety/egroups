@@ -14,7 +14,6 @@ class Home extends React.Component {
   render() {
       const { user, db, member, group, history } = this.props;
       const context = { user, group, db, member, history };
-      console.log("history##", history);
       return (
         <div>
           <Typography component="h2" variant="h6" gutterBottom>

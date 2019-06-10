@@ -24,8 +24,11 @@ class Join extends React.Component {
             created: firebase.firestore.FieldValue.serverTimestamp(),
             displayName: user.displayName
         }, {merge:true});
+        await refMember.collection("private").doc("history").set({
+            // empty object
+        }, {merge:true});
         this.props.memberDidUpdate();
-        window.location.pathname = "/" + group.groupName + "/account";
+        window.location.pathname = "/" + group.groupName;
     } catch(e) {
         console.log(e);
         this.setState({error:"Unable to Join"})

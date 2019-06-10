@@ -29,7 +29,6 @@ class Channel extends React.Component {
         className = classes.read;
       }
     }
-    console.log(className);
     return (
       <Grid container >
         <Grid item component={Link} to={`/${group.groupName}/ch/${channel.channelId}`} className={className}># { channel.title }</Grid>

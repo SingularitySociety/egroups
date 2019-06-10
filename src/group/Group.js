@@ -100,7 +100,6 @@ class GroupHome extends React.Component {
       }
     });
     const context = { user, group, db, member, history };
-    console.log("history@@", history);
     
     return (
       <MuiThemeProvider theme={theme}>

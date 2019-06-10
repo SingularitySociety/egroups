@@ -40,7 +40,6 @@ class Channels extends React.Component {
   }
   render() {
     const { member, group, history } = this.props;
-    console.log("history!!!", history);
     const canCreateNew = !!member && member.privilege 
             >= ((group.privileges && group.privileges.channel && group.privileges.channel.create) || 2);
     return <div>
