@@ -11,6 +11,17 @@ import Decoder from './Decoder';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 import config from './config';
+import {addLocaleData, IntlProvider} from 'react-intl';
+import en from 'react-intl/locale-data/en';
+import ja from 'react-intl/locale-data/ja';
+import message_en from './locale/en.json';
+import message_ja from './locale/ja.json';
+
+addLocaleData([...en, ...ja]);
+const messages = {
+  en: message_en,
+  ja: message_ja
+};
 
 firebase.initializeApp(config);
 var db = firebase.firestore();
@@ -51,23 +62,26 @@ class App extends React.Component {
   render() {
     const params = { user:this.state.user, db:db };
     //console.log("App:", window.location.pathname);
+    const language = navigator.language.split(/[-_]/)[0];  // language without region code
     return (
-      <MuiThemeProvider theme={theme}>
-        <CssBaseline />
-        <Router>
-          <Route exact path="/" render={(props) => <Home {...props} {...params} />} />
-          <Route path="/:groupName" render={(props) => <Group {...props} {...params} joinGroup={this.joinGroup} />} />
-          <Route exact path="/a/about" render={(props) => <About {...props} {...params} />} />
-          <Route exact path="/a/login" render={(props) => <Login {...props} {...params} />} />
-          <Route exact path="/a/login/cmd/:encoded" render={(props) => <Login {...props} {...params} />} />
-          <Route exact path="/a/login/target/:target" render={(props) => <Login {...props} {...params} />} />
-          { // We need to mount the Decoder component only after the user info became available.
-            (this.state.user) ?
-              <Route exact path="/a/decode/:encoded" render={(props) => <Decoder {...props} {...params} />} />
-              : "" 
-          }
-        </Router>
-      </MuiThemeProvider>
+      <IntlProvider locale={language} messages={messages[language]}>
+        <MuiThemeProvider theme={theme}>
+          <CssBaseline />
+          <Router>
+            <Route exact path="/" render={(props) => <Home {...props} {...params} />} />
+            <Route path="/:groupName" render={(props) => <Group {...props} {...params} joinGroup={this.joinGroup} />} />
+            <Route exact path="/a/about" render={(props) => <About {...props} {...params} />} />
+            <Route exact path="/a/login" render={(props) => <Login {...props} {...params} />} />
+            <Route exact path="/a/login/cmd/:encoded" render={(props) => <Login {...props} {...params} />} />
+            <Route exact path="/a/login/target/:target" render={(props) => <Login {...props} {...params} />} />
+            { // We need to mount the Decoder component only after the user info became available.
+              (this.state.user) ?
+                <Route exact path="/a/decode/:encoded" render={(props) => <Decoder {...props} {...params} />} />
+                : "" 
+            }
+          </Router>
+        </MuiThemeProvider>
+      </IntlProvider>
     );
   }
 }

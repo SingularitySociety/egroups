@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Channels from './Channels';
 import { Typography } from '@material-ui/core';
+import {FormattedMessage} from 'react-intl';
 
 const styles = theme => ({
   welcome: {
@@ -17,7 +18,7 @@ class Home extends React.Component {
       return (
         <div>
           <Typography component="h2" variant="h6" gutterBottom>
-            Channels
+            <FormattedMessage id="channels" />
           </Typography>
           <Channels {...context}/>
         </div>
