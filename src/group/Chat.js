@@ -19,7 +19,6 @@ class Chat extends React.Component {
     const ref = db.doc(`groups/${group.groupId}/channels/${channelId}`);
     const channel = (await ref.get()).data();
     this.setState({channel});
-    console.log(channel);
     this.refMessages = ref.collection("messages");
     this.detacher = this.refMessages.orderBy("created").onSnapshot((snapshot)=>{
       const messages=[];
@@ -29,13 +28,11 @@ class Chat extends React.Component {
         messages.push(message);
       })
       this.setState({messages});
-      console.log(messages);
 
       const {user, db} = this.props; // DO NOT MOVE to TOP 
       if (user) {
         const channels = {};
         channels[channelId] = { l:firebase.firestore.FieldValue.serverTimestamp() };
-        console.log(`groups/${group.groupId}/members/${user.uid}/private/history`);
         db.doc(`groups/${group.groupId}/members/${user.uid}/private/history`).set({
           channels
         }, {merge:true})

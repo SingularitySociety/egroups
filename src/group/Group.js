@@ -49,6 +49,9 @@ class GroupHome extends React.Component {
       window.location.pathname = "/";
     }*/
   }
+  componentWillUnmount() {
+    this.detacher && this.detacher();    
+  }
 
   memberDidUpdate = async () => {
     const { user, db } = this.props;
@@ -60,8 +63,14 @@ class GroupHome extends React.Component {
       const privilege = (await db.doc(`groups/${group.groupId}/privileges/${user.uid}`).get()).data();
       member.privilege = (privilege && privilege.value) || 1;
       await refMember.set({lastAccessed:firebase.firestore.FieldValue.serverTimestamp()}, {merge:true})
+      if (!this.detatcher) {
+        this.detacher = db.doc(`groups/${group.groupId}/members/${user.uid}/private/history`).onSnapshot((doc)=>{
+          const history = doc.data();
+          console.log("history=", history);
+          this.setState({history});
+        });
+      }
     }
-    console.log("member:", member);
     this.setState({member:member})
   }
   userDidMount = () => {
