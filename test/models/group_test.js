@@ -18,12 +18,20 @@ const db = authedApp({ uid: "alice" });
 
 class Dinotrux {
   // instance is document
-  constructor(data = {}, keys = null, exists = false) {
-    this.data = data;
-    this.keys = keys;
+  constructor(data = {}, keys = [], exists = false) {
+    this.data = data || {};
+    this.keys = keys || []; 
     this.exists = exists;
-  }
 
+    // validator
+    const paths = this.constructor.paths();
+    if (paths.length === this.keys.length) {
+      this.data.id = this.keys.pop();
+    } else if (paths.length - 1 !== this.keys.length) {
+      throw new Error("key mismatch");
+    }
+  }
+  
   // public instance methods
   id() {
     return this.data.id;
@@ -79,7 +87,7 @@ class Dinotrux {
   // class methods
 
   // public
-  static async get(keys=null) { 
+  static async get(keys=[]) { 
     const doc = await db.doc(this.getPath(keys)).get();
     const data = doc.data();
     data.id = doc.id;
@@ -98,7 +106,7 @@ class Dinotrux {
   }
   // method chains
   // need keys if collection is not on root.
-  static all(keys=null) { 
+  static all(keys=[]) { 
     this.stack = db.collection(this.getPath(keys));
     this.keys = keys;
     return this;
