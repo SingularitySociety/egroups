@@ -25,10 +25,7 @@ describe("Group app", () => {
     const alice_group = db.doc("groups/alice_group");
     const alice_group_priv = db.doc("groups/alice_group/privileges/alice_group");
 
-    const bob_db = test_helper.authedApp({ uid: "bob" });
-    const bob_alice_group = bob_db.doc("groups/alice_group");
-    const bob_alice_group_priv = bob_db.doc("groups/alice_group/privileges/bob");
-    
+    // anyone can create group
     await firebase.assertSucceeds(alice_group.set({
       created: FieldValue.serverTimestamp(),
       uid: "alice",
@@ -39,20 +36,31 @@ describe("Group app", () => {
       logo: "",
       banner: "",
     }));
+    // super user can create privileges
     await firebase.assertSucceeds(alice_group_priv.set({
       created: FieldValue.serverTimestamp(),
       value: 5,
     }));
 
+    // super user can get and update group
+    await firebase.assertSucceeds(alice_group.get());
+    await firebase.assertSucceeds(alice_group.update({"aa": "bb"}));
+  });
+
+  it("should not create privileges and update group by bob", async () => {
+    const bob_db = test_helper.authedApp({ uid: "bob" });
+    const bob_alice_group = bob_db.doc("groups/alice_group");
+    const bob_alice_group_priv = bob_db.doc("groups/alice_group/privileges/bob");
+
+    // not add privileges
     await firebase.assertFails(bob_alice_group_priv.set({
       created: FieldValue.serverTimestamp(),
       value: 5,
     }));
-    
-    await firebase.assertSucceeds(alice_group.get());
-    await firebase.assertSucceeds(alice_group.update({"aa": "bb"}));
 
+    // read ok
     await firebase.assertSucceeds(bob_alice_group.get());
+    // update ng
     await firebase.assertFails(bob_alice_group.update({"bb": "dd"}));
 
   });
