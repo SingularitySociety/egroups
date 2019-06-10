@@ -12,7 +12,6 @@ const styles = theme => ({
     padding: theme.spacing(1),
   },
   caption: {
-    textAlign: "center",
     width: "100%",
   },
 });
@@ -23,21 +22,20 @@ function ComplexGrid(props) {
     <React.Fragment>
       <Header user={user} />
       <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
-          <Grid>
-          <Typography style={{marginLeft:"10%", marginBottom:"5%", width:"80%"}}>
-            現時点では、テスト用に三つのコミュニティが存在します（コミュニティの追加はまだ出来ません）。
-            グリーンコミュニティとピンクコミュニティは、オープンで、誰でも参加が可能です。
-            グリーンコミュニティでは、メンバーならばチャットチャンネルを追加可能です。
-            ピンクコミュニティでは、管理者だけがチャットチャンネルを追加可能です。
-            ちなみに、チャットはまだ実装していません。
+        <Grid item style={{width:"calc(80vmin)"}}>
+          <Typography style={{marginBottom:"5%"}}>
+              現時点では、テスト用に三つのコミュニティが存在します（コミュニティの追加はまだ出来ません）。
+              グリーンコミュニティとピンクコミュニティは、オープンで、誰でも参加が可能です。
+              グリーンコミュニティでは、メンバーならばチャットチャンネルを追加可能です。
+              ピンクコミュニティでは、管理者だけがチャットチャンネルを追加可能です。
           </Typography>
-          </Grid>
           <Grid className={classes.caption}>
-          <Typography component="h2" variant="h5" gutterBottom>
-            Registered Communities. 
-          </Typography>
-          <GroupList user={user} db={db} />
+            <Typography component="h2" variant="h5" gutterBottom>
+              Registered Communities. 
+            </Typography>
+            <GroupList user={user} db={db} />
           </Grid>
+        </Grid>
       </Grid>
     </React.Fragment>
   );

@@ -45,6 +45,9 @@ privilege: access right (0x2000000:owner, 0x1000000:admin, 0x10000-0xff0000:ment
             news: number
         }
     },
+    /owners/{userId}
+        created: date
+
     /members/{userId}
         created: date (duplicated)
         privilege: number (duplicated)
@@ -75,7 +78,7 @@ privilege: access right (0x2000000:owner, 0x1000000:admin, 0x10000-0xff0000:ment
         }
 
     /privileges/{userId}
-        value: number (5:owner, 4:admin, 3:teacher, 2:subscriber, 1:member)
+        value: number (0x2000000:owner, 0x1000000:admin, 0x10000:teacher, 0x100:subscriber, 1:member)
         created: date
 
     /invitations/{invitationId}

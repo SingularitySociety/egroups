@@ -22,7 +22,7 @@ class GroupList extends React.Component {
     this.setState({groups:groups});
   }
   render() {
-    return <ul>
+    return <div>
         { 
             this.state.groups.map((group)=> {
                 return <div key={group.groupId}>
@@ -30,7 +30,7 @@ class GroupList extends React.Component {
                 </div>
             })
         }
-    </ul>
+    </div>
   }
 }
 
