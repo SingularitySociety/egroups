@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
-import CreateNew from './CreateNew';
+import CreateNew from '../common/CreateNew';
 import Channel from './Channel';
 
 const styles = theme => ({
