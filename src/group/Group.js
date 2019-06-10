@@ -78,7 +78,7 @@ class GroupHome extends React.Component {
   }
   userWillUnmount = () => {
     console.log("userWillUnmount");
-    this.setState({member:null})
+    this.setState({member:null, history:null})
   }
 
   render() {
