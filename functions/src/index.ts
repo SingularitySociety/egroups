@@ -11,13 +11,19 @@ export const helloWorld = functions.https.onRequest((request, response) => {
 });
 
 export const groupDidCreate = functions.firestore.document('groups/{groupId}')
-  .onCreate((snapshot, context)=>{
+  .onCreate(async (snapshot, context)=>{
     const { groupId } = context.params;
+    const db = admin.firestore();
     console.log(context);
     const newValue = snapshot.data(); // this is a hack because I can't access context.auth.uid for some reason
     const userId = newValue && newValue.owner;
-    return admin.firestore().doc("/groups/" + groupId + "/owners/" + userId).set({
+    await db.doc(`/groups/${groupId}/owners/${userId}`).set({
       created: new Date()
+    });
+    // The owner becomes a member automatically. memberDidCreate will automatically create the privilege for the owner. 
+    return db.doc(`/groups/${groupId}/members/${userId}`).set({
+      created: new Date(),
+      displayName: (newValue && newValue.displayName) || "admin",
     });
   });
 
@@ -27,6 +33,7 @@ export const memberDidCreate = functions.firestore.document('groups/{groupId}/me
     const db = admin.firestore();
     const owner = (await db.doc(`/groups/${groupId}/owners/${userId}`).get()).data();
     return db.doc("/groups/" + groupId + "/privileges/" + userId).set({
+      // We set the privilege of the owner here so that the owner can leave and join. 
       value: owner ? 0x2000000 : 1, // owner or member
       created: new Date(),
     });
