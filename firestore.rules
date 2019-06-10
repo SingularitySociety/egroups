@@ -35,6 +35,9 @@ service cloud.firestore {
       allow create: if request.auth.uid == userId && groupIsOpen(groupId);
       allow delete, update: if request.auth.uid == userId;
     }
+    match /groups/{groupId}/members/{userId}/private/{itemId} {
+      allow read, write: if request.auth.uid == userId;
+    }
 		match /groups/{groupId}/privileges/{userId} {
     	allow read;
     }

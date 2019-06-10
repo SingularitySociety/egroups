@@ -12,7 +12,6 @@ const styles = theme => ({
 class Message extends React.Component {
   render() {
     const { message, classes } = this.props;
-    console.log(message);
     return (
       <div>
         <Typography variant="caption" className={classes.userName} gutterBottom>

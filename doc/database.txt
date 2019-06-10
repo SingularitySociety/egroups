@@ -2,7 +2,7 @@ userId: Globally unique, assigned by Firebase
 groupId: Globally unique, auto generated 
 groupName: Globally unique, chosen by the owner
 entityId: Unique within a group across channelId, eventId and articleId
-privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:guest)
+privilege: access right (0x2000000:owner, 0x1000000:admin, 0x10000-0xff0000:mentor, 0x100-0xff00:subscriber, 0x01-0xff:member, 0:guest)
 
 /users/{userId}
     created: date
@@ -57,9 +57,22 @@ privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:g
             articles:boolean,
             events:boolean,
         }
-        /subscriptions/{channelId}
-            favorite: boolean
-            notification: boolean
+        /private/history
+            channels:{
+                {channelId}: { 
+                    f: boolean // favorite
+                    n: boolean // notificatino
+                    l: date // last accessed
+                }
+            },
+            articles: {
+                articleId: {
+                    f: boolean
+                    n: boolean
+                    l: date
+                }
+            }
+        }
 
     /privileges/{userId}
         value: number (5:owner, 4:admin, 3:teacher, 2:subscriber, 1:member)
@@ -86,6 +99,10 @@ privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:g
                 name: string ###
             }
             editted: boolean
+        /summary/{summaryId}
+            created: date
+            body: json (or json string)
+
         /subscribers/{userId} ### Auto Updated
             notification: boolen
 

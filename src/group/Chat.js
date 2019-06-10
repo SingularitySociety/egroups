@@ -30,6 +30,16 @@ class Chat extends React.Component {
       })
       this.setState({messages});
       console.log(messages);
+
+      const {user, db} = this.props; // DO NOT MOVE to TOP 
+      if (user) {
+        const channels = {};
+        channels[channelId] = { l:firebase.firestore.FieldValue.serverTimestamp() };
+        console.log(`groups/${group.groupId}/members/${user.uid}/private/history`);
+        db.doc(`groups/${group.groupId}/members/${user.uid}/private/history`).set({
+          channels
+        }, {merge:true})
+      }
     });
   }
 
