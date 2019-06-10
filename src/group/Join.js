@@ -27,7 +27,7 @@ class Join extends React.Component {
             // empty object
         }, {merge:true});
         this.props.memberDidUpdate();
-        window.location.pathname = "/" + group.groupName;
+        //window.location.pathname = "/" + group.groupName;
     } catch(e) {
         console.log(e);
         this.setState({error:"Unable to Join"})
@@ -48,7 +48,7 @@ class Join extends React.Component {
         </div>
     }
     if (member) {
-        console.log("#### MEMBER ####");
+        console.log("Become a member or already a member. Redireting to the group home.");
         return <Redirect to={"/" + group.groupName} />
     }
     if (!(group && group.privileges && group.privileges.membership && group.privileges.membership.open)) {
