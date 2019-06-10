@@ -83,7 +83,7 @@ class GroupHome extends React.Component {
 
   render() {
     const { classes, user, db, match:{params:{groupName}} } = this.props;
-    const { group, member } = this.state;
+    const { group, member, history } = this.state;
     if (groupName.length < 3) {
       return "";
     }
@@ -99,7 +99,8 @@ class GroupHome extends React.Component {
         secondary: colorMap[group.theme.primary],
       }
     });
-    const context = { user, group, db, member };
+    const context = { user, group, db, member, history };
+    console.log("history@@", history);
     
     return (
       <MuiThemeProvider theme={theme}>

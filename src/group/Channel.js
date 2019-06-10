@@ -6,14 +6,33 @@ import { Link } from 'react-router-dom';
 
 
 const styles = theme => ({
+  read: {
+    color: "#000000",
+    textDecoration: "none",
+  },
+  unread: {
+    color: "#000000",
+    fontWeight: "bold",
+    textDecoration: "none",
+  }
 });
 
 class Channel extends React.Component {
   render() {
-    const { channel, group } = this.props;
+    const { classes, channel, group, history } = this.props;
+    let className = classes.unread;
+    if (!channel.updated || !history) {
+      className = classes.read;
+    } else if (history.channels) {
+      const access = history.channels[channel.channelId];
+      if (access && access.l > channel.updated) {
+        className = classes.read;
+      }
+    }
+    console.log(className);
     return (
       <Grid container >
-        <Grid item component={Link} to={`/${group.groupName}/ch/${channel.channelId}`}>{ channel.title }</Grid>
+        <Grid item component={Link} to={`/${group.groupName}/ch/${channel.channelId}`} className={className}># { channel.title }</Grid>
       </Grid>
     )
   }

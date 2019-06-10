@@ -89,6 +89,7 @@ privilege: access right (0x2000000:owner, 0x1000000:admin, 0x10000-0xff0000:ment
         created: date
         title: string
         owner: userId
+        updated: date // done by cloud function
         read: number
         write: number
         /messages/{messageId}

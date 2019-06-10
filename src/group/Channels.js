@@ -39,7 +39,8 @@ class Channels extends React.Component {
     });
   }
   render() {
-    const { member, group } = this.props;
+    const { member, group, history } = this.props;
+    console.log("history!!!", history);
     const canCreateNew = !!member && member.privilege 
             >= ((group.privileges && group.privileges.channel && group.privileges.channel.create) || 2);
     return <div>
@@ -47,7 +48,7 @@ class Channels extends React.Component {
       <div>
         {
           this.state.list.map((channel)=>{
-            return <Channel key={channel.channelId} channel={channel} group={group} />
+            return <Channel key={channel.channelId} channel={channel} group={group} history={history} />
           })
         }
       </div>
