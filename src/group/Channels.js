@@ -5,6 +5,7 @@ import * as firebase from "firebase/app";
 import "firebase/firestore";
 import CreateNew from '../common/CreateNew';
 import Channel from './Channel';
+import { FormattedMessage } from 'react-intl';
 
 const styles = theme => ({
 });
@@ -43,7 +44,8 @@ class Channels extends React.Component {
     const canCreateNew = !!member && member.privilege 
             >= ((group.privileges && group.privileges.channel && group.privileges.channel.create) || 2);
     return <div>
-      { canCreateNew && <CreateNew createNew={ this.createChannel }/> }
+      { canCreateNew && <CreateNew createNew={ this.createChannel } 
+          action={<FormattedMessage id="create" />} label={<FormattedMessage id="channel.name" />}/> }
       <div>
         {
           this.state.list.map((channel)=>{

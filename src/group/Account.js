@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, Button } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
+import {FormattedMessage} from 'react-intl';
 
 const styles = theme => ({
     button: {
@@ -28,10 +29,10 @@ class Account extends React.Component {
         console.log(member);
         return <div>
           <Typography component="h2" variant="h6" gutterBottom>
-            Account
+            <FormattedMessage id="account" />
           </Typography>
           <Typography>Click the "LEAVE" button below to leave this community.</Typography>
-          <Button variant="contained" className={classes.button} onClick={this.handleLeave}>Leave</Button>
+          <Button variant="contained" className={classes.button} onClick={this.handleLeave}><FormattedMessage id="leave" /></Button>
         </div>
     }
 }

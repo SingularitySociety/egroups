@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { IconButton, Button, TextField } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import { FormattedMessage } from 'react-intl';
 
 const styles = theme => ({
     form: {
@@ -56,17 +57,21 @@ class CreateNew extends React.Component {
                       onKeyPress={this.catchReturn} />
                     <Button variant="contained" color="primary" className={classes.button} disabled={ value.length < 3 }
                       onClick={this.onSubmit} type="submit">{action || "Create"}</Button>
-                    <Button variant="contained" className={classes.button} onClick={()=>this.setCreatingFlag(false)}>Cancel</Button>
+                    <Button variant="contained" className={classes.button} onClick={()=>this.setCreatingFlag(false)}>
+                        <FormattedMessage id="cancel" />
+                    </Button>
                   </form>
                 );
             }
             return (
                 <form className={classes.form}>
                 <TextField onChange={this.onChange} value={value} autoFocus 
-                  variant="outlined" label="Channel Name" />
+                  variant="outlined" label={label || "Channel Name"} />
                 <Button variant="contained" color="primary" className={classes.button} disabled={ value.length < 3 }
-                  onClick={this.onSubmit} type="submit">Create</Button>
-                <Button variant="contained" className={classes.button} onClick={()=>this.setCreatingFlag(false)}>Cancel</Button>
+                  onClick={this.onSubmit} type="submit">{action || "Create"}</Button>
+                <Button variant="contained" className={classes.button} onClick={()=>this.setCreatingFlag(false)}>
+                    <FormattedMessage id="cancel" />
+                </Button>
               </form>
             );
         }

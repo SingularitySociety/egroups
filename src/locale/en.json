@@ -1,4 +1,11 @@
 {
     "channels": "Channels",
-    "app.intro": "To get started, edit <code>src/App.js</code> and save to reload."
+    "account":"Account",
+    "leave":"Leave",
+    "post":"Post",
+    "create":"Create",
+    "cancel":"Cancel",
+    "channel.name": "Channel Name",
+    "group.name": "Group Name",
+    "dummy":"dummy"
 }

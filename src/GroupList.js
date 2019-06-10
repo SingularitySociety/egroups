@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import CreateNew from './common/CreateNew';
+import { FormattedMessage } from 'react-intl';
 
 const styles = theme => ({
 });
@@ -39,7 +40,7 @@ class GroupList extends React.Component {
                 </div>
             })
         }
-        <CreateNew label="Group Name" createNew={this.createNew} />
+        <CreateNew label={<FormattedMessage id="group.name" />} createNew={this.createNew} action={<FormattedMessage id="create" />} />
     </div>
   }
 }

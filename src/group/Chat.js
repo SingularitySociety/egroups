@@ -5,6 +5,7 @@ import { Typography } from '@material-ui/core';
 import CreateNew from '../common/CreateNew';
 import AccessDenied from './AccessDenied';
 import Message from './Message';
+import { FormattedMessage } from 'react-intl';
 
 const styles = theme => ({
 });
@@ -73,7 +74,7 @@ class Chat extends React.Component {
         return <Message key={message.messageId} message={message} />
       }) }
       { canWrite && <CreateNew createNew={ this.postMessgae } 
-          action="Post" label="Message" multiline={true} /> }
+          action={<FormattedMessage id="post" />} label={<FormattedMessage id="chat.message" />} multiline={true} /> }
       </div>
     </div>)
   }

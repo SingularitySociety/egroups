@@ -1,4 +1,12 @@
 {
     "channels": "チャット・チャンネル",
-    "app.intro": "Zum Loslegen editiere <code>src/App.js</code>."
+    "account":"アカウント",
+    "leave":"退会",
+    "post":"投稿",
+    "create":"新規作成",
+    "cancel":"取り消し",
+    "channel.name": "チャンネル名",
+    "group.name": "グループ名",
+    "chat.message":"メッセージ",
+    "dummy":"dummy"
 }
