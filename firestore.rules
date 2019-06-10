@@ -26,30 +26,30 @@ service cloud.firestore {
         allow write: if request.auth.uid == userId;
       }
     }
-		match /groupNames/{groupName} {
-    	allow read;
+    match /groupNames/{groupName} {
+      allow read;
    }
-		match /groups/{groupId} {
-    	allow read, create;
+    match /groups/{groupId} {
+      allow read, create;
       allow update, delete: if isGroupAdmin(groupId, request.auth.uid);
     }
-		match /groups/{groupId}/members/{userId} {
-    	allow read;
+    match /groups/{groupId}/members/{userId} {
+      allow read;
       allow create: if request.auth.uid == userId && groupIsOpen(groupId);
       allow delete, update: if request.auth.uid == userId;
     }
     match /groups/{groupId}/members/{userId}/private/{itemId} {
       allow read, write: if request.auth.uid == userId;
     }
-		match /groups/{groupId}/privileges/{userId} {
-    	allow read, create:  if isGroupAdmin(groupId, request.auth.uid);
+    match /groups/{groupId}/privileges/{userId} {
+      allow read, create:  if isGroupAdmin(groupId, request.auth.uid);
     }
-		match /groups/{groupId}/channels/{channelId} {
-    	allow read;
+    match /groups/{groupId}/channels/{channelId} {
+      allow read;
       allow create: if request.auth.uid != null 
           && groupInfo(groupId).privileges.channel.create <= userPrivilege(groupId, request.auth.uid);
     }
-		match /groups/{groupId}/channels/{channelId}/messages/{messageId} {
+    match /groups/{groupId}/channels/{channelId}/messages/{messageId} {
       allow read: if request.auth.uid != null 
           && channelInfo(groupId, channelId).read <= userPrivilege(groupId, request.auth.uid);
       allow write: if request.auth.uid != null 
