@@ -24,7 +24,7 @@ service cloud.firestore {
     	allow read;
     }
 		match /groups/{groupId} {
-    	allow read;
+    	allow create, read;
     }
 		match /groups/{groupId}/members/{userId} {
     	allow read;
@@ -38,6 +38,9 @@ service cloud.firestore {
     	allow read;
       allow create: if request.auth.uid != null 
           && groupInfo(groupId).privileges.channel.create <= userPrivilege(groupId, request.auth.uid);
+    }
+    match /groups/{groupId}/test/{testId} {
+      allow read, create, update;
     }
     match /{document=**} {
       allow read, write: if false;
