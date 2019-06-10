@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
-import * as firebase from "firebase/app";
-import "firebase/firestore";
 import CreateNew from './CreateNew';
 import AccessDenied from './AccessDenied';
 import Message from './Message';
@@ -33,6 +31,7 @@ class Chat extends React.Component {
       if (user) {
         const channels = {};
         channels[channelId] = { l:new Date() }; // NOT firebase.firestore.FieldValue.serverTimestamp()
+        console.log("### Updated")
         db.doc(`groups/${group.groupId}/members/${user.uid}/private/history`).set({
           channels
         }, {merge:true})
@@ -47,7 +46,7 @@ class Chat extends React.Component {
   postMessgae = async (message) => {
     const { user, member } = this.props;
     await this.refMessages.add({
-      created: firebase.firestore.FieldValue.serverTimestamp(),
+      created: new Date(), // firebase.firestore.FieldValue.serverTimestamp(),
       message,
       userId: user.uid,
       userName: member.displayName
