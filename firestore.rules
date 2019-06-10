@@ -4,14 +4,17 @@ service cloud.firestore {
     function groupInfo(groupId) {
       return get(/databases/$(database)/documents/groups/$(groupId)).data;
     }
-    function groupIsOpen(groupId) {
-      return groupInfo(groupId).privileges.membership.open == true;
+    function channelInfo(groupId, channelId) {
+      return get(/databases/$(database)/documents/groups/$(groupId)/channels/$(channelId)).data;
     }
     function userPrivilege(groupId, userId) {
       return get(/databases/$(database)/documents/groups/$(groupId)/privileges/$(userId)).data.value;
     }
     function isGroupAdmin(groupId, userId) {
       return userPrivilege(groupId, userId) >= 4 || groupInfo(groupId).uid == userId;
+    }
+    function groupIsOpen(groupId) {
+      return groupInfo(groupId).privileges.membership.open == true;
     }
     match /users/{userId} {
       allow read, create, update, delete: if request.auth.uid == userId;
@@ -35,6 +38,9 @@ service cloud.firestore {
       allow create: if request.auth.uid == userId && groupIsOpen(groupId);
       allow delete, update: if request.auth.uid == userId;
     }
+    match /groups/{groupId}/members/{userId}/private/{itemId} {
+      allow read, write: if request.auth.uid == userId;
+    }
 		match /groups/{groupId}/privileges/{userId} {
     	allow read, create:  if isGroupAdmin(groupId, request.auth.uid);
     }
@@ -42,6 +48,12 @@ service cloud.firestore {
     	allow read;
       allow create: if request.auth.uid != null 
           && groupInfo(groupId).privileges.channel.create <= userPrivilege(groupId, request.auth.uid);
+    }
+		match /groups/{groupId}/channels/{channelId}/messages/{messageId} {
+      allow read: if request.auth.uid != null 
+          && channelInfo(groupId, channelId).read <= userPrivilege(groupId, request.auth.uid);
+      allow write: if request.auth.uid != null 
+          && channelInfo(groupId, channelId).write <= userPrivilege(groupId, request.auth.uid);
     }
     match /{document=**} {
       allow read, write: if false;

@@ -13,7 +13,7 @@ const styles = theme => ({
 class Account extends React.Component {
     handleLeave = async () => {
         const { db, user, group } = this.props;
-        const refMember = db.doc("groups/" + group.groupId + "/members/" + user.uid);
+        const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
         await refMember.delete();
         this.props.memberDidUpdate();
         window.location.pathname = "/" + group.groupName;

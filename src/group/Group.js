@@ -14,6 +14,8 @@ import Join from './Join';
 import Account from './Account';
 import Processing from '../Processing';
 import Chat from './Chat';
+import * as firebase from "firebase/app";
+import "firebase/firestore";
 
 const colorMap = { blue, pink, red, green};
 
@@ -47,17 +49,28 @@ class GroupHome extends React.Component {
       window.location.pathname = "/";
     }*/
   }
+  componentWillUnmount() {
+    this.detacher && this.detacher();    
+  }
 
   memberDidUpdate = async () => {
     const { user, db } = this.props;
     console.log("memberDidUpdate", user && user.uid);
     const { group } = this.state;
-    const member = (await this.refGroup.collection("members").doc(user.uid).get()).data();
+    const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
+    const member = (await refMember.get()).data();
     if (member) {
       const privilege = (await db.doc(`groups/${group.groupId}/privileges/${user.uid}`).get()).data();
       member.privilege = (privilege && privilege.value) || 1;
+      await refMember.set({lastAccessed:firebase.firestore.FieldValue.serverTimestamp()}, {merge:true})
+      if (!this.detatcher) {
+        this.detacher = db.doc(`groups/${group.groupId}/members/${user.uid}/private/history`).onSnapshot((doc)=>{
+          const history = doc.data();
+          console.log("history=", history);
+          this.setState({history});
+        });
+      }
     }
-    console.log("member:", member);
     this.setState({member:member})
   }
   userDidMount = () => {
@@ -69,8 +82,11 @@ class GroupHome extends React.Component {
   }
 
   render() {
-    const { classes, user, db } = this.props;
+    const { classes, user, db, match:{params:{groupName}} } = this.props;
     const { group, member } = this.state;
+    if (groupName.length < 3) {
+      return "";
+    }
     if (!group) {
       return <Processing />;
     }
@@ -84,14 +100,11 @@ class GroupHome extends React.Component {
       }
     });
     const context = { user, group, db, member };
-    const cmd = { cmd:"redirect", path:window.location.pathname };
-    const str = JSON.stringify(cmd);
-    const loginUrl = "/a/login/cmd/"+encodeURIComponent(str);
     
     return (
       <MuiThemeProvider theme={theme}>
         { user && <User {...context} userDidMount={this.userDidMount} userWillUnmount={this.userWillUnmount}/> }
-        <Header login={loginUrl} {...context} />
+        <Header {...context} />
         <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
             <Grid item className={classes.main}>
               <Route exact path={`/${group.groupName}`} render={(props) => <Home {...props} {...context} />} />

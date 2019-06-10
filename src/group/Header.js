@@ -51,7 +51,9 @@ class MyAppBar extends React.Component {
   };
 
 render() {
-    const { classes, user, login, group, member } = this.props;
+    const { classes, user, group, member } = this.props;
+    const cmd = { cmd:"redirect", path:window.location.pathname };
+    const loginUrl = "/a/login/cmd/"+encodeURIComponent(JSON.stringify(cmd));
 
     return (
       <div className={classes.root}>
@@ -71,7 +73,7 @@ render() {
             {
                 (user) ?
                 <Button color="inherit" onClick={this.logout}>Logout</Button>
-                : <Button color="inherit" to={login || "/a/login"} component={Link}>Login</Button>
+                : <Button color="inherit" to={loginUrl} component={Link}>Login</Button>
             }
           </Toolbar>
         </AppBar>

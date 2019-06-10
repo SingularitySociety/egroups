@@ -7,6 +7,10 @@ import AddIcon from '@material-ui/icons/Add';
 const styles = theme => ({
     button: {
         margin: theme.spacing(1)
+    },
+    multiline: {
+        width: "100%",
+        marginTop: theme.spacing(1),
     }
 });
 
@@ -27,11 +31,32 @@ class CreateNew extends React.Component {
         this.setCreatingFlag(false);
         this.props.createNew(this.state.value);
     }
+    catchReturn = (e) => {
+        if (e.key==='Enter' && !e.shiftKey) {
+            e.preventDefault();
+            if (this.state.value.length > 0) {
+                this.onSubmit(e);
+            }
+        }
+    }
     
     render() {
-        const { classes } = this.props;
+        const { classes, multiline, label, action } = this.props;
         const { value, creating } = this.state;
         if (creating) {
+            if (multiline) {
+                return (
+                    <form>
+                    <TextField onChange={this.onChange} value={value} autoFocus 
+                      variant="outlined" label={label || "Channel Name"} 
+                      multiline={true} rows={2} rowsMax={6} className={classes.multiline}
+                      onKeyPress={this.catchReturn} />
+                    <Button variant="contained" color="primary" className={classes.button} disabled={ value.length < 3 }
+                      onClick={this.onSubmit} type="submit">{action || "Create"}</Button>
+                    <Button variant="contained" className={classes.button} onClick={()=>this.setCreatingFlag(false)}>Cancel</Button>
+                  </form>
+                );
+            }
             return (
                 <form>
                 <TextField onChange={this.onChange} value={value} autoFocus 

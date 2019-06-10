@@ -2,7 +2,7 @@ userId: Globally unique, assigned by Firebase
 groupId: Globally unique, auto generated 
 groupName: Globally unique, chosen by the owner
 entityId: Unique within a group across channelId, eventId and articleId
-privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:guest)
+privilege: access right (0x2000000:owner, 0x1000000:admin, 0x10000-0xff0000:mentor, 0x100-0xff00:subscriber, 0x01-0xff:member, 0:guest)
 
 /users/{userId}
     created: date
@@ -28,13 +28,15 @@ privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:g
             open: boolean
         }
         invitation: {
-            privilege: number
+            create: number
         }
         channel: {
-            privilege: number
+            create: number,
+            read: number, // default
+            write: number, // default
         }
         event: {
-            privilege: number
+            create: number
         }
         article: {
             page: number
@@ -55,9 +57,22 @@ privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:g
             articles:boolean,
             events:boolean,
         }
-        /subscriptions/{channelId}
-            favorite: boolean
-            notification: boolean
+        /private/history
+            channels:{
+                {channelId}: { 
+                    f: boolean // favorite
+                    n: boolean // notificatino
+                    l: date // last accessed
+                }
+            },
+            articles: {
+                articleId: {
+                    f: boolean
+                    n: boolean
+                    l: date
+                }
+            }
+        }
 
     /privileges/{userId}
         value: number (5:owner, 4:admin, 3:teacher, 2:subscriber, 1:member)
@@ -74,7 +89,8 @@ privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:g
         created: date
         title: string
         owner: userId
-        privilege: number
+        read: number
+        write: number
         /messages/{messageId}
             created: date
             message: string
@@ -83,6 +99,10 @@ privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:g
                 name: string ###
             }
             editted: boolean
+        /summary/{summaryId}
+            created: date
+            body: json (or json string)
+
         /subscribers/{userId} ### Auto Updated
             notification: boolen
 
@@ -91,7 +111,8 @@ privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:g
         description: string
         date: date
         onwer: userId
-        privilege: number
+        read: number
+        write: number
         address: string
         url: string
         capacity: number
@@ -105,8 +126,9 @@ privilege: access right (5:owner, 4:admin, 3:mentor, 2:subscriber, 1:member, 0:g
         title: string
         owner: userId
         type: string # "news", "blog", "announcement", "page"
-        privilege: number
-        comment: number
+        read: number 
+        write: number // edit
+        comments: number
         sections: [sectionId, ...]
         comments: [sectionId, ...]
         /authors/{userId}
