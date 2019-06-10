@@ -33,6 +33,15 @@ export const setRule = async() => {
   await firebase.loadFirestoreRules({ projectId, rules });
 }
 
+beforeEach(async () => {
+  // Clear the database between tests
+  await clearData();
+});
+
+before(async () => {
+  await setRule();
+});
+
 after(async () => {
   await Promise.all(firebase.apps().map(app => app.delete()));
   console.log(`View rule coverage information at ${coverageUrl}\n`);

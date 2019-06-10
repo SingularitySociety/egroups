@@ -2,21 +2,6 @@ import * as test_helper from "./test_helper";
 
 import * as firebase from "@firebase/testing";
 
-/*
- * ============
- *  Test Cases
- * ============
- */
-beforeEach(async () => {
-  // Clear the database between tests
-  await test_helper.clearData();
-});
-
-before(async () => {
-  await test_helper.setRule();
-});
-
-
 describe("My app", () => {
   it("require users to log in before creating and reading a profile", async () => {
     const db = test_helper.authedApp(null);
