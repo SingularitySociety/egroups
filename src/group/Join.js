@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, Button } from '@material-ui/core';
-import * as firebase from "firebase/app";
-import "firebase/firestore";
+import { Redirect } from 'react-router-dom';
 
 const styles = theme => ({
     login: {
@@ -21,7 +20,7 @@ class Join extends React.Component {
     const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
     try {
         await refMember.set({ 
-            created: firebase.firestore.FieldValue.serverTimestamp(),
+            created: new Date(), // firebase.firestore.FieldValue.serverTimestamp(),
             displayName: user.displayName
         }, {merge:true});
         await refMember.collection("private").doc("history").set({
@@ -35,7 +34,7 @@ class Join extends React.Component {
     }
   }
   render() {
-    const { user, classes, group } = this.props;
+    const { user, classes, group, member } = this.props;
     const { error } = this.state;
     const title = <Typography component="h2" variant="h6" gutterBottom>
                     Community Membership
@@ -47,6 +46,10 @@ class Join extends React.Component {
                 In order to join {group.title}, please create your account by choosing Login first.
             </Typography>
         </div>
+    }
+    if (member) {
+        console.log("#### MEMBER ####");
+        return <Redirect to={"/" + group.groupName} />
     }
     if (!(group && group.privileges && group.privileges.membership && group.privileges.membership.open)) {
         return <div>
