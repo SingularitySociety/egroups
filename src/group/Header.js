@@ -5,12 +5,14 @@ import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem } from 
 import { Drawer, List, Divider, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import SettingsIcon from '@material-ui/icons/Settings';
+import ExitIcon from '@material-ui/icons/ExitToApp';
 import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
 import { Link } from 'react-router-dom';
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import { FormattedMessage } from 'react-intl';
+import Privilege from './Privileges';
 
 const styles = {
   root: {
@@ -76,14 +78,17 @@ render() {
         </AppBar>
         <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={this.closeMe}>
           <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/account`}><FormattedMessage id="account" /></MenuItem>
-          <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/settings`}><FormattedMessage id="settings" /></MenuItem>
+          {
+            (member && member.privilege > Privilege.admin) && 
+             <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/settings`}><FormattedMessage id="settings" /></MenuItem>
+          }
           <Divider />
           <MenuItem onClick={this.logout}><FormattedMessage id="logout" /></MenuItem>
         </Menu>
         <Drawer open={this.state.drawer} onClose={this.handleClose}>
           <List>
             <ListItem button onClick={this.handleClose} to={"/"} component={Link}>
-              <ListItemIcon><HomeIcon /></ListItemIcon>
+              <ListItemIcon><ExitIcon /></ListItemIcon>
               <ListItemText primary="Exit" />
             </ListItem>
             <ListItem button onClick={this.handleClose} to={"/"+group.groupName} component={Link}>
