@@ -35,16 +35,21 @@ class NewGroup extends React.Component {
     e.preventDefault();
     console.log("onSubmit");
     const { db, match:{params:{groupId}} } = this.props;
-    const { path } = this.state;
+    const { path, title } = this.state;
     const refName = db.doc(`groupNames/${path}`);
     const refGroup = db.doc(`groups/${groupId}`);
     db.runTransaction(async (tr)=>{
       const doc = await tr.get(refName);
       if (doc.exits) {
-        throw "This path is already taken";
+        throw new Error("This path is already taken");
       }
       tr.set(refName, { groupId:groupId });
-      tr.set(refGroup, { groupName:path }, {merge:true});
+      tr.set(refGroup, { groupName:path, title }, {merge:true});
+    }).then(() => {
+      this.setState({redirect:`/${path}`});
+    }).catch((e) => {
+      // Handle Error
+      console.log(e);
     });
   }
   onCancel = async (e) => {
