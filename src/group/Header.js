@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import { FormattedMessage } from 'react-intl';
-import Privilege from './Privileges';
+import { Privileges } from './Privileges';
 
 const styles = {
   root: {
@@ -81,7 +81,7 @@ render() {
         <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={this.closeMe}>
           <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/account`}><FormattedMessage id="account" /></MenuItem>
           {
-            (member && member.privilege > Privilege.admin) && 
+            (member && member.privilege > Privileges.admin) && 
              <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/settings`}><FormattedMessage id="settings" /></MenuItem>
           }
           <Divider />

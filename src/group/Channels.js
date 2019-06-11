@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ChannelList from './ChannelList';
 import { Typography } from '@material-ui/core';
-import {FormattedMessage} from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 const styles = theme => ({
   welcome: {

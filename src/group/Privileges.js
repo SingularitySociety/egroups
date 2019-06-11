@@ -1,6 +1,7 @@
 import React from 'react';
+import { injectIntl } from 'react-intl';
 
-const Privileges = {
+export const Privileges = {
     guest: 0,
     member: 0x01,
     subscriber: 0x100,
@@ -9,13 +10,14 @@ const Privileges = {
     owner: 0x2000000
 };
 
-export const PrivilegeOptions = ()=>{
+const PrivilegeOptions = (props)=>{
+    const { messages } = props.intl;
     return (<React.Fragment>
-    <option key="member" value={Privileges.member}>Member</option>,
-    <option key="subscriber" value={Privileges.subscriber}>Subscriber</option>,
-    <option key="mentor" value={Privileges.mentor}>Mentor</option>,
-    <option key="admin" value={Privileges.admin}>Admin</option>
+    <option key="member" value={Privileges.member}>{messages["member"]}</option>,
+    <option key="subscriber" value={Privileges.subscriber}>{messages["subscriber"]}</option>,
+    <option key="mentor" value={Privileges.mentor}>{messages["mentor"]}</option>,
+    <option key="admin" value={Privileges.admin}>{messages["admin"]}</option>
     </React.Fragment>);
 } 
 
-export default Privileges;
+export default injectIntl(PrivilegeOptions);
