@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Channels from './Channels';
+import ChannelList from './ChannelList';
 import { Typography } from '@material-ui/core';
 import {FormattedMessage} from 'react-intl';
 
@@ -20,7 +20,7 @@ class Home extends React.Component {
           <Typography component="h2" variant="h6" gutterBottom>
             <FormattedMessage id="channels" />
           </Typography>
-          <Channels {...context}/>
+          <ChannelList {...context}/>
         </div>
       )
   }

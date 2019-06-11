@@ -11,7 +11,7 @@ import Privileges from './Privileges';
 const styles = theme => ({
 });
 
-class Channels extends React.Component {
+class ChannelList extends React.Component {
   state = { list:[] }
   componentDidMount() {
     const { db, group } = this.props;
@@ -58,8 +58,8 @@ class Channels extends React.Component {
   }
 }
 
-Channels.propTypes = {
+ChannelList.propTypes = {
   classes: PropTypes.object.isRequired,
 };
   
-export default withStyles(styles)(Channels);
+export default withStyles(styles)(ChannelList);
