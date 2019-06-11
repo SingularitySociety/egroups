@@ -8,6 +8,9 @@ import PrivilegeOptions from './Privileges';
 import { Privileges } from './Privileges';
 
 const styles = theme => ({
+  main: {
+    marginLeft: theme.spacing(1),
+  },
   formControl: {
     width:theme.spacing(40),
   }
@@ -51,13 +54,14 @@ class Settings extends React.Component {
     }
   };    
   render() {
-      const { classes } = this.props;
-      const { open, channelCreate } = this.state;
-      return (
-        <div>
-          <Typography component="h2" variant="h5" gutterBottom>
-            <FormattedMessage id="settings" />
-          </Typography>
+    const { classes } = this.props;
+    const { open, channelCreate } = this.state;
+    return (
+      <div>
+        <Typography component="h2" variant="h5" gutterBottom>
+          <FormattedMessage id="settings" />
+        </Typography>
+        <div className={classes.main}>
           <FormGroup row>
             <FormControlLabel
               control={
@@ -68,20 +72,17 @@ class Settings extends React.Component {
           </FormGroup>
           <FormControl className={classes.formControl}>
             <InputLabel htmlFor="age-native-simple"><FormattedMessage id="settings.channel.create" /></InputLabel>
-            <Select
-              native
-              value={channelCreate}
-              onChange={this.handleChange('channelCreate')}
+            <Select　native　value={channelCreate}　onChange={this.handleChange('channelCreate')}
               inputProps={{
-                name: 'channelCreate',
-                id: 'age-native-simple',
+                name: 'channelCreate', id: 'age-native-simple',
               }}
             >
               <PrivilegeOptions />
             </Select>
           </FormControl>
         </div>
-      )
+      </div>
+    )
   }
 }
 
