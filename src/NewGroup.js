@@ -50,8 +50,8 @@ class NewGroup extends React.Component {
         title,
         privileges: {
           channel: { read:Privileges.member, write:Privileges.member, create:Privileges.member },
-          article: { read:Privileges.member, write:Privileges.member, comment:Privileges.member },
-          event: { read:Privileges.member, write:Privileges.member, attend:Privileges.member },
+          article: { read:Privileges.member, create:Privileges.member, comment:Privileges.member },
+          event: { read:Privileges.member, create:Privileges.member, attend:Privileges.member },
           membership: { open:false },
         }
        }, {merge:true});
