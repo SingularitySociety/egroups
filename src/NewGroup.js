@@ -23,7 +23,7 @@ const styles = theme => ({
 });
 
 class NewGroup extends React.Component {
-  state = { title:"", path:"", invalid:true };
+  state = { title:"", path:"", invalid:true, conflict:false };
 
   async componentDidMount() {
     console.log(window.location);
@@ -78,7 +78,7 @@ class NewGroup extends React.Component {
       const path = event.target.value;
       let invalid = false;
       invalid = invalid || (path.length < 6);
-      this.setState({invalid});
+      this.setState({invalid, conflict:false});
       if (invalid) {
         return; // no need to check the conflict
       }
@@ -88,14 +88,14 @@ class NewGroup extends React.Component {
         return;
       }
       if (doc.exists) {
-        this.setState({invalid:true});
+        this.setState({invalid:true, conflict:true});
       }
     }
   };
 
   render() {
     const { classes, user } = this.props;
-    const { redirect, title, path, invalid } = this.state;
+    const { redirect, title, path, invalid, conflict } = this.state;
     if (redirect) {
       return <Redirect to={ redirect } />
     }
@@ -111,7 +111,7 @@ class NewGroup extends React.Component {
               <TextField label={<FormattedMessage id="group.name" />} value={title} 
                   onChange={this.handleChange('title')} className={classes.textField} margin="normal" />
               <br/>
-              <TextField label={<FormattedMessage id="group.path" />} value={path} autoFocus={true} error={ invalid }
+              <TextField label={<FormattedMessage id={conflict ? "path.conflict" : "group.path"} />} value={path} autoFocus={true} error={ invalid }
                   onChange={this.handleChange('path')} className={classes.textField} margin="normal" />
               <br/>
               <div>Group URL: {`https:/${window.location.host}/${path || "..."}`}</div>
