@@ -10,10 +10,16 @@ service cloud.firestore {
     function userPrivilege(groupId, userId) {
       return get(/databases/$(database)/documents/groups/$(groupId)/privileges/$(userId)).data.value;
     }
-
-    function groupIsOpen(groupId) {
+    function isGroupOpen(groupId) {
       return groupInfo(groupId).privileges.membership.open == true;
     }
+    function isUserAdmin(groupId, userId) {
+      return userPrivilege(groupId, userId) >= 16777216; // 0x1000000
+    }
+    function isUserOwner(groupId, userId) {
+      return exists(/databases/$(database)/documents/groups/$(groupId)/owners/$(userId));
+    }
+
     match /users/{userId} {
       allow read, create, update, delete: if request.auth.uid == userId;
       match /private/{anything=**} {
@@ -25,31 +31,47 @@ service cloud.firestore {
       }
     }
 		match /groupNames/{groupName} {
+      // NEVER allow the client to modify or delete. 
     	allow read;
       allow create: if request.auth.uid != null;
     }
 		match /groups/{groupId} {
     	allow read;
       allow create: if request.auth.uid != null;
-      allow update: if request.auth.uid != null && exists(/databases/$(database)/documents/groups/$(groupId)/owners/$(request.auth.uid)); // TEMP
-      allow delete: if request.auth.uid != null && exists(/databases/$(database)/documents/groups/$(groupId)/owners/$(request.auth.uid));
+      allow update: if request.auth.uid != null && isUserAdmin(groupId, request.auth.uid);
+      allow delete: if request.auth.uid != null && isUserOwner(groupId, request.auth.uid);
     }
 		match /groups/{groupId}/members/{userId} {
     	allow read;
-      allow create: if request.auth.uid == userId && groupIsOpen(groupId);
-      allow create: if request.auth.uid == userId && exists(/databases/$(database)/documents/groups/$(groupId)/owners/$(userId));
+      allow create: if request.auth.uid == userId && isGroupOpen(groupId);
+      allow create: if request.auth.uid == userId && isUserOwner(groupId, request.auth.uid);
       allow delete, update: if request.auth.uid == userId;
     }
     match /groups/{groupId}/members/{userId}/private/{itemId} {
       allow read, write: if request.auth.uid == userId;
     }
 		match /groups/{groupId}/privileges/{userId} {
+      // NEVER allow the client write anything here.   
     	allow read;
+    }
+		match /groups/{groupId}/owners/{userId} {
+      // NEVER allow the client write anything here.   
+      allow read, write: if false;
     }
 		match /groups/{groupId}/channels/{channelId} {
     	allow read;
       allow create: if request.auth.uid != null 
           && groupInfo(groupId).privileges.channel.create <= userPrivilege(groupId, request.auth.uid);
+    }
+		match /groups/{groupId}/articles/{articleId} {
+    	allow read;
+      allow create: if request.auth.uid != null 
+          && groupInfo(groupId).privileges.article.create <= userPrivilege(groupId, request.auth.uid);
+    }
+		match /groups/{groupId}/events/{eventId} {
+    	allow read;
+      allow create: if request.auth.uid != null 
+          && groupInfo(groupId).privileges.event.create <= userPrivilege(groupId, request.auth.uid);
     }
 		match /groups/{groupId}/channels/{channelId}/messages/{messageId} {
       allow read: if request.auth.uid != null 
