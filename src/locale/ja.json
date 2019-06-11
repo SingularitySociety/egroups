@@ -8,5 +8,6 @@
     "channel.name": "チャンネル名",
     "group.name": "グループ名",
     "chat.message":"メッセージ",
+    "new.group":"グループ新規作成",
     "dummy":"dummy"
 }

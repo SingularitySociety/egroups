@@ -1,0 +1,2 @@
+Search: algolia
+Payment: stripe

@@ -30,6 +30,7 @@ service cloud.firestore {
 		match /groups/{groupId} {
     	allow read;
       allow create: if request.auth.uid != null;
+      allow delete: if request.auth.uid != null && exists(/databases/$(database)/documents/groups/$(groupId)/owners/$(request.auth.uid));
     }
 		match /groups/{groupId}/members/{userId} {
     	allow read;
