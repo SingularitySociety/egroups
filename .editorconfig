@@ -4,3 +4,11 @@ root = true
 [*.js]
 indent_style = space
 indent_size = 2
+
+[*.ts]
+indent_style = space
+indent_size = 2
+
+[*.rules]
+indent_style = space
+indent_size = 2
