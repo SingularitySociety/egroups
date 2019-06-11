@@ -16,6 +16,7 @@ import en from 'react-intl/locale-data/en';
 import ja from 'react-intl/locale-data/ja';
 import message_en from './locale/en.json';
 import message_ja from './locale/ja.json';
+import NewGroup from './NewGroup';
 
 addLocaleData([...en, ...ja]);
 const messages = {
@@ -71,6 +72,7 @@ class App extends React.Component {
             <Route exact path="/" render={(props) => <Home {...props} {...params} />} />
             <Route path="/:groupName" render={(props) => <Group {...props} {...params} joinGroup={this.joinGroup} />} />
             <Route exact path="/a/about" render={(props) => <About {...props} {...params} />} />
+            <Route exact path="/a/new/:groupId" render={(props) => <NewGroup {...props} {...params} />} />
             <Route exact path="/a/login" render={(props) => <Login {...props} {...params} />} />
             <Route exact path="/a/login/cmd/:encoded" render={(props) => <Login {...props} {...params} />} />
             <Route exact path="/a/login/target/:target" render={(props) => <Login {...props} {...params} />} />

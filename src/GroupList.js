@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import CreateNew from './common/CreateNew';
 import { FormattedMessage } from 'react-intl';
+import { Redirect } from 'react-router-dom';
 
 const styles = theme => ({
 });
@@ -24,14 +25,20 @@ class GroupList extends React.Component {
     this.setState({groups:groups});
   }
 
-  createNew = (value) => {
+  createNew = async (value) => {
     console.log("createNew", value);
     const { db, user } = this.props;
-    db.collection("groups").add(
+    const doc = await db.collection("groups").add(
       { title:value, owner:user.uid, ownerName:user.displayName } // HACK: see groupDidCreate cloud function
     )
+    console.log(doc.id);
+    this.setState({redirect:`/a/new/${doc.id}`});
   }
   render() {
+    const {redirect} = this.state;
+    if (redirect) {
+      return <Redirect to={redirect} />
+    }
     return <div>
         { 
             this.state.groups.map((group)=> {
