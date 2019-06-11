@@ -8,6 +8,8 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import ExitIcon from '@material-ui/icons/ExitToApp';
 import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
+import ChatIcon from '@material-ui/icons/Chat';
+import SubjectIcon from '@material-ui/icons/Subject';
 import { Link } from 'react-router-dom';
 import * as firebase from "firebase/app";
 import "firebase/auth";
@@ -96,6 +98,14 @@ render() {
               <ListItemText primary="Group Home" />
             </ListItem>
             <Divider />
+            <ListItem button onClick={this.handleClose} to={"/"+group.groupName+"/channels"} component={Link}>
+              <ListItemIcon><ChatIcon /></ListItemIcon>
+              <ListItemText primary={<FormattedMessage id="channels" />} />
+            </ListItem>
+            <ListItem button onClick={this.handleClose} to={"/"+group.groupName+"/blog"} component={Link}>
+              <ListItemIcon><SubjectIcon /></ListItemIcon>
+              <ListItemText primary={<FormattedMessage id="blog" />} />
+            </ListItem>
             <ListItem button onClick={this.handleClose} to={"/"+group.groupName+"/about"} component={Link}>
               <ListItemIcon><InfoIcon /></ListItemIcon>
               <ListItemText primary="About" />

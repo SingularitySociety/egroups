@@ -1,14 +1,20 @@
 {
     "channels": "Channels",
     "account":"Account",
+    "settings":"Settings",
+    "logout":"Logout",
+    "login":"Login",
+    "join":"Join",
     "leave":"Leave",
     "post":"Post",
     "create":"Create",
     "cancel":"Cancel",
+    "blog":"Blog",
     "channel.name": "Channel Name",
     "group.name": "Group Name",
     "chat.message":"Message",
     "new.group":"New Group Settings",
     "group.path":"Group Path (>6 numeric & alpha)",
+    "path.conflict":"This path is already taken",
     "dummy":"dummy"
 }

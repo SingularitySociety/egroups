@@ -9,10 +9,9 @@ const styles = theme => ({
 
 class Articles extends React.Component {
     render() {
-        const { group } = this.props;
         return (
             <Typography component="h2" variant="h5" gutterBottom>
-              <FormattedMessage id="articles" />
+              <FormattedMessage id="blog" />
             </Typography>
           )
     }

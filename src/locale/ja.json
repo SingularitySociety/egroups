@@ -1,5 +1,5 @@
 {
-    "channels": "チャット・チャンネル",
+    "channels": "チャット",
     "account":"アカウント",
     "settings":"設定",
     "logout":"ログアウト",
@@ -9,6 +9,7 @@
     "post":"投稿する",
     "create":"新規作成",
     "cancel":"取り消し",
+    "blog":"ブログ",
     "channel.name": "チャンネル名",
     "group.name": "グループ名",
     "chat.message":"メッセージ",
