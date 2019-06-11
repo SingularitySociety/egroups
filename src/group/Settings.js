@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Typography, FormGroup, Switch, FormControlLabel } from '@material-ui/core';
 import { FormControl, InputLabel, Select } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
+import { PrivilegeOptions } from './Privileges';
 import Privileges from './Privileges';
 
 const styles = theme => ({
@@ -76,8 +77,7 @@ class Settings extends React.Component {
                 id: 'age-native-simple',
               }}
             >
-              <option value={Privileges.member}>Member</option>
-              <option value={Privileges.admin}>Admin</option>
+              { PrivilegeOptions }
             </Select>
           </FormControl>
         </div>
