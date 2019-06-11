@@ -7,5 +7,8 @@
     "cancel":"Cancel",
     "channel.name": "Channel Name",
     "group.name": "Group Name",
+    "chat.message":"Message",
+    "new.group":"New Group Settings",
+    "group.path":"Group Path (>6 numeric & alpha)",
     "dummy":"dummy"
 }

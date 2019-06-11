@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography, Grid, Button } from '@material-ui/core';
+import { Typography, Grid, Button, TextField } from '@material-ui/core';
 import Header from './Header';
 import { FormattedMessage } from 'react-intl';
 import { Redirect } from 'react-router-dom';
@@ -14,15 +14,38 @@ const styles = theme => ({
   },
   button: {
     margin: theme.spacing(1),
-  }
+  },
+  textField: {
+    marginRight: theme.spacing(1),
+    width: 200,
+  },
 });
 
 class NewGroup extends React.Component {
-  state = {};
-  onSubmit = (e) => {
+  state = { title:"", path:"" };
+
+  async componentDidMount() {
+    console.log(window.location);
+    const { db, match:{params:{groupId}} } = this.props;
+    const doc = (await db.doc(`groups/${groupId}`).get()).data();
+    this.setState({title:doc.title});
+  }
+
+  onSubmit = async (e) => {
     e.preventDefault();
     console.log("onSubmit");
-    alert("sorry. not yet implemented");
+    const { db, match:{params:{groupId}} } = this.props;
+    const { path } = this.state;
+    const refName = db.doc(`groupNames/${path}`);
+    const refGroup = db.doc(`groups/${groupId}`);
+    db.runTransaction(async (tr)=>{
+      const doc = await tr.get(refName);
+      if (doc.exits) {
+        throw "This path is already taken";
+      }
+      tr.set(refName, { groupId:groupId });
+      tr.set(refGroup, { groupName:path }, {merge:true});
+    });
   }
   onCancel = async (e) => {
     e.preventDefault();
@@ -31,10 +54,13 @@ class NewGroup extends React.Component {
     await db.doc(`groups/${groupId}`).delete();
     this.setState({redirect:"/"});
   }
+  handleChange = name => event => {
+    this.setState({ [name]: event.target.value });
+  };
 
   render() {
     const { classes, user } = this.props;
-    const { redirect } = this.state;
+    const { redirect, title, path } = this.state;
     if (redirect) {
       return <Redirect to={ redirect } />
     }
@@ -47,11 +73,20 @@ class NewGroup extends React.Component {
               <FormattedMessage id="new.group" />
             </Typography>
             <form className={classes.form}>
-              <Button variant="contained" color="primary" className={classes.button} disabled={ false }
-                onClick={this.onSubmit} type="submit"><FormattedMessage id="create" /></Button>
-              <Button variant="contained" className={classes.button} onClick={this.onCancel}>
-                  <FormattedMessage id="cancel" />
-              </Button>
+              <TextField label={<FormattedMessage id="group.name" />} value={title} 
+                  onChange={this.handleChange('title')} className={classes.textField} margin="normal" />
+              <br/>
+              <TextField label={<FormattedMessage id="group.path" />} value={path} autoFocus={true}
+                  onChange={this.handleChange('path')} className={classes.textField} margin="normal" />
+              <br/>
+              <div>Group URL: {`https:/${window.location.host}/${path || "..."}`}</div>
+              <div>
+                <Button variant="contained" color="primary" className={classes.button} disabled={ false }
+                  onClick={this.onSubmit} type="submit"><FormattedMessage id="create" /></Button>
+                <Button variant="contained" className={classes.button} onClick={this.onCancel}>
+                    <FormattedMessage id="cancel" />
+                </Button>
+              </div>
             </form>
           </Grid>
         </Grid>
