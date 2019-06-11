@@ -17,7 +17,7 @@ import Chat from './Chat';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 import Settings from './Settings';
-import Article from './Article';
+import Blog from './Blog';
 import Articles from './Articles';
 import Channels from './Channels';
 
@@ -121,7 +121,7 @@ class GroupHome extends React.Component {
               <Route exact path={`/${group.groupName}/channels`} render={(props) => <Channels {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/ch/:channelId`} render={(props) => <Chat {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/blog`} render={(props) => <Articles {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/bl/:articleId`} render={(props) => <Article {...props} {...context} />} />
+              <Route exact path={`/${group.groupName}/bl/:articleId`} render={(props) => <Blog {...props} {...context} />} />
             </Grid>
         </Grid>
       </MuiThemeProvider>
