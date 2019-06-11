@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
+import SectionEditor from './SectionEditor';
 
 const styles = theme => ({
 });
@@ -22,10 +23,13 @@ class Article extends React.Component {
       return "";
     }
     return (
+      <div>
         <Typography component="h2" variant="h5" gutterBottom>
           {article.title}
         </Typography>
-      )
+        <SectionEditor />
+      </div>
+    )
   }
 }
 
