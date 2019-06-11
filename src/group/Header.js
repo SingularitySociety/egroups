@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Typography, Button, IconButton } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem } from '@material-ui/core';
 import { Drawer, List, Divider, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountIcon from '@material-ui/icons/AccountCircle';
@@ -26,22 +26,30 @@ const styles = {
 
 class MyAppBar extends React.Component {
   state = {
-      drawer: false,
+    drawer: false,
+    anchorEl: null,
   };
+  openMe = e => {
+    this.setState({anchorEl:e.currentTarget})
+  }
+  closeMe = () => {
+    this.setState({anchorEl:null});
+  }
   handleMenu = event => {
     this.setState({drawer:true});
   };
-
   handleClose = () => {
     this.setState({drawer:false});
   };
   logout = event => {
+    this.closeMe();
     console.log("logout");
     firebase.auth().signOut();
   };
 
 render() {
     const { classes, user, group, member } = this.props;
+    const { anchorEl } = this.state;
     const cmd = { cmd:"redirect", path:window.location.pathname };
     const loginUrl = "/a/login/cmd/"+encodeURIComponent(JSON.stringify(cmd));
 
@@ -57,28 +65,30 @@ render() {
             </Typography>
             {
               member ?
-              <IconButton color="inherit" component={Link} to={"/" + group.groupName + "/account"}><AccountIcon /></IconButton>
+              <IconButton color="inherit" onClick={this.openMe}><AccountIcon /></IconButton>
               : <Button color="inherit" component={Link} to={"/" + group.groupName + "/join"}>Join</Button>
             }
             {
-                (user) ?
-                <Button color="inherit" onClick={this.logout}>Logout</Button>
-                : <Button color="inherit" to={loginUrl} component={Link}>Login</Button>
+                !user && <Button color="inherit" to={loginUrl} component={Link}>Login</Button>
             }
           </Toolbar>
         </AppBar>
+        <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={this.closeMe}>
+          <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/account`}>Account</MenuItem>
+          <MenuItem onClick={this.logout}>Logout</MenuItem>
+        </Menu>
         <Drawer open={this.state.drawer} onClose={this.handleClose}>
           <List>
-            <ListItem button to={"/"} component={Link}>
+            <ListItem button onClick={this.handleClose} to={"/"} component={Link}>
               <ListItemIcon><HomeIcon /></ListItemIcon>
               <ListItemText primary="Exit" />
             </ListItem>
-            <ListItem button to={"/"+group.groupName} component={Link}>
+            <ListItem button onClick={this.handleClose} to={"/"+group.groupName} component={Link}>
               <ListItemIcon><HomeIcon /></ListItemIcon>
               <ListItemText primary="Group Home" />
             </ListItem>
             <Divider />
-            <ListItem button to={"/"+group.groupName+"/about"} component={Link}>
+            <ListItem button onClick={this.handleClose} to={"/"+group.groupName+"/about"} component={Link}>
               <ListItemIcon><InfoIcon /></ListItemIcon>
               <ListItemText primary="About" />
             </ListItem>
