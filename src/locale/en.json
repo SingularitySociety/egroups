@@ -1,4 +1,10 @@
 {
+    "member":"Member",
+    "subscriber":"Subscriber",
+    "mentor":"Mentor",
+    "admin":"Admin",
+    "owner":"Owner",
+    
     "channels": "Channels",
     "account":"Account",
     "settings":"Settings",
@@ -18,5 +24,7 @@
     "path.conflict":"This path is already taken",
 
     "settings.open":"Open (Anybody can Join)",
+    "settings.channel.create":"Can create a new chat channel",
+
     "dummy":"dummy"
 }

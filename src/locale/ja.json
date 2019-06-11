@@ -1,4 +1,10 @@
 {
+    "member":"会員",
+    "subscriber":"有料会員",
+    "mentor":"アドバイザ",
+    "admin":"管理者",
+    "owner":"管理責任者",
+
     "channels": "チャット",
     "account":"アカウント",
     "settings":"設定",
@@ -18,5 +24,6 @@
     "path.conflict":"既に使われています",
 
     "settings.open":"オープン (誰でも参加が可能）",
+    "settings.channel.create":"チャット・チャンネルを新規作成する権限",
     "dummy":"dummy"
 }
