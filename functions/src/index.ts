@@ -27,6 +27,14 @@ export const groupDidCreate = functions.firestore.document('groups/{groupId}')
     });
   });
 
+export const groupDidDelete = functions.firestore.document('groups/{groupId}')
+  .onDelete(async (snapshot, context)=>{
+    const value = snapshot.data();
+    if (value && value.groupName) {
+      await admin.firestore().doc("/groupNames/" + value.groupName).delete();
+    }
+  });
+
 export const memberDidCreate = functions.firestore.document('groups/{groupId}/members/{userId}')
   .onCreate(async (snapshot, context)=>{
     const { groupId, userId } = context.params;
