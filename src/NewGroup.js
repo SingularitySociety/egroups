@@ -23,7 +23,7 @@ const styles = theme => ({
 });
 
 class NewGroup extends React.Component {
-  state = { title:"", path:"" };
+  state = { title:"", path:"", invalid:true };
 
   async componentDidMount() {
     console.log(window.location);
@@ -71,13 +71,31 @@ class NewGroup extends React.Component {
     await db.doc(`groups/${groupId}`).delete();
     this.setState({redirect:"/"});
   }
-  handleChange = name => event => {
+  handleChange = name => async event => {
     this.setState({ [name]: event.target.value });
+    if (name==="path") {
+      const { db } = this.props;
+      const path = event.target.value;
+      let invalid = false;
+      invalid = invalid || (path.length < 6);
+      this.setState({invalid});
+      if (invalid) {
+        return; // no need to check the conflict
+      }
+      const doc = await db.doc(`groupNames/${path}`).get();
+      if (path !== this.state.path) {
+        // The user is typing too fast. Ignore
+        return;
+      }
+      if (doc.exists) {
+        this.setState({invalid:true});
+      }
+    }
   };
 
   render() {
     const { classes, user } = this.props;
-    const { redirect, title, path } = this.state;
+    const { redirect, title, path, invalid } = this.state;
     if (redirect) {
       return <Redirect to={ redirect } />
     }
@@ -93,12 +111,12 @@ class NewGroup extends React.Component {
               <TextField label={<FormattedMessage id="group.name" />} value={title} 
                   onChange={this.handleChange('title')} className={classes.textField} margin="normal" />
               <br/>
-              <TextField label={<FormattedMessage id="group.path" />} value={path} autoFocus={true}
+              <TextField label={<FormattedMessage id="group.path" />} value={path} autoFocus={true} error={ invalid }
                   onChange={this.handleChange('path')} className={classes.textField} margin="normal" />
               <br/>
               <div>Group URL: {`https:/${window.location.host}/${path || "..."}`}</div>
               <div>
-                <Button variant="contained" color="primary" className={classes.button} disabled={ false }
+                <Button variant="contained" color="primary" className={classes.button} disabled={ invalid }
                   onClick={this.onSubmit} type="submit"><FormattedMessage id="create" /></Button>
                 <Button variant="contained" className={classes.button} onClick={this.onCancel}>
                     <FormattedMessage id="cancel" />
