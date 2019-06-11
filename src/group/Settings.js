@@ -13,7 +13,6 @@ const styles = theme => ({
   },
   formControl: {
     width:theme.spacing(40),
-    marginRight:theme.spacing(40),
     marginBottom: theme.spacing(2),
   }
 });
@@ -86,12 +85,14 @@ class Settings extends React.Component {
               <PrivilegeOptions />
             </Select>
           </FormControl>
+          <br/>
           <FormControl className={classes.formControl}>
             <InputLabel><FormattedMessage id="settings.article.create" /></InputLabel>
             <Select　native　value={articleCreate}　onChange={this.handleChange('articleCreate')}>
               <PrivilegeOptions />
             </Select>
           </FormControl>
+          <br/>
           <FormControl className={classes.formControl}>
             <InputLabel><FormattedMessage id="settings.event.create" /></InputLabel>
             <Select　native　value={eventCreate}　onChange={this.handleChange('eventCreate')}>

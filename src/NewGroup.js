@@ -76,8 +76,8 @@ class NewGroup extends React.Component {
     if (name==="path") {
       const { db } = this.props;
       const path = event.target.value;
-      let invalid = false;
-      invalid = invalid || (path.length < 6);
+      const regex = /^\w+$/
+      const invalid = !(path.length >= 6 && regex.test(path));
       this.setState({invalid, conflict:false});
       if (invalid) {
         return; // no need to check the conflict
