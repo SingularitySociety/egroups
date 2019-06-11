@@ -4,12 +4,13 @@ import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem } from '@material-ui/core';
 import { Drawer, List, Divider, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import AccountIcon from '@material-ui/icons/AccountCircle';
+import SettingsIcon from '@material-ui/icons/Settings';
 import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
 import { Link } from 'react-router-dom';
 import * as firebase from "firebase/app";
 import "firebase/auth";
+import { FormattedMessage } from 'react-intl';
 
 const styles = {
   root: {
@@ -65,17 +66,19 @@ render() {
             </Typography>
             {
               member ?
-              <IconButton color="inherit" onClick={this.openMe}><AccountIcon /></IconButton>
-              : <Button color="inherit" component={Link} to={"/" + group.groupName + "/join"}>Join</Button>
+              <IconButton color="inherit" onClick={this.openMe}><SettingsIcon /></IconButton>
+              : <Button color="inherit" component={Link} to={"/" + group.groupName + "/join"}><FormattedMessage id="join" /></Button>
             }
             {
-                !user && <Button color="inherit" to={loginUrl} component={Link}>Login</Button>
+                !user && <Button color="inherit" to={loginUrl} component={Link}><FormattedMessage id="login" /></Button>
             }
           </Toolbar>
         </AppBar>
         <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={this.closeMe}>
-          <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/account`}>Account</MenuItem>
-          <MenuItem onClick={this.logout}>Logout</MenuItem>
+          <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/account`}><FormattedMessage id="account" /></MenuItem>
+          <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/settings`}><FormattedMessage id="settings" /></MenuItem>
+          <Divider />
+          <MenuItem onClick={this.logout}><FormattedMessage id="logout" /></MenuItem>
         </Menu>
         <Drawer open={this.state.drawer} onClose={this.handleClose}>
           <List>

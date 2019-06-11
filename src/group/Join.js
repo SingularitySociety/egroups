@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, Button } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 
 const styles = theme => ({
     login: {
@@ -65,7 +66,7 @@ class Join extends React.Component {
     return <div>
             {title}
             <Typography>This community is open to public. Feel free to join anytime.</Typography>
-            <Button variant="contained" onClick={this.handleJoin} className={classes.button}>Join</Button>
+            <Button variant="contained" onClick={this.handleJoin} className={classes.button}><FormattedMessage id="join" /></Button>
         </div>
   }
 }

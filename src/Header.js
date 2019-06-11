@@ -18,7 +18,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
-
+import { FormattedMessage } from 'react-intl';
 
 const styles = {
   root: {
@@ -64,8 +64,8 @@ render() {
             </Typography>
             {
                 (user) ?
-                <Button color="inherit" onClick={this.logout}>Logout</Button>
-                : <Button color="inherit" to={login || "/a/login"} component={Link}>Login</Button>
+                <Button color="inherit" onClick={this.logout}><FormattedMessage id="logout" /></Button>
+                : <Button color="inherit" to={login || "/a/login"} component={Link}><FormattedMessage id="login" /></Button>
             }
           </Toolbar>
         </AppBar>
