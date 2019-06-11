@@ -5,6 +5,7 @@ import { Typography, Grid, Button, TextField } from '@material-ui/core';
 import Header from './Header';
 import { FormattedMessage } from 'react-intl';
 import { Redirect } from 'react-router-dom';
+import Privileges from './group/Privileges';
 
 const styles = theme => ({
   root: {
@@ -44,7 +45,16 @@ class NewGroup extends React.Component {
         throw new Error("This path is already taken");
       }
       tr.set(refName, { groupId:groupId });
-      tr.set(refGroup, { groupName:path, title }, {merge:true});
+      tr.set(refGroup, { 
+        groupName:path, 
+        title,
+        privileges: {
+          channel: { read:Privileges.member, write:Privileges.member, create:Privileges.member },
+          article: { read:Privileges.member, write:Privileges.member, comment:Privileges.member },
+          event: { read:Privileges.member, write:Privileges.member, attend:Privileges.member },
+          membership: { open:false },
+        }
+       }, {merge:true});
     }).then(() => {
       this.setState({redirect:`/${path}`});
     }).catch((e) => {

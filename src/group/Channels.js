@@ -6,6 +6,7 @@ import "firebase/firestore";
 import CreateNew from '../common/CreateNew';
 import Channel from './Channel';
 import { FormattedMessage } from 'react-intl';
+import Privileges from './Privileges';
 
 const styles = theme => ({
 });
@@ -35,8 +36,8 @@ class Channels extends React.Component {
       title,
       created: firebase.firestore.FieldValue.serverTimestamp(),
       owner: user.uid,
-      read: group.privileges.channel.read || 1, // default is members only
-      write: group.privileges.channel.write || 1, // default is members only
+      read: group.privileges.channel.read || Privileges.member, 
+      write: group.privileges.channel.write || Privileges.member, 
     });
   }
   render() {
