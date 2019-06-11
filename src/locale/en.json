@@ -16,5 +16,7 @@
     "new.group":"New Group Settings",
     "group.path":"Group Path (>6 numeric & alpha)",
     "path.conflict":"This path is already taken",
+
+    "settings.open":"Open (Anybody can Join)",
     "dummy":"dummy"
 }

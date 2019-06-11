@@ -16,5 +16,7 @@
     "new.group":"グループ新規作成",
     "group.path":"パス (６文字以上の英数字)",
     "path.conflict":"既に使われています",
+
+    "settings.open":"オープン (誰でも参加が可能）",
     "dummy":"dummy"
 }
