@@ -56,7 +56,9 @@ class NewGroup extends React.Component {
         }
        }, {merge:true});
     }).then(() => {
-      this.setState({redirect:`/${path}`});
+      // BUGBUG: For some reason, redirect does not work (infinit spiral)
+      //  this.setState({redirect:`/${path}`});
+      window.location.pathname = `/${path}`;
     }).catch((e) => {
       // Handle Error
       console.log(e);
