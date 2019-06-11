@@ -13,6 +13,8 @@ const styles = theme => ({
   },
   formControl: {
     width:theme.spacing(40),
+    marginRight:theme.spacing(40),
+    marginBottom: theme.spacing(2),
   }
 });
 
@@ -23,6 +25,8 @@ class Settings extends React.Component {
     this.state = {
       open: group.privileges.membership.open || false,
       channelCreate: group.privileges.channel.create || Privileges.member,
+      articleCreate: group.privileges.article.create || Privileges.member,
+      eventCreate: group.privileges.event.create || Privileges.member,
     };
   }
   handleCheck = name => async event => {
@@ -48,6 +52,12 @@ class Settings extends React.Component {
       // BUGBUG: Why  do we need to use parseInt?
       await ref.set({privileges:{channel:{create:parseInt(event.target.value)}}}, {merge:true});
       break;
+    case "articleCreate":
+      await ref.set({privileges:{article:{create:parseInt(event.target.value)}}}, {merge:true});
+      break;
+    case "eventCreate":
+      await ref.set({privileges:{event:{create:parseInt(event.target.value)}}}, {merge:true});
+      break;
     default:
       console.log("no handler", name, event.target.value);
       break;
@@ -55,7 +65,7 @@ class Settings extends React.Component {
   };    
   render() {
     const { classes } = this.props;
-    const { open, channelCreate } = this.state;
+    const { open, channelCreate, articleCreate, eventCreate } = this.state;
     return (
       <div>
         <Typography component="h2" variant="h5" gutterBottom>
@@ -71,12 +81,20 @@ class Settings extends React.Component {
             />
           </FormGroup>
           <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="age-native-simple"><FormattedMessage id="settings.channel.create" /></InputLabel>
-            <Select　native　value={channelCreate}　onChange={this.handleChange('channelCreate')}
-              inputProps={{
-                name: 'channelCreate', id: 'age-native-simple',
-              }}
-            >
+            <InputLabel><FormattedMessage id="settings.channel.create" /></InputLabel>
+            <Select　native　value={channelCreate}　onChange={this.handleChange('channelCreate')}>
+              <PrivilegeOptions />
+            </Select>
+          </FormControl>
+          <FormControl className={classes.formControl}>
+            <InputLabel><FormattedMessage id="settings.article.create" /></InputLabel>
+            <Select　native　value={articleCreate}　onChange={this.handleChange('articleCreate')}>
+              <PrivilegeOptions />
+            </Select>
+          </FormControl>
+          <FormControl className={classes.formControl}>
+            <InputLabel><FormattedMessage id="settings.event.create" /></InputLabel>
+            <Select　native　value={eventCreate}　onChange={this.handleChange('eventCreate')}>
               <PrivilegeOptions />
             </Select>
           </FormControl>

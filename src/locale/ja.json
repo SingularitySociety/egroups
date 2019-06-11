@@ -25,5 +25,7 @@
 
     "settings.open":"オープン (誰でも参加が可能）",
     "settings.channel.create":"チャット・チャンネルを新規作成する権限",
+    "settings.article.create":"ブログ・エントリーを新規作成する権限",
+    "settings.event.create":"イベントを新規作成する権限",
     "dummy":"dummy"
 }
