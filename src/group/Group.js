@@ -19,6 +19,7 @@ import "firebase/firestore";
 import Settings from './Settings';
 import Article from './Article';
 import Articles from './Articles';
+import Channels from './Channels';
 
 const colorMap = { blue, pink, red, green};
 
@@ -117,6 +118,7 @@ class GroupHome extends React.Component {
               <Route exact path={`/${group.groupName}/join`} render={(props) => <Join {...props} {...context} memberDidUpdate={this.memberDidUpdate} />} />
               <Route exact path={`/${group.groupName}/account`} render={(props) => <Account {...props} {...context} memberDidUpdate={this.memberDidUpdate} />} />
               <Route exact path={`/${group.groupName}/settings`} render={(props) => <Settings {...props} {...context} />} />
+              <Route exact path={`/${group.groupName}/channels`} render={(props) => <Channels {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/ch/:channelId`} render={(props) => <Chat {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/blog`} render={(props) => <Articles {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/bl/:articleId`} render={(props) => <Article {...props} {...context} />} />
