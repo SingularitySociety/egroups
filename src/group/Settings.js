@@ -77,7 +77,7 @@ class Settings extends React.Component {
                 id: 'age-native-simple',
               }}
             >
-              { PrivilegeOptions }
+              <PrivilegeOptions />
             </Select>
           </FormControl>
         </div>

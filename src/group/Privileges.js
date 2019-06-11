@@ -9,11 +9,13 @@ const Privileges = {
     owner: 0x2000000
 };
 
-export const PrivilegeOptions = [
+export const PrivilegeOptions = ()=>{
+    return (<React.Fragment>
     <option key="member" value={Privileges.member}>Member</option>,
     <option key="subscriber" value={Privileges.subscriber}>Subscriber</option>,
     <option key="mentor" value={Privileges.mentor}>Mentor</option>,
     <option key="admin" value={Privileges.admin}>Admin</option>
-]
+    </React.Fragment>);
+} 
 
 export default Privileges;
