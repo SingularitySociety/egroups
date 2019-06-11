@@ -8,13 +8,25 @@ const styles = theme => ({
 });
 
 class Article extends React.Component {
-    render() {
-        return (
-            <Typography component="h2" variant="h5" gutterBottom>
-              <FormattedMessage id="article" />
-            </Typography>
-          )
+  state = {article:null, sections:[]}
+  async componentDidMount() {
+    const { db, group, match:{params:{articleId}} } = this.props;
+    console.log(articleId);
+    const ref = db.doc(`groups/${group.groupId}/articles/${articleId}`);
+    const article = (await ref.get()).data();
+    this.setState({article});
+  }
+  render() {
+    const { article } = this.state;
+    if (!article) {
+      return "";
     }
+    return (
+        <Typography component="h2" variant="h5" gutterBottom>
+          {article.title}
+        </Typography>
+      )
+  }
 }
 
 Article.propTypes = {
