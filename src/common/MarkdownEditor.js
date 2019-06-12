@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import theme from '../theme';
-import { Button } from '@material-ui/core';
+import { Button, IconButton } from '@material-ui/core';
+import TrashIcon from '@material-ui/icons/Delete';
 import { FormattedMessage } from 'react-intl';
 import RichTextEditor from 'react-rte'; // https://github.com/sstur/react-rte
 //import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
@@ -70,7 +71,7 @@ class MarkdownEditor extends React.Component {
   }
 
   render() {
-    const { classes, action } = this.props;
+    const { classes, action, onDelete } = this.props;
     const { value } = this.state;
     return (
       <div>
@@ -83,6 +84,11 @@ class MarkdownEditor extends React.Component {
         <Button variant="contained" className={classes.button} onClick={this.onCancel}>
             <FormattedMessage id="cancel" />
         </Button>
+        {
+          onDelete && <IconButton onClick={onDelete}>
+            <TrashIcon />
+          </IconButton>
+        }
         </div>
     );
   }

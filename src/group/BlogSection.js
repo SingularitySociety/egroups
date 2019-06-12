@@ -22,11 +22,15 @@ class BlogSection extends React.Component {
   onCancel = () => {
     this.setState({editing:false})
   }
+  onDelete = () => {
+    const { sectionId, index } = this.props;
+    this.props.deleteSection(sectionId, index);
+  }
   startEditing = () => {
     this.setState({editing:true})
   }
   render() {
-    const { markdown, sectionId } = this.props;
+    const { markdown, sectionId, deleteSection } = this.props;
     const { editing } = this.state;
     if (!editing) {
       if (sectionId) {
@@ -49,7 +53,7 @@ class BlogSection extends React.Component {
       );
     }
     return (
-      <MarkdownEditor markdown={markdown} onSave={this.onSave} onCancel={this.onCancel} />
+      <MarkdownEditor markdown={markdown} onSave={this.onSave} onCancel={this.onCancel} onDelete={deleteSection && this.onDelete} />
     )
   }
 }

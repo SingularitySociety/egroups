@@ -43,6 +43,14 @@ class Blog extends React.Component {
       markdown
     }, {merge:true})
   }
+  deleteSection = async (resourceId, index) => {
+    console.log("deleteSection", resourceId);
+    const { article } = this.state;
+    article.sections.splice(index, 1);
+    this.setState(article);
+    await this.refArticle.set(article, {merge:true});
+    await this.refArticle.collection("sections").doc(resourceId).delete();
+  }
 
   render() {
     const { article, resources } = this.state;
@@ -58,7 +66,8 @@ class Blog extends React.Component {
         {
           article.sections.map((sectionId, index)=>{
             return <div key={sectionId}>
-              <BlogSection index={ index }sectionId={sectionId} markdown={ resources[sectionId].markdown } saveSection={this.updateSection} />
+              <BlogSection index={ index }sectionId={sectionId} markdown={ resources[sectionId].markdown } 
+                  saveSection={this.updateSection} deleteSection={this.deleteSection} />
               <BlogSection index={ index+1 } saveSection={this.insertSection} />
             </div>
           })
