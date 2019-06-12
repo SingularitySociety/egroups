@@ -33,6 +33,11 @@ describe("Group app", () => {
       created: new Date()
     });
 
+    await admin_db.doc(`/groups/${aliceGroupId}/privileges/${aliceUID}`).set({
+      value: 0x2000000,
+      created: new Date()
+    });
+
     await firebase.assertSucceeds(alice_group.get());
     await firebase.assertSucceeds(alice_group.update({"aa": "bb"}));
   });
