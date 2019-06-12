@@ -1,14 +1,6 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
-
-export const Privileges = {
-    guest: 0,
-    member: 0x01,
-    subscriber: 0x100,
-    mentor: 0x10000,
-    admin: 0x1000000,
-    owner: 0x2000000
-};
+import Privileges from '../const/Privileges';
 
 const PrivilegeOptions = (props)=>{
     const { messages } = props.intl;

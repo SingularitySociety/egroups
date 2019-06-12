@@ -5,7 +5,7 @@ import { Typography, Grid, Button, TextField } from '@material-ui/core';
 import Header from './Header';
 import { FormattedMessage } from 'react-intl';
 import { Redirect } from 'react-router-dom';
-import { Privileges } from './group/Privileges';
+import Privileges from './const/Privileges';
 
 const styles = theme => ({
   root: {
