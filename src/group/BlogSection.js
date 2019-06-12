@@ -30,7 +30,7 @@ class BlogSection extends React.Component {
     this.setState({editing:true})
   }
   render() {
-    const { markdown, sectionId, deleteSection } = this.props;
+    const { markdown, sectionId, deleteSection, readOnly } = this.props;
     const { editing } = this.state;
     if (!editing) {
       if (sectionId) {
@@ -39,11 +39,13 @@ class BlogSection extends React.Component {
           <Grid item xs={11}>
             <Editor readOnly={true} editorState={value.getEditorState()} />
           </Grid>
-          <Grid item xs={1}>
-            <IconButton size="small" variant="contained" onClick={this.startEditing}>
-              <EditIcon />
-            </IconButton>
-          </Grid>
+          { !readOnly &&
+            <Grid item xs={1}>
+              <IconButton size="small" variant="contained" onClick={this.startEditing}>
+                <EditIcon />
+              </IconButton>
+            </Grid> 
+          }
         </Grid>
       }
       return (

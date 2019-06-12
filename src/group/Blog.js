@@ -54,21 +54,23 @@ class Blog extends React.Component {
 
   render() {
     const { article, resources } = this.state;
-    if (!resources) {
+    const { user } = this.props;
+    if (!resources || !user) {
       return "";
     }
+    const canEdit = (article.owner === user.uid);
     return (
       <div>
         <Typography component="h2" variant="h5" gutterBottom>
           {article.title}
         </Typography>
-        <BlogSection index={ 0 } saveSection={this.insertSection} />
+      { canEdit && <BlogSection index={ 0 } saveSection={this.insertSection} /> }
         {
           article.sections.map((sectionId, index)=>{
             return <div key={sectionId}>
               <BlogSection index={ index }sectionId={sectionId} markdown={ resources[sectionId].markdown } 
-                  saveSection={this.updateSection} deleteSection={this.deleteSection} />
-              <BlogSection index={ index+1 } saveSection={this.insertSection} />
+                  saveSection={this.updateSection} deleteSection={this.deleteSection} readOnly={!canEdit}/>
+              { canEdit && <BlogSection index={ index+1 } saveSection={this.insertSection} /> }
             </div>
           })
         }
