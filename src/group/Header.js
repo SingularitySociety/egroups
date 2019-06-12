@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import { FormattedMessage } from 'react-intl';
-import { Privileges } from './Privileges';
+import Privileges from '../const/Privileges';
 
 const styles = {
   root: {

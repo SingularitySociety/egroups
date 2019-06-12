@@ -4,8 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import { Typography, FormGroup, Switch, FormControlLabel } from '@material-ui/core';
 import { FormControl, InputLabel, Select } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
-import PrivilegeOptions from './Privileges';
-import { Privileges } from './Privileges';
+import PrivilegeOptions from './PrivilegeOptions';
+import Privileges from '../const/Privileges';
 
 const styles = theme => ({
   main: {

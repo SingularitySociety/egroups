@@ -6,7 +6,7 @@ import "firebase/firestore";
 import CreateNew from '../common/CreateNew';
 import Article from './Article';
 import { FormattedMessage } from 'react-intl';
-import Privileges from './Privileges';
+import Privileges from '../const/Privileges';
 
 const styles = theme => ({
 });
