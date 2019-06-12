@@ -45,7 +45,7 @@ service cloud.firestore {
       allow delete: if request.auth.uid != null && isUserOwner(groupId, request.auth.uid);
     }
 		match /groups/{groupId}/members/{userId} {
-    	allow read;
+    	allow read: if request.auth.uid == userId || isUserAdmin(groupId, request.auth.uid);
       allow create: if request.auth.uid == userId && isGroupOpen(groupId);
       allow create: if request.auth.uid == userId && isUserOwner(groupId, request.auth.uid);
       allow delete, update: if request.auth.uid == userId;
@@ -55,7 +55,7 @@ service cloud.firestore {
     }
 		match /groups/{groupId}/privileges/{userId} {
       // NEVER allow the client write anything here.   
-    	allow read;
+    	allow read: if request.auth.uid == userId || isUserAdmin(groupId, request.auth.uid);
     }
 		match /groups/{groupId}/owners/{userId} {
       // NEVER allow the client write anything here.   

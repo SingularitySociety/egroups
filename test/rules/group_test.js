@@ -47,27 +47,67 @@ describe("Group app create and membership", () => {
     await firebase.assertSucceeds(test_helper.create_group(alice_group, aliceUID, aliceUID, true))
     await test_helper.add_group_privilege_for_admin(admin_db, aliceGroupId, aliceUID);
     // end of create group
+
+    // add bob user as member
+    await test_helper.add_group_privilege_for_member(admin_db, aliceGroupId, bobUID, bobUID, Privileges.member);
     
-    // get test
-    await firebase.assertSucceeds(alice_group.get());
+    
+    // admin case 
+    
+    // alice can see open group
+    await firebase.assertSucceeds(alice_db.doc(`/groups/${aliceGroupId}/members/${aliceUID}`).get())
+    await firebase.assertSucceeds(alice_db.doc(`/groups/${aliceGroupId}/members/${bobUID}`).get())
+    await firebase.assertSucceeds(alice_db.doc(`/groups/${aliceGroupId}/members/${charlieUID}`).get())
 
-    // bon can join open group
-    await firebase.assertSucceeds(bob_db.doc(`/groups/{aliceGroupId}/members/{bobUID}`).get())
-
-    // bon can't add other member
-    await firebase.assertSucceeds(bob_db.doc(`/groups/{aliceGroupId}/members/{aliceUID}`).get())
-
-    // anyone can privileges
-    await firebase.assertSucceeds(alice_db.doc(`/groups/{aliceGroupId}/privileges/{aliceUID}`).get())
-    await firebase.assertSucceeds(alice_db.doc(`/groups/{aliceGroupId}/privileges/{bobUID}`).get())
-    await firebase.assertSucceeds(bob_db.doc(`/groups/{aliceGroupId}/privileges/{aliceUID}`).get())
-    await firebase.assertSucceeds(bob_db.doc(`/groups/{aliceGroupId}/privileges/{bobUID}`).get())
+    // admin can read privileges
+    await firebase.assertSucceeds(alice_db.doc(`/groups/${aliceGroupId}/privileges/${aliceUID}`).get())
+    await firebase.assertSucceeds(alice_db.doc(`/groups/${aliceGroupId}/privileges/${bobUID}`).get())
+    await firebase.assertSucceeds(alice_db.doc(`/groups/${aliceGroupId}/privileges/${charlieUID}`).get())
 
     // anyone can't read onwer
-    await firebase.assertFails(alice_db.doc(`/groups/{aliceGroupId}/owners/{aliceUID}`).get())
-    await firebase.assertFails(alice_db.doc(`/groups/{aliceGroupId}/owners/{bobUID}`).get())
-    await firebase.assertFails(bob_db.doc(`/groups/{aliceGroupId}/owners/{aliceUID}`).get())
-    await firebase.assertFails(bob_db.doc(`/groups/{aliceGroupId}/owners/{bobUID}`).get())
+    await firebase.assertFails(alice_db.doc(`/groups/${aliceGroupId}/owners/${aliceUID}`).get())
+    await firebase.assertFails(alice_db.doc(`/groups/${aliceGroupId}/owners/${bobUID}`).get())
+    await firebase.assertFails(alice_db.doc(`/groups/${aliceGroupId}/owners/${charlieUID}`).get())
+
+    
+    // bob can see open group
+    await firebase.assertSucceeds(bob_db.doc(`/groups/${aliceGroupId}/members/${bobUID}`).get())
+
+    // bob can't see other member
+    await firebase.assertFails(bob_db.doc(`/groups/${aliceGroupId}/members/${aliceUID}`).get())
+    await firebase.assertFails(bob_db.doc(`/groups/${aliceGroupId}/members/${charlieUID}`).get())
+
+    // user can't read others privileges
+    await firebase.assertFails(bob_db.doc(`/groups/${aliceGroupId}/privileges/${aliceUID}`).get())
+    await firebase.assertFails(bob_db.doc(`/groups/${aliceGroupId}/privileges/${charlieUID}`).get())
+    // user can read my privilege
+    await firebase.assertSucceeds(bob_db.doc(`/groups/${aliceGroupId}/privileges/${bobUID}`).get())
+
+    // anyone can't read onwer
+    await firebase.assertFails(bob_db.doc(`/groups/${aliceGroupId}/owners/${aliceUID}`).get())
+    await firebase.assertFails(bob_db.doc(`/groups/${aliceGroupId}/owners/${bobUID}`).get())
+    await firebase.assertFails(bob_db.doc(`/groups/${aliceGroupId}/owners/${charlieUID}`).get())
+
+    // ## charlie anonymous
+    
+    // charlie can see open group
+    await firebase.assertSucceeds(charlie_db.doc(`/groups/${aliceGroupId}/members/${charlieUID}`).get())
+
+    // charlie can't see other member
+    await firebase.assertFails(charlie_db.doc(`/groups/${aliceGroupId}/members/${aliceUID}`).get())
+    await firebase.assertFails(charlie_db.doc(`/groups/${aliceGroupId}/members/${bobUID}`).get())
+
+    // user can read my privilege
+    await firebase.assertSucceeds(charlie_db.doc(`/groups/${aliceGroupId}/privileges/${charlieUID}`).get())
+    // user can't read others privileges
+    await firebase.assertFails(charlie_db.doc(`/groups/${aliceGroupId}/privileges/${aliceUID}`).get())
+    await firebase.assertFails(charlie_db.doc(`/groups/${aliceGroupId}/privileges/${bobUID}`).get())
+
+    // anyone can't read onwer
+    await firebase.assertFails(charlie_db.doc(`/groups/${aliceGroupId}/owners/${aliceUID}`).get())
+    await firebase.assertFails(charlie_db.doc(`/groups/${aliceGroupId}/owners/${bobUID}`).get())
+    await firebase.assertFails(charlie_db.doc(`/groups/${aliceGroupId}/owners/${charlieUID}`).get())
+
   });
 
   it("should join closed group", async () => {
