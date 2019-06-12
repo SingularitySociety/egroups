@@ -13,6 +13,31 @@ const styles = {
   }
 };
 
+// The toolbarConfig object allows you to specify custom buttons, reorder buttons and to add custom css classes.
+  // Supported inline styles: https://github.com/facebook/draft-js/blob/master/docs/Advanced-Topics-Inline-Styles.md
+  // Supported block types: https://github.com/facebook/draft-js/blob/master/docs/Advanced-Topics-Custom-Block-Render.md#draft-default-block-render-map
+const toolbarConfig = {
+  // Optionally specify the groups to display (displayed in the order listed).
+  display: ['INLINE_STYLE_BUTTONS', 'BLOCK_TYPE_BUTTONS', 'LINK_BUTTONS', 'BLOCK_TYPE_DROPDOWN', 'HISTORY_BUTTONS'],
+  INLINE_STYLE_BUTTONS: [
+    {label: 'Bold', style: 'BOLD', className: 'custom-css-class'},
+    {label: 'Italic', style: 'ITALIC'},
+    {label: 'Underline', style: 'UNDERLINE'}
+  ],
+  BLOCK_TYPE_DROPDOWN: [
+    {label: 'Normal', style: 'unstyled'},
+    {label: 'Heading Large', style: 'header-one'},
+    {label: 'Heading Medium', style: 'header-two'},
+    {label: 'Heading Small', style: 'header-three'},
+    {label: 'Code', style: 'code-block'},
+    {label: 'Blockquote', style: 'blockquote'},
+  ],
+  BLOCK_TYPE_BUTTONS: [
+    {label: 'UL', style: 'unordered-list-item'},
+    {label: 'OL', style: 'ordered-list-item'}
+  ]
+};
+
 class MarkupEditor extends React.Component {
   state = {
     value: RichTextEditor.createEmptyValue()
@@ -46,7 +71,7 @@ class MarkupEditor extends React.Component {
     return (
       <div>
         <div className={classes.frame}>
-          <RichTextEditor autoFocus value={value} onChange={this.onChange} />
+          <RichTextEditor autoFocus value={value} toolbarConfig={toolbarConfig} onChange={this.onChange} />
         </div>
         
         <Button variant="contained" color="primary" className={classes.button} 
