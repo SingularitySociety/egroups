@@ -59,9 +59,10 @@ class Blog extends React.Component {
         <BlogSection index={ 0 } insertSection={this.insertSection} />
         {
           article.sections.map((sectionId, index)=>{
-            return [<p key={sectionId}>{resources[sectionId].markdown || "..."}</p>,
-            <BlogSection key={index} index={ index+1 } insertSection={this.insertSection} />]
-
+            return <div key={sectionId}>
+              <BlogSection markdown={ resources[sectionId].markdown } insertSection={this.insertSection} />
+              <BlogSection index={ index+1 } insertSection={this.insertSection} />
+            </div>
           })
         }
       </div>

@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-//import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
 import theme from '../theme';
 import { Button } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import RichTextEditor from 'react-rte'; // https://github.com/sstur/react-rte
+//import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
 
 const styles = {
   button: {
