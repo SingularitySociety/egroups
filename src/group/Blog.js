@@ -9,7 +9,7 @@ const styles = theme => ({
 });
 
 class Blog extends React.Component {
-  state = {article:null, sections:[], resouces:{}};
+  state = {article:null, sections:[], resouces:null};
   async componentDidMount() {
     const { db, group, match:{params:{articleId}} } = this.props;
     console.log(articleId);
@@ -44,11 +44,11 @@ class Blog extends React.Component {
     article.sections.splice(index, 0, doc.id);
     console.log("after", article.sections);
     this.setState(article);
-    // ### SAVE
+    await this.refArticle.set(article, {merge:true});
   }
   render() {
     const { article, resources } = this.state;
-    if (!article) {
+    if (!resources) {
       return "";
     }
     return (
@@ -58,8 +58,10 @@ class Blog extends React.Component {
         </Typography>
         <BlogSection index={ 0 } insertSection={this.insertSection} />
         {
-          article.sections.map((sectionId)=>{
-            return <p key={sectionId}>{resources[sectionId].markdown || "..."}</p>
+          article.sections.map((sectionId, index)=>{
+            return [<p key={sectionId}>{resources[sectionId].markdown || "..."}</p>,
+            <BlogSection key={index} index={ index+1 } insertSection={this.insertSection} />]
+
           })
         }
       </div>

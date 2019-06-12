@@ -70,6 +70,7 @@ service cloud.firestore {
     	allow read;
       allow create: if request.auth.uid != null 
           && groupInfo(groupId).privileges.article.create <= userPrivilege(groupId, request.auth.uid);
+      allow update, delete: if resource.data.owner == request.auth.uid;
     }
 		match /groups/{groupId}/articles/{articleId}/sections/{sectionId} {
       allow read: if request.auth.uid != null 
