@@ -29,7 +29,7 @@ class Blog extends React.Component {
   componentWillUnmount() {
     this.detatcher();
   }
-  insertSection = async (markdown, index) => {
+  insertSection = async (index, markdown) => {
     console.log("insertSection", markdown, index);
     const { user } = this.props;
     const { article } = this.state;
@@ -46,6 +46,12 @@ class Blog extends React.Component {
     this.setState(article);
     await this.refArticle.set(article, {merge:true});
   }
+  updateSection = async (resourceId, markdown) => {
+    const doc = await this.refArticle.collection("sections").doc(resourceId).set({
+      markdown
+    }, {merge:true})
+  }
+
   render() {
     const { article, resources } = this.state;
     if (!resources) {
@@ -56,12 +62,12 @@ class Blog extends React.Component {
         <Typography component="h2" variant="h5" gutterBottom>
           {article.title}
         </Typography>
-        <BlogSection index={ 0 } insertSection={this.insertSection} />
+        <BlogSection index={ 0 } saveSection={this.insertSection} />
         {
           article.sections.map((sectionId, index)=>{
             return <div key={sectionId}>
-              <BlogSection markdown={ resources[sectionId].markdown } insertSection={this.insertSection} />
-              <BlogSection index={ index+1 } insertSection={this.insertSection} />
+              <BlogSection sectionId={sectionId} markdown={ resources[sectionId].markdown } saveSection={this.updateSection} />
+              <BlogSection index={ index+1 } saveSection={this.insertSection} />
             </div>
           })
         }

@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import MarkdownEditor from '../common/MarkdownEditor';
-import { IconButton } from '@material-ui/core';
+import { IconButton, Grid } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
 import RichTextEditor from 'react-rte'; // https://github.com/sstur/react-rte
 import { Editor } from 'draft-js';
 
@@ -15,7 +16,8 @@ class BlogSection extends React.Component {
 
   onSave = (markdown) => {
     console.log(markdown);
-    this.props.insertSection(markdown, this.props.index);
+    const { sectionId, index } = this.props;
+    this.props.saveSection(sectionId || index, markdown);
     this.setState({editing:false});
   }
   onCancel = () => {
@@ -25,12 +27,21 @@ class BlogSection extends React.Component {
     this.setState({editing:true})
   }
   render() {
-    const { markdown } = this.props;
+    const { markdown, sectionId } = this.props;
     const { editing } = this.state;
     if (!editing) {
-      if (markdown) {
+      if (sectionId) {
         const value = RichTextEditor.createValueFromString(markdown || "", 'markdown');
-        return <Editor readOnly={true} editorState={value.getEditorState()} />
+        return <Grid container>
+          <Grid item>
+            <Editor readOnly={true} editorState={value.getEditorState()} />
+          </Grid>
+          <Grid item>
+            <IconButton variant="contained" onClick={this.startEditing}>
+              <EditIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
       }
       return (
         <IconButton variant="contained" onClick={this.startEditing}>
@@ -46,7 +57,7 @@ class BlogSection extends React.Component {
 
 BlogSection.propTypes = {
     classes: PropTypes.object.isRequired,
-    insertSection: PropTypes.func.isRequired,
+    saveSection: PropTypes.func.isRequired,
   };
   
 export default withStyles(styles)(BlogSection);
