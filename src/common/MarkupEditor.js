@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
+//import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
 import theme from '../theme';
 import { Button } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
@@ -9,7 +9,7 @@ import RichTextEditor from 'react-rte'; // https://github.com/sstur/react-rte
 
 const styles = {
   button: {
-    marginRight: theme.spacing(1),
+    margin: theme.spacing(1),
   }
 };
 
@@ -39,33 +39,37 @@ const toolbarConfig = {
 };
 
 class MarkupEditor extends React.Component {
-  state = {
-    value: RichTextEditor.createEmptyValue()
-  }
   constructor(props) {
     super(props);
-    console.log("SectionEditor");
+    this.state = {
+      value: RichTextEditor.createValueFromString(this.props.markdown || "", 'markdown')
+    }
   }
-  componentDidMount() {
-    console.log("SectionEditor:didMount");
 
-  }
   onChange = (value) => {
     this.setState({value});
   }
 
-  onSubmit = (e) => {
+  onSave = (e) => {
     e.preventDefault();
+    /*
     const { value } = this.state;
     console.log(value.toString('html'));
     console.log(value.toString('markdown'));
     console.log(value.getEditorState());
+    */
+    this.props.onSave(this.state.value.toString('markdown'));
   }
+
   onCancel = (e) => {
+    /*
     console.log("cancelled");
     const value = RichTextEditor.createValueFromString("abcd**eda**few", 'markdown');
     this.setState({value});
+    */
+    this.props.onCancel();
   }
+
   render() {
     const { classes, action } = this.props;
     const { value } = this.state;
@@ -76,7 +80,7 @@ class MarkupEditor extends React.Component {
         </div>
         
         <Button variant="contained" color="primary" className={classes.button} 
-                  onClick={this.onSubmit} type="submit">{action || "Save"}</Button>
+                  onClick={this.onSave} type="submit">{action || "Save"}</Button>
         <Button variant="contained" className={classes.button} onClick={this.onCancel}>
             <FormattedMessage id="cancel" />
         </Button>
@@ -87,6 +91,8 @@ class MarkupEditor extends React.Component {
 
 MarkupEditor.propTypes = {
     classes: PropTypes.object.isRequired,
+    onSave: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
   };
   
 export default withStyles(styles)(MarkupEditor);
