@@ -76,8 +76,9 @@ service cloud.firestore {
 		match /groups/{groupId}/channels/{channelId}/messages/{messageId} {
       allow read: if request.auth.uid != null 
           && channelInfo(groupId, channelId).read <= userPrivilege(groupId, request.auth.uid);
-      allow write: if request.auth.uid != null 
+      allow create: if request.auth.uid != null 
           && channelInfo(groupId, channelId).write <= userPrivilege(groupId, request.auth.uid);
+      // add "allow update/delete" for the author
     }
     match /{document=**} {
       allow read, write: if false;
