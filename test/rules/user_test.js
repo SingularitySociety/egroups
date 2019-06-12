@@ -5,25 +5,27 @@ import * as firebase from "@firebase/testing";
 const aliceUID = "alice";
 const bobUID = "bob";
 
+const anon_db = test_helper.authedDB(null);
+const alice_db = test_helper.authedDB({ uid: aliceUID });
+const bob_db = test_helper.authedDB({ uid: bobUID });
+
 describe("My app", () => {
   it("require users to log in before creating and reading a profile", async () => {
-    const db = test_helper.authedDB(null);
-    const profile = db.doc(`users/${aliceUID}`);
+    const profile = anon_db.doc(`users/${aliceUID}`);
     await firebase.assertFails(profile.set({ birthday: "January 1" }));
     await firebase.assertFails(profile.get());
   });
 
   it("should only let users create their own profile", async () => {
-    const db = test_helper.authedDB({ uid: aliceUID });
     await firebase.assertSucceeds(
-      db.doc(`users/${aliceUID}`)
+      alice_db.doc(`users/${aliceUID}`)
         .set({
           birthday: "January 1",
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         })
     );
     await firebase.assertFails(
-      db.doc(`users/${bobUID}`)
+      alice_db.doc(`users/${bobUID}`)
         .set({
           birthday: "January 1",
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -32,8 +34,6 @@ describe("My app", () => {
   });
 
   it("should only let users create their own public and anyone read public", async () => {
-    const alice_db = test_helper.authedDB({ uid: aliceUID });
-    const bob_db = test_helper.authedDB({ uid: bobUID });
     await firebase.assertSucceeds(
       alice_db.doc(`users/${aliceUID}/public/test`)
         .set({
@@ -72,8 +72,6 @@ describe("My app", () => {
   });
   
   it("should only let users create/read their own private data", async () => {
-    const alice_db = test_helper.authedDB({ uid: aliceUID });
-    const bob_db = test_helper.authedDB({ uid: bobUID });
     await firebase.assertSucceeds(
       alice_db.doc(`users/${aliceUID}/private/test`)
         .set({
