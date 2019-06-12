@@ -38,7 +38,7 @@ const toolbarConfig = {
   ]
 };
 
-class MarkupEditor extends React.Component {
+class MarkdownEditor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -89,10 +89,10 @@ class MarkupEditor extends React.Component {
   }
 }
 
-MarkupEditor.propTypes = {
+MarkdownEditor.propTypes = {
     classes: PropTypes.object.isRequired,
     onSave: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
   };
   
-export default withStyles(styles)(MarkupEditor);
+export default withStyles(styles)(MarkdownEditor);

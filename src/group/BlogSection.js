@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import MarkdownEditor from '../common/MarkupEditor';
+import MarkdownEditor from '../common/MarkdownEditor';
 import { IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 
