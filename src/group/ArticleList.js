@@ -37,7 +37,8 @@ class ArticleList extends React.Component {
       created: firebase.firestore.FieldValue.serverTimestamp(),
       owner: user.uid,
       read: group.privileges.article.read || Privileges.member, 
-      write: group.privileges.article.write || Privileges.member, 
+      comment: group.privileges.article.comment || Privileges.member, 
+      sections: [], // ordered list of sectionIds
     });
   }
   render() {

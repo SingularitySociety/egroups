@@ -13,7 +13,8 @@ class BlogSection extends React.Component {
 
   onSave = (markdown) => {
     console.log(markdown);
-    this.setState({editing:false})
+    this.props.insertSection(markdown, this.props.index);
+    this.setState({editing:false});
   }
   onCancel = () => {
     this.setState({editing:false})
@@ -38,6 +39,7 @@ class BlogSection extends React.Component {
 
 BlogSection.propTypes = {
     classes: PropTypes.object.isRequired,
+    insertSection: PropTypes.func.isRequired,
   };
   
 export default withStyles(styles)(BlogSection);
