@@ -5,7 +5,7 @@ import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'dr
 import theme from '../theme';
 import { Button } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
-import RichTextEditor from 'react-rte';
+import RichTextEditor from 'react-rte'; // https://github.com/sstur/react-rte
 
 const styles = {
   button: {
@@ -59,6 +59,7 @@ class MarkupEditor extends React.Component {
     const { value } = this.state;
     console.log(value.toString('html'));
     console.log(value.toString('markdown'));
+    console.log(value.getEditorState());
   }
   onCancel = (e) => {
     console.log("cancelled");
