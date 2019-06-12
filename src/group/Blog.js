@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
-import { FormattedMessage } from 'react-intl';
-import MarkupEditor from '../common/MarkupEditor';
+//import { FormattedMessage } from 'react-intl';
+import BlogSection from './BlogSection';
 
 const styles = theme => ({
 });
@@ -27,7 +27,7 @@ class Article extends React.Component {
         <Typography component="h2" variant="h5" gutterBottom>
           {article.title}
         </Typography>
-        <MarkupEditor />
+        <BlogSection />
       </div>
     )
   }
