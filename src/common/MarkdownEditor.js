@@ -26,9 +26,8 @@ const toolbarConfig = {
   ],
   BLOCK_TYPE_DROPDOWN: [
     {label: 'Normal', style: 'unstyled'},
-    {label: 'Heading Large', style: 'header-one'},
-    {label: 'Heading Medium', style: 'header-two'},
-    {label: 'Heading Small', style: 'header-three'},
+    {label: 'Heading Medium', style: 'header-three'},
+    {label: 'Heading Small', style: 'header-four'},
     {label: 'Code', style: 'code-block'},
     {label: 'Blockquote', style: 'blockquote'},
   ],

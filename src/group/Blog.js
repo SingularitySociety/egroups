@@ -12,42 +12,34 @@ class Blog extends React.Component {
   state = {article:null, sections:[], resouces:null};
   async componentDidMount() {
     const { db, group, match:{params:{articleId}} } = this.props;
-    console.log(articleId);
     this.refArticle = db.doc(`groups/${group.groupId}/articles/${articleId}`);
     const article = (await this.refArticle.get()).data();
-    console.log("article:", article);
     this.setState({article});
     this.detatcher = this.refArticle.collection("sections").onSnapshot((snapshot)=>{
       const resources = {};
       snapshot.forEach((doc)=>{
         resources[doc.id] = doc.data();
       })
-      console.log(resources);
       this.setState({resources});
     });
   }
   componentWillUnmount() {
     this.detatcher();
   }
-  insertSection = async (index, markdown) => {
-    console.log("insertSection", markdown, index);
+  insertSection = async (resourceId, index, markdown) => {
     const { user } = this.props;
     const { article } = this.state;
-    console.log(user.uid);
     const doc = await this.refArticle.collection("sections").add({
       markdown: markdown,
       created: new Date(),
       author: user.uid,
     });
-    console.log(doc.id);
-    console.log("befpre", article.sections);
     article.sections.splice(index, 0, doc.id);
-    console.log("after", article.sections);
     this.setState(article);
     await this.refArticle.set(article, {merge:true});
   }
-  updateSection = async (resourceId, markdown) => {
-    const doc = await this.refArticle.collection("sections").doc(resourceId).set({
+  updateSection = async (resourceId, index, markdown) => {
+    await this.refArticle.collection("sections").doc(resourceId).set({
       markdown
     }, {merge:true})
   }
@@ -66,7 +58,7 @@ class Blog extends React.Component {
         {
           article.sections.map((sectionId, index)=>{
             return <div key={sectionId}>
-              <BlogSection sectionId={sectionId} markdown={ resources[sectionId].markdown } saveSection={this.updateSection} />
+              <BlogSection index={ index }sectionId={sectionId} markdown={ resources[sectionId].markdown } saveSection={this.updateSection} />
               <BlogSection index={ index+1 } saveSection={this.insertSection} />
             </div>
           })

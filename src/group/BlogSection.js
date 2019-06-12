@@ -15,9 +15,8 @@ class BlogSection extends React.Component {
   state = { editing:false };
 
   onSave = (markdown) => {
-    console.log(markdown);
     const { sectionId, index } = this.props;
-    this.props.saveSection(sectionId || index, markdown);
+    this.props.saveSection(sectionId, index, markdown);
     this.setState({editing:false});
   }
   onCancel = () => {
@@ -33,18 +32,18 @@ class BlogSection extends React.Component {
       if (sectionId) {
         const value = RichTextEditor.createValueFromString(markdown || "", 'markdown');
         return <Grid container>
-          <Grid item>
+          <Grid item xs={11}>
             <Editor readOnly={true} editorState={value.getEditorState()} />
           </Grid>
-          <Grid item>
-            <IconButton variant="contained" onClick={this.startEditing}>
+          <Grid item xs={1}>
+            <IconButton size="small" variant="contained" onClick={this.startEditing}>
               <EditIcon />
             </IconButton>
           </Grid>
         </Grid>
       }
       return (
-        <IconButton variant="contained" onClick={this.startEditing}>
+        <IconButton size="small" variant="contained" onClick={this.startEditing}>
           <AddIcon />
         </IconButton>
       );
