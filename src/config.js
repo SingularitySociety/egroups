@@ -1,12 +1,11 @@
 const firebaseConfig = {
-  apiKey: "AIzaSyDjiYcArEzy5_0kc1Bq6uo0pHKrDYpBWKY",
-  authDomain: "e-groups.firebaseapp.com",
-  databaseURL: "https://e-groups.firebaseio.com",
-  projectId: "e-groups",
-  storageBucket: "e-groups.appspot.com",
-  messagingSenderId: "866990675127",
-  appId: "1:866990675127:web:821b9610148c3b2b",
-  messageKey: "BCrvhfMDgC5kuQaNsD1pL1uB_s-LdPsxilBoknX-Vs4u8ULzYCbOw9LBjo9jSLWnK6xgzvhZKFMFz8ymkujEn4I",
+  apiKey: "AIzaSyBQ91_ICyFGzcgQSGWaitKeCJlinpQnArI",
+  authDomain: "fire-base-startup.firebaseapp.com",
+  databaseURL: "https://fire-base-startup.firebaseio.com",
+  projectId: "fire-base-startup",
+  storageBucket: "fire-base-startup.appspot.com",
+  messagingSenderId: "310551858437",
+  appId: "1:310551858437:web:9166ca78a33b67c2"
 };
 
 export default firebaseConfig;
