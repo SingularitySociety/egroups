@@ -21,7 +21,8 @@ const isLocalhost = Boolean(
 );
 
 export function register(config) {
-  if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+//  if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+  if ('serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
     if (publicUrl.origin !== window.location.origin) {
@@ -30,10 +31,11 @@ export function register(config) {
       // serve assets; see https://github.com/facebook/create-react-app/issues/2374
       return;
     }
-
     window.addEventListener('load', () => {
       const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
-
+      
+      register_service_worker();
+      /*
       if (isLocalhost) {
         // This is running on localhost. Let's check if a service worker still exists or not.
         checkValidServiceWorker(swUrl, config);
@@ -50,6 +52,7 @@ export function register(config) {
         // Is not localhost. Just register service worker
         registerValidSW(swUrl, config);
       }
+      */
     });
   }
 }
@@ -133,3 +136,24 @@ export function unregister() {
     });
   }
 }
+
+
+const register_service_worker = () => {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+    navigator.serviceWorker.ready.then(function(registration) {
+      return registration.pushManager.getSubscription().then(function(subscription) {
+        if (subscription) {
+          return subscription;
+        }
+        return registration.pushManager.subscribe({
+          userVisibleOnly: true
+        });
+      })
+    }).then(function(subscription) {
+      console.log("pushManager endpoint:", subscription.endpoint);
+    }).catch(function(error) {
+      console.warn("serviceWorker error:", error);
+    })
+      }
+};
