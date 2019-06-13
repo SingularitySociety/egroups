@@ -10,6 +10,7 @@
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read https://bit.ly/CRA-PWA
 
+/*
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
     // [::1] is the IPv6 localhost address.
@@ -19,6 +20,7 @@ const isLocalhost = Boolean(
       /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
     )
 );
+*/
 
 export function register(config) {
 //  if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
@@ -32,7 +34,7 @@ export function register(config) {
       return;
     }
     window.addEventListener('load', () => {
-      const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
+      // const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
       
       register_service_worker();
       /*
@@ -57,6 +59,7 @@ export function register(config) {
   }
 }
 
+/*
 function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
@@ -128,6 +131,7 @@ function checkValidServiceWorker(swUrl, config) {
       );
     });
 }
+*/
 
 export function unregister() {
   if ('serviceWorker' in navigator) {
@@ -140,7 +144,7 @@ export function unregister() {
 
 const register_service_worker = () => {
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register("service-worker.js");
+    navigator.serviceWorker.register("/service-worker.js");
     navigator.serviceWorker.ready.then(function(registration) {
       return registration.pushManager.getSubscription().then(function(subscription) {
         if (subscription) {
