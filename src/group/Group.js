@@ -20,6 +20,7 @@ import Settings from './Settings';
 import Blog from './Blog';
 import Articles from './Articles';
 import Channels from './Channels';
+import ErrorMessage from '../ErrorMessage';
 
 const colorMap = { blue, pink, red, green};
 
@@ -35,7 +36,7 @@ const styles = theme => ({
 });
 
 class GroupHome extends React.Component {
-  state = {group:null, member:null};
+  state = {group:null, member:null, error:null};
   async componentDidMount() {
     const { db, match:{params:{groupName}} } = this.props;
     if (groupName.length < 3) {
@@ -44,6 +45,10 @@ class GroupHome extends React.Component {
 
     //try {
       const data = (await db.doc("groupNames/" + groupName).get()).data();
+      if (data == null) {
+        this.setState({error:{key:"error.invalid.groupname", value:groupName}});
+        return;
+      }
       const groupId = (data && data.groupId) || groupName;
       this.refGroup = db.doc("groups/" + groupId);
       const group = (await this.refGroup.get()).data();
@@ -89,7 +94,11 @@ class GroupHome extends React.Component {
 
   render() {
     const { classes, user, db, match:{params:{groupName}} } = this.props;
-    const { group, member, history } = this.state;
+    const { group, member, history, error } = this.state;
+    if (error) {
+      return <ErrorMessage error={error} />
+    }
+
     if (groupName.length < 3) {
       return "";
     }
