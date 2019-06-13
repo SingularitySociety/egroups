@@ -5,7 +5,8 @@ const firebaseConfig = {
   projectId: "e-groups",
   storageBucket: "e-groups.appspot.com",
   messagingSenderId: "866990675127",
-  appId: "1:866990675127:web:821b9610148c3b2b"
+  appId: "1:866990675127:web:821b9610148c3b2b",
+  messageKey: "BCrvhfMDgC5kuQaNsD1pL1uB_s-LdPsxilBoknX-Vs4u8ULzYCbOw9LBjo9jSLWnK6xgzvhZKFMFz8ymkujEn4I",
 };
 
 export default firebaseConfig;

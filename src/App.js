@@ -10,6 +10,7 @@ import Login from './Login';
 import Decoder from './Decoder';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
+import "firebase/messaging"
 import config from './config';
 import {addLocaleData, IntlProvider} from 'react-intl';
 import en from 'react-intl/locale-data/en';
@@ -25,7 +26,7 @@ const messages = {
 };
 
 firebase.initializeApp(config);
-var db = firebase.firestore();
+const db = firebase.firestore();
 
 class App extends React.Component {
   constructor(props) {
@@ -34,24 +35,49 @@ class App extends React.Component {
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
   componentDidMount() {
-      this.unregisterAuthObserver = firebase.auth().onAuthStateChanged(
-        async (user) => {
-          this.setState({user: user});
-          if (user) {
-            const refUser = db.collection("users").doc(user.uid);
-            var newValue = { lastAccessed:firebase.firestore.FieldValue.serverTimestamp() };
-            const doc = (await refUser.get()).data();
-            if (!doc || !doc.displayName) {
-              newValue.displayName = user.displayName;
-            }
-            await refUser.set(newValue, { merge: true });
+    this.unregisterAuthObserver = firebase.auth().onAuthStateChanged(
+      async (user) => {
+        this.setState({user: user});
+        if (user) {
+          const refUser = db.collection("users").doc(user.uid);
+          const newValue = { lastAccessed:firebase.firestore.FieldValue.serverTimestamp() };
+          const doc = (await refUser.get()).data();
+          if (!doc || !doc.displayName) {
+            newValue.displayName = user.displayName;
           }
+          await refUser.set(newValue, { merge: true });
         }
-      );
-      this.updateWindowDimensions();
-      window.addEventListener('resize', this.updateWindowDimensions);
-  }
+      }
+    );
+    this.getPushToken();
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
     
+  }
+
+  getPushToken() {
+    if (config.messageKey) {
+      const messaging = firebase.messaging();
+      messaging.usePublicVapidKey(config.messageKey);
+
+      // Request Permission of Notifications
+      messaging.requestPermission().then(() => {
+        console.log('Notification permission granted.');
+        
+        // Get Token
+        messaging.getToken().then((token) => {
+          console.log("client key is")
+          console.log(token)
+        })
+      }).catch((err) => {
+        console.log('Unable to get permission to notify.', err);
+      });
+      messaging.onMessage((payload) => {
+        console.log(payload);
+      });
+    }
+  }
+  
   componentWillUnmount() {
     this.unregisterAuthObserver();
     window.removeEventListener('resize', this.updateWindowDimensions);
