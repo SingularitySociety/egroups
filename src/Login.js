@@ -7,6 +7,7 @@ import { Redirect } from 'react-router-dom';
 import Header from './Header';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { appConfig } from './config';
 
 const styles = theme => ({
   root: {
@@ -18,11 +19,7 @@ const uiConfig = {
     // Popup signin flow rather than redirect flow.
     signInFlow: 'popup',
     // We will display Google and Facebook as auth providers.
-    signInOptions: [
-      firebase.auth.EmailAuthProvider.PROVIDER_ID,
-      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-      //firebase.auth.TwitterAuthProvider.PROVIDER_ID,
-    ],
+    signInOptions: appConfig.signInOptions,
     callbacks: {
       // Avoid redirects after sign-in.
       signInSuccessWithAuthResult: (result) => {
