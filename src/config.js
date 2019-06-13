@@ -18,6 +18,7 @@ export const appConfig = {
     //firebase.auth.FacebookAuthProvider.PROVIDER_ID,
     //firebase.auth.TwitterAuthProvider.PROVIDER_ID,
   ],
+  //rootGroup: "betatest",
 }
 
 export default firebaseConfig;
