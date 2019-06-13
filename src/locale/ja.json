@@ -29,6 +29,7 @@
     "settings.event.create":"イベントを新規作成する権限",
 
     "error.invalid.groupname":"グループ名が存在しません",
+    "warning.access.denied":"アクセスが拒否されました",
 
     "dummy":"dummy"
 }
