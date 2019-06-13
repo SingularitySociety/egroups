@@ -12,6 +12,7 @@ import * as firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/messaging"
 import config from './config';
+import { appConfig } from './config';
 import {addLocaleData, IntlProvider} from 'react-intl';
 import en from 'react-intl/locale-data/en';
 import ja from 'react-intl/locale-data/ja';
@@ -87,7 +88,7 @@ class App extends React.Component {
   }
 
   render() {
-    const params = { user:this.state.user, db:db };
+    const params = { user:this.state.user, db:db, rootGroup:appConfig.rootGroup };
     //console.log("App:", window.location.pathname);
     const language = navigator.language.split(/[-_]/)[0];  // language without region code
     return (
@@ -95,8 +96,12 @@ class App extends React.Component {
         <MuiThemeProvider theme={theme}>
           <CssBaseline />
           <Router>
-            <Route exact path="/" render={(props) => <Home {...props} {...params} />} />
-            <Route path="/:groupName" render={(props) => <Group {...props} {...params} joinGroup={this.joinGroup} />} />
+            {
+              appConfig.rootGroup ?
+              <Route exact path="/" render={(props) => <Group {...props} {...params} joinGroup={this.joinGroup} />} />
+              : <Route exact path="/" render={(props) => <Home {...props} {...params} />} />
+            }
+            <Route path="/:gp" render={(props) => <Group {...props} {...params} joinGroup={this.joinGroup} />} />
             <Route exact path="/a/about" render={(props) => <About {...props} {...params} />} />
             <Route exact path="/a/new/:groupId" render={(props) => <NewGroup {...props} {...params} />} />
             <Route exact path="/a/login" render={(props) => <Login {...props} {...params} />} />
