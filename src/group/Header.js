@@ -53,7 +53,7 @@ class MyAppBar extends React.Component {
   };
 
 render() {
-    const { classes, user, group, member } = this.props;
+    const { classes, user, group, member, rootGroup } = this.props;
     const { anchorEl } = this.state;
     const cmd = { cmd:"redirect", path:window.location.pathname };
     const loginUrl = "/a/login/cmd/"+encodeURIComponent(JSON.stringify(cmd));
@@ -89,10 +89,13 @@ render() {
         </Menu>
         <Drawer open={this.state.drawer} onClose={this.handleClose}>
           <List>
-            <ListItem button onClick={this.handleClose} to={"/"} component={Link}>
-              <ListItemIcon><ExitIcon /></ListItemIcon>
-              <ListItemText primary="Exit" />
-            </ListItem>
+            {
+              !rootGroup &&         
+                <ListItem button onClick={this.handleClose} to={"/"} component={Link}>
+                  <ListItemIcon><ExitIcon /></ListItemIcon>
+                  <ListItemText primary="Exit" />
+                </ListItem>
+            }
             <ListItem button onClick={this.handleClose} to={"/"+group.groupName} component={Link}>
               <ListItemIcon><HomeIcon /></ListItemIcon>
               <ListItemText primary="Group Home" />

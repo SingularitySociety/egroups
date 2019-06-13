@@ -38,7 +38,9 @@ const styles = theme => ({
 class GroupHome extends React.Component {
   state = {group:null, member:null, error:null};
   async componentDidMount() {
-    const { db, match:{params:{groupName}} } = this.props;
+    const { db, match:{params:{gp}}, rootGroup } = this.props;
+    console.log(rootGroup);
+    const groupName = gp || rootGroup;
     if (groupName.length < 3) {
       return;
     }
@@ -93,7 +95,9 @@ class GroupHome extends React.Component {
   }
 
   render() {
-    const { classes, user, db, match:{params:{groupName}} } = this.props;
+    const { classes, user, db, match:{params:{gp}}, rootGroup } = this.props;
+    const groupName = gp || rootGroup;
+
     const { group, member, history, error } = this.state;
     if (error) {
       return <ErrorMessage error={error} />
@@ -114,7 +118,7 @@ class GroupHome extends React.Component {
         secondary: colorMap[(group.theme && group.theme.primary) || "blue"],
       }
     });
-    const context = { user, group, db, member, history };
+    const context = { user, group, db, member, history, rootGroup };
     
     return (
       <MuiThemeProvider theme={theme}>
@@ -122,6 +126,10 @@ class GroupHome extends React.Component {
         <Header {...context} />
         <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
             <Grid item className={classes.main}>
+              {
+                rootGroup &&
+                  <Route exact path={`/`} render={(props) => <Home {...props} {...context} />} />
+              }
               <Route exact path={`/${group.groupName}`} render={(props) => <Home {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/about`} render={(props) => <About {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/join`} render={(props) => <Join {...props} {...context} memberDidUpdate={this.memberDidUpdate} />} />
