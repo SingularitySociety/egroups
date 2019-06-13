@@ -7,6 +7,9 @@ service cloud.firestore {
     function channelInfo(groupId, channelId) {
       return get(/databases/$(database)/documents/groups/$(groupId)/channels/$(channelId)).data;
     }
+    function articleInfo(groupId, articleId) {
+      return get(/databases/$(database)/documents/groups/$(groupId)/articles/$(articleId)).data;
+    }
     function userPrivilege(groupId, userId) {
       return get(/databases/$(database)/documents/groups/$(groupId)/privileges/$(userId)).data.value;
     }
@@ -42,7 +45,7 @@ service cloud.firestore {
       allow delete: if request.auth.uid != null && isUserOwner(groupId, request.auth.uid);
     }
 		match /groups/{groupId}/members/{userId} {
-    	allow read;
+    	allow read: if request.auth.uid == userId || isUserAdmin(groupId, request.auth.uid);
       allow create: if request.auth.uid == userId && isGroupOpen(groupId);
       allow create: if request.auth.uid == userId && isUserOwner(groupId, request.auth.uid);
       allow delete, update: if request.auth.uid == userId;
@@ -52,7 +55,7 @@ service cloud.firestore {
     }
 		match /groups/{groupId}/privileges/{userId} {
       // NEVER allow the client write anything here.   
-    	allow read;
+    	allow read: if request.auth.uid == userId || isUserAdmin(groupId, request.auth.uid);
     }
 		match /groups/{groupId}/owners/{userId} {
       // NEVER allow the client write anything here.   
@@ -67,6 +70,13 @@ service cloud.firestore {
     	allow read;
       allow create: if request.auth.uid != null 
           && groupInfo(groupId).privileges.article.create <= userPrivilege(groupId, request.auth.uid);
+      allow update, delete: if resource.data.owner == request.auth.uid;
+    }
+		match /groups/{groupId}/articles/{articleId}/sections/{sectionId} {
+      allow read: if request.auth.uid != null 
+          && articleInfo(groupId, articleId).read <= userPrivilege(groupId, request.auth.uid);
+      allow write: if request.auth.uid != null 
+          && articleInfo(groupId, articleId).owner == request.auth.uid;
     }
 		match /groups/{groupId}/events/{eventId} {
     	allow read;

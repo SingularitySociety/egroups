@@ -25,10 +25,7 @@ function ComplexGrid(props) {
       <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
         <Grid item style={{width:"calc(80vmin)"}}>
           <Typography style={{marginBottom:"5%"}}>
-              現時点では、テスト用に三つのコミュニティが存在します（コミュニティの追加はまだ出来ません）。
-              グリーンコミュニティとピンクコミュニティは、オープンで、誰でも参加が可能です。
-              グリーンコミュニティでは、メンバーならばチャットチャンネルを追加可能です。
-              ピンクコミュニティでは、管理者だけがチャットチャンネルを追加可能です。
+            ベータテスト中です。
           </Typography>
           <Grid className={classes.caption}>
             <Typography component="h2" variant="h5" gutterBottom>
