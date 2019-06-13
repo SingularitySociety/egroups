@@ -56,7 +56,7 @@ class App extends React.Component {
   }
 
   getPushToken() {
-    if (config.messageKey) {
+    if (config.messageKey && firebase.messaging.isSupported()) {
       const messaging = firebase.messaging();
       messaging.usePublicVapidKey(config.messageKey);
 
