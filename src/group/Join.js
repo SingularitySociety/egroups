@@ -22,7 +22,9 @@ class Join extends React.Component {
     try {
         await refMember.set({ 
             created: new Date(), // firebase.firestore.FieldValue.serverTimestamp(),
-            displayName: user.displayName
+            displayName: user.displayName,
+            uid: user.uid,
+            groupId: group.groupId,
         }, {merge:true});
         await refMember.collection("private").doc("history").set({
             // empty object
@@ -67,6 +69,9 @@ class Join extends React.Component {
             {title}
             <Typography>This community is open to public. Feel free to join anytime.</Typography>
             <Button variant="contained" onClick={this.handleJoin} className={classes.button}><FormattedMessage id="join" /></Button>
+            {
+                error && <p style={{color:"red"}}>{error}</p>
+            }
         </div>
   }
 }
