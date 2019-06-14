@@ -68,6 +68,7 @@ class Settings extends React.Component {
     const { db, group } = this.props;
     const ref = db.doc(`groups/${group.groupId}`);
     await ref.set({[name]:value}, {merge:true});
+    this.props.reloadGroup();
   }    
   render() {
     const { classes, group } = this.props;
@@ -117,6 +118,7 @@ class Settings extends React.Component {
 
 Settings.propTypes = {
     classes: PropTypes.object.isRequired,
+    reloadGroup: PropTypes.func.isRequired,
   };
   
 export default withStyles(styles)(Settings);

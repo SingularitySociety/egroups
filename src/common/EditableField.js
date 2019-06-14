@@ -18,6 +18,7 @@ const styles = theme => ({
 class About extends React.Component {
   constructor(props) {
     super(props);
+    this.refTextField = React.createRef();
     this.state = {value:props.value, editing:false, ignoreBlur:false};
   }
   onChange = (e) => {
@@ -25,10 +26,13 @@ class About extends React.Component {
     let editing = (value !== this.props.value)
     this.setState({value, editing, ignoreBlur:false});
   }
-  onSubmit = (e) => {
+  onSubmit = async (e) => {
     e.preventDefault();
     this.setState({ignoreBlue:false});
-    this.props.onSave(this.state.value);
+    await this.props.onSave(this.state.value);
+    console.log("onSubmit end", this.refTextField.current)
+    this.setState({editing:false});
+    this.refTextField.current.blur();
   }
   onBlur = (e) => {
     if (!this.state.ignoreBlur) {
@@ -44,7 +48,7 @@ class About extends React.Component {
       return (
         <form className={classes.form}>
           <TextField label={label} value={value} variant="outlined" className={classes.textField}
-            onChange={this.onChange} onBlur={this.onBlur} />
+            inputRef={this.refTextField} onChange={this.onChange} onBlur={this.onBlur} />
           {
             editing && <React.Fragment>
             <IconButton type="submit" color="primary"

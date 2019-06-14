@@ -65,6 +65,13 @@ class GroupHome extends React.Component {
   componentWillUnmount() {
     this.detacher && this.detacher();    
   }
+  reloadGroup = async () => {
+    const prev = this.state.group;
+    const group = (await this.refGroup.get()).data();
+    group.groupId = prev.groupId;
+    group.groupName = prev.groupName;
+    this.setState({group:group, groupId:prev.groupId});
+  }
 
   memberDidUpdate = async () => {
     const { user, db } = this.props;
@@ -134,7 +141,7 @@ class GroupHome extends React.Component {
               <Route exact path={`/${group.groupName}/about`} render={(props) => <About {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/join`} render={(props) => <Join {...props} {...context} memberDidUpdate={this.memberDidUpdate} />} />
               <Route exact path={`/${group.groupName}/account`} render={(props) => <Account {...props} {...context} memberDidUpdate={this.memberDidUpdate} />} />
-              <Route exact path={`/${group.groupName}/settings`} render={(props) => <Settings {...props} {...context} />} />
+              <Route exact path={`/${group.groupName}/settings`} render={(props) => <Settings {...props} {...context} reloadGroup={this.reloadGroup} />} />
               <Route exact path={`/${group.groupName}/channels`} render={(props) => <Channels {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/ch/:channelId`} render={(props) => <Chat {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/blog`} render={(props) => <Articles {...props} {...context} />} />
