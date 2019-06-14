@@ -1,6 +1,8 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
+import * as utils from './utils'
+
 admin.initializeApp();
 
 // // Start writing Firebase Functions
@@ -62,3 +64,32 @@ export const messageDidCreate = functions.firestore.document('groups/{groupId}/c
       updated: (newValue && newValue.created) || new Date()
     }, {merge:true});
   });
+
+
+export const tokenDidCreate = functions.firestore.document('users/{userId}/private/tokens')
+  .onWrite((change, context) => {
+    const newDocument = change.after.exists ? ((change.after.data() || {}).tokens || []) : [];
+    const oldDocument = change.before ? ((change.before.data() || {}).tokens || []) : [];
+    // see diff
+    if (newDocument.length === oldDocument.length) {
+      return;
+    }
+    
+    // get all groups
+    // const groupsRef = db.collectionGroup('members').where(‘uid’, ‘==’, user.uid); 
+    
+    if (newDocument.length > oldDocument.length) {
+      // add
+      const diff = utils.array_diff(newDocument, oldDocument);
+      console.log(diff);
+    } 
+    if (newDocument.length < oldDocument.length) {
+      //remove
+      const diff = utils.array_diff(oldDocument, newDocument);
+      console.log(diff);
+    } 
+
+    // subscribe topic
+    
+  });
+

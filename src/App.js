@@ -47,32 +47,39 @@ class App extends React.Component {
           }
           await refUser.set(newValue, { merge: true });
         }
+        this.getPushToken(user);
       }
     );
-    this.getPushToken();
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
     
   }
-
-  getPushToken() {
+  updatePushToken(user, token) {
+    const refTokens = db.doc(`users/${user.uid}/private/tokens`);
+    const tokens = refTokens.get();
+    const exist_tokens = tokens.exists ? tokens.data().tokens : [];
+    if (!exist_tokens.includes(token)) {
+      exist_tokens.push(token)
+      console.log(exist_tokens);
+      refTokens.set({tokens: exist_tokens});
+    }
+    // console.log("client key is")
+    console.log(token)
+  }
+  getPushToken(user) {
     if (config.messageKey && firebase.messaging.isSupported()) {
       const messaging = firebase.messaging();
       messaging.usePublicVapidKey(config.messageKey);
 
-      // Request Permission of Notifications
       messaging.requestPermission().then(() => {
-        console.log('Notification permission granted.');
-        
-        // Get Token
         messaging.getToken().then((token) => {
-          console.log("client key is")
-          console.log(token)
+          this.updatePushToken(user, token);
         })
       }).catch((err) => {
         console.log('Unable to get permission to notify.', err);
       });
       messaging.onMessage((payload) => {
+        // todo implement if push message receive
         console.log(payload);
       });
     }
