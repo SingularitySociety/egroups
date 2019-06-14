@@ -58,3 +58,13 @@ Run firestore test
 ```
 npm run mocha
 ```
+
+
+
+## build es6 to js
+
+```
+npm run babel
+```
+
+

@@ -20,7 +20,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "mocha": "mocha --require @babel/register --recursive"
+    "mocha": "mocha --require @babel/register --recursive",
+    "babel": "babel src/const -d lib/src/const && babel test -d lib/test"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -38,6 +39,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/cli": "^7.4.4",
     "@babel/register": "^7.4.4",
     "@firebase/testing": "^0.10.1",
     "chai": "^4.2.0",
