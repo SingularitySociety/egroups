@@ -117,15 +117,14 @@ render() {
         </Drawer>
         <Tabs
           value={0}
-          onChange={()=>{}}
           indicatorColor="primary"
           textColor="primary"
           centered
         >
-          <Tab label={<FormattedMessage id="home" />} />
-          <Tab label={<FormattedMessage id="channels" />} />
-          <Tab label={<FormattedMessage id="blog" />} />
-          <Tab label={<FormattedMessage id="events" />} />
+          <Tab label={<FormattedMessage id="home" />} to={"/"+group.groupName} component={Link} />
+          <Tab label={<FormattedMessage id="channels" />} to={"/"+group.groupName+"/channels"} component={Link} />
+          <Tab label={<FormattedMessage id="blog" />} to={"/"+group.groupName+"/blog"} component={Link} />
+          <Tab label={<FormattedMessage id="events" />} to={"/"+group.groupName+"/events"} component={Link} />
         </Tabs>
       </div>
     );
