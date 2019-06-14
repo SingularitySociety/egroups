@@ -6,6 +6,7 @@ import { FormControl, InputLabel, Select } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import PrivilegeOptions from './PrivilegeOptions';
 import Privileges from '../const/Privileges';
+import EditableField from '../common/EditableField';
 
 const styles = theme => ({
   main: {
@@ -78,6 +79,9 @@ class Settings extends React.Component {
               }
               label={<FormattedMessage id="settings.open" />}
             />
+          </FormGroup>
+          <FormGroup row>
+            <EditableField label="foo" value="bar" />
           </FormGroup>
           <FormControl className={classes.formControl}>
             <InputLabel><FormattedMessage id="settings.channel.create" /></InputLabel>

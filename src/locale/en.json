@@ -29,6 +29,7 @@
     "settings.event.create":"Can create a new event",
 
     "error.invalid.groupname":"Invalid Group Name",
+    "warning.access.denied":"Access Denied",
 
     "dummy":"dummy"
 }
