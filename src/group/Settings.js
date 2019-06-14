@@ -88,10 +88,10 @@ class Settings extends React.Component {
             />
           </FormGroup>
           <FormGroup row>
-            <EditableField label="title" value={group.title} onSave={this.onSave('title')}/>
+            <EditableField label={<FormattedMessage id="group.title"/>} value={group.title} onSave={this.onSave('title')}/>
           </FormGroup>
           <FormGroup row>
-            <EditableField label="description" value={group.description || ""} onSave={this.onSave('description')}/>
+            <EditableField label={<FormattedMessage id="group.description" />} value={group.description || ""} onSave={this.onSave('description')}/>
           </FormGroup>
           <FormControl className={classes.formControl}>
             <InputLabel><FormattedMessage id="settings.channel.create" /></InputLabel>

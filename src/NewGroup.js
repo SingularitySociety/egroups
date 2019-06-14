@@ -108,7 +108,7 @@ class NewGroup extends React.Component {
               <FormattedMessage id="new.group" />
             </Typography>
             <form className={classes.form}>
-              <TextField label={<FormattedMessage id="group.name" />} value={title} 
+              <TextField label={<FormattedMessage id="group.title" />} value={title} 
                   onChange={this.handleChange('title')} className={classes.textField} margin="normal" />
               <br/>
               <TextField label={<FormattedMessage id={conflict ? "path.conflict" : "group.path"} />} value={path} autoFocus={true} error={ invalid }
