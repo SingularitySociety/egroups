@@ -41,7 +41,8 @@ service cloud.firestore {
 		match /groups/{groupId} {
     	allow read;
       allow create: if request.auth.uid != null;
-      allow update: if request.auth.uid != null && isUserAdmin(groupId, request.auth.uid);
+      allow update: if request.auth.uid != null && isUserAdmin(groupId, request.auth.uid)
+          && request.resource.data.title != null && request.resource.data.privileges != null; // to avoid fogotten merge
       allow delete: if request.auth.uid != null && isUserOwner(groupId, request.auth.uid);
     }
 		match /groups/{groupId}/members/{userId} {
