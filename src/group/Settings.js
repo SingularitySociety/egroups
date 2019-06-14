@@ -64,7 +64,7 @@ class Settings extends React.Component {
     }
   };
   onSave = name => async value => {
-    console.log(name, value);
+    //console.log(name, value);
     const { db, group } = this.props;
     const ref = db.doc(`groups/${group.groupId}`);
     await ref.set({[name]:value}, {merge:true});
@@ -89,6 +89,9 @@ class Settings extends React.Component {
           </FormGroup>
           <FormGroup row>
             <EditableField label="title" value={group.title} onSave={this.onSave('title')}/>
+          </FormGroup>
+          <FormGroup row>
+            <EditableField label="description" value={group.description || ""} onSave={this.onSave('description')}/>
           </FormGroup>
           <FormControl className={classes.formControl}>
             <InputLabel><FormattedMessage id="settings.channel.create" /></InputLabel>

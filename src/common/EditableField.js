@@ -20,6 +20,7 @@ class About extends React.Component {
     super(props);
     this.refTextField = React.createRef();
     this.state = {value:props.value, editing:false, ignoreBlur:false};
+    console.log(this.props.value);
   }
   onChange = (e) => {
     let value = e.target.value;
@@ -28,13 +29,14 @@ class About extends React.Component {
   }
   onSubmit = async (e) => {
     e.preventDefault();
-    this.setState({ignoreBlue:false});
+    this.setState({ignoreBlur:true});
     await this.props.onSave(this.state.value);
-    console.log("onSubmit end", this.refTextField.current)
+    //console.log("onSubmit end", this.refTextField.current)
     this.setState({editing:false});
     this.refTextField.current.blur();
   }
   onBlur = (e) => {
+    console.log(this.state.ignoreBlur);
     if (!this.state.ignoreBlur) {
       this.setState({ value:this.props.value, editing:false })
     }

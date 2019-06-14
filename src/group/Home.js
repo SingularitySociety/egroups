@@ -18,6 +18,9 @@ class Home extends React.Component {
           <Typography component="h2" variant="h6" gutterBottom>
             { group.title }
           </Typography>
+          <Typography component="h2" variant="h6" gutterBottom>
+            { group.description }
+          </Typography>
         </div>
       )
   }
