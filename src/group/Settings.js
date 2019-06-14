@@ -13,7 +13,7 @@ const styles = theme => ({
     marginLeft: theme.spacing(1),
   },
   formControl: {
-    width:theme.spacing(40),
+    width:theme.spacing(38),
     marginBottom: theme.spacing(2),
   }
 });

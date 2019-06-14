@@ -20,7 +20,6 @@ class About extends React.Component {
     super(props);
     this.refTextField = React.createRef();
     this.state = {value:props.value, editing:false, ignoreBlur:false};
-    console.log(this.props.value);
   }
   onChange = (e) => {
     let value = e.target.value;
@@ -54,7 +53,7 @@ class About extends React.Component {
             inputRef={this.refTextField} onChange={this.onChange} onBlur={this.onBlur} />
           {
             editing && <React.Fragment>
-            <IconButton type="submit" color="primary"
+            <IconButton type="submit" color="primary" size="small"
                 onClick={this.onSubmit} onMouseDown={this.onMouseDown}>
               <SaveIcon />
             </IconButton>
