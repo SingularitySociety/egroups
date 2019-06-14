@@ -62,9 +62,15 @@ class Settings extends React.Component {
       console.log("no handler", name, event.target.value);
       break;
     }
-  };    
+  };
+  onSave = name => async value => {
+    console.log(name, value);
+    const { db, group } = this.props;
+    const ref = db.doc(`groups/${group.groupId}`);
+    await ref.set({[name]:value}, {merge:true});
+  }    
   render() {
-    const { classes } = this.props;
+    const { classes, group } = this.props;
     const { open, channelCreate, articleCreate, eventCreate } = this.state;
     return (
       <div>
@@ -81,7 +87,7 @@ class Settings extends React.Component {
             />
           </FormGroup>
           <FormGroup row>
-            <EditableField label="foo" value="bar" />
+            <EditableField label="title" value={group.title} onSave={this.onSave('title')}/>
           </FormGroup>
           <FormControl className={classes.formControl}>
             <InputLabel><FormattedMessage id="settings.channel.create" /></InputLabel>

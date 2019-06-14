@@ -28,6 +28,7 @@ class About extends React.Component {
   onSubmit = (e) => {
     e.preventDefault();
     this.setState({ignoreBlue:false});
+    this.props.onSave(this.state.value);
   }
   onBlur = (e) => {
     if (!this.state.ignoreBlur) {
@@ -59,6 +60,7 @@ class About extends React.Component {
 
 About.propTypes = {
     classes: PropTypes.object.isRequired,
+    onSave: PropTypes.func.isRequired,
   };
   
 export default withStyles(styles)(About);
