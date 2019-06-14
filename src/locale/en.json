@@ -16,6 +16,8 @@
     "create":"Create",
     "cancel":"Cancel",
     "blog":"Blog",
+    "home": "Home",
+    "events":"events",
     "channel.name": "Channel Name",
     "group.title": "Group Name",
     "group.description": "Description",

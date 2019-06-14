@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem } from '@material-ui/core';
-import { Drawer, List, Divider, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { Drawer, List, Divider, ListItem, ListItemIcon, ListItemText, Tabs, Tab } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ExitIcon from '@material-ui/icons/ExitToApp';
@@ -115,6 +115,18 @@ render() {
             </ListItem>
           </List>
         </Drawer>
+        <Tabs
+          value={0}
+          onChange={()=>{}}
+          indicatorColor="primary"
+          textColor="primary"
+          centered
+        >
+          <Tab label={<FormattedMessage id="home" />} />
+          <Tab label={<FormattedMessage id="channels" />} />
+          <Tab label={<FormattedMessage id="blog" />} />
+          <Tab label={<FormattedMessage id="events" />} />
+        </Tabs>
       </div>
     );
   }
