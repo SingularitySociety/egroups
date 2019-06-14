@@ -80,19 +80,22 @@ class Settings extends React.Component {
         </Typography>
         <div className={classes.main}>
           <FormGroup row>
-            <FormControlLabel
+            <EditableField label={<FormattedMessage id="group.title"/>} value={group.title} onSave={this.onSave('title')}/>
+          </FormGroup>
+          <FormGroup row>
+            <EditableField label={<FormattedMessage id="group.description" />} value={group.description || ""} 
+              multiline={true} onSave={this.onSave('description')}/>
+          </FormGroup>
+
+          <FormGroup row>
+            <FormControlLabel 
               control={
                 <Switch checked={open} onChange={this.handleCheck('open')} value="open" />
               }
               label={<FormattedMessage id="settings.open" />}
             />
           </FormGroup>
-          <FormGroup row>
-            <EditableField label={<FormattedMessage id="group.title"/>} value={group.title} onSave={this.onSave('title')}/>
-          </FormGroup>
-          <FormGroup row>
-            <EditableField label={<FormattedMessage id="group.description" />} value={group.description || ""} onSave={this.onSave('description')}/>
-          </FormGroup>
+
           <FormControl className={classes.formControl}>
             <InputLabel><FormattedMessage id="settings.channel.create" /></InputLabel>
             <Select　native　value={channelCreate}　onChange={this.handleChange('channelCreate')}>
