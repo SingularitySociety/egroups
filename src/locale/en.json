@@ -29,6 +29,7 @@
     "path.conflict":"This path is already taken",
 
     "member.displayName":"Member Name",
+    "member.profile":"Member Profile",
 
     "settings.open":"Open (Anybody can Join)",
     "settings.channel.create":"Can create a new chat channel",

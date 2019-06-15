@@ -29,7 +29,7 @@ class Account extends React.Component {
         const { db, user, group } = this.props;
         const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
         await refMember.set({[name]:value}, {merge:true});
-        //this.props.reloadGroup();
+        this.props.memberDidUpdate();
       }    
     
     render() {
@@ -46,6 +46,10 @@ class Account extends React.Component {
             <EditableField label={<FormattedMessage id="member.displayName"/>} 
                 value={member.displayName} onSave={this.onSave('displayName')}/>
           </FormGroup>
+          <FormGroup row>
+            <EditableField label={<FormattedMessage id="member.profile"/>} multiline={true}
+                value={member.profile} onSave={this.onSave('profile')}/>
+          </FormGroup>
           <Typography component="h2" variant="h6" gutterBottom>
             <FormattedMessage id="account" />
           </Typography>
@@ -57,6 +61,7 @@ class Account extends React.Component {
 
 Account.propTypes = {
     classes: PropTypes.object.isRequired,
+    memberDidUpdate: PropTypes.func.isRequired,
   };
   
 export default withStyles(styles)(Account);

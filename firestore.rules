@@ -51,7 +51,9 @@ service cloud.firestore {
                       && userId == request.resource.data.uid && groupId == request.resource.data.groupId;
       allow create: if request.auth.uid == userId && isUserOwner(groupId, request.auth.uid)
                       && userId == request.resource.data.uid && groupId == request.resource.data.groupId;
-      allow delete, update: if request.auth.uid == userId;
+      allow delete, update: if request.auth.uid == userId
+                      && userId == request.resource.data.uid && groupId == request.resource.data.groupId;
+      allow delete: if request.auth.uid == userId;
     }
     match /groups/{groupId}/members/{userId}/private/{itemId} {
       allow read, write: if request.auth.uid == userId;

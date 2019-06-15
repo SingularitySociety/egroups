@@ -29,6 +29,7 @@
     "path.conflict":"既に使われています",
 
     "member.displayName":"メンバー名",
+    "member.profile":"自己紹介",
 
     "settings.open":"オープン (誰でも参加が可能）",
     "settings.channel.create":"チャンネルを新規作成する権限",
