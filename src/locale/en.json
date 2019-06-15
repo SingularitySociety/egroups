@@ -37,6 +37,7 @@
     "settings.channel.create":"Can create a new chat channel",
     "settings.article.create":"Can create a new blog entry",
     "settings.event.create":"Can create a new event",
+    "settings.member.read":"Can see the roster",
 
     "error.invalid.groupname":"Invalid Group Name",
     "warning.access.denied":"Access Denied",

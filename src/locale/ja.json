@@ -37,6 +37,7 @@
     "settings.channel.create":"チャンネルを新規作成する権限",
     "settings.article.create":"ブログ記事を新規作成する権限",
     "settings.event.create":"イベントを新規作成する権限",
+    "settings.member.read":"名簿を見る権利",
 
     "error.invalid.groupname":"グループ名が存在しません",
     "warning.access.denied":"アクセスが拒否されました",

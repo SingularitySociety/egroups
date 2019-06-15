@@ -27,6 +27,7 @@ class Settings extends React.Component {
       channelCreate: group.privileges.channel.create || Privileges.member,
       articleCreate: group.privileges.article.create || Privileges.member,
       eventCreate: group.privileges.event.create || Privileges.member,
+      memberRead: group.privileges.member.read || Privileges.member,
     };
   }
   componentDidMount() {
@@ -43,7 +44,7 @@ class Settings extends React.Component {
   handleChange = name => async event => {
     const { db, group } = this.props;
     const ref = db.doc(`groups/${group.groupId}`);
-    this.setState({ [name]: event.target.value });
+    this.setState({ [name]: event.target.value }); // LATER: Remove these states and just read props
     console.log(typeof(event.target.value));
     switch(name) {
     case "channelCreate":
@@ -56,10 +57,14 @@ class Settings extends React.Component {
     case "eventCreate":
       await ref.set({privileges:{event:{create:parseInt(event.target.value)}}}, {merge:true});
       break;
+    case "memberRead":
+      await ref.set({privileges:{member:{read:parseInt(event.target.value)}}}, {merge:true});
+      break;
     default:
       console.log("no handler", name, event.target.value);
       break;
     }
+    this.props.reloadGroup();
   };
   onSave = name => async value => {
     //console.log(name, value);
@@ -70,7 +75,7 @@ class Settings extends React.Component {
   }    
   render() {
     const { classes, group } = this.props;
-    const { open, listing, channelCreate, articleCreate, eventCreate } = this.state;
+    const { open, listing, channelCreate, articleCreate, eventCreate, memberRead } = this.state;
     return (
       <div>
         <div className={classes.main}>
@@ -95,6 +100,13 @@ class Settings extends React.Component {
             />
           </FormGroup>
 
+          <FormControl className={classes.formControl}>
+            <InputLabel><FormattedMessage id="settings.member.read" /></InputLabel>
+            <Select　native　value={memberRead}　onChange={this.handleChange('memberRead')}>
+              <PrivilegeOptions />
+            </Select>
+          </FormControl>
+          <br/>
           <FormControl className={classes.formControl}>
             <InputLabel><FormattedMessage id="settings.channel.create" /></InputLabel>
             <Select　native　value={channelCreate}　onChange={this.handleChange('channelCreate')}>
