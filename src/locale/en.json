@@ -31,6 +31,9 @@
 
     "member.displayName":"Member Name",
     "member.profile":"Member Profile",
+    "member.email":"Email Address",
+    "member.twitter":"Twitter ID",
+    "member.github":"GitHub ID",
 
     "settings.open":"Open (Anybody can Join)",
     "settings.channel.create":"Can create a new chat channel",

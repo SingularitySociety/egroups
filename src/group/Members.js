@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import AccessDenied from './AccessDenied';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
 });
@@ -33,7 +34,7 @@ class Members extends React.Component {
     {
       list.map((item)=>{
         return <div key={item.uid}>
-          <Typography>{item.displayName}</Typography>
+          <Typography component={Link} to={`/${group.groupName}/pr/${item.uid}`}>{item.displayName}</Typography>
         </div>
       })
     }</div>

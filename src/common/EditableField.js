@@ -44,12 +44,12 @@ class About extends React.Component {
     this.setState({ignoreBlur:true});
   }
   render() {
-      const { label, classes, multiline } = this.props;
+      const { label, classes, multiline, readOnly } = this.props;
       const { value, editing } = this.state;
       return (
         <form className={classes.form}>
           <TextField label={label} value={value} variant="outlined" className={classes.textField}
-            multiline={multiline} rows={2} rowsMax={6}
+            multiline={multiline} rows={2} rowsMax={6} disabled={readOnly}
             inputRef={this.refTextField} onChange={this.onChange} onBlur={this.onBlur} />
           {
             editing && <React.Fragment>
