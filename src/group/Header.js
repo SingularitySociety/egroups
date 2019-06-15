@@ -101,7 +101,7 @@ render() {
               return (
                 <Tabs value={tabIndex-30} indicatorColor="primary" textColor="primary" centered >
                   <Tab label={<FormattedMessage id="home" />} to={"/"+group.groupName} component={Link} />
-                  <Tab label={<FormattedMessage id="join" />} to={"/"+group.groupName+"/join"} component={Link} />
+                  <Tab label={<FormattedMessage id="application" />} to={"/"+group.groupName+"/join"} component={Link} />
                 </Tabs>
               )
             } else if (tabIndex > 20) {
@@ -131,7 +131,7 @@ render() {
           })()
         }
         {
-          !member && 
+          !member && tabId!=="join" && 
             <Grid container justify="center" className={classes.join}>
               <Grid item>
                 <Button variant="contained" color="primary" component={Link} to={"/" + group.groupName + "/join"}><FormattedMessage id="join" /></Button>

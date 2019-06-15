@@ -44,7 +44,7 @@ class Join extends React.Component {
     const { user, classes, group, member } = this.props;
     const { error } = this.state;
     const title = <Typography component="h2" variant="h6" gutterBottom>
-                    Community Membership
+                    <FormattedMessage id="application" />
                   </Typography>;
     if (!user) {
         return <div>
@@ -72,7 +72,7 @@ class Join extends React.Component {
     return <div>
             {title}
             <Typography>This community is open to public. Feel free to join anytime.</Typography>
-            <Button variant="contained" onClick={this.handleJoin} className={classes.button}><FormattedMessage id="join" /></Button>
+            <Button variant="contained" color="primary" onClick={this.handleJoin} className={classes.button}><FormattedMessage id="join" /></Button>
             {
                 error && <p style={{color:"red"}}>{error}</p>
             }
