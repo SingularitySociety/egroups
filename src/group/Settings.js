@@ -19,13 +19,6 @@ const styles = theme => ({
 });
 
 class Settings extends React.Component {
-  constructor(props) {
-    super(props);
-    const { group } = props;
-    this.state = {
-      open: group.privileges.membership.open || false,
-    };
-  }
   componentDidMount() {
     const { selectTab } = this.props;
     selectTab("settings");
@@ -33,7 +26,6 @@ class Settings extends React.Component {
   handleCheck = name => async event => {
     const { db, group } = this.props;
     const ref = db.doc(`groups/${group.groupId}`);
-    this.setState({ [name]: event.target.checked });
     await ref.set({privileges:{membership:{[name]:event.target.checked}}}, {merge:true});
     this.props.reloadGroup();
   };    
@@ -69,7 +61,7 @@ class Settings extends React.Component {
   }    
   render() {
     const { classes, group } = this.props;
-    const { open } = this.state;
+    const open = group.privileges.membership.open || false;
     const channelCreate = group.privileges.channel.create || Privileges.member;
     const articleCreate = group.privileges.article.create || Privileges.member;
     const eventCreate = group.privileges.event.create || Privileges.member;
