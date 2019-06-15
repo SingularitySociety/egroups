@@ -2,13 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem } from '@material-ui/core';
-import { Divider, Tabs, Tab } from '@material-ui/core';
+import { Divider, Tabs, Tab, Grid } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Link } from 'react-router-dom';
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import { FormattedMessage } from 'react-intl';
 import Privileges from '../const/Privileges';
+import theme from '../theme';
 
 const styles = {
   root: {
@@ -21,6 +22,9 @@ const styles = {
     marginLeft: -12,
     marginRight: 20,
   },
+  join: {
+    marginTop: theme.spacing(1),
+  }
 };
 
 class MyAppBar extends React.Component {
@@ -53,10 +57,8 @@ render() {
             <Typography variant="h6" color="inherit" className={classes.grow}>
               {group.title}
             </Typography>
-            {
-              member ?
+            { 
               <IconButton color="inherit" onClick={this.openMe}><MenuIcon /></IconButton>
-              : <Button color="inherit" component={Link} to={"/" + group.groupName + "/join"}><FormattedMessage id="join" /></Button>
             }
             {
                 !user && <Button color="inherit" to={loginUrl} component={Link}><FormattedMessage id="login" /></Button>
@@ -64,7 +66,10 @@ render() {
           </Toolbar>
         </AppBar>
         <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={this.closeMe}>
-          <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/account`}><FormattedMessage id="account" /></MenuItem>
+          {
+            member && 
+            <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/account`}><FormattedMessage id="account" /></MenuItem>
+          }
           {
             (member && member.privilege > Privileges.admin) && 
              <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/settings`}><FormattedMessage id="settings" /></MenuItem>
@@ -74,7 +79,10 @@ render() {
             <MenuItem onClick={this.closeMe} component={Link} to={`/`}><FormattedMessage id="exit" /></MenuItem>
           }
           <Divider />
-          <MenuItem onClick={this.logout}><FormattedMessage id="logout" /></MenuItem>
+          {
+            user && 
+            <MenuItem onClick={this.logout}><FormattedMessage id="logout" /></MenuItem>
+          }
         </Menu>
         <Tabs
           value={0}
@@ -87,6 +95,14 @@ render() {
           <Tab label={<FormattedMessage id="blog" />} to={"/"+group.groupName+"/blog"} component={Link} />
           <Tab label={<FormattedMessage id="events" />} to={"/"+group.groupName+"/events"} component={Link} />
         </Tabs>
+        {
+          !member && 
+            <Grid container justify="center" className={classes.join}>
+              <Grid item>
+                <Button variant="contained" color="primary" component={Link} to={"/" + group.groupName + "/join"}><FormattedMessage id="join" /></Button>
+              </Grid>
+            </Grid>
+        }
       </div>
     );
   }
