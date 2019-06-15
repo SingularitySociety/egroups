@@ -39,23 +39,23 @@ class Profile extends React.Component {
         return <div>
           <FormGroup row>
             <EditableField label={<FormattedMessage id="member.displayName"/>} 
-                value={member.displayName} onSave={this.onSave('displayName')} readOnly={true}/>
+                value={member.displayName} onSave={this.onSave('displayName')} disabled={true}/>
           </FormGroup>
           <FormGroup row>
             <EditableField label={<FormattedMessage id="member.profile"/>} multiline={true}
-                value={member.profile} onSave={this.onSave('profile')} readOnly={true}/>
+                value={member.profile} onSave={this.onSave('profile')} disabled={true}/>
           </FormGroup>
           <FormGroup row>
             <EditableField label={<FormattedMessage id="member.email"/>} 
-                value={member.email || ""} onSave={this.onSave('email')} readOnly={true}/>
+                value={member.email || ""} onSave={this.onSave('email')} disabled={true}/>
           </FormGroup>
           <FormGroup row>
             <EditableField label={<FormattedMessage id="member.twitter"/>} 
-                value={member.twitter || ""} onSave={this.onSave('twitter')} readOnly={true}/>
+                value={member.twitter || ""} onSave={this.onSave('twitter')} disabled={true}/>
           </FormGroup>
           <FormGroup row>
             <EditableField label={<FormattedMessage id="member.github"/>} 
-                value={member.github || ""} onSave={this.onSave('github')} readOnly={true}/>
+                value={member.github || ""} onSave={this.onSave('github')} disabled={true}/>
           </FormGroup>
         </div>
     }
