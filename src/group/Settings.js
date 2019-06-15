@@ -75,7 +75,7 @@ class Settings extends React.Component {
   }    
   render() {
     const { classes, group } = this.props;
-    const { open, listing, channelCreate, articleCreate, eventCreate, memberRead } = this.state;
+    const { open, channelCreate, articleCreate, eventCreate, memberRead } = this.state;
     return (
       <div>
         <div className={classes.main}>
@@ -91,12 +91,6 @@ class Settings extends React.Component {
             <FormControlLabel 
               control={ <Switch checked={open} onChange={this.handleCheck('open')} value="open" /> }
               label={<FormattedMessage id="settings.open" />}
-            />
-          </FormGroup>
-          <FormGroup row>
-            <FormControlLabel 
-              control={ <Switch checked={listing || false} onChange={this.handleCheck('listing')} value="listing" /> }
-              label={<FormattedMessage id="settings.listing" />}
             />
           </FormGroup>
 

@@ -16,9 +16,6 @@ service cloud.firestore {
     function isGroupOpen(groupId) {
       return groupInfo(groupId).privileges.membership.open == true;
     }
-    function isListingOpen(groupId) {
-      return groupInfo(groupId).privileges.membership.listing == true;
-    }
     function isUserAdmin(groupId, userId) {
       return userPrivilege(groupId, userId) >= 16777216; // 0x1000000
     }
@@ -53,7 +50,8 @@ service cloud.firestore {
     }
 		match /groups/{groupId}/members/{userId} {
     	allow read: if request.auth.uid == userId || isUserAdmin(groupId, request.auth.uid);
-      allow read: if isUserMember(groupId, request.auth.uid) && isListingOpen(groupId);
+      allow read: if isUserMember(groupId, request.auth.uid) 
+          && groupInfo(groupId).privileges.member.read <= userPrivilege(groupId, request.auth.uid);
       allow create: if request.auth.uid == userId && isGroupOpen(groupId) 
                       && userId == request.resource.data.uid && groupId == request.resource.data.groupId;
       allow create: if request.auth.uid == userId && isUserOwner(groupId, request.auth.uid)
