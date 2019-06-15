@@ -24,10 +24,6 @@ class Settings extends React.Component {
     const { group } = props;
     this.state = {
       open: group.privileges.membership.open || false,
-      channelCreate: group.privileges.channel.create || Privileges.member,
-      articleCreate: group.privileges.article.create || Privileges.member,
-      eventCreate: group.privileges.event.create || Privileges.member,
-      memberRead: group.privileges.member.read || Privileges.member,
     };
   }
   componentDidMount() {
@@ -44,8 +40,6 @@ class Settings extends React.Component {
   handleChange = name => async event => {
     const { db, group } = this.props;
     const ref = db.doc(`groups/${group.groupId}`);
-    this.setState({ [name]: event.target.value }); // LATER: Remove these states and just read props
-    console.log(typeof(event.target.value));
     switch(name) {
     case "channelCreate":
       // BUGBUG: Why  do we need to use parseInt?
@@ -75,7 +69,12 @@ class Settings extends React.Component {
   }    
   render() {
     const { classes, group } = this.props;
-    const { open, channelCreate, articleCreate, eventCreate, memberRead } = this.state;
+    const { open } = this.state;
+    const channelCreate = group.privileges.channel.create || Privileges.member;
+    const articleCreate = group.privileges.article.create || Privileges.member;
+    const eventCreate = group.privileges.event.create || Privileges.member;
+    const memberRead = group.privileges.member.read || Privileges.member;
+
     return (
       <div>
         <div className={classes.main}>
