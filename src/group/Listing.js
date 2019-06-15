@@ -7,9 +7,21 @@ const styles = theme => ({
 });
 
 class Listing extends React.Component {
+  state = { list:[] };
   componentDidMount() {
-    const { selectTab } = this.props;
+    const { db, group, selectTab } = this.props;
     selectTab("listing");
+    this.detacher = db.collection(`groups/${group.groupId}/members`).orderBy("lastAccessed", "desc").onSnapshot((snapshot) => {
+      const list = [];
+      snapshot.forEach((doc)=>{
+        list.push(doc.data());
+      });
+      this.setState({list});
+      console.log(list);
+    })
+  }
+  componentWillUnmount() {
+    this.detacher();
   }
   render() {
       return (
