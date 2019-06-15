@@ -16,10 +16,8 @@ class Profile extends React.Component {
     state = { member:null };
     async componentDidMount() {
         const { db, group, selectTab, match:{params:{userId}} } = this.props;
-        selectTab("listing");
-        console.log(userId);
+        selectTab("profile");
         const member = (await db.doc(`groups/${group.groupId}/members/${userId}`).get()).data();
-        console.log(member);
         this.setState({member});
     }
     onSave = name => async value => {
@@ -27,7 +25,7 @@ class Profile extends React.Component {
     }    
     
     render() {
-        const { classes, group, user } = this.props;
+        const { group, user } = this.props;
         const { member } = this.state;
         if (!user) {
             return <Redirect to={`/${group.groupName}`} />
@@ -35,7 +33,6 @@ class Profile extends React.Component {
         if (!member) {
             return "";
         }
-        console.log(user, member);
         return <div>
           <FormGroup row>
             <EditableField label={<FormattedMessage id="member.displayName"/>} 

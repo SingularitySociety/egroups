@@ -36,6 +36,7 @@ const tabIndexMap = {
   listing: 12,
   settings: 21,
   join: 31,
+  profile: 42,
 }
 
 class MyAppBar extends React.Component {
@@ -98,7 +99,15 @@ render() {
         </Menu>
         {
           (() => {
-            if (tabIndex > 30) {
+            if (tabIndex > 40) {
+              return (
+                <Tabs value={tabIndex-40} indicatorColor="primary" textColor="primary" centered >
+                  <Tab label={<FormattedMessage id="home" />} to={"/"+group.groupName} component={Link} />
+                  <Tab label={<FormattedMessage id="listing" />} to={"/"+group.groupName+"/listing"} component={Link} />
+                  <Tab label={<FormattedMessage id="profile" />} />
+                </Tabs>
+                )
+            } else if (tabIndex > 30) {
               return (
                 <Tabs value={tabIndex-30} indicatorColor="primary" textColor="primary" centered >
                   <Tab label={<FormattedMessage id="home" />} to={"/"+group.groupName} component={Link} />
