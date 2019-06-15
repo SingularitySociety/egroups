@@ -2,14 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem } from '@material-ui/core';
-import { Drawer, List, Divider, ListItem, ListItemIcon, ListItemText, Tabs, Tab } from '@material-ui/core';
+import { Divider, Tabs, Tab } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import SettingsIcon from '@material-ui/icons/Settings';
-import ExitIcon from '@material-ui/icons/ExitToApp';
-import HomeIcon from '@material-ui/icons/Home';
-import InfoIcon from '@material-ui/icons/Info';
-import ChatIcon from '@material-ui/icons/Chat';
-import SubjectIcon from '@material-ui/icons/Subject';
 import { Link } from 'react-router-dom';
 import * as firebase from "firebase/app";
 import "firebase/auth";
@@ -40,12 +34,6 @@ class MyAppBar extends React.Component {
   closeMe = () => {
     this.setState({anchorEl:null});
   }
-  handleMenu = event => {
-    this.setState({drawer:true});
-  };
-  handleClose = () => {
-    this.setState({drawer:false});
-  };
   logout = event => {
     this.closeMe();
     console.log("logout");
@@ -62,15 +50,12 @@ render() {
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
-            <IconButton className={classes.menuButton} onClick={this.handleMenu} color="inherit" aria-label="Menu">
-              <MenuIcon />
-            </IconButton>
             <Typography variant="h6" color="inherit" className={classes.grow}>
               {group.title}
             </Typography>
             {
               member ?
-              <IconButton color="inherit" onClick={this.openMe}><SettingsIcon /></IconButton>
+              <IconButton color="inherit" onClick={this.openMe}><MenuIcon /></IconButton>
               : <Button color="inherit" component={Link} to={"/" + group.groupName + "/join"}><FormattedMessage id="join" /></Button>
             }
             {
@@ -84,37 +69,13 @@ render() {
             (member && member.privilege > Privileges.admin) && 
              <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/settings`}><FormattedMessage id="settings" /></MenuItem>
           }
+          {
+            !rootGroup && 
+            <MenuItem onClick={this.closeMe} component={Link} to={`/`}><FormattedMessage id="exit" /></MenuItem>
+          }
           <Divider />
           <MenuItem onClick={this.logout}><FormattedMessage id="logout" /></MenuItem>
         </Menu>
-        <Drawer open={this.state.drawer} onClose={this.handleClose}>
-          <List>
-            {
-              !rootGroup &&         
-                <ListItem button onClick={this.handleClose} to={"/"} component={Link}>
-                  <ListItemIcon><ExitIcon /></ListItemIcon>
-                  <ListItemText primary="Exit" />
-                </ListItem>
-            }
-            <ListItem button onClick={this.handleClose} to={"/"+group.groupName} component={Link}>
-              <ListItemIcon><HomeIcon /></ListItemIcon>
-              <ListItemText primary="Group Home" />
-            </ListItem>
-            <Divider />
-            <ListItem button onClick={this.handleClose} to={"/"+group.groupName+"/channels"} component={Link}>
-              <ListItemIcon><ChatIcon /></ListItemIcon>
-              <ListItemText primary={<FormattedMessage id="channels" />} />
-            </ListItem>
-            <ListItem button onClick={this.handleClose} to={"/"+group.groupName+"/blog"} component={Link}>
-              <ListItemIcon><SubjectIcon /></ListItemIcon>
-              <ListItemText primary={<FormattedMessage id="blog" />} />
-            </ListItem>
-            <ListItem button onClick={this.handleClose} to={"/"+group.groupName+"/about"} component={Link}>
-              <ListItemIcon><InfoIcon /></ListItemIcon>
-              <ListItemText primary="About" />
-            </ListItem>
-          </List>
-        </Drawer>
         <Tabs
           value={0}
           indicatorColor="primary"
