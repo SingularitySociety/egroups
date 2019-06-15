@@ -23,6 +23,7 @@ class Settings extends React.Component {
   componentDidMount() {
     const { selectTab } = this.props;
     selectTab("settings");
+    console.log(this.props.group);
   }
   handleCheck = name => async event => {
     const { db, group } = this.props;
@@ -60,8 +61,12 @@ class Settings extends React.Component {
     await ref.set({[name]:value}, {merge:true});
     this.props.reloadGroup();
   }
-  onImageUpload = (imageUrl) => {
+  onImageUpload = async (imageUrl) => {
     console.log("onImageUpload", imageUrl);
+    const { db, group } = this.props;
+    const ref = db.doc(`groups/${group.groupId}`);
+    await ref.set({hasImage:true}, {merge:true});
+    this.props.reloadGroup();
   }
   render() {
     const { classes, group } = this.props;
@@ -69,11 +74,15 @@ class Settings extends React.Component {
     const channelCreate = group.privileges.channel.create || Privileges.member;
     const articleCreate = group.privileges.article.create || Privileges.member;
     const eventCreate = group.privileges.event.create || Privileges.member;
-    const memberRead = group.privileges.member.read || Privileges.member;
+    const memberRead = (group.privileges.member && group.privileges.member.read) || Privileges.member;
 
     return (
       <div>
         <div className={classes.main}>
+          <FormGroup row>
+            <ImageUploader imagePath={`/groups/${group.groupId}/profile`} onImageUpload={this.onImageUpload} loadImage={group.hasImage}/>
+          </FormGroup>
+
           <FormGroup row>
             <EditableField label={<FormattedMessage id="group.title"/>} value={group.title} onSave={this.onSave('title')}/>
           </FormGroup>
@@ -87,10 +96,6 @@ class Settings extends React.Component {
               control={ <Switch checked={open} onChange={this.handleCheck('open')} value="open" /> }
               label={<FormattedMessage id="settings.open" />}
             />
-          </FormGroup>
-
-          <FormGroup row>
-            <ImageUploader imagePath={`/groups/${group.groupId}/profile`} onImageUpload={this.onImageUpload}/>
           </FormGroup>
 
           <FormControl className={classes.formControl}>

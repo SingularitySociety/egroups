@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
+import { Button, Grid } from '@material-ui/core';
 import * as firebase from "firebase/app";
 import "firebase/storage";
 
@@ -11,14 +11,13 @@ const styles = theme => ({
     marginBottom: theme.spacing(1),
   },
   thumbnail: {
-    height: "calc(40vmin)",
-    width: "calc(40vmin)",
+    height: "calc(30vmin)",
+    width: "calc(30vmin)",
     backgroundPosition: "center",
     backgroundSize: "cover",
     backgroundColor: "lightgray",
     border: "1px lightgray solid",
-    borderRadius: theme.spacing(3),
-    marginBottom: theme.spacing(1),
+    borderRadius: "calc(15vmin)",
   }
 });
 
@@ -27,8 +26,10 @@ class About extends React.Component {
   async componentDidMount() {
     const storagRef = firebase.storage().ref();
     this.imageRef = storagRef.child(this.props.imagePath);
-    const imageUrl = await this.imageRef.getDownloadURL();
-    this.setState({imageUrl});
+    if (this.props.loadImage) {
+      const imageUrl = await this.imageRef.getDownloadURL();
+      this.setState({imageUrl});
+    }
   }
   onFileInput = (e) => {
     const task = this.imageRef.put(e.target.files[0]);
@@ -46,13 +47,15 @@ class About extends React.Component {
     const { classes } = this.props;
     const { imageUrl } = this.state;
     const imageStyle = imageUrl ? { backgroundImage:`url("${imageUrl}")` } : {};
-    return (<div className={classes.root}>
-        <div className={classes.thumbnail} style={imageStyle} />
-        <Button variant="contained" component="label">
-            Upload Image
-            <input type="file" accept="image/*" style={{ display: "none" }} onChange={this.onFileInput} />
-        </Button>
-      </div>)
+    return (<Grid container className={classes.root} spacing={1} justify="center">
+        <Grid item className={classes.thumbnail} style={imageStyle} />
+        <Grid item>
+          <Button variant="contained" component="label">
+              Upload Image
+              <input type="file" accept="image/*" style={{ display: "none" }} onChange={this.onFileInput} />
+          </Button>
+        </Grid>
+      </Grid>)
   }
 }
 
