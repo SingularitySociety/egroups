@@ -8,7 +8,7 @@ import { blue, pink, red, green } from '@material-ui/core/colors';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { Route } from 'react-router-dom';
 import Home from './Home';
-import About from './About';
+import Events from './Events';
 import User from './User';
 import Join from './Join';
 import Account from './Account';
@@ -138,7 +138,7 @@ class GroupHome extends React.Component {
                   <Route exact path={`/`} render={(props) => <Home {...props} {...context} />} />
               }
               <Route exact path={`/${group.groupName}`} render={(props) => <Home {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/about`} render={(props) => <About {...props} {...context} />} />
+              <Route exact path={`/${group.groupName}/events`} render={(props) => <Events {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/join`} render={(props) => <Join {...props} {...context} memberDidUpdate={this.memberDidUpdate} />} />
               <Route exact path={`/${group.groupName}/account`} render={(props) => <Account {...props} {...context} memberDidUpdate={this.memberDidUpdate} />} />
               <Route exact path={`/${group.groupName}/settings`} render={(props) => <Settings {...props} {...context} reloadGroup={this.reloadGroup} />} />
