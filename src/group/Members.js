@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
+import AccessDenied from './AccessDenied';
 
 const styles = theme => ({
 });
@@ -23,8 +24,13 @@ class Members extends React.Component {
     this.detacher();
   }
   render() {
-    const {list} = this.state;
-    return <div>{
+    const { member, group } = this.props;
+    const { list } = this.state;
+    const canRead = ((member && member.privilege) || 0) >= group.privileges.member.read;
+    return <div>{ 
+      !canRead && <AccessDenied />
+    }
+    {
       list.map((item)=>{
         return <div key={item.uid}>
           <Typography>{item.displayName}</Typography>
