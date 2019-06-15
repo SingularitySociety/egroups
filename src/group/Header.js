@@ -27,6 +27,13 @@ const styles = {
   }
 };
 
+const tabIndexMap = {
+  home: 0,
+  chat: 1,
+  blog: 2,
+  events: 3
+}
+
 class MyAppBar extends React.Component {
   state = {
     drawer: false,
@@ -45,10 +52,11 @@ class MyAppBar extends React.Component {
   };
 
 render() {
-    const { classes, user, group, member, rootGroup } = this.props;
+    const { classes, user, group, member, rootGroup, tabId } = this.props;
     const { anchorEl } = this.state;
     const cmd = { cmd:"redirect", path:window.location.pathname };
     const loginUrl = "/a/login/cmd/"+encodeURIComponent(JSON.stringify(cmd));
+    const tabIndex = tabIndexMap[tabId || "home"] || 0;
 
     return (
       <div className={classes.root}>
@@ -85,7 +93,7 @@ render() {
           }
         </Menu>
         <Tabs
-          value={0}
+          value={tabIndex}
           indicatorColor="primary"
           textColor="primary"
           centered

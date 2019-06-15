@@ -9,7 +9,11 @@ const styles = theme => ({
 });
 
 class Articles extends React.Component {
-    render() {
+  componentDidMount() {
+    const { selectTab } = this.props;
+    selectTab("blog");
+  }
+  render() {
       const { user, db, member, group, history } = this.props;
       const context = { user, group, db, member, history };
       return (

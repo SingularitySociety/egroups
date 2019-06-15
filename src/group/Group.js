@@ -36,7 +36,7 @@ const styles = theme => ({
 });
 
 class GroupHome extends React.Component {
-  state = {group:null, member:null, error:null};
+  state = {group:null, member:null, error:null, tabId:"home"};
   async componentDidMount() {
     const { db, match:{params:{gp}}, rootGroup } = this.props;
     console.log(rootGroup);
@@ -100,12 +100,16 @@ class GroupHome extends React.Component {
     console.log("userWillUnmount");
     this.setState({member:null, history:null})
   }
+  selectTab = (tabId) => {
+    console.log("selectTab", tabId)
+    this.setState({tabId});
+  }
 
   render() {
     const { classes, user, db, match:{params:{gp}}, rootGroup } = this.props;
     const groupName = gp || rootGroup;
 
-    const { group, member, history, error } = this.state;
+    const { group, member, history, error, tabId } = this.state;
     if (error) {
       return <ErrorMessage error={error} />
     }
@@ -125,12 +129,12 @@ class GroupHome extends React.Component {
         secondary: colorMap[(group.theme && group.theme.primary) || "blue"],
       }
     });
-    const context = { user, group, db, member, history, rootGroup };
+    const context = { user, group, db, member, history, rootGroup, selectTab:this.selectTab };
     
     return (
       <MuiThemeProvider theme={theme}>
         { user && <User {...context} userDidMount={this.userDidMount} userWillUnmount={this.userWillUnmount}/> }
-        <Header {...context} />
+        <Header {...context} tabId={tabId} />
         <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
             <Grid item className={classes.main}>
               {

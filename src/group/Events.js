@@ -7,18 +7,22 @@ import { FormattedMessage } from 'react-intl';
 const styles = theme => ({
 });
 
-class About extends React.Component {
-    render() {
-        return (
-            <Typography component="h2" variant="h5" gutterBottom>
-              <FormattedMessage id="events" />
-            </Typography>
-          )
-    }
+class Events extends React.Component {
+  componentDidMount() {
+    const { selectTab } = this.props;
+    selectTab("events");
+  }
+  render() {
+      return (
+          <Typography component="h2" variant="h5" gutterBottom>
+            <FormattedMessage id="events" />
+          </Typography>
+        )
+  }
 }
 
-About.propTypes = {
+Events.propTypes = {
     classes: PropTypes.object.isRequired,
   };
   
-export default withStyles(styles)(About);
+export default withStyles(styles)(Events);

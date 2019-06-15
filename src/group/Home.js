@@ -10,6 +10,10 @@ const styles = theme => ({
 });
 
 class Home extends React.Component {
+  componentDidMount() {
+    const { selectTab } = this.props;
+    selectTab("home");
+  }
   render() {
       const { group } = this.props;
       //const context = { user, group, db, member, history };

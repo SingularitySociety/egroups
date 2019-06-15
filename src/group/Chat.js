@@ -17,6 +17,7 @@ class Chat extends React.Component {
     console.log(channelId);
     const ref = db.doc(`groups/${group.groupId}/channels/${channelId}`);
     const channel = (await ref.get()).data();
+
     this.setState({channel});
     this.refMessages = ref.collection("messages");
     this.detacher = this.refMessages.orderBy("created").onSnapshot((snapshot)=>{

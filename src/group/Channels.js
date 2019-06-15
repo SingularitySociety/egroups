@@ -12,6 +12,10 @@ const styles = theme => ({
 });
 
 class Channels extends React.Component {
+  componentDidMount() {
+    const { selectTab } = this.props;
+    selectTab("chat");
+  }
   render() {
       const { user, db, member, group, history } = this.props;
       const context = { user, group, db, member, history };
