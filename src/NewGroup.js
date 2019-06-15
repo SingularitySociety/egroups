@@ -52,6 +52,8 @@ class NewGroup extends React.Component {
           channel: { read:Privileges.member, write:Privileges.member, create:Privileges.member },
           article: { read:Privileges.member, create:Privileges.member, comment:Privileges.member },
           event: { read:Privileges.member, create:Privileges.member, attend:Privileges.member },
+          member: { read:Privileges.member, write:Privileges.admin },
+          invitation: { create:Privileges.admin },
           membership: { open:false },
         }
        }, {merge:true});
@@ -108,7 +110,7 @@ class NewGroup extends React.Component {
               <FormattedMessage id="new.group" />
             </Typography>
             <form className={classes.form}>
-              <TextField label={<FormattedMessage id="group.name" />} value={title} 
+              <TextField label={<FormattedMessage id="group.title" />} value={title} 
                   onChange={this.handleChange('title')} className={classes.textField} margin="normal" />
               <br/>
               <TextField label={<FormattedMessage id={conflict ? "path.conflict" : "group.path"} />} value={path} autoFocus={true} error={ invalid }

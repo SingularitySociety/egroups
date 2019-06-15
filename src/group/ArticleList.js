@@ -16,7 +16,7 @@ class ArticleList extends React.Component {
   componentDidMount() {
     const { db, group } = this.props;
     this.detacher = db.collection(`groups/${group.groupId}/articles`).orderBy("created", "desc").onSnapshot((snapshot) => {
-      console.log("onSnapshot")
+      //console.log("onSnapshot")
       const list = [];
       snapshot.forEach((doc)=>{
         const article = doc.data();

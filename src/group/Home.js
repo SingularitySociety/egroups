@@ -10,6 +10,10 @@ const styles = theme => ({
 });
 
 class Home extends React.Component {
+  componentDidMount() {
+    const { selectTab } = this.props;
+    selectTab("home");
+  }
   render() {
       const { group } = this.props;
       //const context = { user, group, db, member, history };
@@ -17,6 +21,9 @@ class Home extends React.Component {
         <div>
           <Typography component="h2" variant="h6" gutterBottom>
             { group.title }
+          </Typography>
+          <Typography gutterBottom>
+            { group.description }
           </Typography>
         </div>
       )

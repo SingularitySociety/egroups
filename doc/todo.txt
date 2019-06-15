@@ -1,4 +1,12 @@
 Check the author == uid when create something
+Fix font issue with MarkdownEditor (editor and read-onlyl)
+Error handling (invalid page)
+UI changes
+Edit title & description (settings page)
+Edit color scheme
+Image upload
+Set homepage
+
 
 
 Search: algolia

@@ -22,6 +22,9 @@ service cloud.firestore {
     function isUserOwner(groupId, userId) {
       return exists(/databases/$(database)/documents/groups/$(groupId)/owners/$(userId));
     }
+    function isUserMember(groupId, userId) {
+      return exists(/databases/$(database)/documents/groups/$(groupId)/members/$(userId));
+    }
 
     match /users/{userId} {
       allow read, create, update, delete: if request.auth.uid == userId;
@@ -41,16 +44,21 @@ service cloud.firestore {
 		match /groups/{groupId} {
     	allow read;
       allow create: if request.auth.uid != null;
-      allow update: if request.auth.uid != null && isUserAdmin(groupId, request.auth.uid);
+      allow update: if request.auth.uid != null && isUserAdmin(groupId, request.auth.uid)
+          && request.resource.data.title != null && request.resource.data.privileges != null; // to avoid fogotten merge
       allow delete: if request.auth.uid != null && isUserOwner(groupId, request.auth.uid);
     }
 		match /groups/{groupId}/members/{userId} {
     	allow read: if request.auth.uid == userId || isUserAdmin(groupId, request.auth.uid);
+      allow read: if isUserMember(groupId, request.auth.uid) 
+          && groupInfo(groupId).privileges.member.read <= userPrivilege(groupId, request.auth.uid);
       allow create: if request.auth.uid == userId && isGroupOpen(groupId) 
                       && userId == request.resource.data.uid && groupId == request.resource.data.groupId;
       allow create: if request.auth.uid == userId && isUserOwner(groupId, request.auth.uid)
                       && userId == request.resource.data.uid && groupId == request.resource.data.groupId;
-      allow delete, update: if request.auth.uid == userId;
+      allow delete, update: if request.auth.uid == userId
+                      && userId == request.resource.data.uid && groupId == request.resource.data.groupId;
+      allow delete: if request.auth.uid == userId;
     }
     match /groups/{groupId}/members/{userId}/private/{itemId} {
       allow read, write: if request.auth.uid == userId;

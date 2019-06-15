@@ -16,19 +16,34 @@
     "create":"Create",
     "cancel":"Cancel",
     "blog":"Blog",
+    "home": "Home",
+    "exit": "Exit",
+    "events":"Events",
+    "profile":"Profile",
+    "listing":"Roster",
+    "application":"Application",
     "channel.name": "Channel Name",
-    "group.name": "Group Name",
+    "group.title": "Group Name",
+    "group.description": "Description",
     "chat.message":"Message",
     "new.group":"New Group Settings",
     "group.path":"Group Path (>6 numeric & alpha)",
     "path.conflict":"This path is already taken",
 
+    "member.displayName":"Member Name",
+    "member.profile":"Member Profile",
+    "member.email":"Email Address",
+    "member.twitter":"Twitter ID",
+    "member.github":"GitHub ID",
+
     "settings.open":"Open (Anybody can Join)",
     "settings.channel.create":"Can create a new chat channel",
     "settings.article.create":"Can create a new blog entry",
     "settings.event.create":"Can create a new event",
+    "settings.member.read":"Can see the roster",
 
     "error.invalid.groupname":"Invalid Group Name",
+    "warning.access.denied":"Access Denied",
 
     "dummy":"dummy"
 }

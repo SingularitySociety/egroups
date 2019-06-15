@@ -8,7 +8,7 @@ import { blue, pink, red, green } from '@material-ui/core/colors';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { Route } from 'react-router-dom';
 import Home from './Home';
-import About from './About';
+import Events from './Events';
 import User from './User';
 import Join from './Join';
 import Account from './Account';
@@ -21,6 +21,8 @@ import Blog from './Blog';
 import Articles from './Articles';
 import Channels from './Channels';
 import ErrorMessage from '../ErrorMessage';
+import Listing from './Listing';
+import Profile from './Profile';
 
 const colorMap = { blue, pink, red, green};
 
@@ -36,7 +38,7 @@ const styles = theme => ({
 });
 
 class GroupHome extends React.Component {
-  state = {group:null, member:null, error:null};
+  state = {group:null, member:null, error:null, tabId:"home"};
   async componentDidMount() {
     const { db, match:{params:{gp}}, rootGroup } = this.props;
     console.log(rootGroup);
@@ -56,7 +58,7 @@ class GroupHome extends React.Component {
       const group = (await this.refGroup.get()).data();
       group.groupId = groupId;
       group.groupName = groupName || groupId;
-      console.log("GroupHoume for "+groupName);
+      //console.log("GroupHoume for "+groupName);
       this.setState({group:group, groupId:groupId});
     /*} catch(e) {
       window.location.pathname = "/";
@@ -64,6 +66,14 @@ class GroupHome extends React.Component {
   }
   componentWillUnmount() {
     this.detacher && this.detacher();    
+  }
+  reloadGroup = async () => {
+    const prev = this.state.group;
+    const group = (await this.refGroup.get()).data();
+    group.groupId = prev.groupId;
+    group.groupName = prev.groupName;
+    console.log(group);
+    this.setState({group:group, groupId:prev.groupId});
   }
 
   memberDidUpdate = async () => {
@@ -93,12 +103,16 @@ class GroupHome extends React.Component {
     console.log("userWillUnmount");
     this.setState({member:null, history:null})
   }
+  selectTab = (tabId) => {
+    //console.log("selectTab", tabId)
+    this.setState({tabId});
+  }
 
   render() {
     const { classes, user, db, match:{params:{gp}}, rootGroup } = this.props;
     const groupName = gp || rootGroup;
 
-    const { group, member, history, error } = this.state;
+    const { group, member, history, error, tabId } = this.state;
     if (error) {
       return <ErrorMessage error={error} />
     }
@@ -118,12 +132,12 @@ class GroupHome extends React.Component {
         secondary: colorMap[(group.theme && group.theme.primary) || "blue"],
       }
     });
-    const context = { user, group, db, member, history, rootGroup };
+    const context = { user, group, db, member, history, rootGroup, selectTab:this.selectTab };
     
     return (
       <MuiThemeProvider theme={theme}>
         { user && <User {...context} userDidMount={this.userDidMount} userWillUnmount={this.userWillUnmount}/> }
-        <Header {...context} />
+        <Header {...context} tabId={tabId} />
         <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
             <Grid item className={classes.main}>
               {
@@ -131,12 +145,16 @@ class GroupHome extends React.Component {
                   <Route exact path={`/`} render={(props) => <Home {...props} {...context} />} />
               }
               <Route exact path={`/${group.groupName}`} render={(props) => <Home {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/about`} render={(props) => <About {...props} {...context} />} />
+              <Route exact path={`/${group.groupName}/events`} render={(props) => <Events {...props} {...context} />} />
+              <Route exact path={`/${group.groupName}/listing`} render={(props) => <Listing {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/join`} render={(props) => <Join {...props} {...context} memberDidUpdate={this.memberDidUpdate} />} />
-              <Route exact path={`/${group.groupName}/account`} render={(props) => <Account {...props} {...context} memberDidUpdate={this.memberDidUpdate} />} />
-              <Route exact path={`/${group.groupName}/settings`} render={(props) => <Settings {...props} {...context} />} />
+              <Route exact path={`/${group.groupName}/account`} 
+                render={(props) => <Account {...props} {...context} memberDidUpdate={this.memberDidUpdate} />} />
+              <Route exact path={`/${group.groupName}/settings`} 
+                render={(props) => <Settings {...props} {...context} reloadGroup={this.reloadGroup} />} />
               <Route exact path={`/${group.groupName}/channels`} render={(props) => <Channels {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/ch/:channelId`} render={(props) => <Chat {...props} {...context} />} />
+              <Route exact path={`/${group.groupName}/pr/:userId`} render={(props) => <Profile {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/blog`} render={(props) => <Articles {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/bl/:articleId`} render={(props) => <Blog {...props} {...context} />} />
             </Grid>
