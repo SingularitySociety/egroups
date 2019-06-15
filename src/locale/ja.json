@@ -28,6 +28,8 @@
     "group.path":"パス (６文字以上の英数字)",
     "path.conflict":"既に使われています",
 
+    "member.displayName":"メンバー名",
+
     "settings.open":"オープン (誰でも参加が可能）",
     "settings.channel.create":"チャンネルを新規作成する権限",
     "settings.article.create":"ブログ記事を新規作成する権限",
