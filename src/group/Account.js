@@ -12,6 +12,10 @@ const styles = theme => ({
 });
 
 class Account extends React.Component {
+    componentDidMount() {
+        const { selectTab } = this.props;
+        selectTab("account");
+    }
     handleLeave = async () => {
         const { db, user, group } = this.props;
         const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);

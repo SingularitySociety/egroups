@@ -29,6 +29,10 @@ class Settings extends React.Component {
       eventCreate: group.privileges.event.create || Privileges.member,
     };
   }
+  componentDidMount() {
+    const { selectTab } = this.props;
+    selectTab("settings");
+  }
   handleCheck = name => async event => {
     const { db, group } = this.props;
     const ref = db.doc(`groups/${group.groupId}`);

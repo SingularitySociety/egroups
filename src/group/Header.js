@@ -31,7 +31,10 @@ const tabIndexMap = {
   home: 0,
   chat: 1,
   blog: 2,
-  events: 3
+  events: 3,
+  account: 11,
+  settings: 21,
+  join: 31,
 }
 
 class MyAppBar extends React.Component {
@@ -92,17 +95,41 @@ render() {
             <MenuItem onClick={this.logout}><FormattedMessage id="logout" /></MenuItem>
           }
         </Menu>
-        <Tabs
-          value={tabIndex}
-          indicatorColor="primary"
-          textColor="primary"
-          centered
-        >
-          <Tab label={<FormattedMessage id="home" />} to={"/"+group.groupName} component={Link} />
-          <Tab label={<FormattedMessage id="channels" />} to={"/"+group.groupName+"/channels"} component={Link} />
-          <Tab label={<FormattedMessage id="blog" />} to={"/"+group.groupName+"/blog"} component={Link} />
-          <Tab label={<FormattedMessage id="events" />} to={"/"+group.groupName+"/events"} component={Link} />
-        </Tabs>
+        {
+          (() => {
+            if (tabIndex > 30) {
+              return (
+                <Tabs value={tabIndex-30} indicatorColor="primary" textColor="primary" centered >
+                  <Tab label={<FormattedMessage id="home" />} to={"/"+group.groupName} component={Link} />
+                  <Tab label={<FormattedMessage id="join" />} to={"/"+group.groupName+"/join"} component={Link} />
+                </Tabs>
+              )
+            } else if (tabIndex > 20) {
+              return (
+                <Tabs value={tabIndex-20} indicatorColor="primary" textColor="primary" centered >
+                  <Tab label={<FormattedMessage id="home" />} to={"/"+group.groupName} component={Link} />
+                  <Tab label={<FormattedMessage id="settings" />} to={"/"+group.groupName+"/settings"} component={Link} />
+                </Tabs>
+                )
+            } else if (tabIndex > 10) {
+              return (
+                <Tabs value={tabIndex-10} indicatorColor="primary" textColor="primary" centered >
+                  <Tab label={<FormattedMessage id="home" />} to={"/"+group.groupName} component={Link} />
+                  <Tab label={<FormattedMessage id="account" />} to={"/"+group.groupName+"/account"} component={Link} />
+                </Tabs>
+                )
+            } else {
+              return (
+                <Tabs value={tabIndex} indicatorColor="primary" textColor="primary" centered >
+                  <Tab label={<FormattedMessage id="home" />} to={"/"+group.groupName} component={Link} />
+                  <Tab label={<FormattedMessage id="channels" />} to={"/"+group.groupName+"/channels"} component={Link} />
+                  <Tab label={<FormattedMessage id="blog" />} to={"/"+group.groupName+"/blog"} component={Link} />
+                  <Tab label={<FormattedMessage id="events" />} to={"/"+group.groupName+"/events"} component={Link} />
+                </Tabs>
+                )
+            }
+          })()
+        }
         {
           !member && 
             <Grid container justify="center" className={classes.join}>

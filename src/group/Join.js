@@ -36,6 +36,10 @@ class Join extends React.Component {
         this.setState({error:"Unable to Join"})
     }
   }
+  componentDidMount() {
+    const { selectTab } = this.props;
+    selectTab("join");
+  }
   render() {
     const { user, classes, group, member } = this.props;
     const { error } = this.state;
