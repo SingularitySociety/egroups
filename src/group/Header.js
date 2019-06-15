@@ -33,6 +33,7 @@ const tabIndexMap = {
   blog: 2,
   events: 3,
   account: 11,
+  listing: 12,
   settings: 21,
   join: 31,
 }
@@ -116,6 +117,7 @@ render() {
                 <Tabs value={tabIndex-10} indicatorColor="primary" textColor="primary" centered >
                   <Tab label={<FormattedMessage id="home" />} to={"/"+group.groupName} component={Link} />
                   <Tab label={<FormattedMessage id="account" />} to={"/"+group.groupName+"/account"} component={Link} />
+                  <Tab label={<FormattedMessage id="listing" />} to={"/"+group.groupName+"/listing"} component={Link} />
                 </Tabs>
                 )
             } else {
