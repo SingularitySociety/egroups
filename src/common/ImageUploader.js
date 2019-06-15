@@ -18,29 +18,22 @@ const styles = theme => ({
 class About extends React.Component {
   state = {imageUrl:null};
   async componentDidMount() {
-    const { imagePath } = this.props;
     const storagRef = firebase.storage().ref();
-    const imageRef = storagRef.child(imagePath);
-    const imageUrl = await imageRef.getDownloadURL();
+    this.imageRef = storagRef.child(this.props.imagePath);
+    const imageUrl = await this.imageRef.getDownloadURL();
     this.setState({imageUrl});
   }
   onFileInput = (e) => {
-    const { imagePath, onImageUpload } = this.props;
-    const file = e.target.files[0];
-    console.log("onFileInput", imagePath);
-    const storagRef = firebase.storage().ref();
-    const imageRef = storagRef.child(imagePath);
-    console.log(imageRef.fullPath);
-    const task = imageRef.put(file);
+    const task = this.imageRef.put(e.target.files[0]);
     task.on('state_changed', (snapshot)=>{
-      console.log("progress");
+      console.log("progress", snapshot.progress);
     }, (error) => {
       console.log("failed");
     }, async () => {
       console.log("success");
       const imageUrl = await task.snapshot.ref.getDownloadURL();
       console.log("url", imageUrl);
-      onImageUpload(imageUrl);
+      this.props.onImageUpload(imageUrl);
       this.setState({imageUrl});
     })
   }    

@@ -7,6 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import PrivilegeOptions from './PrivilegeOptions';
 import Privileges from '../const/Privileges';
 import EditableField from '../common/EditableField';
+import ImageUploader from '../common/ImageUploader';
 
 const styles = theme => ({
   main: {
@@ -58,7 +59,10 @@ class Settings extends React.Component {
     const ref = db.doc(`groups/${group.groupId}`);
     await ref.set({[name]:value}, {merge:true});
     this.props.reloadGroup();
-  }    
+  }
+  onImageUpload = (imageUrl) => {
+    console.log("onImageUpload", imageUrl);
+  }
   render() {
     const { classes, group } = this.props;
     const open = group.privileges.membership.open || false;
@@ -83,6 +87,10 @@ class Settings extends React.Component {
               control={ <Switch checked={open} onChange={this.handleCheck('open')} value="open" /> }
               label={<FormattedMessage id="settings.open" />}
             />
+          </FormGroup>
+
+          <FormGroup row>
+            <ImageUploader imagePath={`/groups/${group.groupId}/profile`} onImageUpload={this.onImageUpload}/>
           </FormGroup>
 
           <FormControl className={classes.formControl}>
