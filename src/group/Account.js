@@ -40,7 +40,7 @@ class Account extends React.Component {
         if (!member) {
             return "";
         }
-        console.log(member);
+        console.log(user, member);
         return <div>
           <FormGroup row>
             <EditableField label={<FormattedMessage id="member.displayName"/>} 
@@ -49,6 +49,18 @@ class Account extends React.Component {
           <FormGroup row>
             <EditableField label={<FormattedMessage id="member.profile"/>} multiline={true}
                 value={member.profile} onSave={this.onSave('profile')}/>
+          </FormGroup>
+          <FormGroup row>
+            <EditableField label={<FormattedMessage id="member.email"/>} 
+                value={member.email || ""} onSave={this.onSave('email')}/>
+          </FormGroup>
+          <FormGroup row>
+            <EditableField label={<FormattedMessage id="member.twitter"/>} 
+                value={member.twitter || ""} onSave={this.onSave('twitter')}/>
+          </FormGroup>
+          <FormGroup row>
+            <EditableField label={<FormattedMessage id="member.github"/>} 
+                value={member.github || ""} onSave={this.onSave('github')}/>
           </FormGroup>
           <Typography>Click the "LEAVE" button below to leave this community.</Typography>
           <Button variant="contained" className={classes.button} onClick={this.handleLeave}><FormattedMessage id="leave" /></Button>

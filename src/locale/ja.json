@@ -31,6 +31,9 @@
 
     "member.displayName":"メンバー名",
     "member.profile":"自己紹介",
+    "member.email":"メールアドレス",
+    "member.twitter":"Twitter ID",
+    "member.github":"GitHub ID",
 
     "settings.open":"オープン (誰でも参加可能）",
     "settings.channel.create":"チャンネルを新規作成する権限",
