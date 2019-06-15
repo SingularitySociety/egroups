@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography, FormGroup, Switch, FormControlLabel } from '@material-ui/core';
+import { FormGroup, Switch, FormControlLabel } from '@material-ui/core';
 import { FormControl, InputLabel, Select } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import PrivilegeOptions from './PrivilegeOptions';
@@ -79,9 +79,6 @@ class Settings extends React.Component {
     const { open, channelCreate, articleCreate, eventCreate } = this.state;
     return (
       <div>
-        <Typography component="h2" variant="h5" gutterBottom>
-          <FormattedMessage id="settings" />
-        </Typography>
         <div className={classes.main}>
           <FormGroup row>
             <EditableField label={<FormattedMessage id="group.title"/>} value={group.title} onSave={this.onSave('title')}/>

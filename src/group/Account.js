@@ -50,9 +50,6 @@ class Account extends React.Component {
             <EditableField label={<FormattedMessage id="member.profile"/>} multiline={true}
                 value={member.profile} onSave={this.onSave('profile')}/>
           </FormGroup>
-          <Typography component="h2" variant="h6" gutterBottom>
-            <FormattedMessage id="account" />
-          </Typography>
           <Typography>Click the "LEAVE" button below to leave this community.</Typography>
           <Button variant="contained" className={classes.button} onClick={this.handleLeave}><FormattedMessage id="leave" /></Button>
         </div>

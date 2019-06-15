@@ -16,7 +16,6 @@ class ChannelList extends React.Component {
   componentDidMount() {
     const { db, group } = this.props;
     this.detacher = db.collection(`groups/${group.groupId}/channels`).orderBy("created", "desc").onSnapshot((snapshot) => {
-      console.log("onSnapshot")
       const list = [];
       snapshot.forEach((doc)=>{
         const channel = doc.data();
