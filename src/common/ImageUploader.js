@@ -11,7 +11,14 @@ const styles = theme => ({
     marginBottom: theme.spacing(1),
   },
   thumbnail: {
-    height: "calc(30vmin)",
+    height: "calc(40vmin)",
+    width: "calc(40vmin)",
+    backgroundPosition: "center",
+    backgroundSize: "cover",
+    backgroundColor: "lightgray",
+    border: "1px lightgray solid",
+    borderRadius: theme.spacing(3),
+    marginBottom: theme.spacing(1),
   }
 });
 
@@ -26,13 +33,11 @@ class About extends React.Component {
   onFileInput = (e) => {
     const task = this.imageRef.put(e.target.files[0]);
     task.on('state_changed', (snapshot)=>{
-      console.log("progress", snapshot.progress);
+      console.log("progress", snapshot);
     }, (error) => {
       console.log("failed");
     }, async () => {
-      console.log("success");
       const imageUrl = await task.snapshot.ref.getDownloadURL();
-      console.log("url", imageUrl);
       this.props.onImageUpload(imageUrl);
       this.setState({imageUrl});
     })
@@ -40,10 +45,9 @@ class About extends React.Component {
   render() {
     const { classes } = this.props;
     const { imageUrl } = this.state;
+    const imageStyle = imageUrl ? { backgroundImage:`url("${imageUrl}")` } : {};
     return (<div className={classes.root}>
-        {
-          imageUrl && <img className={classes.thumbnail} alt="profile" src={imageUrl} />
-        }
+        <div className={classes.thumbnail} style={imageStyle} />
         <Button variant="contained" component="label">
             Upload Image
             <input type="file" accept="image/*" style={{ display: "none" }} onChange={this.onFileInput} />
