@@ -32,6 +32,7 @@
     "member.profile":"自己紹介",
 
     "settings.open":"オープン (誰でも参加が可能）",
+    "settings.listing":"名簿（メンバー限定）",
     "settings.channel.create":"チャンネルを新規作成する権限",
     "settings.article.create":"ブログ記事を新規作成する権限",
     "settings.event.create":"イベントを新規作成する権限",

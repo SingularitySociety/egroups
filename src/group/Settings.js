@@ -37,14 +37,8 @@ class Settings extends React.Component {
     const { db, group } = this.props;
     const ref = db.doc(`groups/${group.groupId}`);
     this.setState({ [name]: event.target.checked });
-    switch(name) {
-    case "open":
-      await ref.set({privileges:{membership:{open:event.target.checked}}}, {merge:true});
-      break;
-    default:
-      console.log("no handler", name);
-      break;
-    }
+    await ref.set({privileges:{membership:{[name]:event.target.checked}}}, {merge:true});
+    this.props.reloadGroup();
   };    
   handleChange = name => async event => {
     const { db, group } = this.props;
@@ -76,7 +70,7 @@ class Settings extends React.Component {
   }    
   render() {
     const { classes, group } = this.props;
-    const { open, channelCreate, articleCreate, eventCreate } = this.state;
+    const { open, listing, channelCreate, articleCreate, eventCreate } = this.state;
     return (
       <div>
         <div className={classes.main}>
@@ -90,10 +84,14 @@ class Settings extends React.Component {
 
           <FormGroup row>
             <FormControlLabel 
-              control={
-                <Switch checked={open} onChange={this.handleCheck('open')} value="open" />
-              }
+              control={ <Switch checked={open} onChange={this.handleCheck('open')} value="open" /> }
               label={<FormattedMessage id="settings.open" />}
+            />
+          </FormGroup>
+          <FormGroup row>
+            <FormControlLabel 
+              control={ <Switch checked={listing || false} onChange={this.handleCheck('listing')} value="listing" /> }
+              label={<FormattedMessage id="settings.listing" />}
             />
           </FormGroup>
 

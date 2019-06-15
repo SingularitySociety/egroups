@@ -70,6 +70,7 @@ class GroupHome extends React.Component {
     const group = (await this.refGroup.get()).data();
     group.groupId = prev.groupId;
     group.groupName = prev.groupName;
+    console.log(group);
     this.setState({group:group, groupId:prev.groupId});
   }
 
