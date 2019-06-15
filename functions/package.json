@@ -8,14 +8,14 @@
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "mocha": "mocha  -r ts-node/register --recursive test/*.ts"
+    "mocha": "mocha  -r ts-node/register --recursive test/*_test.ts"
   },
   "engines": {
     "node": "8"
   },
   "main": "lib/index.js",
   "dependencies": {
-    "firebase-admin": "~7.0.0",
+    "firebase-admin": "~8.1.0",
     "firebase-functions": "^2.3.0"
   },
   "devDependencies": {
