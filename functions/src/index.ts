@@ -16,6 +16,17 @@ app.get('/api/hello', async (req:any, res) => {
 
 export const api = functions.https.onRequest(app);
 
+// MEMO: In order to make this work, you need to go to add "Servie Account Toke Creator" role to 
+// the associated App Engine default service account. 
+// From Firebase console, 
+// (1) open the setting, 
+// (2) select Service account tab, 
+// (3) click "Manage service account permissions"
+//   notice that "App Engine default service account" is listed
+// (4) Click the "IAM" on the side bar
+// (5) Find the "App Engine default service account" and click the Edit button
+// (6) Click "+ Add Another Role"
+// (7) Select "Service Account Token Creator" and Save
 export const getJWT = functions.https.onCall(async (data, context) => {
   if (context.auth) {
     const token = await admin.auth().createCustomToken(context.auth.uid);
