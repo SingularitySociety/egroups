@@ -44,7 +44,7 @@ export const groupDidCreate = functions.firestore.document('groups/{groupId}')
     const { groupId } = context.params;
     const db = admin.firestore();
     console.log(context);
-    const newValue = snapshot.data(); // this is a hack because I can't access context.auth.uid for some reason
+    const newValue = snapshot.data(); // BUGBUG: this is a hack because I can't access context.auth.uid for some reason
     const userId = newValue && newValue.owner;
     await db.doc(`/groups/${groupId}/owners/${userId}`).set({
       created: new Date()
@@ -53,6 +53,8 @@ export const groupDidCreate = functions.firestore.document('groups/{groupId}')
     return db.doc(`/groups/${groupId}/members/${userId}`).set({
       created: new Date(),
       displayName: (newValue && newValue.ownerName) || "admin",
+      uid: userId,
+      groupId: groupId,
     });
   });
 
