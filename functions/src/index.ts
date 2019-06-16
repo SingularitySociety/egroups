@@ -1,15 +1,29 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import * as express from 'express';
+import * as cors from 'cors';
+//import * as fs from 'fs';
 
 import * as utils from './utils'
 
 admin.initializeApp();
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-export const helloWorld = functions.https.onRequest((request, response) => {
-  response.send("Hello from Firebase!");
+const app = express();
+app.use(cors());
+
+app.get('/api/hello', async (req:any, res) => {
+  console.log('hello');
+  res.send("hello world with Express");
+});
+
+export const api = functions.https.onRequest(app);
+
+export const getJWT = functions.https.onCall(async (data, context) => {
+  if (context.auth) {
+    const token = await admin.auth().createCustomToken(context.auth.uid);
+    return { token: token }
+  }
+  return { token: null };
 });
 
 export const groupDidCreate = functions.firestore.document('groups/{groupId}')
@@ -42,17 +56,36 @@ export const memberDidCreate = functions.firestore.document('groups/{groupId}/me
     const { groupId, userId } = context.params;
     const db = admin.firestore();
     const owner = (await db.doc(`/groups/${groupId}/owners/${userId}`).get()).data();
-    return db.doc("/groups/" + groupId + "/privileges/" + userId).set({
-      // We set the privilege of the owner here so that the owner can leave and join. 
-      value: owner ? 0x2000000 : 1, // owner or member
+    // We set the privilege of the owner here so that the owner can leave and join. 
+    const privilege = owner ? 0x2000000 : 1; // owner or member
+    await db.doc("/groups/" + groupId + "/privileges/" + userId).set({
+      value: privilege,
       created: new Date(),
     });
+
+    // This is for custom token to control the access to Firestore Storage.
+    return db.doc(`/privileges/${userId}`).set({
+      [groupId]: privilege 
+    }, {merge:true});
   });
 
 export const memberDidDelete = functions.firestore.document('groups/{groupId}/members/{userId}')
-  .onDelete((snapshot, context)=>{
+  .onDelete(async (snapshot, context)=>{
     const { groupId, userId } = context.params;
-    return admin.firestore().doc("/groups/" + groupId + "/privileges/" + userId).delete();
+    const db = admin.firestore();
+    await db.doc("/groups/" + groupId + "/privileges/" + userId).delete();
+
+    // This is for custom token to control the access to Firestore Storage.
+    const ref = db.doc(`/privileges/${userId}`);
+    return admin.firestore().runTransaction(async (tr) => {
+      const doc = await tr.get(ref);
+      const data = doc.data();
+      if (data) {
+        delete data[groupId];
+        return tr.set(ref, data); // no merge
+      }
+      return true;
+    });
   });
 
 export const messageDidCreate = functions.firestore.document('groups/{groupId}/channels/{channelId}/messages/{messageId}')
