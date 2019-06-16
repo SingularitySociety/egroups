@@ -35,6 +35,11 @@ jobs:
       - run:
           name: firestore test
           command: npm run mocha
+      - run:
+          name: funtions test
+          command: |
+            cd functions
+            npm run mocha
       #- run:
       #    name: build
       #    command: npm run build
