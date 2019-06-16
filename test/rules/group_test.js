@@ -12,8 +12,20 @@ const charlieUID = "charlie";
 
 const admin_db = test_helper.adminDB();
 
-const alice_db = test_helper.authedDB({ uid: aliceUID });
-const bob_db = test_helper.authedDB({ uid: bobUID });
+const alice_db = test_helper.authedDB({
+  uid: aliceUID,
+  privileges: {
+    alice_group: 33554432,
+  }
+  
+});
+const bob_db = test_helper.authedDB({
+  uid: bobUID,
+  privileges: {
+    alice_group: 1,
+  }
+
+});
 const charlie_db = test_helper.authedDB({ uid: charlieUID });
 
 describe("Group app create and membership", () => {
@@ -26,7 +38,10 @@ describe("Group app create and membership", () => {
     await test_helper.add_group_privilege_for_admin(admin_db, aliceGroupId, aliceUID);
 
     await firebase.assertSucceeds(alice_group.get());
-    await firebase.assertSucceeds(alice_group.update({"aa": "bb"}));
+    await firebase.assertSucceeds(alice_group.update({
+      "title": "hello",
+      "privileges": 1,
+    }));
   });
 
   it("should not update group by bob", async () => {
