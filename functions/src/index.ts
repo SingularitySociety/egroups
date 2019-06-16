@@ -16,6 +16,10 @@ app.get('/api/hello', async (req:any, res) => {
 
 export const api = functions.https.onRequest(app);
 
+export const getJWT = functions.https.onCall((data, context) => {
+  return { message: "Hello World" };
+});
+
 export const groupDidCreate = functions.firestore.document('groups/{groupId}')
   .onCreate(async (snapshot, context)=>{
     const { groupId } = context.params;

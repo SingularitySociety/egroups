@@ -10,7 +10,8 @@ import Login from './Login';
 import Decoder from './Decoder';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
-import "firebase/messaging"
+import "firebase/messaging";
+import "firebase/functions";
 import config from './config';
 import { appConfig } from './config';
 import {addLocaleData, IntlProvider} from 'react-intl';
@@ -44,8 +45,11 @@ class App extends React.Component {
         }
         this.setState({user: user});
         if (user) {
-          this.detachPrivilegesObserver = db.doc(`privileges/${user.uid}`).onSnapshot((snapshot) => {
-            console.log("onSnapshot", snapshot.data())
+          this.detachPrivilegesObserver = db.doc(`privileges/${user.uid}`).onSnapshot(async (snapshot) => {
+            console.log("onSnapshot", snapshot.data());
+            const getJWT = firebase.functions().httpsCallable('getJWT');
+            const token = (await getJWT()).data; 
+            console.log("token", token);
           });
 
           const refUser = db.collection("users").doc(user.uid);
