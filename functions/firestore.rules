@@ -1,1 +1,107 @@
-../firestore.rules
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function groupInfo(groupId) {
+      return get(/databases/$(database)/documents/groups/$(groupId)).data;
+    }
+    function channelInfo(groupId, channelId) {
+      return get(/databases/$(database)/documents/groups/$(groupId)/channels/$(channelId)).data;
+    }
+    function articleInfo(groupId, articleId) {
+      return get(/databases/$(database)/documents/groups/$(groupId)/articles/$(articleId)).data;
+    }
+    function userPrivilege(groupId, userId) {
+      return get(/databases/$(database)/documents/groups/$(groupId)/privileges/$(userId)).data.value;
+    }
+    function isGroupOpen(groupId) {
+      return groupInfo(groupId).privileges.membership.open == true;
+    }
+    function isUserAdmin(groupId, userId) {
+      return userPrivilege(groupId, userId) >= 16777216; // 0x1000000
+    }
+    function isUserOwner(groupId, userId) {
+      return exists(/databases/$(database)/documents/groups/$(groupId)/owners/$(userId));
+    }
+    function isUserMember(groupId, userId) {
+      return exists(/databases/$(database)/documents/groups/$(groupId)/members/$(userId));
+    }
+
+    match /users/{userId} {
+      allow read, create, update, delete: if request.auth.uid == userId;
+      match /private/{anything=**} {
+        allow read, write: if request.auth.uid == userId;
+      }
+      match /public/{anything=**} {
+        allow read: if request.auth.uid != null;
+        allow write: if request.auth.uid == userId;
+      }
+    }
+		match /groupNames/{groupName} {
+      // NEVER allow the client to modify or delete. 
+    	allow read;
+      allow create: if request.auth.uid != null;
+    }
+		match /groups/{groupId} {
+    	allow read;
+      allow create: if request.auth.uid != null;
+      allow update: if request.auth.uid != null && isUserAdmin(groupId, request.auth.uid)
+          && request.resource.data.title != null && request.resource.data.privileges != null; // to avoid fogotten merge
+      allow delete: if request.auth.uid != null && isUserOwner(groupId, request.auth.uid);
+    }
+		match /groups/{groupId}/members/{userId} {
+    	allow read: if request.auth.uid == userId || isUserAdmin(groupId, request.auth.uid);
+      allow read: if isUserMember(groupId, request.auth.uid) 
+          && groupInfo(groupId).privileges.member.read <= userPrivilege(groupId, request.auth.uid);
+      allow create: if request.auth.uid == userId && isGroupOpen(groupId) 
+                      && userId == request.resource.data.uid && groupId == request.resource.data.groupId;
+      allow create: if request.auth.uid == userId && isUserOwner(groupId, request.auth.uid)
+                      && userId == request.resource.data.uid && groupId == request.resource.data.groupId;
+      allow delete, update: if request.auth.uid == userId
+                      && userId == request.resource.data.uid && groupId == request.resource.data.groupId;
+      allow delete: if request.auth.uid == userId;
+    }
+    match /groups/{groupId}/members/{userId}/private/{itemId} {
+      allow read, write: if request.auth.uid == userId;
+    }
+		match /groups/{groupId}/privileges/{userId} {
+      // NEVER allow the client write anything here.   
+    	allow read: if request.auth.uid == userId || isUserAdmin(groupId, request.auth.uid);
+    }
+		match /groups/{groupId}/owners/{userId} {
+      // NEVER allow the client write anything here.   
+      allow read, write: if false;
+    }
+		match /groups/{groupId}/channels/{channelId} {
+    	allow read;
+      allow create: if request.auth.uid != null 
+          && groupInfo(groupId).privileges.channel.create <= userPrivilege(groupId, request.auth.uid);
+    }
+		match /groups/{groupId}/articles/{articleId} {
+    	allow read;
+      allow create: if request.auth.uid != null 
+          && groupInfo(groupId).privileges.article.create <= userPrivilege(groupId, request.auth.uid);
+      allow update, delete: if resource.data.owner == request.auth.uid;
+    }
+		match /groups/{groupId}/articles/{articleId}/sections/{sectionId} {
+      allow read: if request.auth.uid != null 
+          && articleInfo(groupId, articleId).read <= userPrivilege(groupId, request.auth.uid);
+      allow write: if request.auth.uid != null 
+          && articleInfo(groupId, articleId).owner == request.auth.uid;
+    }
+		match /groups/{groupId}/events/{eventId} {
+    	allow read;
+      allow create: if request.auth.uid != null 
+          && groupInfo(groupId).privileges.event.create <= userPrivilege(groupId, request.auth.uid);
+    }
+		match /groups/{groupId}/channels/{channelId}/messages/{messageId} {
+      allow read: if request.auth.uid != null 
+          && channelInfo(groupId, channelId).read <= userPrivilege(groupId, request.auth.uid);
+      allow create: if request.auth.uid != null 
+          && channelInfo(groupId, channelId).write <= userPrivilege(groupId, request.auth.uid);
+      // add "allow update/delete" for the author
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
