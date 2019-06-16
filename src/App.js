@@ -51,6 +51,11 @@ class App extends React.Component {
             const token = (await getJWT()).data; 
             console.log("token", token);
             this.setState({privileges: token.privileges});
+            try {
+              await firebase.auth().signInWithCustomToken(token.token);
+            } catch(e) {
+              console.log(e);
+            }
           });
 
           const refUser = db.collection("users").doc(user.uid);

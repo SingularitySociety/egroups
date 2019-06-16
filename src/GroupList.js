@@ -47,7 +47,7 @@ class GroupList extends React.Component {
                 </div>
             })
         }
-        <CreateNew label={<FormattedMessage id="group.name" />} createNew={this.createNew} action={<FormattedMessage id="create" />} />
+        <CreateNew label={<FormattedMessage id="group.title" />} createNew={this.createNew} action={<FormattedMessage id="create" />} />
     </div>
   }
 }

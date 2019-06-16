@@ -102,7 +102,7 @@ class NewGroup extends React.Component {
       return <Redirect to={ redirect } />
     }
     const privilege = privileges && privileges[groupId];
-    const disabledSubmit = invalid || privilege !== Privileges.admin
+    const disabledSubmit = invalid || privilege !== Privileges.owner
     return (
       <React.Fragment>
         <Header user={user} />
@@ -120,7 +120,7 @@ class NewGroup extends React.Component {
               <br/>
               <div>Group URL: {`https:/${window.location.host}/${path || "..."}`}</div>
               <div>
-                <Button variant="contained" color="primary" className={classes.button} disabled={ invalid }
+                <Button variant="contained" color="primary" className={classes.button} disabled={ disabledSubmit }
                   onClick={this.onSubmit} type="submit"><FormattedMessage id="create" /></Button>
                 <Button variant="contained" className={classes.button} onClick={this.onCancel}>
                     <FormattedMessage id="cancel" />
