@@ -50,6 +50,8 @@ export const memberDidCreate = functions.firestore.document('groups/{groupId}/me
       // We set the privilege of the owner here so that the owner can leave and join. 
       value: owner ? 0x2000000 : 1, // owner or member
       created: new Date(),
+      uid: userId, // HACK: quick access after collectionGroup query
+      groupId: groupId, // HACK: quick access after collectionGroup query
     });
   });
 
