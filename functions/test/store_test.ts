@@ -37,7 +37,13 @@ describe("test topic subscription", () => {
     await messaging.subscribe_group([123], [], "1", admin_db, (tokens, topic) => {
       tokens.should.members([123]);
       topic.should.equal(topic_ids.shift());
+    }, () => {});
+    const topic_ids2 = ["g_1", "g_2", "g_3", "g_4"];
+    await messaging.subscribe_group([], [123], "1", admin_db, () => {}, (tokens, topic) => {
+      tokens.should.members([123]);
+      topic.should.equal(topic_ids2.shift());
     });
+
   })
 })
     

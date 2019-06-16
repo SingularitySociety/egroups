@@ -121,6 +121,6 @@ export const tokenDidCreate = functions.firestore.document('users/{userId}/priva
     const oldTokens = change.before ? ((change.before.data() || {}).tokens || []) : [];
 
     const db = admin.firestore();
-    return messaging.subscribe_group(newTokens, oldTokens, userId, db,  messaging.subscripe_topic);
+    return messaging.subscribe_group(newTokens, oldTokens, userId, db,  messaging.subscribe_topic, messaging.unsubscribe_topic);
   });
 

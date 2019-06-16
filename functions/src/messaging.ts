@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 import * as utils from './utils'
 
-export const subscribe_group = async (newTokens, oldTokens, userId, db, subscribe) => {
+export const subscribe_group = async (newTokens, oldTokens, userId, db, subscribe, unsubscribe) => {
   // see diff
   if (newTokens.length === oldTokens.length) {
     return;
@@ -22,16 +22,27 @@ export const subscribe_group = async (newTokens, oldTokens, userId, db, subscrib
   }
   if (newTokens.length < oldTokens.length) {
     //remove
-    const diff = utils.array_diff(oldTokens, newTokens);
-    console.log(diff);
+    const tokens = utils.array_diff(oldTokens, newTokens);
+    topics.forEach((topic) => {
+      unsubscribe(tokens, topic);
+    });
   } 
   return
 
 }
 
-export const subscripe_topic = (tokens, topic) => {
+export const subscribe_topic = (tokens, topic) => {
   try {
     const response = admin.messaging().subscribeToTopic(tokens, topic);
+    console.log('Successfully subscribed to topic:', response);
+  } catch(error) {
+    console.log('Error subscribing to topic:', error);
+  }
+}
+
+export const unsubscribe_topic = (tokens, topic) => {
+  try {
+    const response = admin.messaging().unsubscribeFromTopic(tokens, topic);
     console.log('Successfully subscribed to topic:', response);
   } catch(error) {
     console.log('Error subscribing to topic:', error);
