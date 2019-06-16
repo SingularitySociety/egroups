@@ -38,8 +38,16 @@ class App extends React.Component {
   componentDidMount() {
     this.unregisterAuthObserver = firebase.auth().onAuthStateChanged(
       async (user) => {
+        if (this.detachPrivilegesObserver) {
+          this.detachPrivilegesObserver();
+          this.detachPrivilegesObserver = null;
+        }
         this.setState({user: user});
         if (user) {
+          this.detachPrivilegesObserver = db.doc(`privileges/${user.uid}`).onSnapshot((snapshot) => {
+            console.log("onSnapshot", snapshot.data())
+          });
+
           const refUser = db.collection("users").doc(user.uid);
           const newValue = { lastAccessed:firebase.firestore.FieldValue.serverTimestamp() };
           const doc = (await refUser.get()).data();
@@ -56,6 +64,14 @@ class App extends React.Component {
     
   }
 
+  componentWillUnmount() {
+    if (this.detachPrivilegesObserver) {
+      this.detachPrivilegesObserver();
+    }
+    this.unregisterAuthObserver();
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+  
   getPushToken() {
     if (config.messageKey && firebase.messaging.isSupported()) {
       const messaging = firebase.messaging();
@@ -79,10 +95,6 @@ class App extends React.Component {
     }
   }
   
-  componentWillUnmount() {
-    this.unregisterAuthObserver();
-    window.removeEventListener('resize', this.updateWindowDimensions);
-  }
   updateWindowDimensions() {
     this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
