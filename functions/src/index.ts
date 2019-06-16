@@ -46,19 +46,36 @@ export const memberDidCreate = functions.firestore.document('groups/{groupId}/me
     const { groupId, userId } = context.params;
     const db = admin.firestore();
     const owner = (await db.doc(`/groups/${groupId}/owners/${userId}`).get()).data();
-    return db.doc("/groups/" + groupId + "/privileges/" + userId).set({
-      // We set the privilege of the owner here so that the owner can leave and join. 
-      value: owner ? 0x2000000 : 1, // owner or member
+    // We set the privilege of the owner here so that the owner can leave and join. 
+    const privilege = owner ? 0x2000000 : 1; // owner or member
+    await db.doc("/groups/" + groupId + "/privileges/" + userId).set({
+      value: privilege,
       created: new Date(),
-      uid: userId, // HACK: quick access after collectionGroup query
-      groupId: groupId, // HACK: quick access after collectionGroup query
     });
+
+    // This is for custom token to control the access to Firestore Storage.
+    return db.doc(`/privileges/${userId}`).set({
+      [groupId]: privilege 
+    }, {merge:true});
   });
 
 export const memberDidDelete = functions.firestore.document('groups/{groupId}/members/{userId}')
-  .onDelete((snapshot, context)=>{
+  .onDelete(async (snapshot, context)=>{
     const { groupId, userId } = context.params;
-    return admin.firestore().doc("/groups/" + groupId + "/privileges/" + userId).delete();
+    const db = admin.firestore();
+    await db.doc("/groups/" + groupId + "/privileges/" + userId).delete();
+
+    // This is for custom token to control the access to Firestore Storage.
+    const ref = db.doc(`/privileges/${userId}`);
+    return admin.firestore().runTransaction(async (tr) => {
+      const doc = await tr.get(ref);
+      const data = doc.data();
+      if (data) {
+        delete data[groupId];
+        return tr.set(ref, data); // no merge
+      }
+      return true;
+    });
   });
 
 export const messageDidCreate = functions.firestore.document('groups/{groupId}/channels/{channelId}/messages/{messageId}')
