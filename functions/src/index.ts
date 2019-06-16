@@ -29,8 +29,10 @@ export const api = functions.https.onRequest(app);
 // (7) Select "Service Account Token Creator" and Save
 export const getJWT = functions.https.onCall(async (data, context) => {
   if (context.auth) {
-    const token = await admin.auth().createCustomToken(context.auth.uid);
-    return { token: token }
+    const db = admin.firestore();
+    const privileges = (await db.doc(`/privileges/${context.auth.uid}`).get()).data();    
+    const token = await admin.auth().createCustomToken(context.auth.uid, {privileges});
+    return { token, privileges }
   }
   return { token: null };
 });

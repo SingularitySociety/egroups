@@ -96,11 +96,13 @@ class NewGroup extends React.Component {
   };
 
   render() {
-    const { classes, user } = this.props;
+    const { classes, user, privileges, match:{params:{groupId}} } = this.props;
     const { redirect, title, path, invalid, conflict } = this.state;
     if (redirect) {
       return <Redirect to={ redirect } />
     }
+    const privilege = privileges && privileges[groupId];
+    const disabledSubmit = invalid || privilege !== Privileges.admin
     return (
       <React.Fragment>
         <Header user={user} />

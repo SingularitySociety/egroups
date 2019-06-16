@@ -50,6 +50,7 @@ class App extends React.Component {
             const getJWT = firebase.functions().httpsCallable('getJWT');
             const token = (await getJWT()).data; 
             console.log("token", token);
+            this.setState({privileges: token.privileges});
           });
 
           const refUser = db.collection("users").doc(user.uid);
@@ -104,7 +105,8 @@ class App extends React.Component {
   }
 
   render() {
-    const params = { user:this.state.user, db:db, rootGroup:appConfig.rootGroup };
+    const { user, privileges } = this.state;
+    const params = { user, db, privileges, rootGroup:appConfig.rootGroup };
     //console.log("App:", window.location.pathname);
     const language = navigator.language.split(/[-_]/)[0];  // language without region code
     return (
