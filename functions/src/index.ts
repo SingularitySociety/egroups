@@ -16,8 +16,12 @@ app.get('/api/hello', async (req:any, res) => {
 
 export const api = functions.https.onRequest(app);
 
-export const getJWT = functions.https.onCall((data, context) => {
-  return { message: "Hello World" };
+export const getJWT = functions.https.onCall(async (data, context) => {
+  if (context.auth) {
+    const token = await admin.auth().createCustomToken(context.auth.uid);
+    return { token: token }
+  }
+  return { token: null };
 });
 
 export const groupDidCreate = functions.firestore.document('groups/{groupId}')
