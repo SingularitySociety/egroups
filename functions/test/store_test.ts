@@ -2,7 +2,7 @@ import * as test_helper from "../../lib/test/rules/test_helper";
 import * as firebase from "@firebase/testing";
 import { should } from 'chai';
 
-import * as index from '../src/index';
+import * as messaging from '../src/messaging';
 
 should()
 
@@ -34,7 +34,7 @@ describe("test topic subscription", () => {
     });
 
     const topic_ids = ["g_1", "g_2", "g_3", "g_4"];
-    await index.subscribe_topic([123], [], "1", admin_db, (tokens, topic) => {
+    await messaging.subscribe_group([123], [], "1", admin_db, (tokens, topic) => {
       tokens.should.members([123]);
       topic.should.equal(topic_ids.shift());
     });
