@@ -47,8 +47,8 @@ class App extends React.Component {
             newValue.displayName = user.displayName;
           }
           await refUser.set(newValue, { merge: true });
+          this.getPushToken(user);
         }
-        this.getPushToken(user);
       }
     );
     this.updateWindowDimensions();

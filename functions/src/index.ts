@@ -66,23 +66,6 @@ export const messageDidCreate = functions.firestore.document('groups/{groupId}/c
   });
 
 
-export const tokenDidCreate = functions.firestore.document('users/{userId}/private/tokens')
-  .onWrite((change, context) => {
-    const { userId } = context.params;
-    const newTokens = change.after.exists ? ((change.after.data() || {}).tokens || []) : [];
-    const oldTokens = change.before ? ((change.before.data() || {}).tokens || []) : [];
-
-    const db = admin.firestore();
-    subscribe_topic(newTokens, oldTokens, userId, db, (tokens, topic) => {
-      try {
-        const response = admin.messaging().subscribeToTopic(tokens, topic);
-        console.log('Successfully subscribed to topic:', response);
-      } catch(error) {
-        console.log('Error subscribing to topic:', error);
-      }
-    });
-  });
-
 export const subscribe_topic = async (newTokens, oldTokens, userId, db, subscribe) => {
   // see diff
   if (newTokens.length === oldTokens.length) {
@@ -110,3 +93,21 @@ export const subscribe_topic = async (newTokens, oldTokens, userId, db, subscrib
   return
 
 }
+
+export const tokenDidCreate = functions.firestore.document('users/{userId}/private/tokens')
+  .onWrite((change, context) => {
+    const { userId } = context.params;
+    const newTokens = change.after.exists ? ((change.after.data() || {}).tokens || []) : [];
+    const oldTokens = change.before ? ((change.before.data() || {}).tokens || []) : [];
+
+    const db = admin.firestore();
+    return subscribe_topic(newTokens, oldTokens, userId, db, (tokens, topic) => {
+      try {
+        const response = admin.messaging().subscribeToTopic(tokens, topic);
+        console.log('Successfully subscribed to topic:', response);
+      } catch(error) {
+        console.log('Error subscribing to topic:', error);
+      }
+    });
+  });
+
