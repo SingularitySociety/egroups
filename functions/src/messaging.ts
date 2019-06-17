@@ -68,3 +68,24 @@ export const unsubscribe_topic = async (tokens, topic) => {
     console.log('Error subscribing to topic:', error);
   }
 }
+
+export const push_message_to_group = async (groupId, channelId, messageId, messagePayload) => {
+  const message = {
+    data: {
+      groupId,
+      channelId,
+      messageId,
+      message: messagePayload.message,
+      messageUserName: messagePayload.userName,
+      messageUID: messagePayload.userId,
+    },
+    topic: groupId_to_topic(groupId),
+  };
+  await admin.messaging().send(message)
+    .then((response) => {
+      console.log('Successfully sent message:', response);
+    })
+    .catch((error) => {
+      console.log('Error sending message:', error);
+    });
+}
