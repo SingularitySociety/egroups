@@ -21,6 +21,7 @@ class Blog extends React.Component {
       this.setState({error:{key:"error.invalid.articleId", value:articleId}});
       return;
     }
+    article.articleId = articleId;
     this.setState({article});
     this.detatcher = this.refArticle.collection("sections").onSnapshot((snapshot)=>{
       const resources = {};
@@ -65,7 +66,6 @@ class Blog extends React.Component {
     const { article } = this.state;
     const doc = await this.refArticle.collection("sections").add({
       type: "image",
-      markdown: "BUGBUG (we are not to suposed to see this)",
       created: new Date(),
       author: user.uid,
     });
@@ -76,7 +76,8 @@ class Blog extends React.Component {
 
   render() {
     const { article, resources, error } = this.state;
-    const { user, member } = this.props;
+    const { user, group, member } = this.props;
+    const context = { user, group, article };
     if (error) {
       return <ErrorMessage error={error} />
     }
@@ -102,7 +103,7 @@ class Blog extends React.Component {
             return <div key={sectionId}>
               <BlogSection index={ index }sectionId={sectionId} resource={ resources[sectionId] } 
                   saveSection={this.updateSection} deleteSection={this.deleteSection} 
-                  insertPhoto={this.insertPhoto} readOnly={!canEdit}/>
+                  insertPhoto={this.insertPhoto} readOnly={!canEdit} {...context} />
               { canEdit && <BlogSection index={ index+1 } 
                   insertPhoto={this.insertPhoto} saveSection={this.insertSection} /> }
             </div>

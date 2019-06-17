@@ -8,6 +8,7 @@ import PhotoIcon from '@material-ui/icons/AddPhotoAlternate';
 import EditIcon from '@material-ui/icons/Edit';
 import RichTextEditor from 'react-rte'; // https://github.com/sstur/react-rte
 import MarkdownViewer from '../common/MarkdownViewer';
+import ImageUploader from '../common/ImageUploader';
 
 const styles = theme => ({
 });
@@ -36,13 +37,20 @@ class BlogSection extends React.Component {
     insertPhoto(index);
   }
   render() {
-    const { resource, sectionId, deleteSection, readOnly } = this.props;
+    const { group, resource, sectionId, article, deleteSection, readOnly } = this.props;
     const { editing } = this.state;
     if (!editing) {
       if (sectionId) {
         //console.log("render1", markdown);
         const value = RichTextEditor.createValueFromString(resource.markdown || "", 'markdown');
         //console.log("render1", value.toString("markdown"));
+        if (resource.type==="image") {
+          const imagePath = `groups/${group.groupId}/articles/${article.articleId}/${sectionId}`;
+          console.log(imagePath);
+          return (
+            <ImageUploader imagePath={imagePath} onImageUpload={()=>{}} />
+          );
+        }
         return <Grid container>
           <Grid item xs={11} style={{padding:"1px"}}>
             <MarkdownViewer value={value} useHtml={false} />

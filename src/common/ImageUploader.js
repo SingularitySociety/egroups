@@ -21,7 +21,7 @@ const styles = theme => ({
   }
 });
 
-class About extends React.Component {
+class ImageViewer extends React.Component {
   state = {imageUrl:null};
   async componentDidMount() {
     const storagRef = firebase.storage().ref();
@@ -59,10 +59,10 @@ class About extends React.Component {
   }
 }
 
-About.propTypes = {
+ImageViewer.propTypes = {
     classes: PropTypes.object.isRequired,
     imagePath: PropTypes.string.isRequired,
     onImageUpload: PropTypes.func.isRequired,
   };
   
-export default withStyles(styles)(About);
+export default withStyles(styles)(ImageViewer);
