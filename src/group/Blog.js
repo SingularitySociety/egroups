@@ -15,7 +15,7 @@ class Blog extends React.Component {
     const { db, group, match:{params:{articleId}} } = this.props;
     this.refArticle = db.doc(`groups/${group.groupId}/articles/${articleId}`);
     const article = (await this.refArticle.get()).data();
-    console.log("article=", article);
+    //console.log("article=", article);
     // BUGBUG: This is an attempt to catch non-existing but does not work because it causes security error unlike chat. 
     if (article === null) {
       this.setState({error:{key:"error.invalid.articleId", value:articleId}});
