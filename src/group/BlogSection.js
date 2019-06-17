@@ -30,7 +30,7 @@ class BlogSection extends React.Component {
     this.setState({editing:true})
   }
   render() {
-    const { markdown, sectionId, deleteSection, readOnly, classes } = this.props;
+    const { markdown, sectionId, deleteSection, readOnly } = this.props;
     const { editing } = this.state;
     if (!editing) {
       if (sectionId) {

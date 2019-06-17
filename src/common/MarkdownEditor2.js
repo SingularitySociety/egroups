@@ -4,6 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import theme from '../theme';
 import { Button, IconButton, Grid } from '@material-ui/core';
 import TrashIcon from '@material-ui/icons/Delete';
+import { FormatBold, FormatItalic, FormatUnderlined } from '@material-ui/icons';
+//import { FormatListBulleted, FormatListNumbered, Undo, Redo } from '@material-ui/icons';
 import { FormattedMessage } from 'react-intl';
 import { EditorValue }  from 'react-rte'; // https://github.com/sstur/react-rte
 //import { EditorValue } from 'react-rte';
@@ -64,19 +66,39 @@ class MarkdownEditor extends React.Component {
     return 'not-handled';
   }
 
+  toggleStyle = (style) => {
+    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, style));    
+  }
+
   render() {
     const { classes, action, onDelete } = this.props;
     const { editorState } = this.state;
     return (
       <div>
-      <Grid container>
-        <Grid item xs={11} className={classes.editorFrame}>
-          <Editor editorState={editorState} 
-            handleKeyCommand={this.handleKeyCommand}
-            onChange={this.onChange} />
+        <Grid container>
+          <Grid item>
+            <IconButton size="small" onClick={()=>{this.toggleStyle("BOLD")}}>
+              <FormatBold/>
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <IconButton size="small" onClick={()=>{this.toggleStyle("ITALIC")}}>
+              <FormatItalic/>
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <IconButton size="small" onClick={()=>{this.toggleStyle("UNDERLINE")}}>
+              <FormatUnderlined/>
+            </IconButton>
+          </Grid>
         </Grid>
-      </Grid>
-        
+        <Grid container>
+          <Grid item xs={11} className={classes.editorFrame}>
+            <Editor editorState={editorState} 
+              handleKeyCommand={this.handleKeyCommand}
+              onChange={this.onChange} />
+          </Grid>
+        </Grid>
         <Button variant="contained" color="primary" className={classes.button} 
                   onClick={this.onSave} type="submit">{action || "Save"}</Button>
         <Button variant="contained" className={classes.button} onClick={this.onCancel}>
