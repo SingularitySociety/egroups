@@ -14,7 +14,7 @@ const aliceUID = "alice";
 describe("test topic subscription", () => {
   it("should subscribe topic", async () => {
     const alice_group = admin_db.doc(`groups/${aliceGroupId}`);
-    // await firebase.assertSucceeds(test_helper.create_group(alice_group, aliceUID, aliceUID, true));
+    await firebase.assertSucceeds(test_helper.create_group(alice_group, aliceUID, aliceUID, true));
 
     await admin_db.doc(`groups/1/members/${aliceUID}`).set({
       uid: aliceUID,

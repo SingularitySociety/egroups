@@ -1,3 +1,4 @@
+import * as supertest from 'supertest';
 import * as index from '../src/index';
 import { should } from 'chai';
 import * as utils from '../src/utils'
@@ -16,16 +17,11 @@ describe('Hello function', () => {
     res3.should.members([]);
   });
 
-  it('should return hello world', () => {
-    const req = { query: {text: 'input'} };
+  it('should return hello world', async () => {
+    const request = supertest(index.app);
+    const response = await request.get("/api/hello");
 
-    const res = {
-      send: (payload: string) => {
-        payload.should.equal('Hello from Firebase!');
-      },
-    };
-
-    index.helloWorld(req as any, res as any);
-
+    response.status.should.equal(200);
+    response.text.should.equal("hello world with Express");
   });
 });
