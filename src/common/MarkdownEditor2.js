@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import theme from '../theme';
+//import theme from '../theme';
 import { Button, IconButton, Grid } from '@material-ui/core';
 import TrashIcon from '@material-ui/icons/Delete';
 import { FormatBold, FormatItalic, FormatUnderlined, FormatQuote } from '@material-ui/icons';

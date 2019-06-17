@@ -38,7 +38,7 @@ export const blockStyleFn = (classes, contentBlock) => {
   } else if (type === 'ordered-list-item') {
     return classes.orderedListItem;
   } else if (type === 'unstyled') {
-    console.log(type, classes.unstyled);
+    //console.log(type, classes.unstyled);
     return classes.unstyled;
   }
 }
