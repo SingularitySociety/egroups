@@ -73,6 +73,12 @@ class Blog extends React.Component {
     this.setState(article);
     await this.refArticle.set(article, {merge:true});
   }
+  onImageUpload = async (resourceId) => {
+    console.log("onImageUpload", resourceId);
+    await this.refArticle.collection("sections").doc(resourceId).set({
+      hasImage: true
+    }, {merge:true})
+  }
 
   render() {
     const { article, resources, error } = this.state;
@@ -103,7 +109,8 @@ class Blog extends React.Component {
             return <div key={sectionId}>
               <BlogSection index={ index }sectionId={sectionId} resource={ resources[sectionId] } 
                   saveSection={this.updateSection} deleteSection={this.deleteSection} 
-                  insertPhoto={this.insertPhoto} readOnly={!canEdit} {...context} />
+                  insertPhoto={this.insertPhoto} onImageUpload={this.onImageUpload} 
+                  readOnly={!canEdit} {...context} />
               { canEdit && <BlogSection index={ index+1 } 
                   insertPhoto={this.insertPhoto} saveSection={this.insertSection} /> }
             </div>
