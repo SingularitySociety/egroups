@@ -2,7 +2,7 @@ import * as test_helper from "../../lib/test/rules/test_helper";
 import * as firebase from "@firebase/testing";
 import { should } from 'chai';
 
-import * as index from '../src/index';
+import * as messaging from '../src/messaging';
 
 should()
 
@@ -34,10 +34,32 @@ describe("test topic subscription", () => {
     });
 
     const topic_ids = ["g_1", "g_2", "g_3", "g_4"];
-    await index.subscribe_topic([123], [], "1", admin_db, (tokens, topic) => {
+    await messaging.subscribe_group([123], [], "1", admin_db, (tokens, topic) => {
       tokens.should.members([123]);
       topic.should.equal(topic_ids.shift());
+    }, () => {});
+    const topic_ids2 = ["g_1", "g_2", "g_3", "g_4"];
+    await messaging.subscribe_group([], [123], "1", admin_db, () => {}, (tokens, topic) => {
+      tokens.should.members([123]);
+      topic.should.equal(topic_ids2.shift());
     });
+
   })
+
+  it("should subscribe new group", async () => {
+    const alice_group = admin_db.doc(`groups/${aliceGroupId}`);
+    await firebase.assertSucceeds(test_helper.create_group(alice_group, aliceUID, aliceUID, true));
+
+    await admin_db.doc(`/users/${aliceUID}/private/tokens`).set({
+      tokens: ["abc", "def"]
+    });
+    
+    await messaging.subscribe_new_group(aliceUID, aliceGroupId, admin_db, (tokens, topic) => {
+      tokens.should.members(["abc", "def"]);
+      topic.should.equal("g_alice_group");
+    });
+
+  })
+
 })
     

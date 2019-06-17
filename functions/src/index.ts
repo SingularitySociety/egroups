@@ -3,8 +3,7 @@ import * as admin from 'firebase-admin';
 import * as express from 'express';
 import * as cors from 'cors';
 //import * as fs from 'fs';
-
-import * as utils from './utils'
+import * as messaging from './messaging';
 
 admin.initializeApp();
 
@@ -77,7 +76,8 @@ export const memberDidCreate = functions.firestore.document('groups/{groupId}/me
       value: privilege,
       created: new Date(),
     });
-
+    await messaging.subscribe_new_group(userId, groupId, db, messaging.subscribe_topic);
+    
     // This is for custom token to control the access to Firestore Storage.
     return db.doc(`/privileges/${userId}`).set({
       [groupId]: privilege 
@@ -92,6 +92,9 @@ export const memberDidDelete = functions.firestore.document('groups/{groupId}/me
 
     // This is for custom token to control the access to Firestore Storage.
     const ref = db.doc(`/privileges/${userId}`);
+
+    await messaging.subscribe_new_group(userId, groupId, db, messaging.unsubscribe_topic);
+
     return admin.firestore().runTransaction(async (tr) => {
       const doc = await tr.get(ref);
       const data = doc.data();
@@ -114,33 +117,6 @@ export const messageDidCreate = functions.firestore.document('groups/{groupId}/c
   });
 
 
-export const subscribe_topic = async (newTokens, oldTokens, userId, db, subscribe) => {
-  // see diff
-  if (newTokens.length === oldTokens.length) {
-    return;
-  }
-  
-  // get all groups
-  const groupsSnapShot = await db.collectionGroup('members').where("uid", "==", "alice").get()
-  const topics = groupsSnapShot.docs.map((doc) => {
-    return "g_" + doc.data().groupId;
-  });
-  
-  if (newTokens.length > oldTokens.length) {
-    // add
-    const tokens = utils.array_diff(newTokens, oldTokens);
-    topics.forEach((topic) => {
-      subscribe(tokens, topic);
-    });
-  }
-  if (newTokens.length < oldTokens.length) {
-    //remove
-    const diff = utils.array_diff(oldTokens, newTokens);
-    console.log(diff);
-  } 
-  return
-
-}
 
 export const tokenDidCreate = functions.firestore.document('users/{userId}/private/tokens')
   .onWrite((change, context) => {
@@ -149,13 +125,6 @@ export const tokenDidCreate = functions.firestore.document('users/{userId}/priva
     const oldTokens = change.before ? ((change.before.data() || {}).tokens || []) : [];
 
     const db = admin.firestore();
-    return subscribe_topic(newTokens, oldTokens, userId, db, (tokens, topic) => {
-      try {
-        const response = admin.messaging().subscribeToTopic(tokens, topic);
-        console.log('Successfully subscribed to topic:', response);
-      } catch(error) {
-        console.log('Error subscribing to topic:', error);
-      }
-    });
+    return messaging.subscribe_group(newTokens, oldTokens, userId, db, messaging.subscribe_topic, messaging.unsubscribe_topic);
   });
 
