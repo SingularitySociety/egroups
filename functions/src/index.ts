@@ -1,15 +1,41 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-
-import * as utils from './utils'
+import * as express from 'express';
+import * as cors from 'cors';
+//import * as fs from 'fs';
+import * as messaging from './messaging';
 
 admin.initializeApp();
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-export const helloWorld = functions.https.onRequest((request, response) => {
-  response.send("Hello from Firebase!");
+export const app = express();
+app.use(cors());
+
+app.get('/api/hello', async (req:any, res) => {
+  console.log('hello');
+  res.send("hello world with Express");
+});
+
+export const api = functions.https.onRequest(app);
+
+// MEMO: In order to make this work, you need to go to add "Servie Account Toke Creator" role to 
+// the associated App Engine default service account. 
+// From Firebase console, 
+// (1) open the setting, 
+// (2) select Service account tab, 
+// (3) click "Manage service account permissions"
+//   notice that "App Engine default service account" is listed
+// (4) Click the "IAM" on the side bar
+// (5) Find the "App Engine default service account" and click the Edit button
+// (6) Click "+ Add Another Role"
+// (7) Select "Service Account Token Creator" and Save
+export const getJWT = functions.https.onCall(async (data, context) => {
+  if (context.auth) {
+    const db = admin.firestore();
+    const privileges = (await db.doc(`/privileges/${context.auth.uid}`).get()).data();    
+    const token = await admin.auth().createCustomToken(context.auth.uid, {privileges});
+    return { token, privileges }
+  }
+  return { token: null };
 });
 
 export const groupDidCreate = functions.firestore.document('groups/{groupId}')
@@ -17,7 +43,7 @@ export const groupDidCreate = functions.firestore.document('groups/{groupId}')
     const { groupId } = context.params;
     const db = admin.firestore();
     console.log(context);
-    const newValue = snapshot.data(); // this is a hack because I can't access context.auth.uid for some reason
+    const newValue = snapshot.data(); // BUGBUG: this is a hack because I can't access context.auth.uid for some reason
     const userId = newValue && newValue.owner;
     await db.doc(`/groups/${groupId}/owners/${userId}`).set({
       created: new Date()
@@ -26,6 +52,8 @@ export const groupDidCreate = functions.firestore.document('groups/{groupId}')
     return db.doc(`/groups/${groupId}/members/${userId}`).set({
       created: new Date(),
       displayName: (newValue && newValue.ownerName) || "admin",
+      uid: userId,
+      groupId: groupId,
     });
   });
 
@@ -42,17 +70,36 @@ export const memberDidCreate = functions.firestore.document('groups/{groupId}/me
     const { groupId, userId } = context.params;
     const db = admin.firestore();
     const owner = (await db.doc(`/groups/${groupId}/owners/${userId}`).get()).data();
-    return db.doc("/groups/" + groupId + "/privileges/" + userId).set({
-      // We set the privilege of the owner here so that the owner can leave and join. 
-      value: owner ? 0x2000000 : 1, // owner or member
+    // We set the privilege of the owner here so that the owner can leave and join. 
+    const privilege = owner ? 0x2000000 : 1; // owner or member
+    await db.doc("/groups/" + groupId + "/privileges/" + userId).set({
+      value: privilege,
       created: new Date(),
     });
+
+    // This is for custom token to control the access to Firestore Storage.
+    return db.doc(`/privileges/${userId}`).set({
+      [groupId]: privilege 
+    }, {merge:true});
   });
 
 export const memberDidDelete = functions.firestore.document('groups/{groupId}/members/{userId}')
-  .onDelete((snapshot, context)=>{
+  .onDelete(async (snapshot, context)=>{
     const { groupId, userId } = context.params;
-    return admin.firestore().doc("/groups/" + groupId + "/privileges/" + userId).delete();
+    const db = admin.firestore();
+    await db.doc("/groups/" + groupId + "/privileges/" + userId).delete();
+
+    // This is for custom token to control the access to Firestore Storage.
+    const ref = db.doc(`/privileges/${userId}`);
+    return admin.firestore().runTransaction(async (tr) => {
+      const doc = await tr.get(ref);
+      const data = doc.data();
+      if (data) {
+        delete data[groupId];
+        return tr.set(ref, data); // no merge
+      }
+      return true;
+    });
   });
 
 export const messageDidCreate = functions.firestore.document('groups/{groupId}/channels/{channelId}/messages/{messageId}')
@@ -66,33 +113,6 @@ export const messageDidCreate = functions.firestore.document('groups/{groupId}/c
   });
 
 
-export const subscribe_topic = async (newTokens, oldTokens, userId, db, subscribe) => {
-  // see diff
-  if (newTokens.length === oldTokens.length) {
-    return;
-  }
-  
-  // get all groups
-  const groupsSnapShot = await db.collectionGroup('members').where("uid", "==", "alice").get()
-  const topics = groupsSnapShot.docs.map((doc) => {
-    return "g_" + doc.data().groupId;
-  });
-  
-  if (newTokens.length > oldTokens.length) {
-    // add
-    const tokens = utils.array_diff(newTokens, oldTokens);
-    topics.forEach((topic) => {
-      subscribe(tokens, topic);
-    });
-  }
-  if (newTokens.length < oldTokens.length) {
-    //remove
-    const diff = utils.array_diff(oldTokens, newTokens);
-    console.log(diff);
-  } 
-  return
-
-}
 
 export const tokenDidCreate = functions.firestore.document('users/{userId}/private/tokens')
   .onWrite((change, context) => {
@@ -101,13 +121,6 @@ export const tokenDidCreate = functions.firestore.document('users/{userId}/priva
     const oldTokens = change.before ? ((change.before.data() || {}).tokens || []) : [];
 
     const db = admin.firestore();
-    return subscribe_topic(newTokens, oldTokens, userId, db, (tokens, topic) => {
-      try {
-        const response = admin.messaging().subscribeToTopic(tokens, topic);
-        console.log('Successfully subscribed to topic:', response);
-      } catch(error) {
-        console.log('Error subscribing to topic:', error);
-      }
-    });
+    return messaging.subscribe_group(newTokens, oldTokens, userId, db,  messaging.subscribe_topic, messaging.unsubscribe_topic);
   });
 

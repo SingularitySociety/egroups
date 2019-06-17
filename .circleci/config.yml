@@ -24,6 +24,12 @@ jobs:
           # https://stackoverflow.com/questions/54274835/firestore-emulator-fails-to-start-when-run-inside-docker
           command: java -jar $HOME/.cache/firebase/emulators/cloud-firestore-emulator-v1.5.0.jar --host=127.0.0.1
           background: true
+      - restore_cache:
+          keys:
+            - npm-cache-{{ arch }}-{{ .Branch }}-{{ checksum "package.json" }}
+      - restore_cache:
+          keys:
+            - functions-npm-cache-{{ arch }}-{{ .Branch }}-{{ checksum "functions/package.json" }}
       - run:
           name: npm install
           command: npm install
@@ -32,9 +38,22 @@ jobs:
           command: |
             cd functions
             npm install
+      - save_cache:
+          key: npm-cache-{{ arch }}-{{ .Branch }}-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - save_cache:
+          key: functions-npm-cache-{{ arch }}-{{ .Branch }}-{{ checksum "functions/package.json" }}
+          paths:
+            - functions/node_modules
       - run:
           name: firestore test
           command: npm run mocha
+      - run:
+          name: funtions test
+          command: |
+            cd functions
+            npm run mocha
       #- run:
       #    name: build
       #    command: npm run build

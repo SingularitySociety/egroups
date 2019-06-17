@@ -10,7 +10,8 @@ import Login from './Login';
 import Decoder from './Decoder';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
-import "firebase/messaging"
+import "firebase/messaging";
+import "firebase/functions";
 import config from './config';
 import { appConfig } from './config';
 import {addLocaleData, IntlProvider} from 'react-intl';
@@ -38,8 +39,25 @@ class App extends React.Component {
   componentDidMount() {
     this.unregisterAuthObserver = firebase.auth().onAuthStateChanged(
       async (user) => {
+        if (this.detachPrivilegesObserver) {
+          this.detachPrivilegesObserver();
+          this.detachPrivilegesObserver = null;
+        }
         this.setState({user: user});
         if (user) {
+          this.detachPrivilegesObserver = db.doc(`privileges/${user.uid}`).onSnapshot(async (snapshot) => {
+            console.log("onSnapshot", snapshot.data());
+            const getJWT = firebase.functions().httpsCallable('getJWT');
+            const token = (await getJWT()).data; 
+            console.log("token", token);
+            this.setState({privileges: token.privileges});
+            try {
+              await firebase.auth().signInWithCustomToken(token.token);
+            } catch(e) {
+              console.log(e);
+            }
+          });
+
           const refUser = db.collection("users").doc(user.uid);
           const newValue = { lastAccessed:firebase.firestore.FieldValue.serverTimestamp() };
           const doc = (await refUser.get()).data();
@@ -55,6 +73,7 @@ class App extends React.Component {
     window.addEventListener('resize', this.updateWindowDimensions);
     
   }
+  
   updatePushToken(user, token) {
     const refTokens = db.doc(`users/${user.uid}/private/tokens`);
     const tokens = refTokens.get();
@@ -67,6 +86,7 @@ class App extends React.Component {
     // console.log("client key is")
     console.log(token)
   }
+  
   getPushToken(user) {
     if (config.messageKey && firebase.messaging.isSupported()) {
       const messaging = firebase.messaging();
@@ -85,17 +105,22 @@ class App extends React.Component {
       });
     }
   }
-  
+
   componentWillUnmount() {
+    if (this.detachPrivilegesObserver) {
+      this.detachPrivilegesObserver();
+    }
     this.unregisterAuthObserver();
     window.removeEventListener('resize', this.updateWindowDimensions);
   }
+  
   updateWindowDimensions() {
     this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
 
   render() {
-    const params = { user:this.state.user, db:db, rootGroup:appConfig.rootGroup };
+    const { user, privileges } = this.state;
+    const params = { user, db, privileges, rootGroup:appConfig.rootGroup };
     //console.log("App:", window.location.pathname);
     const language = navigator.language.split(/[-_]/)[0];  // language without region code
     return (
