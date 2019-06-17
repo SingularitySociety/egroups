@@ -1,6 +1,15 @@
 import * as admin from 'firebase-admin';
 import * as utils from './utils'
 
+
+const get_topic_from_group = async (db, uid) => {
+  const groupsSnapShot = await db.collectionGroup('members').where("uid", "==", uid).get()
+  const topics = groupsSnapShot.docs.map((doc) => {
+    return "g_" + doc.data().groupId;
+  });
+  return topics;
+}
+
 export const subscribe_group = async (newTokens, oldTokens, userId, db, subscribe, unsubscribe) => {
   // see diff
   if (newTokens.length === oldTokens.length) {
@@ -8,10 +17,7 @@ export const subscribe_group = async (newTokens, oldTokens, userId, db, subscrib
   }
   
   // get all groups
-  const groupsSnapShot = await db.collectionGroup('members').where("uid", "==", "alice").get()
-  const topics = groupsSnapShot.docs.map((doc) => {
-    return "g_" + doc.data().groupId;
-  });
+  const topics = await get_topic_from_group(db, userId)
   
   if (newTokens.length > oldTokens.length) {
     // add
