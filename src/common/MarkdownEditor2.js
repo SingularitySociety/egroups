@@ -4,13 +4,13 @@ import { withStyles } from '@material-ui/core/styles';
 import theme from '../theme';
 import { Button, IconButton, Grid } from '@material-ui/core';
 import TrashIcon from '@material-ui/icons/Delete';
-import { FormatBold, FormatItalic, FormatUnderlined } from '@material-ui/icons';
+import { FormatBold, FormatItalic, FormatUnderlined, FormatQuote, Code } from '@material-ui/icons';
 import { FormatListBulleted, FormatListNumbered, Undo, Redo } from '@material-ui/icons';
 import { FormattedMessage } from 'react-intl';
 import { EditorValue }  from 'react-rte'; // https://github.com/sstur/react-rte
 //import { EditorValue } from 'react-rte';
 import { Editor, RichUtils, EditorState } from 'draft-js';
-//import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
+//import { Editor, EditorState, , convertToRaw, convertFromRaw } from 'draft-js';
 
 const styles = {
   editorFrame: {
@@ -69,6 +69,9 @@ class MarkdownEditor extends React.Component {
   toggleStyle = (style) => {
     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, style));    
   }
+  toggleBlockType = (type) => {
+    this.onChange(RichUtils.toggleBlockType(this.state.editorState, type));
+  }
   onMouseDown = e => {
     e.preventDefault(); // don't steal focus
   }
@@ -110,6 +113,26 @@ class MarkdownEditor extends React.Component {
           <Grid item>
             <IconButton size="small" onClick={()=>{this.toggleStyle("UNDERLINE")}} onMouseDown={this.onMouseDown}>
               <FormatUnderlined/>
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <IconButton size="small" onClick={()=>{this.toggleBlockType("unordered-list-item")}} onMouseDown={this.onMouseDown}>
+              <FormatListBulleted/>
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <IconButton size="small" onClick={()=>{this.toggleBlockType("ordered-list-item")}} onMouseDown={this.onMouseDown}>
+              <FormatListNumbered/>
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <IconButton size="small" onClick={()=>{this.toggleBlockType("blockquote")}} onMouseDown={this.onMouseDown}>
+              <FormatQuote/>
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <IconButton size="small" onClick={()=>{this.toggleBlockType("code-block")}} onMouseDown={this.onMouseDown}>
+              <Code/>
             </IconButton>
           </Grid>
         </Grid>
