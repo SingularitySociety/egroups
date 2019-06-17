@@ -45,5 +45,21 @@ describe("test topic subscription", () => {
     });
 
   })
+
+  it("should subscribe new group", async () => {
+    const alice_group = admin_db.doc(`groups/${aliceGroupId}`);
+    await firebase.assertSucceeds(test_helper.create_group(alice_group, aliceUID, aliceUID, true));
+
+    await admin_db.doc(`/users/${aliceUID}/private/tokens`).set({
+      tokens: ["abc", "def"]
+    });
+    
+    await messaging.subscribe_new_group(aliceUID, aliceGroupId, admin_db, (tokens, topic) => {
+      tokens.should.members(["abc", "def"]);
+      topic.should.equal("g_alice_group");
+    });
+
+  })
+
 })
     

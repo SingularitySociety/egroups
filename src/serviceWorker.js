@@ -144,7 +144,13 @@ export function unregister() {
 
 const register_service_worker = () => {
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register("/service-worker.js");
+    navigator.serviceWorker.register("/service-worker.js").then(registration => {
+      registration.onupdatefound = function() {
+        registration.update();
+      }
+    }).catch((err) => {
+      console.log(err)
+    });
     navigator.serviceWorker.ready.then(function(registration) {
       return registration.pushManager.getSubscription().then(function(subscription) {
         if (subscription) {

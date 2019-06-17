@@ -76,7 +76,8 @@ export const memberDidCreate = functions.firestore.document('groups/{groupId}/me
       value: privilege,
       created: new Date(),
     });
-
+    await messaging.subscribe_new_group(userId, groupId, db, messaging.subscribe_topic);
+    
     // This is for custom token to control the access to Firestore Storage.
     return db.doc(`/privileges/${userId}`).set({
       [groupId]: privilege 
@@ -91,6 +92,9 @@ export const memberDidDelete = functions.firestore.document('groups/{groupId}/me
 
     // This is for custom token to control the access to Firestore Storage.
     const ref = db.doc(`/privileges/${userId}`);
+
+    await messaging.subscribe_new_group(userId, groupId, db, messaging.unsubscribe_topic);
+
     return admin.firestore().runTransaction(async (tr) => {
       const doc = await tr.get(ref);
       const data = doc.data();
@@ -121,6 +125,6 @@ export const tokenDidCreate = functions.firestore.document('users/{userId}/priva
     const oldTokens = change.before ? ((change.before.data() || {}).tokens || []) : [];
 
     const db = admin.firestore();
-    return messaging.subscribe_group(newTokens, oldTokens, userId, db,  messaging.subscribe_topic, messaging.unsubscribe_topic);
+    return messaging.subscribe_group(newTokens, oldTokens, userId, db, messaging.subscribe_topic, messaging.unsubscribe_topic);
   });
 
