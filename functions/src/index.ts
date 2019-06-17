@@ -8,7 +8,7 @@ import * as utils from './utils'
 
 admin.initializeApp();
 
-const app = express();
+export const app = express();
 app.use(cors());
 
 app.get('/api/hello', async (req:any, res) => {
