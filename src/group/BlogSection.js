@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import MarkdownEditor from '../common/MarkdownEditor';
+import MarkdownEditor from '../common/MarkdownEditor2';
 import { IconButton, Grid } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
@@ -37,7 +37,7 @@ class BlogSection extends React.Component {
         const value = RichTextEditor.createValueFromString(markdown || "", 'markdown');
         return <Grid container>
           <Grid item xs={11}>
-            <MarkdownViewer value={value} useHtml={true} />
+            <MarkdownViewer value={value} useHtml={false} />
           </Grid>
           { !readOnly &&
             <Grid item xs={1}>
