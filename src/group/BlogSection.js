@@ -6,7 +6,7 @@ import { IconButton, Grid } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import PhotoIcon from '@material-ui/icons/AddPhotoAlternate';
 import EditIcon from '@material-ui/icons/Edit';
-import RichTextEditor from 'react-rte'; // https://github.com/sstur/react-rte
+//import RichTextEditor from 'react-rte'; // https://github.com/sstur/react-rte
 import MarkdownViewer from '../common/MarkdownViewer';
 import ImageUploader from '../common/ImageUploader';
 
@@ -46,7 +46,7 @@ class BlogSection extends React.Component {
     if (!editing) {
       if (sectionId) {
         //console.log("render1", markdown);
-        const value = RichTextEditor.createValueFromString(resource.markdown || "", 'markdown');
+        //const value = RichTextEditor.createValueFromString(resource.markdown || "", 'markdown');
         //console.log("render1", value.toString("markdown"));
         if (resource.type==="image") {
           const imagePath = `groups/${group.groupId}/articles/${article.articleId}/${sectionId}`;
@@ -57,7 +57,7 @@ class BlogSection extends React.Component {
         }
         return <Grid container>
           <Grid item xs={11} style={{padding:"1px"}}>
-            <MarkdownViewer value={value} useHtml={false} />
+            <MarkdownViewer markdown={resource.markdown} useHtml={false} />
           </Grid>
           { !readOnly &&
             <Grid item xs={1}>

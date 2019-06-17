@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Editor } from 'draft-js';
+import { Editor, EditorState } from 'draft-js';
 import './MarkdownViewer.css';
+import {stateFromMarkdown} from 'draft-js-import-markdown';
+
 
 const styles = theme => ({
  editorFrame: {
@@ -45,18 +47,13 @@ export const blockStyleFn = (classes, contentBlock) => {
 
 class MarkdownViewer extends React.Component {
     render() {
-      const { value, useHtml, classes } = this.props;
-      if (useHtml) {
-        // This is quite safe because we always generate value from markdown. 
-        return <span 
-          className={classes.root}
-          dangerouslySetInnerHTML={{__html:value.toString('html')}}>
-        </span>
-      }
+      const { value, classes, markdown } = this.props;
+      const contentState = stateFromMarkdown(markdown);
+      let editorState = EditorState.createWithContent(contentState);
       return (
         <Editor readOnly={true} 
         blockStyleFn={(contentBlock) => { return blockStyleFn(classes, contentBlock)}}
-        editorState={value.getEditorState()} />
+        editorState={editorState} />
       )  
     }
 }
