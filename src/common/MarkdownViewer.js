@@ -8,10 +8,13 @@ const styles = theme => ({
 
 class MarkdownViewer extends React.Component {
     render() {
-      const { value } = this.props;
+      const { value, useHtml } = this.props;
+      if (useHtml) {
+        return <span dangerouslySetInnerHTML={{__html:value.toString('html')}}></span>
+      }
       return (
         <Editor readOnly={true} editorState={value.getEditorState()} />
-      )
+      )  
     }
 }
 

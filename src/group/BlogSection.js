@@ -38,7 +38,7 @@ class BlogSection extends React.Component {
         const value = RichTextEditor.createValueFromString(markdown || "", 'markdown');
         return <Grid container>
           <Grid item xs={11}>
-            <MarkdownViewer value={value} />
+            <MarkdownViewer value={value} useHtml={true} />
           </Grid>
           { !readOnly &&
             <Grid item xs={1}>
