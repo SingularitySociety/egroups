@@ -4,7 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import theme from '../theme';
 import { Button, IconButton, Grid } from '@material-ui/core';
 import TrashIcon from '@material-ui/icons/Delete';
-import { FormatBold, FormatItalic, FormatUnderlined, FormatQuote, Code } from '@material-ui/icons';
+import { FormatBold, FormatItalic, FormatUnderlined, FormatQuote } from '@material-ui/icons';
+//import { Code } from '@material-ui/icons';
 import { FormatListBulleted, FormatListNumbered, Undo, Redo } from '@material-ui/icons';
 import { FormattedMessage } from 'react-intl';
 import { EditorValue }  from 'react-rte'; // https://github.com/sstur/react-rte
@@ -20,7 +21,22 @@ const styles = {
   },
   button: {
     margin: theme.spacing(1),
+  },
+  blockquote: {
+    background: "yellow",
+  },
+  unorderedListItem: {
+  },
+  orderedListItem: {
+  },
+  unstyled: {
   }
+};
+const customStyleMap = {
+  /*
+  BOLD: {
+  }
+  */
 };
 
 class MarkdownEditor extends React.Component {
@@ -87,6 +103,18 @@ class MarkdownEditor extends React.Component {
     const { editorState } = this.state;
     const canUndo = editorState.getUndoStack().size !== 0;
     const canRedo = editorState.getRedoStack().size !== 0;
+    const blockStyleFn = (contentBlock) => {
+      const type = contentBlock.getType();
+      if (type === 'blockquote') {
+        return classes.blockquote;
+      } else if (type === 'unordered-list-item') {
+        return classes.unorderedListItem;
+      } else if (type === 'ordered-list-item') {
+        return classes.orderedListItem;
+      } else if (type === 'unstyled') {
+        return classes.unstyled;
+      }
+    }
     return (
       <div>
         <Grid container>
@@ -130,15 +158,19 @@ class MarkdownEditor extends React.Component {
               <FormatQuote/>
             </IconButton>
           </Grid>
+          { /*
           <Grid item>
             <IconButton size="small" onClick={()=>{this.toggleBlockType("code-block")}} onMouseDown={this.onMouseDown}>
               <Code/>
             </IconButton>
           </Grid>
+          */ }
         </Grid>
         <Grid container>
           <Grid item xs={11} className={classes.editorFrame}>
             <Editor editorState={editorState} 
+              customStyleMap={customStyleMap}
+              blockStyleFn={blockStyleFn}
               handleKeyCommand={this.handleKeyCommand}
               onChange={this.onChange} />
           </Grid>

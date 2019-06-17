@@ -15,6 +15,7 @@ class BlogSection extends React.Component {
   state = { editing:false };
 
   onSave = (markdown) => {
+    console.log("onSave", markdown);
     const { sectionId, index } = this.props;
     this.props.saveSection(sectionId, index, markdown);
     this.setState({editing:false});
@@ -34,7 +35,9 @@ class BlogSection extends React.Component {
     const { editing } = this.state;
     if (!editing) {
       if (sectionId) {
+        console.log("render1", markdown);
         const value = RichTextEditor.createValueFromString(markdown || "", 'markdown');
+        console.log("render1", value.toString("markdown"));
         return <Grid container>
           <Grid item xs={11} style={{padding:"1px"}}>
             <MarkdownViewer value={value} useHtml={false} />
