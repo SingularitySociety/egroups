@@ -69,6 +69,9 @@ class MarkdownEditor extends React.Component {
   toggleStyle = (style) => {
     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, style));    
   }
+  onMouseDown = e => {
+    e.preventDefault(); // don't steal focus
+  }
 
   render() {
     const { classes, action, onDelete } = this.props;
@@ -77,17 +80,17 @@ class MarkdownEditor extends React.Component {
       <div>
         <Grid container>
           <Grid item>
-            <IconButton size="small" onClick={()=>{this.toggleStyle("BOLD")}}>
+            <IconButton size="small" onClick={()=>{this.toggleStyle("BOLD")}} onMouseDown={this.onMouseDown}>
               <FormatBold/>
             </IconButton>
           </Grid>
           <Grid item>
-            <IconButton size="small" onClick={()=>{this.toggleStyle("ITALIC")}}>
+            <IconButton size="small" onClick={()=>{this.toggleStyle("ITALIC")}} onMouseDown={this.onMouseDown}>
               <FormatItalic/>
             </IconButton>
           </Grid>
           <Grid item>
-            <IconButton size="small" onClick={()=>{this.toggleStyle("UNDERLINE")}}>
+            <IconButton size="small" onClick={()=>{this.toggleStyle("UNDERLINE")}} onMouseDown={this.onMouseDown}>
               <FormatUnderlined/>
             </IconButton>
           </Grid>
