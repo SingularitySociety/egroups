@@ -23,6 +23,12 @@ const styles = theme => ({
   },
   orderedListItem: {
   },
+  codeBlock: {
+    background: "#EFF0F1", // matching github
+    paddingLeft: theme.spacing(1),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+  },
   unstyled: {
     fontFamily: "'Roboto', sans-serif",
     marginBottom: theme.spacing(1),
@@ -39,6 +45,8 @@ export const blockStyleFn = (classes, contentBlock) => {
     return classes.unorderedListItem;
   } else if (type === 'ordered-list-item') {
     return classes.orderedListItem;
+  } else if (type === 'code-block') {
+    return classes.codeBlock;
   } else if (type === 'unstyled') {
     //console.log(type, classes.unstyled);
     return classes.unstyled;

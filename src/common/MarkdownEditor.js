@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Button, IconButton, Grid } from '@material-ui/core';
 import TrashIcon from '@material-ui/icons/Delete';
 import { FormatBold, FormatItalic, FormatUnderlined, FormatQuote } from '@material-ui/icons';
-//import { Code } from '@material-ui/icons';
+import { Code } from '@material-ui/icons';
 import { FormatListBulleted, FormatListNumbered, Undo, Redo } from '@material-ui/icons';
 import { FormattedMessage } from 'react-intl';
 import { Editor, RichUtils, EditorState } from 'draft-js';
@@ -27,7 +27,6 @@ class MarkdownEditor extends React.Component {
     super(props);
     const contentState = stateFromMarkdown(this.props.markdown || "");
     const editorState = EditorState.createWithContent(contentState);
-    console.log(editorState);
     this.state = {
       editorState
     }
@@ -121,13 +120,11 @@ class MarkdownEditor extends React.Component {
               <FormatQuote/>
             </IconButton>
           </Grid>
-          { /*
           <Grid item>
             <IconButton size="small" onClick={()=>{this.toggleBlockType("code-block")}} onMouseDown={this.onMouseDown}>
               <Code/>
             </IconButton>
           </Grid>
-          */ }
         </Grid>
         <Grid container>
           <Grid item xs={11} className={classes.editorFrame}>
