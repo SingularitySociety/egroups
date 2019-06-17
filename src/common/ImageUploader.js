@@ -53,17 +53,21 @@ class ImageViewer extends React.Component {
     })
   }    
   render() {
-    const { classes } = this.props;
+    const { classes, readOnly } = this.props;
     const { imageUrl } = this.state;
     const imageStyle = imageUrl ? { backgroundImage:`url("${imageUrl}")` } : {};
     return (<Grid container className={classes.root} spacing={1} justify="center">
         <Grid item className={classes.thumbnail} style={imageStyle} />
-        <Grid item>
-          <Button variant="contained" component="label">
-              Upload Image
-              <input type="file" accept="image/*" style={{ display: "none" }} onChange={this.onFileInput} />
-          </Button>
+        {
+          !readOnly &&
+            <Grid item>
+            <Button variant="contained" component="label">
+                Upload Image
+                <input type="file" accept="image/*" style={{ display: "none" }} onChange={this.onFileInput} />
+            </Button>
         </Grid>
+
+        }
       </Grid>)
   }
 }
