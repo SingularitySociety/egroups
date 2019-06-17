@@ -6,7 +6,6 @@ import { IconButton, Grid } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import RichTextEditor from 'react-rte'; // https://github.com/sstur/react-rte
-import { Editor } from 'draft-js';
 import MarkdownViewer from '../common/MarkdownViewer';
 
 const styles = theme => ({
