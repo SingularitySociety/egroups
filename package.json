@@ -19,7 +19,6 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "deploy": "npm run build && firebase deploy",
     "use_staging": "cp src/config/staging.js src/config.js && firebase use staging",
     "use_default": "cp src/config/default.js src/config.js && firebase use default",
     "stage": "npm run use_staging && npm run deploy && npm run use_default",
