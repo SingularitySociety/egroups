@@ -5,11 +5,11 @@ import theme from '../theme';
 import { Button, IconButton, Grid } from '@material-ui/core';
 import TrashIcon from '@material-ui/icons/Delete';
 import { FormatBold, FormatItalic, FormatUnderlined } from '@material-ui/icons';
-//import { FormatListBulleted, FormatListNumbered, Undo, Redo } from '@material-ui/icons';
+import { FormatListBulleted, FormatListNumbered, Undo, Redo } from '@material-ui/icons';
 import { FormattedMessage } from 'react-intl';
 import { EditorValue }  from 'react-rte'; // https://github.com/sstur/react-rte
 //import { EditorValue } from 'react-rte';
-import { Editor, RichUtils } from 'draft-js';
+import { Editor, RichUtils, EditorState } from 'draft-js';
 //import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
 
 const styles = {
@@ -72,13 +72,31 @@ class MarkdownEditor extends React.Component {
   onMouseDown = e => {
     e.preventDefault(); // don't steal focus
   }
+  undo = () => {
+    this.onChange(EditorState.undo(this.state.editorState));
+  }
+  redo = () => {
+    this.onChange(EditorState.redo(this.state.editorState));
+  }
 
   render() {
     const { classes, action, onDelete } = this.props;
     const { editorState } = this.state;
+    const canUndo = editorState.getUndoStack().size !== 0;
+    const canRedo = editorState.getRedoStack().size !== 0;
     return (
       <div>
         <Grid container>
+          <Grid item>
+            <IconButton size="small" disabled={!canUndo} onClick={this.undo} onMouseDown={this.onMouseDown}>
+              <Undo/>
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <IconButton size="small" disabled={!canRedo} onClick={this.redo} onMouseDown={this.onMouseDown}>
+              <Redo/>
+            </IconButton>
+          </Grid>
           <Grid item>
             <IconButton size="small" onClick={()=>{this.toggleStyle("BOLD")}} onMouseDown={this.onMouseDown}>
               <FormatBold/>
