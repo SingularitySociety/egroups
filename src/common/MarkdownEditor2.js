@@ -5,8 +5,8 @@ import theme from '../theme';
 import { Button, IconButton, Grid } from '@material-ui/core';
 import TrashIcon from '@material-ui/icons/Delete';
 import { FormattedMessage } from 'react-intl';
-import RichTextEditor from 'react-rte'; // https://github.com/sstur/react-rte
-import { EditorValue } from 'react-rte';
+import { EditorValue }  from 'react-rte'; // https://github.com/sstur/react-rte
+//import { EditorValue } from 'react-rte';
 import { Editor } from 'draft-js';
 //import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
 
@@ -19,7 +19,7 @@ const styles = {
 class MarkdownEditor extends React.Component {
   constructor(props) {
     super(props);
-    const value = RichTextEditor.createValueFromString(this.props.markdown || "", 'markdown');
+    const value = EditorValue.createFromString(this.props.markdown || "", 'markdown');
     this.state = {
       editorState: value.getEditorState()
     }
