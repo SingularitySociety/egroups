@@ -50,7 +50,7 @@ describe("test topic subscription", () => {
     const alice_group = admin_db.doc(`groups/${aliceGroupId}`);
     await firebase.assertSucceeds(test_helper.create_group(alice_group, aliceUID, aliceUID, true));
 
-    await admin_db.doc(`/users/${userId}/private/tokens`).set({
+    await admin_db.doc(`/users/${aliceUID}/private/tokens`).set({
       tokens: ["abc", "def"]
     });
     
