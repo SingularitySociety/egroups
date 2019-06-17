@@ -21,7 +21,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "mocha": "mocha --require @babel/register --recursive",
-    "babel": "babel src/const -d lib/src/const && babel test -d lib/test"
+    "babel": "babel src/const -d lib/src/const && babel test -d lib/test",
+    "deploy": "react-scripts build && firebase deploy"
   },
   "eslintConfig": {
     "extends": "react-app"
