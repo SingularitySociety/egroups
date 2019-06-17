@@ -8,11 +8,14 @@ import { FormatBold, FormatItalic, FormatUnderlined, FormatQuote } from '@materi
 //import { Code } from '@material-ui/icons';
 import { FormatListBulleted, FormatListNumbered, Undo, Redo } from '@material-ui/icons';
 import { FormattedMessage } from 'react-intl';
-import { EditorValue }  from 'react-rte'; // https://github.com/sstur/react-rte
+//import { EditorValue }  from 'react-rte'; // https://github.com/sstur/react-rte
 //import { EditorValue } from 'react-rte';
 import { Editor, RichUtils, EditorState } from 'draft-js';
 //import { Editor, EditorState, , convertToRaw, convertFromRaw } from 'draft-js';
 import { blockStyleFn, editorStyles } from './MarkdownViewer';
+import {stateToMarkdown} from 'draft-js-export-markdown';
+import {stateFromMarkdown} from 'draft-js-import-markdown';
+
 
 const styles = editorStyles;
 
@@ -26,9 +29,11 @@ const customStyleMap = {
 class MarkdownEditor extends React.Component {
   constructor(props) {
     super(props);
-    const value = EditorValue.createFromString(this.props.markdown || "", 'markdown');
+    const contentState = stateFromMarkdown(this.props.markdown || "");
+    const editorState = EditorState.createWithContent(contentState);
+    console.log(editorState);
     this.state = {
-      editorState: value.getEditorState()
+      editorState
     }
   }
 
@@ -44,8 +49,10 @@ class MarkdownEditor extends React.Component {
     console.log(value.toString('markdown'));
     console.log(value.getEditorState());
     */
-    const value = new EditorValue(this.state.editorState);
-    this.props.onSave(value.toString('markdown'));
+    //const value = new EditorValue(this.state.editorState);
+    const contentState = this.state.editorState.getCurrentContent();
+    const markdown = stateToMarkdown(contentState);
+    this.props.onSave(markdown);
   }
 
   onCancel = (e) => {
