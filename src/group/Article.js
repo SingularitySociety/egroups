@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
 
@@ -32,7 +32,12 @@ class Article extends React.Component {
     }
     return (
       <Grid container >
-        <Grid item component={Link} to={`/${group.groupName}/bl/${article.articleId}`} className={className}># { article.title }</Grid>
+        <Grid item>
+          <Typography component={Link} className={className}
+            to={`/${group.groupName}/bl/${article.articleId}`}>
+          { article.title }
+          </Typography>
+        </Grid>
       </Grid>
     )
   }
