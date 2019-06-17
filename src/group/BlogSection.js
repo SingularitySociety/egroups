@@ -4,9 +4,11 @@ import { withStyles } from '@material-ui/core/styles';
 import MarkdownEditor from '../common/MarkdownEditor2';
 import { IconButton, Grid } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import PhotoIcon from '@material-ui/icons/AddPhotoAlternate';
 import EditIcon from '@material-ui/icons/Edit';
 import RichTextEditor from 'react-rte'; // https://github.com/sstur/react-rte
 import MarkdownViewer from '../common/MarkdownViewer';
+import ImageUploader from '../common/ImageUploader';
 
 const styles = theme => ({
 });
@@ -15,6 +17,7 @@ class BlogSection extends React.Component {
   state = { editing:false };
 
   onSave = (markdown) => {
+    //console.log("onSave", markdown);
     const { sectionId, index } = this.props;
     this.props.saveSection(sectionId, index, markdown);
     this.setState({editing:false});
@@ -23,20 +26,33 @@ class BlogSection extends React.Component {
     this.setState({editing:false})
   }
   onDelete = () => {
-    const { sectionId, index } = this.props;
-    this.props.deleteSection(sectionId, index);
+    const { deleteSection, sectionId, index } = this.props;
+    deleteSection(sectionId, index);
   }
   startEditing = () => {
     this.setState({editing:true})
   }
+  insertPhoto = () => {
+    const { insertPhoto, index } = this.props;
+    insertPhoto(index);
+  }
   render() {
-    const { markdown, sectionId, deleteSection, readOnly } = this.props;
+    const { group, resource, sectionId, article, deleteSection, readOnly } = this.props;
     const { editing } = this.state;
     if (!editing) {
       if (sectionId) {
-        const value = RichTextEditor.createValueFromString(markdown || "", 'markdown');
+        //console.log("render1", markdown);
+        const value = RichTextEditor.createValueFromString(resource.markdown || "", 'markdown');
+        //console.log("render1", value.toString("markdown"));
+        if (resource.type==="image") {
+          const imagePath = `groups/${group.groupId}/articles/${article.articleId}/${sectionId}`;
+          console.log(imagePath);
+          return (
+            <ImageUploader imagePath={imagePath} onImageUpload={()=>{}} />
+          );
+        }
         return <Grid container>
-          <Grid item xs={11}>
+          <Grid item xs={11} style={{padding:"1px"}}>
             <MarkdownViewer value={value} useHtml={false} />
           </Grid>
           { !readOnly &&
@@ -48,14 +64,21 @@ class BlogSection extends React.Component {
           }
         </Grid>
       }
-      return (
-        <IconButton size="small" variant="contained" onClick={this.startEditing}>
-          <AddIcon />
-        </IconButton>
-      );
+      return <Grid container justify="center">
+        <Grid item xs={1}>
+          <IconButton  size="small" variant="contained" onClick={this.startEditing}>
+            <AddIcon />
+          </IconButton>
+        </Grid> 
+        <Grid item xs={1}>
+          <IconButton  size="small" variant="contained" onClick={this.insertPhoto}>
+            <PhotoIcon />
+          </IconButton>
+        </Grid> 
+      </Grid>
     }
     return (
-      <MarkdownEditor markdown={markdown} onSave={this.onSave} onCancel={this.onCancel} onDelete={deleteSection && this.onDelete} />
+      <MarkdownEditor markdown={resource.markdown} onSave={this.onSave} onCancel={this.onCancel} onDelete={deleteSection && this.onDelete} />
     )
   }
 }

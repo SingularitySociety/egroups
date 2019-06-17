@@ -5,10 +5,43 @@ import { Editor } from 'draft-js';
 import './MarkdownViewer.css';
 
 const styles = theme => ({
-  root: {
-    fontFamily: "'Roboto', sans-serif",
+ editorFrame: {
+    borderColor: theme.palette.primary.main,
+    borderWidth: "1px",
+    borderStyle: "solid",
   },
+  button: {
+    margin: theme.spacing(1),
+  },
+  blockquote: {
+    padding: theme.spacing(1),
+    background: "#dddddd",
+  },
+  unorderedListItem: {
+  },
+  orderedListItem: {
+  },
+  unstyled: {
+    fontFamily: "'Roboto', sans-serif",
+    marginBottom: theme.spacing(1),
+  }
 });
+
+export const editorStyles = styles;
+
+export const blockStyleFn = (classes, contentBlock) => {
+  const type = contentBlock.getType();
+  if (type === 'blockquote') {
+    return classes.blockquote;
+  } else if (type === 'unordered-list-item') {
+    return classes.unorderedListItem;
+  } else if (type === 'ordered-list-item') {
+    return classes.orderedListItem;
+  } else if (type === 'unstyled') {
+    //console.log(type, classes.unstyled);
+    return classes.unstyled;
+  }
+}
 
 class MarkdownViewer extends React.Component {
     render() {
@@ -21,7 +54,9 @@ class MarkdownViewer extends React.Component {
         </span>
       }
       return (
-        <Editor readOnly={true} editorState={value.getEditorState()} />
+        <Editor readOnly={true} 
+        blockStyleFn={(contentBlock) => { return blockStyleFn(classes, contentBlock)}}
+        editorState={value.getEditorState()} />
       )  
     }
 }

@@ -79,6 +79,10 @@ export const push_message_to_group = async (groupId, channelId, messageId, messa
       messageUserName: messagePayload.userName,
       messageUID: messagePayload.userId,
     },
+    notification: {
+      "title": "Chat",
+      "body": messagePayload.message,
+    },
     topic: groupId_to_topic(groupId),
   };
   await admin.messaging().send(message)

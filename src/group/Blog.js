@@ -21,6 +21,7 @@ class Blog extends React.Component {
       this.setState({error:{key:"error.invalid.articleId", value:articleId}});
       return;
     }
+    article.articleId = articleId;
     this.setState({article});
     this.detatcher = this.refArticle.collection("sections").onSnapshot((snapshot)=>{
       const resources = {};
@@ -37,6 +38,7 @@ class Blog extends React.Component {
     const { user } = this.props;
     const { article } = this.state;
     const doc = await this.refArticle.collection("sections").add({
+      type: "markdown",
       markdown: markdown,
       created: new Date(),
       author: user.uid,
@@ -58,10 +60,24 @@ class Blog extends React.Component {
     await this.refArticle.set(article, {merge:true});
     await this.refArticle.collection("sections").doc(resourceId).delete();
   }
+  insertPhoto = async (index) => {
+    console.log("insertPhoto", index);
+    const { user } = this.props;
+    const { article } = this.state;
+    const doc = await this.refArticle.collection("sections").add({
+      type: "image",
+      created: new Date(),
+      author: user.uid,
+    });
+    article.sections.splice(index, 0, doc.id);
+    this.setState(article);
+    await this.refArticle.set(article, {merge:true});
+  }
 
   render() {
     const { article, resources, error } = this.state;
-    const { user, member } = this.props;
+    const { user, group, member } = this.props;
+    const context = { user, group, article };
     if (error) {
       return <ErrorMessage error={error} />
     }
@@ -81,13 +97,15 @@ class Blog extends React.Component {
         <Typography component="h2" variant="h5" gutterBottom>
           {article.title}
         </Typography>
-      { canEdit && <BlogSection index={ 0 } saveSection={this.insertSection} /> }
+      { canEdit && <BlogSection index={ 0 } saveSection={this.insertSection} insertPhoto={this.insertPhoto} /> }
         {
           article.sections.map((sectionId, index)=>{
             return <div key={sectionId}>
-              <BlogSection index={ index }sectionId={sectionId} markdown={ resources[sectionId].markdown } 
-                  saveSection={this.updateSection} deleteSection={this.deleteSection} readOnly={!canEdit}/>
-              { canEdit && <BlogSection index={ index+1 } saveSection={this.insertSection} /> }
+              <BlogSection index={ index }sectionId={sectionId} resource={ resources[sectionId] } 
+                  saveSection={this.updateSection} deleteSection={this.deleteSection} 
+                  insertPhoto={this.insertPhoto} readOnly={!canEdit} {...context} />
+              { canEdit && <BlogSection index={ index+1 } 
+                  insertPhoto={this.insertPhoto} saveSection={this.insertSection} /> }
             </div>
           })
         }
