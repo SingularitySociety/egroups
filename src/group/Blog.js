@@ -73,10 +73,10 @@ class Blog extends React.Component {
     this.setState(article);
     await this.refArticle.set(article, {merge:true});
   }
-  onImageUpload = async (resourceId) => {
-    console.log("onImageUpload", resourceId);
+  onImageUpload = async (resourceId, imageUrl) => {
+    //console.log("onImageUpload", resourceId, imageUrl);
     await this.refArticle.collection("sections").doc(resourceId).set({
-      hasImage: true
+      hasImage: true, imageUrl
     }, {merge:true})
   }
 

@@ -24,9 +24,15 @@ const styles = theme => ({
 class ImageViewer extends React.Component {
   state = {imageUrl:null};
   async componentDidMount() {
+    const { imagePath, loadImage, imageUrl } = this.props;
+    console.log("## IMAGEURL ###", imageUrl);
+    if (imageUrl) {
+      this.setState({imageUrl});
+      return;
+    }
     const storagRef = firebase.storage().ref();
-    this.imageRef = storagRef.child(this.props.imagePath);
-    if (this.props.loadImage) {
+    this.imageRef = storagRef.child(imagePath);
+    if (loadImage) {
       const imageUrl = await this.imageRef.getDownloadURL();
       this.setState({imageUrl});
     }
@@ -38,6 +44,9 @@ class ImageViewer extends React.Component {
     }, (error) => {
       console.log("failed");
     }, async () => {
+      // Accordign to the document, this download URL is valid until you explicitly reveke it,
+      // and it is accessible by anybody (no security). The security is at this getDownloadURL() level. 
+      // It is fine to cache this URL in the database because we put a security around the database.
       const imageUrl = await task.snapshot.ref.getDownloadURL();
       this.props.onImageUpload(imageUrl);
       this.setState({imageUrl});

@@ -35,9 +35,10 @@ class BlogSection extends React.Component {
     const { insertPhoto, index } = this.props;
     insertPhoto(index);
   }
-  onImageUpload = () => {
+  onImageUpload = (imageUrl) => {
+    //console.log("onImageUpload", imageUrl);
     const { onImageUpload, sectionId } = this.props;
-    onImageUpload(sectionId);
+    onImageUpload(sectionId, imageUrl);
   }
   render() {
     const { group, resource, sectionId, article, deleteSection, readOnly } = this.props;
@@ -50,7 +51,7 @@ class BlogSection extends React.Component {
         if (resource.type==="image") {
           const imagePath = `groups/${group.groupId}/articles/${article.articleId}/${sectionId}`;
           return (
-            <ImageUploader imagePath={imagePath} loadImage={resource.hasImage} onImageUpload={this.onImageUpload} />
+            <ImageUploader imagePath={imagePath} loadImage={resource.hasImage} imageUrl={resource.imageUrl} onImageUpload={this.onImageUpload} />
           );
         }
         return <Grid container>
