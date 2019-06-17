@@ -12,26 +12,10 @@ import { EditorValue }  from 'react-rte'; // https://github.com/sstur/react-rte
 //import { EditorValue } from 'react-rte';
 import { Editor, RichUtils, EditorState } from 'draft-js';
 //import { Editor, EditorState, , convertToRaw, convertFromRaw } from 'draft-js';
+import { blockStyleFn, editorStyles } from './MarkdownViewer';
 
-const styles = {
-  editorFrame: {
-    borderColor: theme.palette.primary.main,
-    borderWidth: "1px",
-    borderStyle: "solid",
-  },
-  button: {
-    margin: theme.spacing(1),
-  },
-  blockquote: {
-    background: "yellow",
-  },
-  unorderedListItem: {
-  },
-  orderedListItem: {
-  },
-  unstyled: {
-  }
-};
+const styles = editorStyles;
+
 const customStyleMap = {
   /*
   BOLD: {
@@ -103,18 +87,6 @@ class MarkdownEditor extends React.Component {
     const { editorState } = this.state;
     const canUndo = editorState.getUndoStack().size !== 0;
     const canRedo = editorState.getRedoStack().size !== 0;
-    const blockStyleFn = (contentBlock) => {
-      const type = contentBlock.getType();
-      if (type === 'blockquote') {
-        return classes.blockquote;
-      } else if (type === 'unordered-list-item') {
-        return classes.unorderedListItem;
-      } else if (type === 'ordered-list-item') {
-        return classes.orderedListItem;
-      } else if (type === 'unstyled') {
-        return classes.unstyled;
-      }
-    }
     return (
       <div>
         <Grid container>
@@ -170,7 +142,7 @@ class MarkdownEditor extends React.Component {
           <Grid item xs={11} className={classes.editorFrame}>
             <Editor editorState={editorState} 
               customStyleMap={customStyleMap}
-              blockStyleFn={blockStyleFn}
+              blockStyleFn={(contentBlock) => { return blockStyleFn(classes, contentBlock)}}
               handleKeyCommand={this.handleKeyCommand}
               onChange={this.onChange} />
           </Grid>
