@@ -7,10 +7,15 @@ import TrashIcon from '@material-ui/icons/Delete';
 import { FormattedMessage } from 'react-intl';
 import { EditorValue }  from 'react-rte'; // https://github.com/sstur/react-rte
 //import { EditorValue } from 'react-rte';
-import { Editor } from 'draft-js';
+import { Editor, RichUtils } from 'draft-js';
 //import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
 
 const styles = {
+  editorFrame: {
+    borderColor: theme.palette.primary.main,
+    borderWidth: "1px",
+    borderStyle: "solid",
+  },
   button: {
     margin: theme.spacing(1),
   }
@@ -50,14 +55,25 @@ class MarkdownEditor extends React.Component {
     this.props.onCancel();
   }
 
+  handleKeyCommand = (command, editorState) => {
+    const newState = RichUtils.handleKeyCommand(editorState, command);
+    if (newState) {
+      this.onChange(newState);
+      return 'handled';
+    }
+    return 'not-handled';
+  }
+
   render() {
     const { classes, action, onDelete } = this.props;
     const { editorState } = this.state;
     return (
       <div>
       <Grid container>
-          <Grid item xs={11}>
-          <Editor editorState={editorState} onChange={this.onChange} />
+        <Grid item xs={11} className={classes.editorFrame}>
+          <Editor editorState={editorState} 
+            handleKeyCommand={this.handleKeyCommand}
+            onChange={this.onChange} />
         </Grid>
       </Grid>
         

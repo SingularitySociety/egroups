@@ -30,13 +30,13 @@ class BlogSection extends React.Component {
     this.setState({editing:true})
   }
   render() {
-    const { markdown, sectionId, deleteSection, readOnly } = this.props;
+    const { markdown, sectionId, deleteSection, readOnly, classes } = this.props;
     const { editing } = this.state;
     if (!editing) {
       if (sectionId) {
         const value = RichTextEditor.createValueFromString(markdown || "", 'markdown');
         return <Grid container>
-          <Grid item xs={11}>
+          <Grid item xs={11} style={{padding:"1px"}}>
             <MarkdownViewer value={value} useHtml={false} />
           </Grid>
           { !readOnly &&
