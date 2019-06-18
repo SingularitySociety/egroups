@@ -25,7 +25,7 @@ class Blog extends React.Component {
   state = {article:null, sections:[], resouces:null};
   async componentDidMount() {
     const { db, group, match:{params:{articleId}}, selectTab } = this.props;
-    selectTab("article");
+    selectTab("article", `bl/${articleId}`);
 
     this.refArticle = db.doc(`groups/${group.groupId}/articles/${articleId}`);
     const article = (await this.refArticle.get()).data();

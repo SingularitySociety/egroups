@@ -104,16 +104,19 @@ class MyAppBar extends React.Component {
         crams = [this.cramHome, this.cramBlog];
         break;
       case "article":
-        crams = [this.cramHome, this.cramBlog];
+        crams = [this.cramHome, this.cramBlog, this.breadCram(pageInfo.tabId, pageInfo.path)];
         break;
       case "channels":
         crams = [this.cramHome, this.cramChannels];
         break;
-      case "chat":
-        crams = [this.cramHome, this.cramChannels];
+      case "channel":
+        crams = [this.cramHome, this.cramChannels, this.breadCram(pageInfo.tabId, pageInfo.path)];
         break;
       case "events":
         crams = [this.cramHome, this.cramEvents];
+        break;
+      case "event":
+        crams = [this.cramHome, this.cramEvents, this.breadCram(pageInfo.tabId, pageInfo.path)];
         break;
       case "account":
         crams = [this.cramHome, this.cramAccount];
