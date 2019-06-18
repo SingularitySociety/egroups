@@ -37,11 +37,6 @@ export const subscribe_all_groups = async(userId, db, subscribe) => {
 }
 
 export const subscribe_group = async (newTokens, oldTokens, userId, db, subscribe, unsubscribe) => {
-  // see diff
-  if (newTokens.length === oldTokens.length) {
-    return;
-  }
-  
   // get all groups
   const topics = await get_topics_from_all_group(db, userId)
   const diff = utils.array_diff(newTokens, oldTokens);
