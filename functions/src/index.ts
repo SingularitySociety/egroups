@@ -129,3 +129,11 @@ export const tokenDidCreate = functions.firestore.document('users/{userId}/priva
     return messaging.subscribe_group(newTokens, oldTokens, userId, db, messaging.subscribe_topic, messaging.unsubscribe_topic);
   });
 
+export const updateTopicSubscription = functions.https.onCall(async (data, context) => {
+  if (context.auth) {
+    const db = admin.firestore();
+    await messaging.subscribe_all_groups(context.auth.uid, db, messaging.subscribe_topic);
+    return {  }
+  }
+  return {  };
+});

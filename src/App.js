@@ -74,17 +74,21 @@ class App extends React.Component {
     
   }
   
-  updatePushToken(user, token) {
+  async updatePushToken(user, newToken) {
+    const oldToken = localStorage.getItem("pushToken");
+    localStorage.setItem("pushToken", newToken);
+
     const refTokens = db.doc(`users/${user.uid}/private/tokens`);
-    const tokens = refTokens.get();
-    const exist_tokens = tokens.exists ? tokens.data().tokens : [];
-    if (!exist_tokens.includes(token)) {
-      exist_tokens.push(token)
-      console.log(exist_tokens);
-      refTokens.set({tokens: exist_tokens});
+    const tokens = await refTokens.get();
+    let exist_tokens = tokens.exists ? tokens.data().tokens : [];
+    if (!exist_tokens.includes(newToken)) {
+      exist_tokens.push(newToken)
     }
-    // console.log("client key is")
-    console.log(token)
+    if (oldToken && exist_tokens.includes(oldToken)) {
+      exist_tokens = exist_tokens.delete((elem) => elem === oldToken);
+    }
+    refTokens.set({tokens: exist_tokens});
+    console.log(exist_tokens)
   }
   
   getPushToken(user) {
@@ -92,10 +96,25 @@ class App extends React.Component {
       const messaging = firebase.messaging();
       messaging.usePublicVapidKey(config.messageKey);
 
+      const exist_token = localStorage.getItem("pushToken");
       messaging.requestPermission().then(() => {
-        messaging.getToken().then((token) => {
-          this.updatePushToken(user, token);
-        })
+        if (exist_token) {
+          // update force
+          // firebase.functions().httpsCallable('updateTopicSubscription');
+
+          // watch refresh
+          messaging.onTokenRefresh(function() {
+            messaging.getToken().then(function(refreshedToken) {
+              console.log("refresh token");
+              this.updatePushToken(user, refreshedToken);
+            });
+          });
+        } else {
+          // new token
+          messaging.getToken().then((token) => {
+            this.updatePushToken(user, token);
+          })
+        }
       }).catch((err) => {
         console.log('Unable to get permission to notify.', err);
       });

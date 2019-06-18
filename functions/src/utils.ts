@@ -1,3 +1,11 @@
 export const array_diff = (a: any[], b: any[]) => {
-  return a.filter((i) => {return b.indexOf(i) < 0;});
+  a = a.filter((i) => {
+    const ret = b.indexOf(i) < 0;
+    if (!ret) {
+      b = b.filter((elem) => {return elem !== i});
+    }
+    return ret;
+  });
+
+  return [a, b];
 };
