@@ -1,28 +1,30 @@
 // @flow
 import {OrderedSet, is} from 'immutable';
 
-import type {CharacterMetadata} from 'draft-js';
-import type {List} from 'immutable';
+import {CharacterMetadata} from 'draft-js';
+import {List} from 'immutable';
 
+/*
 type EntityKey = ?string;
 type Style = OrderedSet<string>;
 type StyleRange = [string, Style];
 type EntityRange = [EntityKey, Array<StyleRange>];
-export type CharacterMetaList = List<CharacterMetadata>;
+*/
+export const CharacterMetaList = List;
 
-export const EMPTY_SET: Style = new OrderedSet();
+export const EMPTY_SET = new OrderedSet();
 
-export default function getEntityRanges(
-  text: string,
-  charMetaList: CharacterMetaList,
-): Array<EntityRange> {
-  let charEntity: ?string = null;
-  let prevCharEntity: ?string = null;
-  let ranges: Array<EntityRange> = [];
+export function getEntityRanges(
+  text,
+  charMetaList,
+) {
+  let charEntity = null;
+  let prevCharEntity = null;
+  let ranges = [];
   let rangeStart = 0;
   for (let i = 0, len = text.length; i < len; i++) {
     prevCharEntity = charEntity;
-    let meta: CharacterMetadata = charMetaList.get(i);
+    let meta = charMetaList.get(i);
     charEntity = meta ? meta.getEntity() : null;
     if (i > 0 && charEntity !== prevCharEntity) {
       ranges.push([
@@ -43,9 +45,9 @@ export default function getEntityRanges(
 }
 
 function getStyleRanges(
-  text: string,
-  charMetaList: CharacterMetaList,
-): Array<StyleRange> {
+  text,
+  charMetaList,
+) {
   let charStyle = EMPTY_SET;
   let prevCharStyle = EMPTY_SET;
   let ranges = [];
