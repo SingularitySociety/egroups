@@ -82,7 +82,7 @@ class BlogSection extends React.Component {
       </Grid>
     }
     return (
-      <MarkdownEditor markdown={resource.markdown} onSave={this.onSave} onCancel={this.onCancel} onDelete={deleteSection && this.onDelete} />
+      <MarkdownEditor markdown={(resource && resource.markdown) || ""} onSave={this.onSave} onCancel={this.onCancel} onDelete={deleteSection && this.onDelete} />
     )
   }
 }

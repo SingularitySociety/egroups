@@ -59,9 +59,9 @@ class ImageViewer extends React.Component {
     const { classes, readOnly, displayMode } = this.props;
     const { imageUrl } = this.state;
     const imageStyle = imageUrl ? { backgroundImage:`url("${imageUrl}")` } : {};
-    const imageElement = (displayMode == "wide") ? (
+    const imageElement = (displayMode === "wide") ? (
         <Grid item>
-          <img src={imageUrl} className={classes[displayMode]} />
+          <img src={imageUrl} className={classes[displayMode]} alt="blog image" />
         </Grid>
       ) : <Grid item className={classes[displayMode || "thumbnail"]} style={imageStyle} />;
     return (<Grid container className={classes.root} spacing={1} justify="center">
