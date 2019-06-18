@@ -61,6 +61,16 @@ class MarkdownEditor extends React.Component {
     }
     return 'not-handled';
   }
+  handleReturn = (e, editorState) => {
+    if (e.shiftKey) {
+      const newState = RichUtils.insertSoftNewline(editorState);
+      if (newState) {
+        this.onChange(newState);
+        return 'handled';
+      }
+    }
+    return 'not-handled';
+  }
 
   toggleStyle = (style) => {
     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, style));    
@@ -137,6 +147,7 @@ class MarkdownEditor extends React.Component {
             <Editor editorState={editorState} 
               customStyleMap={customStyleMap}
               blockStyleFn={(contentBlock) => { return blockStyleFn(classes, contentBlock)}}
+              handleReturn={this.handleReturn}
               handleKeyCommand={this.handleKeyCommand}
               onChange={this.onChange} />
           </Grid>
