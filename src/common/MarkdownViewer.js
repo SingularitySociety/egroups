@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Editor } from 'draft-js';
+import { Editor, EditorState } from 'draft-js';
 import './MarkdownViewer.css';
+import {stateFromMarkdown} from 'draft-js-import-markdown';
+
 
 const styles = theme => ({
  editorFrame: {
@@ -21,9 +23,17 @@ const styles = theme => ({
   },
   orderedListItem: {
   },
+  codeBlock: {
+    background: "#EFF0F1", // matching github
+    paddingLeft: theme.spacing(1),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+  },
   unstyled: {
     fontFamily: "'Roboto', sans-serif",
-    marginBottom: theme.spacing(1),
+    fontSize: "calc(4vmin)",
+    lineHeight: "1.8em",
+    marginBottom: theme.spacing(2),
   }
 });
 
@@ -37,6 +47,8 @@ export const blockStyleFn = (classes, contentBlock) => {
     return classes.unorderedListItem;
   } else if (type === 'ordered-list-item') {
     return classes.orderedListItem;
+  } else if (type === 'code-block') {
+    return classes.codeBlock;
   } else if (type === 'unstyled') {
     //console.log(type, classes.unstyled);
     return classes.unstyled;
@@ -45,18 +57,13 @@ export const blockStyleFn = (classes, contentBlock) => {
 
 class MarkdownViewer extends React.Component {
     render() {
-      const { value, useHtml, classes } = this.props;
-      if (useHtml) {
-        // This is quite safe because we always generate value from markdown. 
-        return <span 
-          className={classes.root}
-          dangerouslySetInnerHTML={{__html:value.toString('html')}}>
-        </span>
-      }
+      const { classes, markdown } = this.props;
+      const contentState = stateFromMarkdown(markdown);
+      let editorState = EditorState.createWithContent(contentState);
       return (
         <Editor readOnly={true} 
-        blockStyleFn={(contentBlock) => { return blockStyleFn(classes, contentBlock)}}
-        editorState={value.getEditorState()} />
+          blockStyleFn={(contentBlock) => { return blockStyleFn(classes, contentBlock)}}
+          editorState={editorState} />
       )  
     }
 }

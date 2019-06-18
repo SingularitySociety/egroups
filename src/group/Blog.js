@@ -7,6 +7,18 @@ import BlogSection from './BlogSection';
 import ErrorMessage from '../ErrorMessage';
 
 const styles = theme => ({
+  readerFrame: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+  },
+  editorFrame: {
+
+  },
+  title: {
+    fontWeight: "900",
+    fontSize: "calc(5.3vmin)",
+    marginBottom: theme.spacing(2),
+  }
 });
 
 class Blog extends React.Component {
@@ -15,7 +27,7 @@ class Blog extends React.Component {
     const { db, group, match:{params:{articleId}} } = this.props;
     this.refArticle = db.doc(`groups/${group.groupId}/articles/${articleId}`);
     const article = (await this.refArticle.get()).data();
-    console.log("article=", article);
+    //console.log("article=", article);
     // BUGBUG: This is an attempt to catch non-existing but does not work because it causes security error unlike chat. 
     if (article === null) {
       this.setState({error:{key:"error.invalid.articleId", value:articleId}});
@@ -73,10 +85,16 @@ class Blog extends React.Component {
     this.setState(article);
     await this.refArticle.set(article, {merge:true});
   }
+  onImageUpload = async (resourceId, imageUrl) => {
+    //console.log("onImageUpload", resourceId, imageUrl);
+    await this.refArticle.collection("sections").doc(resourceId).set({
+      hasImage: true, imageUrl
+    }, {merge:true})
+  }
 
   render() {
     const { article, resources, error } = this.state;
-    const { user, group, member } = this.props;
+    const { user, group, member, classes } = this.props;
     const context = { user, group, article };
     if (error) {
       return <ErrorMessage error={error} />
@@ -92,9 +110,12 @@ class Blog extends React.Component {
     if (!resources) {
       return "";
     }
+
+    const frameClass = canEdit ? classes.editorFrame : classes.readerFrame;
+
     return (
-      <div>
-        <Typography component="h2" variant="h5" gutterBottom>
+      <div className={frameClass}>
+        <Typography component="h2" gutterBottom className={classes.title}>
           {article.title}
         </Typography>
       { canEdit && <BlogSection index={ 0 } saveSection={this.insertSection} insertPhoto={this.insertPhoto} /> }
@@ -103,7 +124,8 @@ class Blog extends React.Component {
             return <div key={sectionId}>
               <BlogSection index={ index }sectionId={sectionId} resource={ resources[sectionId] } 
                   saveSection={this.updateSection} deleteSection={this.deleteSection} 
-                  insertPhoto={this.insertPhoto} readOnly={!canEdit} {...context} />
+                  insertPhoto={this.insertPhoto} onImageUpload={this.onImageUpload} 
+                  readOnly={!canEdit} {...context} />
               { canEdit && <BlogSection index={ index+1 } 
                   insertPhoto={this.insertPhoto} saveSection={this.insertSection} /> }
             </div>

@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import MarkdownEditor from '../common/MarkdownEditor2';
 import { IconButton, Grid } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import PhotoIcon from '@material-ui/icons/AddPhotoAlternate';
 import EditIcon from '@material-ui/icons/Edit';
-import RichTextEditor from 'react-rte'; // https://github.com/sstur/react-rte
 import MarkdownViewer from '../common/MarkdownViewer';
+import MarkdownEditor from '../common/MarkdownEditor';
 import ImageUploader from '../common/ImageUploader';
 
 const styles = theme => ({
@@ -36,24 +35,30 @@ class BlogSection extends React.Component {
     const { insertPhoto, index } = this.props;
     insertPhoto(index);
   }
+  onImageUpload = (imageUrl) => {
+    //console.log("onImageUpload", imageUrl);
+    const { onImageUpload, sectionId } = this.props;
+    onImageUpload(sectionId, imageUrl);
+  }
   render() {
     const { group, resource, sectionId, article, deleteSection, readOnly } = this.props;
     const { editing } = this.state;
     if (!editing) {
       if (sectionId) {
         //console.log("render1", markdown);
-        const value = RichTextEditor.createValueFromString(resource.markdown || "", 'markdown');
+        //const value = RichTextEditor.createValueFromString(resource.markdown || "", 'markdown');
         //console.log("render1", value.toString("markdown"));
         if (resource.type==="image") {
           const imagePath = `groups/${group.groupId}/articles/${article.articleId}/${sectionId}`;
-          console.log(imagePath);
           return (
-            <ImageUploader imagePath={imagePath} onImageUpload={()=>{}} />
+            <ImageUploader imagePath={imagePath} loadImage={resource.hasImage} imageUrl={resource.imageUrl} 
+                readOnly={readOnly} displayMode="wide" onImageUpload={this.onImageUpload} />
           );
         }
-        return <Grid container>
-          <Grid item xs={11} style={{padding:"1px"}}>
-            <MarkdownViewer value={value} useHtml={false} />
+        const textWidth = readOnly ? 12 : 11;
+        return <Grid container justify="center">
+          <Grid item xs={textWidth} style={{padding:"1px"}}>
+            <MarkdownViewer markdown={resource.markdown} useHtml={false} />
           </Grid>
           { !readOnly &&
             <Grid item xs={1}>
@@ -78,7 +83,7 @@ class BlogSection extends React.Component {
       </Grid>
     }
     return (
-      <MarkdownEditor markdown={resource.markdown} onSave={this.onSave} onCancel={this.onCancel} onDelete={deleteSection && this.onDelete} />
+      <MarkdownEditor markdown={(resource && resource.markdown) || ""} onSave={this.onSave} onCancel={this.onCancel} onDelete={deleteSection && this.onDelete} />
     )
   }
 }
