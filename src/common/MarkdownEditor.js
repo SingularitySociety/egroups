@@ -10,8 +10,11 @@ import { FormatListBulleted, FormatListNumbered, Undo, Redo } from '@material-ui
 import { FormattedMessage } from 'react-intl';
 import { Editor, RichUtils, EditorState } from 'draft-js';
 import { blockStyleFn, editorStyles } from './MarkdownViewer';
-import { stateToMarkdown } from 'draft-js-export-markdown';
-import { stateFromMarkdown } from 'draft-js-import-markdown';
+
+//import { stateToMarkdown } from 'draft-js-export-markdown';
+//import { stateFromMarkdown } from 'draft-js-import-markdown';
+import stateFromMarkdown from './markdown/stateFromMarkdown';
+import stateToMarkdown from './markdown/stateToMarkdown';
 
 const styles = editorStyles;
 
@@ -39,6 +42,7 @@ class MarkdownEditor extends React.Component {
   onSave = (e) => {
     e.preventDefault();
     const contentState = this.state.editorState.getCurrentContent();
+    console.log(stateToMarkdown);
     const markdown = stateToMarkdown(contentState);
     this.props.onSave(markdown);
   }
