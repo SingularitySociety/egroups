@@ -10,6 +10,9 @@ const styles = theme => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
+  wide: {
+    width: "100%",
+  },
   thumbnail: {
     height: "calc(30vmin)",
     width: "calc(30vmin)",
@@ -21,12 +24,18 @@ const styles = theme => ({
   }
 });
 
-class About extends React.Component {
+class ImageViewer extends React.Component {
   state = {imageUrl:null};
   async componentDidMount() {
+    const { imagePath, loadImage, imageUrl } = this.props;
+    console.log("## IMAGEURL ###", imageUrl);
+    if (imageUrl) {
+      this.setState({imageUrl});
+      return;
+    }
     const storagRef = firebase.storage().ref();
-    this.imageRef = storagRef.child(this.props.imagePath);
-    if (this.props.loadImage) {
+    this.imageRef = storagRef.child(imagePath);
+    if (loadImage) {
       const imageUrl = await this.imageRef.getDownloadURL();
       this.setState({imageUrl});
     }
@@ -38,31 +47,43 @@ class About extends React.Component {
     }, (error) => {
       console.log("failed");
     }, async () => {
+      // Accordign to the document, this download URL is valid until you explicitly reveke it,
+      // and it is accessible by anybody (no security). The security is at this getDownloadURL() level. 
+      // It is fine to cache this URL in the database because we put a security around the database.
       const imageUrl = await task.snapshot.ref.getDownloadURL();
       this.props.onImageUpload(imageUrl);
       this.setState({imageUrl});
     })
   }    
   render() {
-    const { classes } = this.props;
+    const { classes, readOnly, displayMode } = this.props;
     const { imageUrl } = this.state;
     const imageStyle = imageUrl ? { backgroundImage:`url("${imageUrl}")` } : {};
-    return (<Grid container className={classes.root} spacing={1} justify="center">
-        <Grid item className={classes.thumbnail} style={imageStyle} />
+    const imageElement = (displayMode === "wide") ? (
         <Grid item>
-          <Button variant="contained" component="label">
-              Upload Image
-              <input type="file" accept="image/*" style={{ display: "none" }} onChange={this.onFileInput} />
-          </Button>
+          <img src={imageUrl} className={classes[displayMode]} alt="blog image" />
         </Grid>
+      ) : <Grid item className={classes[displayMode || "thumbnail"]} style={imageStyle} />;
+    return (<Grid container className={classes.root} spacing={1} justify="center">
+        { imageElement }
+        {
+          !readOnly &&
+            <Grid item>
+            <Button variant="contained" component="label">
+                Upload Image
+                <input type="file" accept="image/*" style={{ display: "none" }} onChange={this.onFileInput} />
+            </Button>
+        </Grid>
+
+        }
       </Grid>)
   }
 }
 
-About.propTypes = {
+ImageViewer.propTypes = {
     classes: PropTypes.object.isRequired,
     imagePath: PropTypes.string.isRequired,
     onImageUpload: PropTypes.func.isRequired,
   };
   
-export default withStyles(styles)(About);
+export default withStyles(styles)(ImageViewer);

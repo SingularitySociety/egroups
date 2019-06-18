@@ -1,3 +1,28 @@
+ImageUploader
+ display style (profile, blog, ...)
+ readonly
+ icon button ?
+ store URL
+MarkdownEditor2
+ <code>
+ save/cencel/delete buttons on right
+ link
+ h1...h3
+ draft mode & publish
+blog/chat
+ settings
+Account/profile
+ Image upload
+List of members
+ Image
+List of blog articles
+ Image
+Storage
+ member only read
+ blog, owner only upload
+ group profile, admin only upload
+ personal profile, user only
+
 Check the author == uid when create something
 Fix font issue with MarkdownEditor (editor and read-onlyl)
 Error handling (invalid page)
