@@ -71,6 +71,12 @@ class MyAppBar extends React.Component {
     this.cramSettings = <MUILink key="settings" color="inherit" component={Link} to={`/${group.groupName}/settings`}>
             <FormattedMessage id="settings" />
           </MUILink>;
+    this.cramHomePage = <MUILink key="page.home" color="inherit" component={Link} to={`/${group.groupName}`}>
+            <FormattedMessage id="page.home" />
+          </MUILink>;
+    this.cramJoin = <MUILink key="join" color="inherit" component={Link} to={`/${group.groupName}/join`}>
+            <FormattedMessage id="application" />
+          </MUILink>;
   }
   openMe = e => {
     this.setState({anchorEl:e.currentTarget})
@@ -123,6 +129,9 @@ class MyAppBar extends React.Component {
       case "settings":
         crams = [this.cramHome, this.cramSettings];
         break;
+      case "join":
+        crams = [this.cramHomePage, this.cramJoin];
+        break;
       default:
         console.log("### unknown tabId", tabId);
         break;
@@ -150,10 +159,10 @@ class MyAppBar extends React.Component {
               </MUILink>
             </Typography>
             { 
+              user ?
               <IconButton color="inherit" onClick={this.openMe}><MenuIcon /></IconButton>
-            }
-            {
-                !user && <Button color="inherit" to={loginUrl} component={Link}><FormattedMessage id="login" /></Button>
+              :
+              <Button color="inherit" to={loginUrl} component={Link}><FormattedMessage id="login" /></Button>
             }
           </Toolbar>
         </AppBar>
@@ -163,14 +172,11 @@ class MyAppBar extends React.Component {
             <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/account`}><FormattedMessage id="account" /></MenuItem>
           }
           {
-            (member && member.privilege > Privileges.admin) && 
-             <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/settings`}><FormattedMessage id="settings" /></MenuItem>
+            (member && member.privilege >= Privileges.admin) && 
+            <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/settings`}><FormattedMessage id="settings" /></MenuItem>
           }
           <Divider />
-          {
-            user && 
             <MenuItem onClick={this.logout}><FormattedMessage id="logout" /></MenuItem>
-          }
         </Menu>
         { subbar }
         {
