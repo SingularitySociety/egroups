@@ -129,7 +129,7 @@ class App extends React.Component {
           // new token
           console.log("new_token")
           messaging.getToken().then((token) => {
-            this.updatePushToken(user, token);
+            this.updatePushToken(user.uid, token);
           })
         }
       }).catch((err) => {
