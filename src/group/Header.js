@@ -23,8 +23,8 @@ const styles = {
     marginLeft: -12,
     marginRight: 20,
   },
-  subbar: {
-    marginTop: theme.spacing(4),
+  breadcrums: {
+    marginTop: theme.spacing(2),
   },
   join: {
     marginTop: theme.spacing(1),
@@ -102,9 +102,14 @@ class MyAppBar extends React.Component {
         <Tabs value={0} indicatorColor="primary" textColor="primary" centered >
           { tabs }
         </Tabs>
-        : <Breadcrumbs aria-label="Breadcrumb">
-          { crams }
-        </Breadcrumbs>;
+        : 
+        <Grid container justify="center">
+          <Grid item className={classes.breadcrums}>
+            <Breadcrumbs aria-label="Breadcrumb">
+              { crams }
+            </Breadcrumbs>
+          </Grid>
+        </Grid>;
 
     return (
       <div className={classes.root}>
@@ -142,11 +147,7 @@ class MyAppBar extends React.Component {
             <MenuItem onClick={this.logout}><FormattedMessage id="logout" /></MenuItem>
           }
         </Menu>
-        <Grid container justify="center">
-          <Grid item className={classes.subbar}>
-          { subbar }
-          </Grid>
-        </Grid>
+        { subbar }
         {
           !member && tabId!=="join" && 
             <Grid container justify="center" className={classes.join}>
