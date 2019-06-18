@@ -6,7 +6,7 @@ import { Typography } from '@material-ui/core';
 const styles = theme => ({
 });
 
-class About extends React.Component {
+class MemberHome extends React.Component {
     componentDidMount() {
       const { selectTab } = this.props;
       selectTab("member");
@@ -20,8 +20,8 @@ class About extends React.Component {
     }
 }
 
-About.propTypes = {
+MemberHome.propTypes = {
     classes: PropTypes.object.isRequired,
   };
   
-export default withStyles(styles)(About);
+export default withStyles(styles)(MemberHome);

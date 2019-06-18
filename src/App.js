@@ -4,7 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import theme from './theme';
 import Home from './Home';
-import Group from './group/Group';
+import GroupRouter from './group/GroupRouter';
 import About from './About';
 import Login from './Login';
 import Decoder from './Decoder';
@@ -166,10 +166,10 @@ class App extends React.Component {
           <Router>
             {
               appConfig.rootGroup ?
-              <Route exact path="/" render={(props) => <Group {...props} {...params} joinGroup={this.joinGroup} />} />
+              <Route exact path="/" render={(props) => <GroupRouter {...props} {...params} joinGroup={this.joinGroup} />} />
               : <Route exact path="/" render={(props) => <Home {...props} {...params} />} />
             }
-            <Route path="/:gp" render={(props) => <Group {...props} {...params} joinGroup={this.joinGroup} />} />
+            <Route path="/:gp" render={(props) => <GroupRouter {...props} {...params} joinGroup={this.joinGroup} />} />
             <Route exact path="/a/about" render={(props) => <About {...props} {...params} />} />
             <Route exact path="/a/new/:groupId" render={(props) => <NewGroup {...props} {...params} />} />
             <Route exact path="/a/login" render={(props) => <Login {...props} {...params} />} />

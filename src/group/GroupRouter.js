@@ -7,7 +7,7 @@ import { MuiThemeProvider } from '@material-ui/core';
 import { blue, pink, red, green } from '@material-ui/core/colors';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { Route } from 'react-router-dom';
-import Home from './Home';
+import GroupHome from './GroupHome';
 import Events from './Events';
 import User from './User';
 import Join from './Join';
@@ -23,7 +23,7 @@ import Channels from './Channels';
 import ErrorMessage from '../ErrorMessage';
 import Listing from './Listing';
 import Profile from './Profile';
-import Member from './Member';
+import MemberHome from './MemberHome';
 
 const colorMap = { blue, pink, red, green};
 
@@ -38,7 +38,7 @@ const styles = theme => ({
   }
 });
 
-class GroupHome extends React.Component {
+class GroupRouter extends React.Component {
   state = {group:null, member:null, error:null, pageInfo:{tabId:"home"}};
   async componentDidMount() {
     const { db, match:{params:{gp}}, rootGroup } = this.props;
@@ -143,10 +143,10 @@ class GroupHome extends React.Component {
             <Grid item className={classes.main}>
               {
                 rootGroup &&
-                  <Route exact path={`/`} render={(props) => <Home {...props} {...context} />} />
+                  <Route exact path={`/`} render={(props) => <GroupHome {...props} {...context} />} />
               }
-              <Route exact path={`/${group.groupName}`} render={(props) => <Home {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/member`} render={(props) => <Member {...props} {...context} />} />
+              <Route exact path={`/${group.groupName}`} render={(props) => <GroupHome {...props} {...context} />} />
+              <Route exact path={`/${group.groupName}/member`} render={(props) => <MemberHome {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/events`} render={(props) => <Events {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/listing`} render={(props) => <Listing {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/join`} render={(props) => <Join {...props} {...context} memberDidUpdate={this.memberDidUpdate} />} />
@@ -166,8 +166,8 @@ class GroupHome extends React.Component {
   }
 }
 
-GroupHome.propTypes = {
+GroupRouter.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(GroupHome);
+export default withStyles(styles)(GroupRouter);
