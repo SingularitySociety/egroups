@@ -1,6 +1,6 @@
 // @flow
 
-import replaceTextWithMeta from './lib/replaceTextWithMeta';
+import replaceTextWithMeta from './replaceTextWithMeta';
 import {CharacterMetadata, ContentBlock, ContentState, genKey} from 'draft-js';
 import {List, Map, OrderedSet, Repeat, Seq} from 'immutable';
 import {BLOCK_TYPE, ENTITY_TYPE, INLINE_STYLE} from 'draft-js-utils';
@@ -9,15 +9,16 @@ import {
   INLINE_ELEMENTS,
   SPECIAL_ELEMENTS,
   SELF_CLOSING_ELEMENTS,
-} from './lib/Constants';
+} from './Constants';
 
-import type {Entity} from 'draft-js';
-import type {Set, IndexedSeq} from 'immutable';
-import type {
-  Node as SyntheticNode,
-  ElementNode as SyntheticElement,
+import {Entity} from 'draft-js';
+import {Set, IndexedSeq} from 'immutable';
+import {
+  Node,
+  ElementNode,
 } from 'synthetic-dom';
 
+/*
 type DOMNode = SyntheticNode | Node;
 type DOMElement = SyntheticElement | Element;
 
@@ -46,9 +47,11 @@ type ParsedBlock = {
   depth: number;
   data: ?BlockData;
 };
+*/
 
-export type ElementStyles = {[tagName: string]: Style};
+//export const ElementStyles = {[tagName]};
 
+/*
 type PartialBlock = {
   type?: string;
   data?: BlockData;
@@ -85,6 +88,7 @@ type Options = {
   customInlineFn?: CustomInlineFn;
 };
 type DataMap<T> = {[key: string]: T};
+*/
 
 const DATA_URL = /^data:/i;
 const NO_STYLE = OrderedSet();
@@ -112,8 +116,8 @@ const ELEM_ATTR_MAP = {
   img: {src: 'src', alt: 'alt', width: 'width', height: 'height'},
 };
 
-const getEntityData = (tagName: string, element: DOMElement) => {
-  const data: DataMap<string> = {};
+const getEntityData = (tagName, element) => {
+  const data = {};
   if (ELEM_ATTR_MAP.hasOwnProperty(tagName)) {
     const attrMap = ELEM_ATTR_MAP[tagName];
     for (let i = 0; i < element.attributes.length; i++) {
@@ -135,10 +139,10 @@ const getEntityData = (tagName: string, element: DOMElement) => {
 // Functions to create entities from elements.
 const ElementToEntity = {
   a(
-    generator: ContentGenerator,
-    tagName: string,
-    element: DOMElement,
-  ): ?string {
+    generator,
+    tagName,
+    element,
+  ) {
     let data = getEntityData(tagName, element);
     // Don't add `<a>` elements with invalid href.
     if (isAllowedHref(data.url)) {
@@ -146,10 +150,10 @@ const ElementToEntity = {
     }
   },
   img(
-    generator: ContentGenerator,
-    tagName: string,
-    element: DOMElement,
-  ): ?string {
+    generator,
+    tagName,
+    element,
+  ) {
     let data = getEntityData(tagName, element);
     // Don't add `<img>` elements with no src.
     if (data.src != null) {
@@ -159,22 +163,24 @@ const ElementToEntity = {
 };
 
 class ContentGenerator {
+  /*
   contentStateForEntities: ContentState;
   blockStack: Array<ParsedBlock>;
   blockList: Array<ParsedBlock>;
   depth: number;
   options: Options;
+  */
   // This will be passed to the customInlineFn to allow it
   // to return a Style() or Entity().
   inlineCreators = {
-    Style: (style: Style) => ({type: 'STYLE', style}),
-    Entity: (type: string, data: DataMap<mixed>, mutability: EntityMutability = 'MUTABLE') => ({
+    Style: (style) => ({type: 'STYLE', style}),
+    Entity: (type, data, mutability = 'MUTABLE') => ({
       type: 'ENTITY',
       entityKey: this.createEntity(type, toStringMap(data), mutability),
     }),
   };
 
-  constructor(options: Options = {}) {
+  constructor(options = {}) {
     this.options = options;
     this.contentStateForEntities = ContentState.createFromBlockArray([]);
     // This represents the hierarchy as we traverse nested elements; for
@@ -186,7 +192,7 @@ class ContentGenerator {
     this.depth = 0;
   }
 
-  process(element: DOMElement): ContentState {
+  process(element) {
     this.processBlockElement(element);
     let contentBlocks = [];
     this.blockList.forEach((block) => {
@@ -229,7 +235,7 @@ class ContentGenerator {
     );
   }
 
-  getBlockTypeFromTagName(tagName: string): string {
+  getBlockTypeFromTagName(tagName) {
     let {blockTypes} = this.options;
     if (blockTypes && blockTypes[tagName]) {
       return blockTypes[tagName];
@@ -274,14 +280,14 @@ class ContentGenerator {
     }
   }
 
-  processBlockElement(element: DOMElement) {
+  processBlockElement(element) {
     if (!element) {
       return;
     }
     let {customBlockFn} = this.options;
     let tagName = element.nodeName.toLowerCase();
-    let type: ?string;
-    let data: ?BlockData;
+    let type;
+    let data;
     if (customBlockFn) {
       let customBlock = customBlockFn(element);
       if (customBlock != null) {
@@ -308,7 +314,7 @@ class ContentGenerator {
         type = parent.type;
       }
     }
-    let block: ParsedBlock = {
+    let block = {
       tagName: tagName,
       textFragments: [],
       type: type,
@@ -333,7 +339,7 @@ class ContentGenerator {
     }
   }
 
-  processInlineElement(element: DOMElement) {
+  processInlineElement(element) {
     let tagName = element.nodeName.toLowerCase();
     if (tagName === 'br') {
       this.processText(SOFT_BREAK_PLACEHOLDER);
@@ -374,7 +380,7 @@ class ContentGenerator {
     block.styleStack.pop();
   }
 
-  processTextNode(node: DOMNode) {
+  processTextNode(node) {
     let text = node.nodeValue;
     // This is important because we will use \r as a placeholder for a soft break.
     text = text.replace(LINE_BREAKS, '\n');
@@ -386,7 +392,7 @@ class ContentGenerator {
     this.processText(text);
   }
 
-  processText(text: string) {
+  processText(text) {
     let block = this.blockStack.slice(-1)[0];
     let style = block.styleStack.slice(-1)[0];
     let entity = block.entityStack.slice(-1)[0];
@@ -394,17 +400,17 @@ class ContentGenerator {
       style: style,
       entity: entity,
     });
-    let seq: CharacterMetaSeq = Repeat(charMetadata, text.length);
+    let seq = Repeat(charMetadata, text.length);
     block.textFragments.push({
       text: text,
       characterMeta: seq,
     });
   }
 
-  processNode(node: DOMNode) {
+  processNode(node) {
     if (node.nodeType === NODE_TYPE_ELEMENT) {
       // $FlowIssue
-      let element: DOMElement = node;
+      let element = node;
       let tagName = element.nodeName.toLowerCase();
       if (INLINE_ELEMENTS.hasOwnProperty(tagName)) {
         this.processInlineElement(element);
@@ -416,7 +422,7 @@ class ContentGenerator {
     }
   }
 
-  createEntity(type: string, data: DataMap<string>, mutability: EntityMutability = 'MUTABLE') {
+  createEntity(type, data, mutability = 'MUTABLE') {
     this.contentStateForEntities = this.contentStateForEntities.createEntity(
       type,
       mutability,
@@ -427,9 +433,9 @@ class ContentGenerator {
 }
 
 function trimLeadingNewline(
-  text: string,
-  characterMeta: CharacterMetaSeq,
-): TextFragment {
+  text,
+  characterMeta,
+) {
   if (text.charAt(0) === '\n') {
     text = text.slice(1);
     characterMeta = characterMeta.slice(1);
@@ -438,9 +444,9 @@ function trimLeadingNewline(
 }
 
 function trimLeadingSpace(
-  text: string,
-  characterMeta: CharacterMetaSeq,
-): TextFragment {
+  text,
+  characterMeta,
+) {
   while (text.charAt(0) === ' ') {
     text = text.slice(1);
     characterMeta = characterMeta.slice(1);
@@ -449,9 +455,9 @@ function trimLeadingSpace(
 }
 
 function trimTrailingSpace(
-  text: string,
-  characterMeta: CharacterMetaSeq,
-): TextFragment {
+  text,
+  characterMeta,
+) {
   while (text.slice(-1) === ' ') {
     text = text.slice(0, -1);
     characterMeta = characterMeta.slice(0, -1);
@@ -460,9 +466,9 @@ function trimTrailingSpace(
 }
 
 function collapseWhiteSpace(
-  text: string,
-  characterMeta: CharacterMetaSeq,
-): TextFragment {
+  text,
+  characterMeta,
+) {
   text = text.replace(/[ \t\n]/g, ' ');
   ({text, characterMeta} = trimLeadingSpace(text, characterMeta));
   ({text, characterMeta} = trimTrailingSpace(text, characterMeta));
@@ -489,7 +495,7 @@ function collapseWhiteSpace(
   return {text, characterMeta};
 }
 
-function canHaveDepth(blockType: string): boolean {
+function canHaveDepth(blockType) {
   switch (blockType) {
     case BLOCK_TYPE.UNORDERED_LIST_ITEM:
     case BLOCK_TYPE.ORDERED_LIST_ITEM: {
@@ -501,10 +507,10 @@ function canHaveDepth(blockType: string): boolean {
   }
 }
 
-function concatFragments(fragments: Array<TextFragment>): TextFragment {
+function concatFragments(fragments) {
   let text = '';
-  let characterMeta: CharacterMetaSeq = Seq();
-  fragments.forEach((textFragment: TextFragment) => {
+  let characterMeta = Seq();
+  fragments.forEach((textFragment) => {
     text = text + textFragment.text;
     characterMeta = characterMeta.concat(textFragment.characterMeta);
   });
@@ -512,10 +518,10 @@ function concatFragments(fragments: Array<TextFragment>): TextFragment {
 }
 
 function addStyleFromTagName(
-  styleSet: StyleSet,
-  tagName: string,
-  elementStyles?: ElementStyles,
-): StyleSet {
+  styleSet,
+  tagName,
+  elementStyles,
+) {
   switch (tagName) {
     case 'b':
     case 'strong': {
@@ -547,12 +553,12 @@ function addStyleFromTagName(
   }
 }
 
-function hasSemanticMeaning(blockType: string) {
+function hasSemanticMeaning(blockType) {
   return blockType !== BLOCK_TYPE.UNSTYLED;
 }
 
-function toStringMap(input: mixed) {
-  let result: DataMap<string> = {};
+function toStringMap(input) {
+  let result = {};
   if (input !== null && typeof input === 'object' && !Array.isArray(input)) {
     let obj = input;
     for (let key of Object.keys(obj)) {
@@ -565,7 +571,7 @@ function toStringMap(input: mixed) {
   return result;
 }
 
-function isAllowedHref(input: ?string) {
+function isAllowedHref(input) {
   if (input == null || input.match(DATA_URL)) {
     return false;
   } else {
@@ -574,9 +580,9 @@ function isAllowedHref(input: ?string) {
 }
 
 export function stateFromElement(
-  element: DOMElement,
-  options?: Options,
-): ContentState {
+  element,
+  options,
+) {
   return new ContentGenerator(options).process(element);
 }
 

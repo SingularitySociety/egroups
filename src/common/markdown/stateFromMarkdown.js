@@ -18,7 +18,7 @@ type = {
 
 let defaultOptions = {};
 
-export default function stateFromMarkdown(
+export function stateFromMarkdown(
   markdown,
   options,
 ) {
