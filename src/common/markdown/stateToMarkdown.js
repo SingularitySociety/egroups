@@ -1,30 +1,27 @@
 // @flow
 
-import { getEntityRanges } from './getEntityRanges';
 import {
+  getEntityRanges,
   BLOCK_TYPE,
   ENTITY_TYPE,
   INLINE_STYLE,
-} from './Constants-1';
+} from 'draft-js-utils';
 
-import {ContentState, ContentBlock} from 'draft-js';
+import type {ContentState, ContentBlock} from 'draft-js';
 
-/*
 type Options = {
   gfm?: ?boolean;
 };
-*/
 
 const {BOLD, CODE, ITALIC, STRIKETHROUGH, UNDERLINE} = INLINE_STYLE;
 
 const CODE_INDENT = '    ';
 
-const defaultOptions = {
+const defaultOptions: Options = {
   gfm: false,
 };
 
 class MarkupGenerator {
-  /*
   blocks: Array<ContentBlock>;
   contentState: ContentState;
   currentBlock: number;
@@ -32,14 +29,13 @@ class MarkupGenerator {
   totalBlocks: number;
   listItemCounts: Object;
   options: Options;
-  */
 
-  constructor(contentState, options) {
+  constructor(contentState: ContentState, options?: Options) {
     this.contentState = contentState;
     this.options = options || defaultOptions;
   }
 
-  generate() {
+  generate(): string {
     this.output = [];
     this.blocks = this.contentState.getBlockMap().toArray();
     this.totalBlocks = this.blocks.length;
@@ -190,7 +186,7 @@ class MarkupGenerator {
       this.listItemCounts[blockDepth] + 1);
   }
 
-  insertLineBreaks(n) {
+  insertLineBreaks(n: number) {
     if (this.currentBlock > 0) {
       for (let i = 0; i < n; i++) {
         this.output.push('\n');
@@ -198,7 +194,7 @@ class MarkupGenerator {
     }
   }
 
-  renderBlockContent(block) {
+  renderBlockContent(block: ContentBlock): string {
     let {contentState} = this;
     let blockType = block.getType();
     let text = block.getText();
@@ -267,7 +263,7 @@ class MarkupGenerator {
   }
 }
 
-function canHaveDepth(blockType) {
+function canHaveDepth(blockType: any): boolean {
   switch (blockType) {
     case BLOCK_TYPE.UNORDERED_LIST_ITEM:
     case BLOCK_TYPE.ORDERED_LIST_ITEM:
@@ -297,9 +293,9 @@ function escapeTitle(text) {
   return text.replace(/"/g, '\\"');
 }
 
-export function stateToMarkdown(
-  content,
-  options,
-) {
+export default function stateToMarkdown(
+  content: ContentState,
+  options?: Options,
+): string {
   return new MarkupGenerator(content, options).generate();
 }
