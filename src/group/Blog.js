@@ -24,7 +24,9 @@ const styles = theme => ({
 class Blog extends React.Component {
   state = {article:null, sections:[], resouces:null};
   async componentDidMount() {
-    const { db, group, match:{params:{articleId}} } = this.props;
+    const { db, group, match:{params:{articleId}}, selectTab } = this.props;
+    selectTab("article");
+
     this.refArticle = db.doc(`groups/${group.groupId}/articles/${articleId}`);
     const article = (await this.refArticle.get()).data();
     //console.log("article=", article);

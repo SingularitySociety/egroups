@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem } from '@material-ui/core';
-import MULink from '@material-ui/core/Link';
+import MUILink from '@material-ui/core/Link';
 import { Divider, Tabs, Tab, Grid, Breadcrumbs } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Link } from 'react-router-dom';
@@ -39,24 +39,38 @@ class MyAppBar extends React.Component {
       drawer: false,
       anchorEl: null,
     };
-    this.tabMember = <Tab key="member" label={<FormattedMessage id="home" />} to={"/"+group.groupName + "/member"} component={Link} />;
-    this.tabMemberOnly = <Tab key="member" label={<FormattedMessage id="page.member" />} to={"/"+group.groupName + "/member"} component={Link} />;
-    this.tabHome = <Tab key="home" label={<FormattedMessage id="page.home" />} to={"/"+group.groupName} component={Link} />;
-    this.tabChannels = <Tab key="channels" label={<FormattedMessage id="channels" />} to={"/"+group.groupName+"/channels"} component={Link} />;
-    this.tabBlog = <Tab key="blog" label={<FormattedMessage id="blog" />} to={"/"+group.groupName+"/blog"} component={Link} />;
-    this.tabEvents = <Tab key="events" label={<FormattedMessage id="events" />} to={"/"+group.groupName+"/events"} component={Link} />;
-    this.cramHome = <MULink key="home" color="inherit" component={Link} to={`/${group.groupName}/member`}>
+    this.tabExit = <Tab key="exit" label={<FormattedMessage id="exit" />} 
+                              to={`/`} component={Link} />;
+    this.tabMember = <Tab key="member" label={<FormattedMessage id="home" />} 
+                              to={`/${group.groupName}/member`} component={Link} />;
+    this.tabMemberOnly = <Tab key="member" label={<FormattedMessage id="page.member" />} 
+                              to={`/${group.groupName}/member`} component={Link} />;
+    this.tabHome = <Tab key="home" label={<FormattedMessage id="page.home" />} 
+                              to={`/${group.groupName}`} component={Link} />;
+    this.tabChannels = <Tab key="channels" label={<FormattedMessage id="channels" />} 
+                              to={`/${group.groupName}/channels`} component={Link} />;
+    this.tabBlog = <Tab key="blog" label={<FormattedMessage id="blog" />} 
+                              to={`/${group.groupName}/blog`} component={Link} />;
+    this.tabEvents = <Tab key="events" label={<FormattedMessage id="events" />} 
+                              to={`/${group.groupName}/events`} component={Link} />;
+    this.cramHome = <MUILink key="home" color="inherit" component={Link} to={`/${group.groupName}/member`}>
             <FormattedMessage id="home" />
-          </MULink>;
-    this.cramBlog = <MULink key="blog" color="inherit" component={Link} to={`/${group.groupName}/blog`}>
+          </MUILink>;
+    this.cramBlog = <MUILink key="blog" color="inherit" component={Link} to={`/${group.groupName}/blog`}>
             <FormattedMessage id="blog" />
-          </MULink>;
-    this.cramChannels = <MULink key="channels" color="inherit" component={Link} to={`/${group.groupName}/channels`}>
+          </MUILink>;
+    this.cramChannels = <MUILink key="channels" color="inherit" component={Link} to={`/${group.groupName}/channels`}>
             <FormattedMessage id="channels" />
-          </MULink>;
-    this.cramEvents = <MULink key="events" color="inherit" component={Link} to={`/${group.groupName}/events`}>
+          </MUILink>;
+    this.cramEvents = <MUILink key="events" color="inherit" component={Link} to={`/${group.groupName}/events`}>
             <FormattedMessage id="events" />
-          </MULink>;
+          </MUILink>;
+    this.cramAccount = <MUILink key="account" color="inherit" component={Link} to={`/${group.groupName}/account`}>
+            <FormattedMessage id="account" />
+          </MUILink>;
+    this.cramSettings = <MUILink key="settings" color="inherit" component={Link} to={`/${group.groupName}/settings`}>
+            <FormattedMessage id="settings" />
+          </MUILink>;
   }
   openMe = e => {
     this.setState({anchorEl:e.currentTarget})
@@ -81,6 +95,9 @@ class MyAppBar extends React.Component {
     switch(tabId) {
       case "home":
         tabs = [this.tabHome, this.tabMemberOnly];
+        if (!rootGroup) {
+          tabs.push(this.tabExit);
+        }
         break;
       case "member":
         tabs = [this.tabMember, this.tabChannels, this.tabBlog, this.tabEvents];
@@ -88,11 +105,23 @@ class MyAppBar extends React.Component {
       case "blog":
         crams = [this.cramHome, this.cramBlog];
         break;
+      case "article":
+        crams = [this.cramHome, this.cramBlog];
+        break;
       case "channels":
+        crams = [this.cramHome, this.cramChannels];
+        break;
+      case "chat":
         crams = [this.cramHome, this.cramChannels];
         break;
       case "events":
         crams = [this.cramHome, this.cramEvents];
+        break;
+      case "account":
+        crams = [this.cramHome, this.cramAccount];
+        break;
+      case "settings":
+        crams = [this.cramHome, this.cramSettings];
         break;
       default:
         console.log("### unknown tabId", tabId);
@@ -116,9 +145,9 @@ class MyAppBar extends React.Component {
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h6" color="inherit" className={classes.grow} >
-              <MULink color="inherit" component={Link} to={`/${group.groupName}`}>
+              <MUILink color="inherit" component={Link} to={`/${group.groupName}`}>
                 {group.title}
-              </MULink>
+              </MUILink>
             </Typography>
             { 
               <IconButton color="inherit" onClick={this.openMe}><MenuIcon /></IconButton>
@@ -136,10 +165,6 @@ class MyAppBar extends React.Component {
           {
             (member && member.privilege > Privileges.admin) && 
              <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/settings`}><FormattedMessage id="settings" /></MenuItem>
-          }
-          {
-            !rootGroup && 
-            <MenuItem onClick={this.closeMe} component={Link} to={`/`}><FormattedMessage id="exit" /></MenuItem>
           }
           <Divider />
           {
