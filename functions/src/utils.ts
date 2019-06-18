@@ -1,11 +1,12 @@
 export const array_diff = (a: any[], b: any[]) => {
-  a = a.filter((i) => {
+  let new_b = b.slice();
+  const new_a = a.filter((i) => {
     const ret = b.indexOf(i) < 0;
     if (!ret) {
-      b = b.filter((elem) => {return elem !== i});
+      new_b = new_b.filter((elem) => {return elem !== i});
     }
     return ret;
   });
 
-  return [a, b];
+  return [new_a, new_b];
 };
