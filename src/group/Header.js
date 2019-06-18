@@ -40,10 +40,19 @@ const tabIndexMap = {
 }
 
 class MyAppBar extends React.Component {
-  state = {
-    drawer: false,
-    anchorEl: null,
-  };
+  constructor(props) {
+    super(props);
+    const { group } = props;
+    this.state = {
+      drawer: false,
+      anchorEl: null,
+    };
+    this.tabMember = <Tab key="member" label={<FormattedMessage id="home" />} to={"/"+group.groupName + "/member"} component={Link} />;
+    this.tabHome = <Tab key="home" label={<FormattedMessage id="home" />} to={"/"+group.groupName} component={Link} />;
+    this.tabChannels = <Tab key="channels" label={<FormattedMessage id="channels" />} to={"/"+group.groupName+"/channels"} component={Link} />;
+    this.tabBlog = <Tab key="blog" label={<FormattedMessage id="blog" />} to={"/"+group.groupName+"/blog"} component={Link} />;
+    this.tabEvents = <Tab key="events" label={<FormattedMessage id="events" />} to={"/"+group.groupName+"/events"} component={Link} />;
+  }
   openMe = e => {
     this.setState({anchorEl:e.currentTarget})
   }
@@ -56,12 +65,28 @@ class MyAppBar extends React.Component {
     firebase.auth().signOut();
   };
 
-render() {
+  render() {
     const { classes, user, group, member, rootGroup, tabId } = this.props;
     const { anchorEl } = this.state;
     const cmd = { cmd:"redirect", path:window.location.pathname };
     const loginUrl = "/a/login/cmd/"+encodeURIComponent(JSON.stringify(cmd));
     const tabIndex = tabIndexMap[tabId || "home"] || 0;
+
+    let tabs = []; 
+    //let crams = [];
+    switch(tabId) {
+      case "home":
+        tabs = [this.tabHome, this.tabMember];
+        break;
+      case "member":
+        tabs = [this.tabMember, this.tabChannels, this.tabBlog, this.tabEvents];
+        break;
+    }
+    const subbar = (tabs.length > 0) ?
+        <Tabs value={0} indicatorColor="primary" textColor="primary" centered >
+          { tabs }
+        </Tabs>
+        : "";
 
     return (
       <div className={classes.root}>
@@ -97,6 +122,7 @@ render() {
             <MenuItem onClick={this.logout}><FormattedMessage id="logout" /></MenuItem>
           }
         </Menu>
+        { subbar }
         {
           (() => {
             if (tabIndex > 40) {

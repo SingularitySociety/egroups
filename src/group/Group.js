@@ -23,6 +23,7 @@ import Channels from './Channels';
 import ErrorMessage from '../ErrorMessage';
 import Listing from './Listing';
 import Profile from './Profile';
+import Member from './Member';
 
 const colorMap = { blue, pink, red, green};
 
@@ -145,6 +146,7 @@ class GroupHome extends React.Component {
                   <Route exact path={`/`} render={(props) => <Home {...props} {...context} />} />
               }
               <Route exact path={`/${group.groupName}`} render={(props) => <Home {...props} {...context} />} />
+              <Route exact path={`/${group.groupName}/member`} render={(props) => <Member {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/events`} render={(props) => <Events {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/listing`} render={(props) => <Listing {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/join`} render={(props) => <Join {...props} {...context} memberDidUpdate={this.memberDidUpdate} />} />
