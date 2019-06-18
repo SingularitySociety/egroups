@@ -18,6 +18,7 @@ const styles = theme => ({
   blockquote: {
     padding: theme.spacing(1),
     background: "#dddddd",
+    fontSize: "calc(4vmin)",
   },
   unorderedListItem: {
   },
