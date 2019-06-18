@@ -4,8 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import { Editor, EditorState } from 'draft-js';
 import './MarkdownViewer.css';
 
-//import {stateFromMarkdown} from 'draft-js-import-markdown';
-import stateFromMarkdown from './markdown/stateFromMarkdown';
+import {stateFromMarkdown} from 'draft-js-import-markdown';
+//import stateFromMarkdown from './markdown/stateFromMarkdown';
 
 
 const styles = theme => ({

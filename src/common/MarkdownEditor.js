@@ -11,10 +11,10 @@ import { FormattedMessage } from 'react-intl';
 import { Editor, RichUtils, EditorState } from 'draft-js';
 import { blockStyleFn, editorStyles } from './MarkdownViewer';
 
-//import { stateToMarkdown } from 'draft-js-export-markdown';
-//import { stateFromMarkdown } from 'draft-js-import-markdown';
-import stateFromMarkdown from './markdown/stateFromMarkdown';
-import stateToMarkdown from './markdown/stateToMarkdown';
+import { stateToMarkdown } from 'draft-js-export-markdown';
+import { stateFromMarkdown } from 'draft-js-import-markdown';
+//import stateFromMarkdown from './markdown/stateFromMarkdown';
+//import stateToMarkdown from './markdown/stateToMarkdown';
 
 const styles = editorStyles;
 
