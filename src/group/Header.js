@@ -53,34 +53,21 @@ class MyAppBar extends React.Component {
                               to={`/${group.groupName}/blog`} component={Link} />;
     this.tabEvents = <Tab key="events" label={<FormattedMessage id="events" />} 
                               to={`/${group.groupName}/events`} component={Link} />;
-    this.cramHome = <MUILink key="home" color="inherit" component={Link} to={`/${group.groupName}/member`}>
-            <FormattedMessage id="home" />
-          </MUILink>;
-    this.cramBlog = <MUILink key="blog" color="inherit" component={Link} to={`/${group.groupName}/blog`}>
-            <FormattedMessage id="blog" />
-          </MUILink>;
-    this.cramChannels = <MUILink key="channels" color="inherit" component={Link} to={`/${group.groupName}/channels`}>
-            <FormattedMessage id="channels" />
-          </MUILink>;
-    this.cramEvents = <MUILink key="events" color="inherit" component={Link} to={`/${group.groupName}/events`}>
-            <FormattedMessage id="events" />
-          </MUILink>;
-    this.cramAccount = <MUILink key="account" color="inherit" component={Link} to={`/${group.groupName}/account`}>
-            <FormattedMessage id="account" />
-          </MUILink>;
-    this.cramSettings = <MUILink key="settings" color="inherit" component={Link} to={`/${group.groupName}/settings`}>
-            <FormattedMessage id="settings" />
-          </MUILink>;
+    this.cramHome = this.breadCram("home", "member", "home");
+    this.cramBlog = this.breadCram("blog");
+    this.cramChannels = this.breadCram("channels");
+    this.cramEvents = this.breadCram("events");
+    this.cramAccount = this.breadCram("account");
+    this.cramSettings = this.breadCram("settings");
+    this.cramJoin = this.breadCram("join", null, "application");
     this.cramHomePage = <MUILink key="page.home" color="inherit" component={Link} to={`/${group.groupName}`}>
             <FormattedMessage id="page.home" />
           </MUILink>;
-    this.cramJoin = <MUILink key="join" color="inherit" component={Link} to={`/${group.groupName}/join`}>
-            <FormattedMessage id="application" />
-          </MUILink>;
   }
   breadCram = (tabId, path, label) => {
-    return <MUILink key={tabId} color="inherit" component={Link} to={path}>
-            <FormattedMessage id={label} />
+    const { group } = this.props;
+    return <MUILink key={tabId} color="inherit" component={Link} to={`/${group.groupName}/${path || tabId}`}>
+            <FormattedMessage id={label || tabId} />
           </MUILink>;
   }
   openMe = e => {
