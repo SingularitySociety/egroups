@@ -91,14 +91,14 @@ class MyAppBar extends React.Component {
   };
 
   render() {
-    const { classes, user, group, member, rootGroup, tabId } = this.props;
+    const { classes, user, group, member, rootGroup, pageInfo } = this.props;
     const { anchorEl } = this.state;
     const cmd = { cmd:"redirect", path:window.location.pathname };
     const loginUrl = "/a/login/cmd/"+encodeURIComponent(JSON.stringify(cmd));
 
     let tabs = []; 
     let crams = [];
-    switch(tabId) {
+    switch(pageInfo.tabId) {
       case "home":
         tabs = [this.tabHome, this.tabMemberOnly];
         if (!rootGroup) {
@@ -133,7 +133,7 @@ class MyAppBar extends React.Component {
         crams = [this.cramHomePage, this.cramJoin];
         break;
       default:
-        console.log("### unknown tabId", tabId);
+        console.log("### unknown tabId", pageInfo.tabId);
         break;
     }
     const subbar = (tabs.length > 0) ?
@@ -180,7 +180,7 @@ class MyAppBar extends React.Component {
         </Menu>
         { subbar }
         {
-          !member && tabId!=="join" && 
+          !member && pageInfo.tabId!=="join" && 
             <Grid container justify="center" className={classes.join}>
               <Grid item>
                 <Button variant="contained" color="primary" component={Link} to={"/" + group.groupName + "/join"}><FormattedMessage id="join" /></Button>
