@@ -23,6 +23,9 @@ const styles = {
     marginLeft: -12,
     marginRight: 20,
   },
+  subbar: {
+    marginTop: theme.spacing(4),
+  },
   join: {
     marginTop: theme.spacing(1),
   }
@@ -107,8 +110,10 @@ class MyAppBar extends React.Component {
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
-            <Typography variant="h6" color="inherit" className={classes.grow}>
-              {group.title}
+            <Typography variant="h6" color="inherit" className={classes.grow} >
+              <MULink color="inherit" component={Link} to={`/${group.groupName}`}>
+                {group.title}
+              </MULink>
             </Typography>
             { 
               <IconButton color="inherit" onClick={this.openMe}><MenuIcon /></IconButton>
@@ -137,7 +142,11 @@ class MyAppBar extends React.Component {
             <MenuItem onClick={this.logout}><FormattedMessage id="logout" /></MenuItem>
           }
         </Menu>
-        { subbar }
+        <Grid container justify="center">
+          <Grid item className={classes.subbar}>
+          { subbar }
+          </Grid>
+        </Grid>
         {
           !member && tabId!=="join" && 
             <Grid container justify="center" className={classes.join}>
