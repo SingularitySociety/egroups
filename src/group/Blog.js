@@ -7,6 +7,18 @@ import BlogSection from './BlogSection';
 import ErrorMessage from '../ErrorMessage';
 
 const styles = theme => ({
+  readerFrame: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+  },
+  editorFrame: {
+
+  },
+  title: {
+    fontWeight: "900",
+    fontSize: "calc(5.3vmin)",
+    marginBottom: theme.spacing(2),
+  }
 });
 
 class Blog extends React.Component {
@@ -82,7 +94,7 @@ class Blog extends React.Component {
 
   render() {
     const { article, resources, error } = this.state;
-    const { user, group, member } = this.props;
+    const { user, group, member, classes } = this.props;
     const context = { user, group, article };
     if (error) {
       return <ErrorMessage error={error} />
@@ -98,9 +110,12 @@ class Blog extends React.Component {
     if (!resources) {
       return "";
     }
+
+    const frameClass = canEdit ? classes.editorFrame : classes.readerFrame;
+
     return (
-      <div>
-        <Typography component="h2" variant="h5" gutterBottom>
+      <div className={frameClass}>
+        <Typography component="h2" gutterBottom className={classes.title}>
           {article.title}
         </Typography>
       { canEdit && <BlogSection index={ 0 } saveSection={this.insertSection} insertPhoto={this.insertPhoto} /> }

@@ -31,7 +31,9 @@ const styles = theme => ({
   },
   unstyled: {
     fontFamily: "'Roboto', sans-serif",
-    marginBottom: theme.spacing(1),
+    fontSize: "calc(4vmin)",
+    lineHeight: "1.8em",
+    marginBottom: theme.spacing(2),
   }
 });
 

@@ -55,8 +55,9 @@ class BlogSection extends React.Component {
                 readOnly={readOnly} displayMode="wide" onImageUpload={this.onImageUpload} />
           );
         }
-        return <Grid container>
-          <Grid item xs={11} style={{padding:"1px"}}>
+        const textWidth = readOnly ? 12 : 11;
+        return <Grid container justify="center">
+          <Grid item xs={textWidth} style={{padding:"1px"}}>
             <MarkdownViewer markdown={resource.markdown} useHtml={false} />
           </Grid>
           { !readOnly &&
