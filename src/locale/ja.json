@@ -30,6 +30,9 @@
     "group.path":"パス (６文字以上の英数字)",
     "path.conflict":"既に使われています",
 
+    "page.home":"公式ページ",
+    "page.member":"メンバー専用",
+
     "member.displayName":"メンバー名",
     "member.profile":"自己紹介",
     "member.email":"メールアドレス",

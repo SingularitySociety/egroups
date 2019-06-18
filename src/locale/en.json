@@ -30,6 +30,9 @@
     "group.path":"Group Path (>6 numeric & alpha)",
     "path.conflict":"This path is already taken",
 
+    "page.home":"Home Page",
+    "page.member":"Member Only",
+
     "member.displayName":"Member Name",
     "member.profile":"Member Profile",
     "member.email":"Email Address",
