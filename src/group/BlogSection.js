@@ -15,10 +15,10 @@ const styles = theme => ({
 class BlogSection extends React.Component {
   state = { editing:false };
 
-  onSave = (markdown) => {
+  onSave = (markdown, raw) => {
     //console.log("onSave", markdown);
     const { sectionId, index } = this.props;
-    this.props.saveSection(sectionId, index, markdown);
+    this.props.saveSection(sectionId, index, markdown, raw);
     this.setState({editing:false});
   }
   onCancel = () => {
@@ -58,7 +58,7 @@ class BlogSection extends React.Component {
         const textWidth = readOnly ? 12 : 11;
         return <Grid container justify="center">
           <Grid item xs={textWidth} style={{padding:"1px"}}>
-            <MarkdownViewer markdown={resource.markdown} useHtml={false} />
+            <MarkdownViewer resource={resource} useHtml={false} />
           </Grid>
           { !readOnly &&
             <Grid item xs={1}>
@@ -83,7 +83,7 @@ class BlogSection extends React.Component {
       </Grid>
     }
     return (
-      <MarkdownEditor markdown={(resource && resource.markdown) || ""} onSave={this.onSave} onCancel={this.onCancel} onDelete={deleteSection && this.onDelete} />
+      <MarkdownEditor resource={resource} onSave={this.onSave} onCancel={this.onCancel} onDelete={deleteSection && this.onDelete} />
     )
   }
 }
@@ -91,6 +91,7 @@ class BlogSection extends React.Component {
 BlogSection.propTypes = {
     classes: PropTypes.object.isRequired,
     saveSection: PropTypes.func.isRequired,
+    resource: PropTypes.object.isRequired,
   };
   
 export default withStyles(styles)(BlogSection);

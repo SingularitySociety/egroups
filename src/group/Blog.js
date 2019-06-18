@@ -46,12 +46,13 @@ class Blog extends React.Component {
   componentWillUnmount() {
     this.detatcher();
   }
-  insertSection = async (resourceId, index, markdown) => {
+  insertSection = async (resourceId, index, markdown, raw) => {
     const { user } = this.props;
     const { article } = this.state;
     const doc = await this.refArticle.collection("sections").add({
       type: "markdown",
-      markdown: markdown,
+      markdown,
+      raw,
       created: new Date(),
       author: user.uid,
     });
@@ -59,9 +60,10 @@ class Blog extends React.Component {
     this.setState(article);
     await this.refArticle.set(article, {merge:true});
   }
-  updateSection = async (resourceId, index, markdown) => {
+  updateSection = async (resourceId, index, markdown, raw) => {
     await this.refArticle.collection("sections").doc(resourceId).set({
-      markdown
+      markdown, 
+      raw
     }, {merge:true})
   }
   deleteSection = async (resourceId, index) => {
@@ -118,7 +120,7 @@ class Blog extends React.Component {
         <Typography component="h2" gutterBottom className={classes.title}>
           {article.title}
         </Typography>
-      { canEdit && <BlogSection index={ 0 } saveSection={this.insertSection} insertPhoto={this.insertPhoto} /> }
+      { canEdit && <BlogSection index={ 0 } resource={{}} saveSection={this.insertSection} insertPhoto={this.insertPhoto} /> }
         {
           article.sections.map((sectionId, index)=>{
             return <div key={sectionId}>
@@ -126,7 +128,7 @@ class Blog extends React.Component {
                   saveSection={this.updateSection} deleteSection={this.deleteSection} 
                   insertPhoto={this.insertPhoto} onImageUpload={this.onImageUpload} 
                   readOnly={!canEdit} {...context} />
-              { canEdit && <BlogSection index={ index+1 } 
+              { canEdit && <BlogSection index={ index+1 } resource={{}}
                   insertPhoto={this.insertPhoto} saveSection={this.insertSection} /> }
             </div>
           })

@@ -8,7 +8,7 @@ import { FormatBold, FormatItalic, FormatUnderlined, FormatQuote } from '@materi
 import { Code } from '@material-ui/icons';
 import { FormatListBulleted, FormatListNumbered, Undo, Redo } from '@material-ui/icons';
 import { FormattedMessage } from 'react-intl';
-import { Editor, RichUtils, EditorState } from 'draft-js';
+import { Editor, RichUtils, EditorState, convertToRaw } from 'draft-js';
 import { blockStyleFn, editorStyles } from './MarkdownViewer';
 
 import { stateToMarkdown } from 'draft-js-export-markdown';
@@ -28,7 +28,8 @@ const customStyleMap = {
 class MarkdownEditor extends React.Component {
   constructor(props) {
     super(props);
-    const contentState = stateFromMarkdown(this.props.markdown || "");
+    const { resource } = this.props;
+    const contentState = stateFromMarkdown(resource.markdown || "");
     const editorState = EditorState.createWithContent(contentState);
     this.state = {
       editorState
@@ -42,9 +43,10 @@ class MarkdownEditor extends React.Component {
   onSave = (e) => {
     e.preventDefault();
     const contentState = this.state.editorState.getCurrentContent();
-    console.log(stateToMarkdown);
+    //console.log(stateToMarkdown);
     const markdown = stateToMarkdown(contentState);
-    this.props.onSave(markdown);
+    const raw = convertToRaw(contentState);
+    this.props.onSave(markdown, raw);
   }
 
   onCancel = (e) => {
@@ -158,6 +160,7 @@ MarkdownEditor.propTypes = {
     classes: PropTypes.object.isRequired,
     onSave: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
+    resource: PropTypes.object.isRequired,
   };
   
 export default withStyles(styles)(MarkdownEditor);

@@ -60,8 +60,8 @@ export const blockStyleFn = (classes, contentBlock) => {
 
 class MarkdownViewer extends React.Component {
     render() {
-      const { classes, markdown } = this.props;
-      const contentState = stateFromMarkdown(markdown);
+      const { classes, resource } = this.props;
+      const contentState = stateFromMarkdown(resource.markdown);
       let editorState = EditorState.createWithContent(contentState);
       return (
         <Editor readOnly={true} 
@@ -73,6 +73,7 @@ class MarkdownViewer extends React.Component {
 
 MarkdownViewer.propTypes = {
     classes: PropTypes.object.isRequired,
+    resource: PropTypes.object.isRequired,
   };
   
 export default withStyles(styles)(MarkdownViewer);
