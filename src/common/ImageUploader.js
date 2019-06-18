@@ -10,6 +10,9 @@ const styles = theme => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
+  wide: {
+    width: "100%",
+  },
   thumbnail: {
     height: "calc(30vmin)",
     width: "calc(30vmin)",
@@ -53,11 +56,16 @@ class ImageViewer extends React.Component {
     })
   }    
   render() {
-    const { classes, readOnly } = this.props;
+    const { classes, readOnly, displayMode } = this.props;
     const { imageUrl } = this.state;
     const imageStyle = imageUrl ? { backgroundImage:`url("${imageUrl}")` } : {};
+    const imageElement = (displayMode == "wide") ? (
+        <Grid item>
+          <img src={imageUrl} className={classes[displayMode]} />
+        </Grid>
+      ) : <Grid item className={classes[displayMode || "thumbnail"]} style={imageStyle} />;
     return (<Grid container className={classes.root} spacing={1} justify="center">
-        <Grid item className={classes.thumbnail} style={imageStyle} />
+        { imageElement }
         {
           !readOnly &&
             <Grid item>

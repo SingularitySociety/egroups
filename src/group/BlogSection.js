@@ -52,7 +52,7 @@ class BlogSection extends React.Component {
           const imagePath = `groups/${group.groupId}/articles/${article.articleId}/${sectionId}`;
           return (
             <ImageUploader imagePath={imagePath} loadImage={resource.hasImage} imageUrl={resource.imageUrl} 
-                readOnly={readOnly} onImageUpload={this.onImageUpload} />
+                readOnly={readOnly} displayMode="wide" onImageUpload={this.onImageUpload} />
           );
         }
         return <Grid container>
