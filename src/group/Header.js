@@ -78,6 +78,11 @@ class MyAppBar extends React.Component {
             <FormattedMessage id="application" />
           </MUILink>;
   }
+  breadCram = (tabId, path, label) => {
+    return <MUILink key={tabId} color="inherit" component={Link} to={path}>
+            <FormattedMessage id={label} />
+          </MUILink>;
+  }
   openMe = e => {
     this.setState({anchorEl:e.currentTarget})
   }
