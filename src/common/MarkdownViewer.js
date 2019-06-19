@@ -44,7 +44,7 @@ const styles = theme => ({
       fontSize: '1.2rem',
     },
     lineHeight: "2.0em",
-    marginBottom: theme.spacing(2),
+    marginBottom: "1.5em",
   }
 });
 
