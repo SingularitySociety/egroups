@@ -131,6 +131,9 @@ class MyAppBar extends React.Component {
       case "listing":
         crams = [this.cramHome, this.cramListing];
         break;
+      case "profile":
+        crams = [this.cramHome, this.cramListing, this.breadCram(pageInfo.tabId, pageInfo.path)];
+        break;
       default:
         console.log("### unknown tabId", pageInfo.tabId);
         break;
