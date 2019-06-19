@@ -133,7 +133,8 @@ class GroupRouter extends React.Component {
         secondary: colorMap[(group.theme && group.theme.primary) || "blue"],
       }
     });
-    const context = { user, group, db, member, history, rootGroup, selectTab:this.selectTab };
+    const context = { user, group, db, member, history, rootGroup, 
+                      selectTab:this.selectTab, memberDidUpdate:this.memberDidUpdate, reloadGroup:this.reloadGroup };
     
     return (
       <MuiThemeProvider theme={theme}>
@@ -149,11 +150,11 @@ class GroupRouter extends React.Component {
               <Route exact path={`/${group.groupName}/member`} render={(props) => <MemberHome {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/events`} render={(props) => <Events {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/listing`} render={(props) => <Listing {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/join`} render={(props) => <Join {...props} {...context} memberDidUpdate={this.memberDidUpdate} />} />
+              <Route exact path={`/${group.groupName}/join`} render={(props) => <Join {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/account`} 
-                render={(props) => <Account {...props} {...context} memberDidUpdate={this.memberDidUpdate} />} />
+                render={(props) => <Account {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/settings`} 
-                render={(props) => <Settings {...props} {...context} reloadGroup={this.reloadGroup} />} />
+                render={(props) => <Settings {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/channels`} render={(props) => <Channels {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/ch/:channelId`} render={(props) => <Chat {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/pr/:userId`} render={(props) => <Profile {...props} {...context} />} />
