@@ -59,6 +59,7 @@ class MyAppBar extends React.Component {
     this.cramEvents = this.breadCram("events");
     this.cramAccount = this.breadCram("account");
     this.cramSettings = this.breadCram("settings");
+    this.cramListing = this.breadCram("listing");
     this.cramJoin = this.breadCram("join", null, "application");
     this.cramHomePage = <MUILink key="page.home" color="inherit" component={Link} to={`/${group.groupName}`}>
             <FormattedMessage id="page.home" />
@@ -126,6 +127,9 @@ class MyAppBar extends React.Component {
         break;
       case "join":
         crams = [this.cramHomePage, this.cramJoin];
+        break;
+      case "listing":
+        crams = [this.cramHomePage, this.cramListing];
         break;
       default:
         console.log("### unknown tabId", pageInfo.tabId);
