@@ -20,7 +20,11 @@ const styles = theme => ({
   blockquote: {
     padding: theme.spacing(1),
     background: "#dddddd",
-    fontSize: "calc(4vmin)",
+    fontSize: "0.95rem",
+    '@media (min-width:480px)': {
+      fontSize: '1.2rem',
+    },
+    lineHeight: "2.0em",
   },
   unorderedListItem: {
   },
@@ -31,12 +35,15 @@ const styles = theme => ({
     paddingLeft: theme.spacing(1),
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
-    fontSize: "14px",
+    fontSize: "1rem",
   },
   unstyled: {
     fontFamily: "'Roboto', sans-serif",
-    fontSize: "calc(4vmin)",
-    lineHeight: "1.8em",
+    fontSize: "0.95rem",
+    '@media (min-width:480px)': {
+      fontSize: '1.2rem',
+    },
+    lineHeight: "2.0em",
     marginBottom: theme.spacing(2),
   }
 });

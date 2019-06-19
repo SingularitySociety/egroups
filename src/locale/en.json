@@ -37,6 +37,8 @@
     "page.home":"Home Page",
     "page.member":"Member Only",
 
+    "title.welcome":"Welcome",
+
     "member.displayName":"Member Name",
     "member.profile":"Member Profile",
     "member.email":"Email Address",
