@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
 import MountDetector from '../common/MountDetector';
 import Privileges from '../const/Privileges';
 import * as firebase from "firebase/app";
