@@ -6,6 +6,7 @@ import Privileges from '../const/Privileges';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 import BlogArticle from './BlogArticle';
+import { injectIntl } from 'react-intl';
 
 
 const styles = theme => ({
@@ -33,7 +34,7 @@ class GroupHome extends React.Component {
   }
   memberDidMount = async (member) => {
     console.log("memberDidMount");
-    const { group, db, user, reloadGroup } = this.props;
+    const { group, db, user, reloadGroup, intl:{messages} } = this.props;
     if (member.privilege >= Privileges.admin) {
       this.setState({canEdit:true});
       console.log("isAdmin", group.homepage);
@@ -41,7 +42,7 @@ class GroupHome extends React.Component {
       // This code is not atomic but it is fine because there is only one owner
       if (!group.homepage) {
         const doc = await db.collection(`groups/${group.groupId}/articles`).add({
-          title: "welcome", // BUGBUG: Localize it
+          title: messages["title.welcome"], // BUGBUG: Localize it
           created: firebase.firestore.FieldValue.serverTimestamp(),
           type: "page",
           owner: user.uid,
@@ -61,16 +62,16 @@ class GroupHome extends React.Component {
   memberWillUnmount = () => {
   }
   render() {
-      const { group, member, user, db } = this.props;
-      const { article } = this.state;
-      const context = { group, member, user, db, article }
-      //const context = { user, group, db, member, history };
-      return (
-        <div>
-          { member && <MountDetector didMount={this.memberDidMount} willUnmount={this.memberWillUnmount} value={member} />}
-          { article && <BlogArticle {...context} />}
-        </div>
-      )
+    const { group, member, user, db } = this.props;
+    const { article } = this.state;
+    const context = { group, member, user, db, article }
+    //const context = { user, group, db, member, history };
+    return (
+      <div>
+        { member && <MountDetector didMount={this.memberDidMount} willUnmount={this.memberWillUnmount} value={member} />}
+        { article && <BlogArticle {...context} />}
+      </div>
+    )
   }
 }
 
@@ -78,4 +79,4 @@ GroupHome.propTypes = {
   classes: PropTypes.object.isRequired,
 };
   
-export default withStyles(styles)(GroupHome);
+export default withStyles(styles)(injectIntl(GroupHome));
