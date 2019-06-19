@@ -129,7 +129,7 @@ class MyAppBar extends React.Component {
         crams = [this.cramHomePage, this.cramJoin];
         break;
       case "listing":
-        crams = [this.cramHomePage, this.cramListing];
+        crams = [this.cramHome, this.cramListing];
         break;
       default:
         console.log("### unknown tabId", pageInfo.tabId);
@@ -169,6 +169,10 @@ class MyAppBar extends React.Component {
           {
             member && 
             <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/account`}><FormattedMessage id="account" /></MenuItem>
+          }
+          {
+            member && 
+            <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/listing`}><FormattedMessage id="listing" /></MenuItem>
           }
           {
             (member && member.privilege >= Privileges.admin) && 
