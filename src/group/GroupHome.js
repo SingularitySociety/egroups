@@ -6,6 +6,7 @@ import MountDetector from '../common/MountDetector';
 import Privileges from '../const/Privileges';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
+import BlogArticle from './BlogArticle';
 
 
 const styles = theme => ({
@@ -15,11 +16,13 @@ const styles = theme => ({
 });
 
 class GroupHome extends React.Component {
+  state = {};
   componentDidMount() {
     const { selectTab } = this.props;
     selectTab("home");
   }
   memberDidMount = async (member) => {
+    console.log("memberDidMount");
     if (member.privilege >= Privileges.admin) {
       this.setState({canEdit:true});
       const { group, db, user, reloadGroup } = this.props;
@@ -40,23 +43,26 @@ class GroupHome extends React.Component {
           homepage: doc.id,
         }, {merge:true});
         reloadGroup();
+      } else {
+        this.refArticle = db.doc(`groups/${group.groupId}/articles/${group.homepage}`);
+        const article = (await this.refArticle.get()).data();
+        console.log(article);
+        article.articleid = group.homepage;
+        this.setState({article});
       }
     }
   }
   memberWillUnmount = () => {
   }
   render() {
-      const { group, member } = this.props;
+      const { group, member, user, db } = this.props;
+      const { article } = this.state;
+      const context = { group, member, user, db, article }
       //const context = { user, group, db, member, history };
       return (
         <div>
           { member && <MountDetector didMount={this.memberDidMount} willUnmount={this.memberWillUnmount} value={member} />}
-          <Typography component="h2" variant="h6" gutterBottom>
-            { group.title }
-          </Typography>
-          <Typography gutterBottom>
-            { group.homepage }
-          </Typography>
+          { article && <BlogArticle {...context} />}
         </div>
       )
   }
