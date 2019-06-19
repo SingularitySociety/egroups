@@ -20,12 +20,23 @@ class GroupHome extends React.Component {
   componentDidMount() {
     const { selectTab } = this.props;
     selectTab("home");
+    this.loadArticle();
+  }
+  loadArticle = async () => {
+    const { group, db } = this.props;
+    if (group.homepage) {
+      this.refArticle = db.doc(`groups/${group.groupId}/articles/${group.homepage}`);
+      const article = (await this.refArticle.get()).data();
+      console.log(article);
+      article.articleid = group.homepage;
+      this.setState({article});
+    }
   }
   memberDidMount = async (member) => {
     console.log("memberDidMount");
+    const { group, db, user, reloadGroup } = this.props;
     if (member.privilege >= Privileges.admin) {
       this.setState({canEdit:true});
-      const { group, db, user, reloadGroup } = this.props;
       console.log("isAdmin", group.homepage);
 
       // This code is not atomic but it is fine because there is only one owner
@@ -42,14 +53,10 @@ class GroupHome extends React.Component {
         await db.doc(`groups/${group.groupId}`).set({
           homepage: doc.id,
         }, {merge:true});
+        group.homepage = doc.id;
         reloadGroup();
-      } else {
-        this.refArticle = db.doc(`groups/${group.groupId}/articles/${group.homepage}`);
-        const article = (await this.refArticle.get()).data();
-        console.log(article);
-        article.articleid = group.homepage;
-        this.setState({article});
       }
+      this.loadArticle();
     }
   }
   memberWillUnmount = () => {
