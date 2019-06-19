@@ -28,7 +28,7 @@ class GroupHome extends React.Component {
       this.refArticle = db.doc(`groups/${group.groupId}/articles/${group.homepage}`);
       const article = (await this.refArticle.get()).data();
       console.log(article);
-      article.articleid = group.homepage;
+      article.articleId = group.homepage;
       this.setState({article});
     }
   }

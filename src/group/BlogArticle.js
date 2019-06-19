@@ -21,10 +21,11 @@ const styles = theme => ({
   }
 });
 
-class Blog extends React.Component {
+class BlogArticle extends React.Component {
   state = {article:null, sections:[], resouces:null};
   async componentDidMount() {
     const { db, group, article } = this.props;
+    console.log("BlogArticle, articleId", article.articleId);
     this.refArticle = db.doc(`groups/${group.groupId}/articles/${article.articleId}`);
     this.setState({article});
     this.detatcher = this.refArticle.collection("sections").onSnapshot((snapshot)=>{
@@ -130,8 +131,8 @@ class Blog extends React.Component {
   }
 }
 
-Blog.propTypes = {
+BlogArticle.propTypes = {
     classes: PropTypes.object.isRequired,
   };
   
-export default withStyles(styles)(Blog);
+export default withStyles(styles)(BlogArticle);
