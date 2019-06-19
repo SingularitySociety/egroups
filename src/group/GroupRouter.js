@@ -9,7 +9,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { Route } from 'react-router-dom';
 import GroupHome from './GroupHome';
 import Events from './Events';
-import User from './User';
+import MountDetector from '../common/MountDetector';
 import Join from './Join';
 import Account from './Account';
 import Processing from '../Processing';
@@ -137,7 +137,7 @@ class GroupRouter extends React.Component {
     
     return (
       <MuiThemeProvider theme={theme}>
-        { user && <User {...context} userDidMount={this.userDidMount} userWillUnmount={this.userWillUnmount}/> }
+        { user && <MountDetector didMount={this.userDidMount} willUnmount={this.userWillUnmount}/> }
         <Header {...context} pageInfo={pageInfo} />
         <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
             <Grid item className={classes.main}>
