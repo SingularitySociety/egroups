@@ -103,10 +103,10 @@ class Blog extends React.Component {
     if (error) {
       return <ErrorMessage error={error} />
     }
-    if (!user || !article) {
+    if (!article) {
       return "";
     }
-    const canEdit = (article.owner === user.uid);
+    const canEdit = (user && article.owner === user.uid);
     const canRead = ((member && member.privilege) || 0) >= article.read;
     if (!canRead) {
       return <AccessDenied />
