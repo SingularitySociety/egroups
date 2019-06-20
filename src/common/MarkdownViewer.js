@@ -18,6 +18,7 @@ const styles = theme => ({
     margin: theme.spacing(1),
   },
   blockquote: {
+    fontFamily: "'Roboto', sans-serif",
     padding: theme.spacing(1),
     background: "#dddddd",
     fontSize: "0.95rem",
