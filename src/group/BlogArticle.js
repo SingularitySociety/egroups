@@ -32,7 +32,8 @@ class BlogArticle extends React.Component {
       const resources = {};
       snapshot.forEach((doc)=>{
         resources[doc.id] = doc.data();
-      })
+      });
+      console.log("BlogArticle.cdm", article.sections && article.sections.length, Object.keys(resources).length)
       this.setState({resources});
     });
   }
