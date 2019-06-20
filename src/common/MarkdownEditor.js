@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 //import theme from '../theme';
-import { Button, IconButton, Grid } from '@material-ui/core';
+import { IconButton, Grid } from '@material-ui/core';
 import TrashIcon from '@material-ui/icons/Delete';
+import SaveIcon from '@material-ui/icons/Save';
+import CancelIcon from '@material-ui/icons/Cancel';
 import { FormatBold, FormatItalic, FormatUnderlined, FormatQuote } from '@material-ui/icons';
 import { Code } from '@material-ui/icons';
 import { FormatListBulleted, FormatListNumbered, Undo, Redo } from '@material-ui/icons';
-import { FormattedMessage } from 'react-intl';
 import { Editor, RichUtils, EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import { blockStyleFn, editorStyles } from './MarkdownViewer';
 
@@ -89,7 +90,7 @@ class MarkdownEditor extends React.Component {
   }
 
   render() {
-    const { classes, action, onDelete } = this.props;
+    const { classes, onDelete } = this.props;
     const { editorState } = this.state;
     const canUndo = editorState.getUndoStack().size !== 0;
     const canRedo = editorState.getRedoStack().size !== 0;
@@ -151,18 +152,21 @@ class MarkdownEditor extends React.Component {
               handleKeyCommand={this.handleKeyCommand}
               onChange={this.onChange} />
           </Grid>
+          <Grid item xs={1}>
+            <IconButton size="small" onClick={this.onSave} type="submit">
+              <SaveIcon />
+            </IconButton>
+            <IconButton size="small" onClick={this.onCancel}>
+              <CancelIcon />
+            </IconButton>
+            {
+            onDelete && <IconButton size="small" onClick={onDelete}>
+              <TrashIcon />
+            </IconButton>
+            }
+          </Grid>
         </Grid>
-        <Button variant="contained" color="primary" className={classes.button} 
-                  onClick={this.onSave} type="submit">{action || "Save"}</Button>
-        <Button variant="contained" className={classes.button} onClick={this.onCancel}>
-            <FormattedMessage id="cancel" />
-        </Button>
-        {
-          onDelete && <IconButton onClick={onDelete}>
-            <TrashIcon />
-          </IconButton>
-        }
-        </div>
+      </div>
     );
   }
 }
