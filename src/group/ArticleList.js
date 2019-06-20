@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 import CreateNew from '../common/CreateNew';
-import Article from './Article';
+import ArticleItem from './ArticleItem';
 import { FormattedMessage } from 'react-intl';
 import Privileges from '../const/Privileges';
 
@@ -51,7 +51,7 @@ class ArticleList extends React.Component {
       <div>
         {
           this.state.list.map((article)=>{
-            return <Article key={article.articleId} article={article} group={group} history={history} />
+            return <ArticleItem key={article.articleId} article={article} group={group} history={history} />
           })
         }
       </div>

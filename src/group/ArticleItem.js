@@ -17,7 +17,7 @@ const styles = theme => ({
   }
 });
 
-class Article extends React.Component {
+class ArticleItem extends React.Component {
   render() {
     const { classes, article, group, history } = this.props;
     console.log(article);
@@ -43,8 +43,8 @@ class Article extends React.Component {
   }
 }
 
-Article.propTypes = {
+ArticleItem.propTypes = {
     classes: PropTypes.object.isRequired,
   };
   
-export default withStyles(styles)(Article);
+export default withStyles(styles)(ArticleItem);
