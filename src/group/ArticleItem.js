@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import LockIcon from '@material-ui/icons/Lock';
 import { Grid } from '@material-ui/core';
 import MUILink from '@material-ui/core/link';
 import { Link } from 'react-router-dom';
+import Privileges from '../const/Privileges';
 
 
 const styles = theme => ({
@@ -36,6 +38,7 @@ class ArticleItem extends React.Component {
             to={`/${group.groupName}/bl/${article.articleId}`}>
           { article.title }
           </MUILink>
+          { article.read !== Privileges.guest  && <LockIcon fontSize="small" /> }
         </Grid>
       </Grid>
     )
