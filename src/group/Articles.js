@@ -7,6 +7,8 @@ import "firebase/firestore";
 import CreateNew from '../common/CreateNew';
 import Privileges from '../const/Privileges';
 import { FormattedMessage } from 'react-intl';
+import { Grid } from '@material-ui/core';
+
 
 const styles = theme => ({
 });
@@ -34,11 +36,15 @@ class Articles extends React.Component {
       const canCreateNew = !!member && member.privilege 
             >= ((group.privileges && group.privileges.article && group.privileges.article.create) || Privileges.member);
       return (
-        <div>
-          { canCreateNew && <CreateNew createNew={ this.createArticle } 
-              action={<FormattedMessage id="create" />} label={<FormattedMessage id="article.name" />}/> }
-          <ArticleList {...context}/>
-        </div>
+        <Grid container justify="center">
+          <Grid item xs={12} style={{textAlign:"center"}}>
+            { canCreateNew && <CreateNew createNew={ this.createArticle } 
+                action={<FormattedMessage id="create" />} label={<FormattedMessage id="article.name" />}/> }
+          </Grid>
+          <Grid item xs={12}>
+            <ArticleList {...context}/>
+          </Grid>
+        </Grid>
         )
     }
 }
