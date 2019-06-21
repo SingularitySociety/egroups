@@ -12,7 +12,7 @@ const styles = theme => ({
 class Channels extends React.Component {
   componentDidMount() {
     const { selectTab } = this.props;
-    selectTab("chat");
+    selectTab("channels");
   }
   render() {
       const { user, db, member, group, history } = this.props;

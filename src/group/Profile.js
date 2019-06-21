@@ -16,7 +16,7 @@ class Profile extends React.Component {
     state = { member:null };
     async componentDidMount() {
         const { db, group, selectTab, match:{params:{userId}} } = this.props;
-        selectTab("profile");
+        selectTab("profile", `pr/${userId}`);
         const member = (await db.doc(`groups/${group.groupId}/members/${userId}`).get()).data();
         this.setState({member});
     }

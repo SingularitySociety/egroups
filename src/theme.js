@@ -1,8 +1,8 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
 import primary from '@material-ui/core/colors/blue';
 import secondary from '@material-ui/core/colors/deepPurple';
 
-export default createMuiTheme({
+let theme = createMuiTheme({
     typography: {
         useNextVariants: true,
     },
@@ -11,3 +11,6 @@ export default createMuiTheme({
       secondary: secondary,
     }
 });
+
+theme = responsiveFontSizes(theme, { factor: 1 });
+export default theme;

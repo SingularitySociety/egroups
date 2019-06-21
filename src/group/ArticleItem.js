@@ -1,23 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Grid, Typography } from '@material-ui/core';
+import LockIcon from '@material-ui/icons/Lock';
+import { Grid } from '@material-ui/core';
+import MUILink from '@material-ui/core/link';
 import { Link } from 'react-router-dom';
+import Privileges from '../const/Privileges';
 
 
 const styles = theme => ({
   read: {
     color: "#000000",
-    textDecoration: "none",
   },
   unread: {
     color: "#000000",
     fontWeight: "bold",
-    textDecoration: "none",
   }
 });
 
-class Article extends React.Component {
+class ArticleItem extends React.Component {
   render() {
     const { classes, article, group, history } = this.props;
     console.log(article);
@@ -33,18 +34,19 @@ class Article extends React.Component {
     return (
       <Grid container >
         <Grid item>
-          <Typography component={Link} className={className}
+          <MUILink component={Link} className={className}
             to={`/${group.groupName}/bl/${article.articleId}`}>
           { article.title }
-          </Typography>
+          </MUILink>
+          { article.read !== Privileges.guest  && <LockIcon fontSize="small" /> }
         </Grid>
       </Grid>
     )
   }
 }
 
-Article.propTypes = {
+ArticleItem.propTypes = {
     classes: PropTypes.object.isRequired,
   };
   
-export default withStyles(styles)(Article);
+export default withStyles(styles)(ArticleItem);

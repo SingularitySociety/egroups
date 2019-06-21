@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Editor, EditorState } from 'draft-js';
+import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import './MarkdownViewer.css';
+
 import {stateFromMarkdown} from 'draft-js-import-markdown';
+//import stateFromMarkdown from './markdown/stateFromMarkdown';
 
 
 const styles = theme => ({
@@ -18,7 +20,11 @@ const styles = theme => ({
   blockquote: {
     padding: theme.spacing(1),
     background: "#dddddd",
-    fontSize: "calc(4vmin)",
+    fontSize: "0.95rem",
+    '@media (min-width:480px)': {
+      fontSize: '1.2rem',
+    },
+    lineHeight: "2.0em",
   },
   unorderedListItem: {
   },
@@ -29,12 +35,16 @@ const styles = theme => ({
     paddingLeft: theme.spacing(1),
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
+    fontSize: "1rem",
   },
   unstyled: {
     fontFamily: "'Roboto', sans-serif",
-    fontSize: "calc(4vmin)",
-    lineHeight: "1.8em",
-    marginBottom: theme.spacing(2),
+    fontSize: "0.95rem",
+    '@media (min-width:480px)': {
+      fontSize: '1.2rem',
+    },
+    lineHeight: "2.0em",
+    marginBottom: "1.5em",
   }
 });
 
@@ -58,8 +68,8 @@ export const blockStyleFn = (classes, contentBlock) => {
 
 class MarkdownViewer extends React.Component {
     render() {
-      const { classes, markdown } = this.props;
-      const contentState = stateFromMarkdown(markdown);
+      const { classes, resource } = this.props;
+      const contentState = resource.raw ? convertFromRaw(resource.raw) : stateFromMarkdown(resource.markdown);
       let editorState = EditorState.createWithContent(contentState);
       return (
         <Editor readOnly={true} 
@@ -71,6 +81,7 @@ class MarkdownViewer extends React.Component {
 
 MarkdownViewer.propTypes = {
     classes: PropTypes.object.isRequired,
+    resource: PropTypes.object.isRequired,
   };
   
 export default withStyles(styles)(MarkdownViewer);

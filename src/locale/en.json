@@ -22,6 +22,10 @@
     "profile":"Profile",
     "listing":"Roster",
     "application":"Application",
+    "article":"Article",
+    "channel":"Channel",
+    "event":"Event",
+
     "channel.name": "Channel Name",
     "group.title": "Group Name",
     "group.description": "Description",
@@ -29,6 +33,11 @@
     "new.group":"New Group Settings",
     "group.path":"Group Path (>6 numeric & alpha)",
     "path.conflict":"This path is already taken",
+
+    "page.home":"Home Page",
+    "page.member":"Member Only",
+
+    "title.welcome":"Welcome",
 
     "member.displayName":"Member Name",
     "member.profile":"Member Profile",

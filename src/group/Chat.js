@@ -13,7 +13,8 @@ const styles = theme => ({
 class Chat extends React.Component {
   state = {channel:null, messages:[]}
   async componentDidMount() {
-    const { db, group, match:{params:{channelId}} } = this.props;
+    const { db, group, match:{params:{channelId}}, selectTab } = this.props;
+    selectTab("channel", `ch/${channelId}`);
     console.log(channelId);
     const ref = db.doc(`groups/${group.groupId}/channels/${channelId}`);
     const channel = (await ref.get()).data();

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { IconButton, Button, TextField } from '@material-ui/core';
+import { Fab, Button, TextField } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { FormattedMessage } from 'react-intl';
 
@@ -76,9 +76,9 @@ class CreateNew extends React.Component {
             );
         }
         return (
-            <IconButton variant="contained" onClick={()=>this.setCreatingFlag(true)}>
-              <AddIcon />
-            </IconButton>
+            <Fab variant="extended" color="primary" onClick={()=>this.setCreatingFlag(true)}>
+              <AddIcon /><FormattedMessage id="article" />
+            </Fab>
         );
     }
 }
