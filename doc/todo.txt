@@ -3,12 +3,16 @@ ImageUploader
  readonly
  icon button ?
  store URL
+ thumbnail
+ design clean-up process
 MarkdownEditor2
- <code>
- save/cencel/delete buttons on right
+* <code>
+* save/cencel/delete buttons on right
  link
  h1...h3
  draft mode & publish
+ https://github.com/draft-js-plugins/draft-js-plugins
+
 blog/chat
  settings
 Account/profile
