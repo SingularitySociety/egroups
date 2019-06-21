@@ -151,7 +151,7 @@ export const generateThumbnail = functions.storage.object().onFinalize(async (ob
     if (!contentType || !contentType.startsWith("image")) {
       return false;
     }
-    return image.create_thumbnail(object);
+    return image.createThumbnail(object);
   } else {
     console.log("not hit", paths);
     return false;
