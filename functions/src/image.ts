@@ -6,10 +6,10 @@ import * as fs from 'fs';
 
 import * as sharp from 'sharp';
 
-const thumb_prefix = 'thumb_';
+const thumbPrefix = 'thumb_';
 
-const run_image_magick = async (bucket, orinalFilePath, dirName, fileName, size, contentType) => {
-  const thumbFileName = thumb_prefix + `${fileName}_${size}`;
+const runImageMagick = async (bucket, orinalFilePath, dirName, fileName, size, contentType) => {
+  const thumbFileName = thumbPrefix + `${fileName}_${size}`;
 
   const outFilePath = path.join(os.tmpdir(), thumbFileName);
   // Generate a thumbnail using ImageMagick.
@@ -32,7 +32,7 @@ const run_image_magick = async (bucket, orinalFilePath, dirName, fileName, size,
   }
 }
 
-export const create_thumbnail = async (object) => {
+export const createThumbnail = async (object) => {
   const fileBucket = object.bucket; // e-group-test.appspot.com
   const filePath = object.name; // groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q
   const contentType = object.contentType; // image/jpeg
@@ -42,7 +42,7 @@ export const create_thumbnail = async (object) => {
   }
   // Get the file name.
   const fileName = path.basename(filePath);
-  if (fileName.startsWith(thumb_prefix)) {
+  if (fileName.startsWith(thumbPrefix)) {
     console.log('Already a Thumbnail.');
     return false;
   }
@@ -55,8 +55,8 @@ export const create_thumbnail = async (object) => {
   await bucket.file(filePath).download({destination: tempFilePath});
   console.log('Image downloaded locally to', tempFilePath);
 
-  await run_image_magick(bucket, tempFilePath, dirName, fileName, 200, contentType)
-  await run_image_magick(bucket, tempFilePath, dirName, fileName, 600, contentType)
+  await runImageMagick(bucket, tempFilePath, dirName, fileName, 200, contentType)
+  await runImageMagick(bucket, tempFilePath, dirName, fileName, 600, contentType)
 
   // Once the thumbnail has been uploaded delete the local file to free up disk space.
   fs.unlinkSync(tempFilePath);
