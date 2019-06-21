@@ -4,6 +4,7 @@ import * as express from 'express';
 import * as cors from 'cors';
 //import * as fs from 'fs';
 import * as messaging from './messaging';
+import * as image from './image';
 
 admin.initializeApp();
 
@@ -136,4 +137,23 @@ export const updateTopicSubscription = functions.https.onCall(async (data, conte
     return {  }
   }
   return {  };
+});
+
+export const generateThumbnail = functions.storage.object().onFinalize(async (object) => {
+  const filePath = object.name; // groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q
+  const contentType = object.contentType; // image/jpeg
+  
+  if (!filePath) {
+    return false;
+  }
+  const paths = filePath.split("/")
+  if (paths[0] === "groups" && paths[2] === "articles") {
+    if (!contentType || !contentType.startsWith("image")) {
+      return false;
+    }
+    return image.create_thumbnail(object);
+  } else {
+    console.log("not hit", paths);
+    return false;
+  }
 });
