@@ -8,7 +8,8 @@ service firebase.storage {
     match /groups/{groupId}/articles/{articleId}/{imageId} {
       allow write: if request.auth.uid != null 
         && 1 <= userPrivilege(groupId, request.auth.uid)
-        && request.resource.size < 10 * 1024 * 1024;
+        && request.resource.size < 10 * 1024 * 1024
+        && request.resource.contentType in ['image/png', 'image/gif', 'image/jpeg'];
       allow read;
     }
     match /{allPaths=**} {
