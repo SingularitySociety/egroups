@@ -65,7 +65,7 @@ class ImageViewer extends React.Component {
     })
   }    
   render() {
-    const { classes, readOnly, displayMode, inline } = this.props;
+    const { classes, readOnly, displayMode, inline, onImageUpload } = this.props;
     const { imageUrl } = this.state;
     const imageStyle = imageUrl ? { backgroundImage:`url("${imageUrl}")` } : {};
     const imageElement = (displayMode === "wide") ? (
@@ -79,7 +79,7 @@ class ImageViewer extends React.Component {
     return (<Grid container className={classes.root} spacing={1} justify="center">
         { imageElement }
         {
-          !readOnly &&
+          !readOnly && onImageUpload &&
             <Grid item>
             <Button variant="contained" component="label">
                 Upload Image
@@ -95,7 +95,6 @@ class ImageViewer extends React.Component {
 ImageViewer.propTypes = {
     classes: PropTypes.object.isRequired,
     imagePath: PropTypes.string.isRequired,
-    onImageUpload: PropTypes.func.isRequired,
   };
   
 export default withStyles(styles)(ImageViewer);

@@ -1,11 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Grid } from '@material-ui/core';
+import { Grid, Paper } from '@material-ui/core';
+import ChatIcon from '@material-ui/icons/ChatBubble';
 import { Link } from 'react-router-dom';
 
 
 const styles = theme => ({
+  root: {
+    marginBottom: theme.spacing(1),
+    paddingTop: theme.spacing(1),
+    paddingLeft: theme.spacing(1),
+  },
   read: {
     color: "#000000",
     textDecoration: "none",
@@ -30,9 +36,12 @@ class ChannelItem extends React.Component {
       }
     }
     return (
-      <Grid container >
-        <Grid item component={Link} to={`/${group.groupName}/ch/${channel.channelId}`} className={className}># { channel.title }</Grid>
-      </Grid>
+      <Paper className={classes.root}>
+        <Grid container spacing={1}>
+          <Grid item><ChatIcon /></Grid>
+          <Grid item component={Link} to={`/${group.groupName}/ch/${channel.channelId}`} className={className}>{ channel.title }</Grid>
+        </Grid>
+      </Paper>
     )
   }
 }
