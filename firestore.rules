@@ -28,7 +28,8 @@ service cloud.firestore {
       return exists(/databases/$(database)/documents/groups/$(groupId)/owners/$(userId));
     }
     function isUserMember(groupId, userId) {
-      return exists(/databases/$(database)/documents/groups/$(groupId)/members/$(userId));
+      //return exists(/databases/$(database)/documents/groups/$(groupId)/members/$(userId));
+      return userPrivilege(groupId, userId) >= 1; // 0x1
     }
 
     match /users/{userId} {
