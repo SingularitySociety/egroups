@@ -37,7 +37,7 @@ class Channels extends React.Component {
       const canCreateNew = !!member && member.privilege 
               >= ((group.privileges && group.privileges.channel && group.privileges.channel.create) || 2);
       return (
-        <Grid container justify="center">
+        <Grid container justify="center" spacing={1}>
           <Grid item xs={12} style={{textAlign:"center"}}>
                   { canCreateNew && <CreateNew createNew={ this.createChannel } 
                     action={<FormattedMessage id="create" />} label={<FormattedMessage id="channel" />}/> }
