@@ -28,7 +28,7 @@ class ImageViewer extends React.Component {
   state = {imageUrl:null};
   async componentDidMount() {
     const { imagePath, loadImage, imageUrl } = this.props;
-    console.log("## IMAGEURL ###", imageUrl);
+    console.log(imageUrl, imagePath);
     if (imageUrl) {
       this.setState({imageUrl});
       return;
@@ -45,7 +45,7 @@ class ImageViewer extends React.Component {
     task.on('state_changed', (snapshot)=>{
       console.log("progress", snapshot);
     }, (error) => {
-      console.log("failed");
+      console.log("failed", error);
     }, async () => {
       // Accordign to the document, this download URL is valid until you explicitly reveke it,
       // and it is accessible by anybody (no security). The security is at this getDownloadURL() level. 

@@ -80,7 +80,7 @@ class Settings extends React.Component {
       <div>
         <div className={classes.main}>
           <FormGroup row>
-            <ImageUploader imagePath={`/groups/${group.groupId}/profile`} onImageUpload={this.onImageUpload} loadImage={group.hasImage}/>
+            <ImageUploader imagePath={`/groups/${group.groupId}/images/profile`} onImageUpload={this.onImageUpload} loadImage={group.hasImage}/>
           </FormGroup>
 
           <FormGroup row>
