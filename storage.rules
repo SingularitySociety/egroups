@@ -1,7 +1,19 @@
 service firebase.storage {
   match /b/{bucket}/o {
+    function userPrivilege(groupId, userId) {
+      // Note: This uses the custom token.
+      return request.auth.token.privileges[groupId];
+    }
+
+    match /groups/{groupId}/articles/{articleId}/{imageId} {
+      allow write: if request.auth.uid != null 
+        && 1 <= userPrivilege(groupId, request.auth.uid)
+        && request.resource.size < 10 * 1024 * 1024
+        && request.resource.contentType in ['image/png', 'image/gif', 'image/jpeg'];
+      allow read;
+    }
     match /{allPaths=**} {
-      allow read, write: if request.auth!=null;
+      allow read, write: if false
     }
   }
 }
