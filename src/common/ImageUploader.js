@@ -13,15 +13,24 @@ const styles = theme => ({
   wide: {
     width: "100%",
   },
-  thumbnail: {
-    height: "calc(30vmin)",
-    width: "calc(30vmin)",
+  thumbLarge: {
+    height: "12em",
+    width: "12em",
     backgroundPosition: "center",
     backgroundSize: "cover",
     backgroundColor: "lightgray",
     border: "1px lightgray solid",
-    borderRadius: "calc(15vmin)",
-  }
+    borderRadius: "6em",
+  },
+  thumbMiddle: {
+    height: "5em",
+    width: "5em",
+    backgroundPosition: "center",
+    backgroundSize: "cover",
+    backgroundColor: "lightgray",
+    border: "1px lightgray solid",
+    borderRadius: "2.5em",
+  },
 });
 
 class ImageViewer extends React.Component {
@@ -56,14 +65,17 @@ class ImageViewer extends React.Component {
     })
   }    
   render() {
-    const { classes, readOnly, displayMode } = this.props;
+    const { classes, readOnly, displayMode, inline } = this.props;
     const { imageUrl } = this.state;
     const imageStyle = imageUrl ? { backgroundImage:`url("${imageUrl}")` } : {};
     const imageElement = (displayMode === "wide") ? (
         <Grid item>
           <img src={imageUrl} className={classes[displayMode]} alt="blog article" />
         </Grid>
-      ) : <Grid item className={classes[displayMode || "thumbnail"]} style={imageStyle} />;
+      ) : <Grid item className={classes[displayMode || "thumbLarge"]} style={imageStyle} />;
+    if (inline) {
+      return imageElement;
+    }
     return (<Grid container className={classes.root} spacing={1} justify="center">
         { imageElement }
         {
