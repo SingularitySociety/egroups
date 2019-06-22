@@ -25,6 +25,10 @@ service firebase.storage {
       allow write: if isUserAdmin(groupId, request.auth.uid);
       allow read;
     }
+    match /groups/{groupId}/members/{userId}/images/{imageId} {
+      allow write: if request.auth.uid == userId;
+      allow read;
+    }
     match /{allPaths=**} {
       allow read, write: if false
     }

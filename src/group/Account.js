@@ -5,6 +5,7 @@ import { Typography, Button, FormGroup } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import EditableField from '../common/EditableField';
+import ImageUploader from '../common/ImageUploader';
 
 const styles = theme => ({
     button: {
@@ -30,8 +31,15 @@ class Account extends React.Component {
         const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
         await refMember.set({[name]:value}, {merge:true});
         this.props.memberDidUpdate();
-      }    
-    
+    }    
+    onImageUpload = async (imageUrl) => {
+        console.log("onImageUpload", imageUrl);
+        const { db, user, group } = this.props;
+        const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
+        await refMember.set({hasImage:true}, {merge:true});
+        this.props.memberDidUpdate();
+    }
+        
     render() {
         const { classes, group, user, member } = this.props;
         if (!user) {
@@ -42,6 +50,10 @@ class Account extends React.Component {
         }
         console.log(user, member);
         return <div>
+          <FormGroup row>
+            <ImageUploader imagePath={`/groups/${group.groupId}/members/${user.uid}/images/profile`} 
+                onImageUpload={this.onImageUpload} loadImage={member.hasImage}/>
+          </FormGroup>
           <FormGroup row>
             <EditableField label={<FormattedMessage id="member.displayName"/>} 
                 value={member.displayName} onSave={this.onSave('displayName')}/>
