@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 import CreateNew from '../common/CreateNew';
-import Channel from './Channel';
+import ChannelItem from './ChannelItem';
 import { FormattedMessage } from 'react-intl';
 import Privileges from '../const/Privileges';
 
@@ -49,7 +49,7 @@ class ChannelList extends React.Component {
       <div>
         {
           this.state.list.map((channel)=>{
-            return <Channel key={channel.channelId} channel={channel} group={group} history={history} />
+            return <ChannelItem key={channel.channelId} channel={channel} group={group} history={history} />
           })
         }
       </div>

@@ -17,7 +17,7 @@ const styles = theme => ({
   }
 });
 
-class Channel extends React.Component {
+class ChannelItem extends React.Component {
   render() {
     const { classes, channel, group, history } = this.props;
     let className = classes.unread;
@@ -37,8 +37,8 @@ class Channel extends React.Component {
   }
 }
 
-Channel.propTypes = {
+ChannelItem.propTypes = {
     classes: PropTypes.object.isRequired,
   };
   
-export default withStyles(styles)(Channel);
+export default withStyles(styles)(ChannelItem);
