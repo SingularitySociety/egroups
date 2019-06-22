@@ -77,7 +77,7 @@ class CreateNew extends React.Component {
         }
         return (
             <Fab variant="extended" color="primary" onClick={()=>this.setCreatingFlag(true)}>
-              <AddIcon /><FormattedMessage id="article" />
+              <AddIcon />{label}
             </Fab>
         );
     }

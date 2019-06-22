@@ -45,7 +45,7 @@ class ChannelList extends React.Component {
             >= ((group.privileges && group.privileges.channel && group.privileges.channel.create) || 2);
     return <div>
       { canCreateNew && <CreateNew createNew={ this.createChannel } 
-          action={<FormattedMessage id="create" />} label={<FormattedMessage id="channel.name" />}/> }
+          action={<FormattedMessage id="create" />} label={<FormattedMessage id="channel" />}/> }
       <div>
         {
           this.state.list.map((channel)=>{
