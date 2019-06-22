@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
 import AccessDenied from './AccessDenied';
-import { Link } from 'react-router-dom';
+import MemberItem from './MemberItem';
 
 const styles = theme => ({
 });
@@ -33,8 +32,9 @@ class Members extends React.Component {
     }
     {
       list.map((item)=>{
+        const context = { group, item };
         return <div key={item.uid}>
-          <Typography component={Link} to={`/${group.groupName}/pr/${item.uid}`}>{item.displayName}</Typography>
+          <MemberItem {...context} />
         </div>
       })
     }</div>

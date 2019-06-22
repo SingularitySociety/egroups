@@ -13,22 +13,31 @@ const styles = theme => ({
   wide: {
     width: "100%",
   },
-  thumbnail: {
-    height: "calc(30vmin)",
-    width: "calc(30vmin)",
+  thumbLarge: {
+    height: "12em",
+    width: "12em",
     backgroundPosition: "center",
     backgroundSize: "cover",
     backgroundColor: "lightgray",
     border: "1px lightgray solid",
-    borderRadius: "calc(15vmin)",
-  }
+    borderRadius: "6em",
+  },
+  thumbMiddle: {
+    height: "5em",
+    width: "5em",
+    backgroundPosition: "center",
+    backgroundSize: "cover",
+    backgroundColor: "lightgray",
+    border: "1px lightgray solid",
+    borderRadius: "2.5em",
+  },
 });
 
 class ImageViewer extends React.Component {
   state = {imageUrl:null};
   async componentDidMount() {
     const { imagePath, loadImage, imageUrl } = this.props;
-    console.log("## IMAGEURL ###", imageUrl);
+    console.log(imageUrl, imagePath);
     if (imageUrl) {
       this.setState({imageUrl});
       return;
@@ -45,7 +54,7 @@ class ImageViewer extends React.Component {
     task.on('state_changed', (snapshot)=>{
       console.log("progress", snapshot);
     }, (error) => {
-      console.log("failed");
+      console.log("failed", error);
     }, async () => {
       // Accordign to the document, this download URL is valid until you explicitly reveke it,
       // and it is accessible by anybody (no security). The security is at this getDownloadURL() level. 
@@ -56,14 +65,17 @@ class ImageViewer extends React.Component {
     })
   }    
   render() {
-    const { classes, readOnly, displayMode } = this.props;
+    const { classes, readOnly, displayMode, inline } = this.props;
     const { imageUrl } = this.state;
     const imageStyle = imageUrl ? { backgroundImage:`url("${imageUrl}")` } : {};
     const imageElement = (displayMode === "wide") ? (
         <Grid item>
           <img src={imageUrl} className={classes[displayMode]} alt="blog article" />
         </Grid>
-      ) : <Grid item className={classes[displayMode || "thumbnail"]} style={imageStyle} />;
+      ) : <Grid item className={classes[displayMode || "thumbLarge"]} style={imageStyle} />;
+    if (inline) {
+      return imageElement;
+    }
     return (<Grid container className={classes.root} spacing={1} justify="center">
         { imageElement }
         {

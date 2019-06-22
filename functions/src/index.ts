@@ -60,10 +60,17 @@ export const groupDidCreate = functions.firestore.document('groups/{groupId}')
 
 export const groupDidDelete = functions.firestore.document('groups/{groupId}')
   .onDelete(async (snapshot, context)=>{
+    const { groupId } = context.params;
     const value = snapshot.data();
     if (value && value.groupName) {
       await admin.firestore().doc("/groupNames/" + value.groupName).delete();
     }
+    // We need to remove all the images associated with this user
+    const bucket = admin.storage().bucket();
+    const path = `groups/${groupId}/`;
+    bucket.deleteFiles({prefix:path}, (errors)=>{
+      console.log("deleteFiles: ", path, errors);
+    });
   });
 
 export const memberDidCreate = functions.firestore.document('groups/{groupId}/members/{userId}')
@@ -96,7 +103,8 @@ export const memberDidDelete = functions.firestore.document('groups/{groupId}/me
 
     await messaging.subscribe_new_group(userId, groupId, db, messaging.unsubscribe_topic);
 
-    return admin.firestore().runTransaction(async (tr) => {
+    // We need to use transaction because there is no way to remove a section of a document atomically.
+    await admin.firestore().runTransaction(async (tr) => {
       const doc = await tr.get(ref);
       const data = doc.data();
       if (data) {
@@ -104,6 +112,13 @@ export const memberDidDelete = functions.firestore.document('groups/{groupId}/me
         return tr.set(ref, data); // no merge
       }
       return true;
+    });
+
+    // We need to remove all the images associated with this user
+    const bucket = admin.storage().bucket();
+    const path = `groups/${groupId}/members/${userId}/`;
+    bucket.deleteFiles({prefix:path}, (errors)=>{
+      console.log("deleteFiles: ", path, errors);
     });
   });
 
@@ -147,7 +162,10 @@ export const generateThumbnail = functions.storage.object().onFinalize(async (ob
     return false;
   }
   const paths = filePath.split("/")
-  if (paths[0] === "groups" && paths[2] === "articles") {
+  if (paths[0] === "groups" 
+      && (paths[2] === "articles" 
+       || paths[2] === "images"
+       || (paths[2] === "members") && (paths[4] === "images"))) {
     if (!contentType || !contentType.startsWith("image")) {
       return false;
     }
