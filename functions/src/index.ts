@@ -171,15 +171,8 @@ export const generateThumbnail = functions.storage.object().onFinalize(async (ob
     return false;
   }
 
-  let store_path = ''; 
   const imageId = paths[paths.length -1];
-  if (image.validImagePath(filePath, [constant.articlePath])) {
-    store_path = paths.slice(0,4).concat(["sections"], paths.slice(4,5)).join("/");
-  } else if (image.validImagePath(filePath, [constant.imagePath])) {
-    store_path = paths.slice(0,2).join("/");
-  } else if (image.validImagePath(filePath, [constant.memberPath])) {
-    store_path = paths.slice(0,4).join("/");
-  }
+  const store_path = image.getStorePath(filePath);
   
   const thumbnails = await image.createThumbnail(object, constant.thumbnailSizes)
   if (thumbnails) {
