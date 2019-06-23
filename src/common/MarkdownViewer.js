@@ -17,6 +17,12 @@ const styles = theme => ({
   button: {
     margin: theme.spacing(1),
   },
+  headerOne: {
+    fontSize: "1.9rem",
+    '@media (min-width:480px)': {
+      fontSize: '2.1rem',
+    },
+  },
   blockquote: {
     fontFamily: "'Roboto', sans-serif",
     padding: theme.spacing(1),
