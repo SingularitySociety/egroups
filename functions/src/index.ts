@@ -159,6 +159,9 @@ export const generateThumbnail = functions.storage.object().onFinalize(async (ob
   const filePath = object.name; // groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q
   const contentType = object.contentType; // image/jpeg
   
+  if (!contentType || !contentType.startsWith("image")) {
+    return false;
+  }
   if (!filePath) {
     return false;
   }
@@ -167,21 +170,16 @@ export const generateThumbnail = functions.storage.object().onFinalize(async (ob
     console.log("not hit", paths);
     return false;
   }
-  if (!contentType || !contentType.startsWith("image")) {
-    return false;
-  }
+
+  const imageId = paths[paths.length -1];
+  const store_path = image.getStorePath(filePath);
+  
   const thumbnails = await image.createThumbnail(object, constant.thumbnailSizes)
   if (thumbnails) {
-    // todo more specific pach check.
-    if (image.validImagePath(filePath, [constant.articlePath])) {
-      // generate firestora path from image file path;
-      const store_path = paths.slice(0,4).concat(["sections"], paths.slice(4,5)).join("/")
-      
-      // update store
-      const db = admin.firestore();
-      const image_data_ref = db.doc(store_path);
-      await image_data_ref.set({thumbnails: thumbnails}, {merge:true})
-    }
+    const db = admin.firestore();
+    const image_data_ref = db.doc(store_path);
+    const data = {[imageId]:{thumbnails: thumbnails}};
+    await image_data_ref.set(data, {merge:true})
   }
   return true
 });

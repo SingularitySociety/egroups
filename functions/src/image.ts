@@ -3,10 +3,10 @@ import * as admin from 'firebase-admin';
 import * as path from 'path';
 import * as os from 'os';
 import * as fs from 'fs';
-
 import * as sharp from 'sharp';
-
 import * as UUID from "uuid-v4";
+
+import * as constant from './constant';
 
 const thumbPrefix = 'thumb_';
 
@@ -81,11 +81,25 @@ async function asyncForEach(array, callback) {
   }
 }
 
-export const validImagePath = (path, match_paths) => {
-  const paths = path.split("/");
-  return match_paths.reduce((ret, match_path) => {
-    return ret || (Object.keys(match_path).reduce((match, key) => {
-      return match && paths[Number(key)] === match_path[key]
-    }, true)) 
+export const validImagePath = (filePath, matchPaths) => {
+  const paths = filePath.split("/");
+  return matchPaths.reduce((ret, matchPath) => {
+    return ret || ((Object.keys(matchPath.path).reduce((match, key) => {
+      return match && paths[Number(key)] === matchPath.path[key]
+    }, true)) && paths.length === matchPath.length)
   }, false);
+}
+
+export const getStorePath = (filePath) => {
+  const paths = filePath.split("/");
+  if (validImagePath(filePath, [constant.articlePath])) {
+    return paths.slice(0,4).concat(["sections"], paths.slice(4,5)).join("/");
+  } else if (validImagePath(filePath, [constant.imagePath])) {
+    return paths.slice(0,2).join("/");
+  } else if (validImagePath(filePath, [constant.groupProfilePath])) {
+    return paths.slice(0,2).join("/");
+  } else if (validImagePath(filePath, [constant.memberPath])) {
+    return paths.slice(0,4).join("/");
+  }
+  return "";
 }
