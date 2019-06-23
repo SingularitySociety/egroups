@@ -59,7 +59,7 @@ export const createThumbnail = async (object, sizes) => {
   
   // Download file from bucket.
   const bucket = admin.storage().bucket(fileBucket);
-  const tempFilePath = path.join(os.tmpdir(), fileName);
+  const tempFilePath = path.join(os.tmpdir(), UUID()); // fileName is not unique
 
   await bucket.file(filePath).download({destination: tempFilePath});
   console.log('Image downloaded locally to', tempFilePath);
