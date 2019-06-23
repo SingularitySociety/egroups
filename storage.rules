@@ -14,19 +14,19 @@ service firebase.storage {
       //return exists(/databases/$(database)/documents/groups/$(groupId)/members/$(userId));
       return userPrivilege(groupId, userId) >= 1; // 0x1
     }
-
+    function isValidImage(resource) {
+      return resource.size < 10 * 1024 * 1024 && resource.contentType in ['image/png', 'image/gif', 'image/jpeg'];
+    }
     match /groups/{groupId}/articles/{articleId}/{imageId} {
-      allow write: if isUserMember(groupId, request.auth.uid)
-        && request.resource.size < 10 * 1024 * 1024
-        && request.resource.contentType in ['image/png', 'image/gif', 'image/jpeg'];
+      allow write: if isUserMember(groupId, request.auth.uid) && isValidImage(request.resource)
       allow read;
     }
     match /groups/{groupId}/images/{imageId} {
-      allow write: if isUserAdmin(groupId, request.auth.uid);
+      allow write: if isUserAdmin(groupId, request.auth.uid) && isValidImage(request.resource);
       allow read;
     }
     match /groups/{groupId}/members/{userId}/images/{imageId} {
-      allow write: if request.auth.uid == userId;
+      allow write: if request.auth.uid == userId && isValidImage(request.resource);
       allow read;
     }
     match /{allPaths=**} {
