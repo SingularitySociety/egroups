@@ -18,9 +18,11 @@ const styles = theme => ({
     margin: theme.spacing(1),
   },
   headerOne: {
-    fontSize: "1.9rem",
+    fontWeight: "600",
+    marginBottom: theme.spacing(2),
+    fontSize: "1.4rem",
     '@media (min-width:480px)': {
-      fontSize: '2.1rem',
+      fontSize: '1.8rem',
     },
   },
   blockquote: {
