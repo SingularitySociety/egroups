@@ -170,15 +170,32 @@ export const generateThumbnail = functions.storage.object().onFinalize(async (ob
   if (!contentType || !contentType.startsWith("image")) {
     return false;
   }
-  const thumbnails = await image.createThumbnail(object, constant.thumbnailSizes)
-  if (thumbnails) {
-    // todo more specific pach check.
-    if (image.validImagePath(filePath, [constant.articlePath])) {
-      // generate firestora path from image file path;
-      const store_path = paths.slice(0,4).concat(["sections"], paths.slice(4,5)).join("/")
-      
-      // update store
+
+  let store_path = ''; 
+  const imageId = paths[paths.length -1];
+  if (image.validImagePath(filePath, [constant.articlePath])) {
+    store_path = paths.slice(0,4).concat(["sections"], paths.slice(4,5)).join("/");
+  } else if (image.validImagePath(filePath, [constant.imagePath])) {
+    store_path = paths.slice(0,2).join("/");
+    imageId = paths[3]; // "profile"
+  } else if (image.validImagePath(filePath, [constant.memberPath])) {
+    store_path = paths.slice(0,4).join("/");
+    imageId = paths[5]; // "profile", "banner", ...
+  }
+
+
+  if (store_path) {
+    const thumbnails = await image.createThumbnail(object, constant.thumbnailSizes)
+    if (thumbnails) {
       const db = admin.firestore();
+      const image_data_ref = db.doc(store_path);
+      const data = imageId ? {[imageId]:{thumbnails: thumbnails}} : {thumbnails: thumbnails};
+      await image_data_ref.set(data, {merge:true})
+    }
+    return true
+  } else {
+>>>>>>> 7920c9b44ea9b77c7c763e7698601a7018790d98
+  if (thumbnails) {
       const image_data_ref = db.doc(store_path);
       await image_data_ref.set({thumbnails: thumbnails}, {merge:true})
     }
