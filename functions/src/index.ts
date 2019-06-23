@@ -5,6 +5,7 @@ import * as cors from 'cors';
 //import * as fs from 'fs';
 import * as messaging from './messaging';
 import * as image from './image';
+import * as constant from './constant';
 
 admin.initializeApp();
 
@@ -154,57 +155,38 @@ export const updateTopicSubscription = functions.https.onCall(async (data, conte
   return {  };
 });
 
-const thumbnailSizes = [600, 1200];
-
 export const generateThumbnail = functions.storage.object().onFinalize(async (object) => {
   const filePath = object.name; // groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q
   const contentType = object.contentType; // image/jpeg
   
+  if (!contentType || !contentType.startsWith("image")) {
+    return false;
+  }
   if (!filePath) {
     return false;
   }
-  const paths = filePath.split("/")
-  if (paths[0] !== "groups") {
-    return false;
-  }
-  let store_path: any = null;
-  let imageId:any = null;
-  switch(paths.length) {
-    case 5:
-      if (paths[2] === "articles") {
-        store_path = paths.slice(0,4).concat(["sections"], paths.slice(4,5)).join("/");
-      }
-      break;
-    case 4:
-      if (paths[2] === "images") {
-        store_path = paths.slice(0,2).join("/");
-        imageId = paths[3]; // "profile"
-      } 
-      break;
-    case 6:
-      if (paths[2] === "members" && paths[4] === "images") {
-        store_path = paths.slice(0,4).join("/");
-        imageId = paths[5]; // "profile", "banner", ...
-      }
-      break;
-    default:
-      break;     
-  }
-
-  if (store_path) {
-    if (!contentType || !contentType.startsWith("image")) {
-      return false;
-    }
-    const thumbnails = await image.createThumbnail(object, thumbnailSizes)
-    if (thumbnails) {
-      const db = admin.firestore();
-      const image_data_ref = db.doc(store_path);
-      const data = imageId ? {[imageId]:{thumbnails: thumbnails}} : {thumbnails: thumbnails};
-      await image_data_ref.set(data, {merge:true})
-    }
-    return true
-  } else {
+  const paths = filePath.split("/");
+  if (!image.validImagePath(filePath, constant.matchImagePaths)) {
     console.log("not hit", paths);
     return false;
   }
+
+  let store_path = ''; 
+  const imageId = paths[paths.length -1];
+  if (image.validImagePath(filePath, [constant.articlePath])) {
+    store_path = paths.slice(0,4).concat(["sections"], paths.slice(4,5)).join("/");
+  } else if (image.validImagePath(filePath, [constant.imagePath])) {
+    store_path = paths.slice(0,2).join("/");
+  } else if (image.validImagePath(filePath, [constant.memberPath])) {
+    store_path = paths.slice(0,4).join("/");
+  }
+  
+  const thumbnails = await image.createThumbnail(object, constant.thumbnailSizes)
+  if (thumbnails) {
+    const db = admin.firestore();
+    const image_data_ref = db.doc(store_path);
+    const data = {[imageId]:{thumbnails: thumbnails}};
+    await image_data_ref.set(data, {merge:true})
+  }
+  return true
 });
