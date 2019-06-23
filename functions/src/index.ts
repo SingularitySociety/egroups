@@ -159,15 +159,15 @@ export const generateThumbnail = functions.storage.object().onFinalize(async (ob
   const filePath = object.name; // groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q
   const contentType = object.contentType; // image/jpeg
   
+  if (!contentType || !contentType.startsWith("image")) {
+    return false;
+  }
   if (!filePath) {
     return false;
   }
   const paths = filePath.split("/");
   if (!image.validImagePath(filePath, constant.matchImagePaths)) {
     console.log("not hit", paths);
-    return false;
-  }
-  if (!contentType || !contentType.startsWith("image")) {
     return false;
   }
 
@@ -177,28 +177,16 @@ export const generateThumbnail = functions.storage.object().onFinalize(async (ob
     store_path = paths.slice(0,4).concat(["sections"], paths.slice(4,5)).join("/");
   } else if (image.validImagePath(filePath, [constant.imagePath])) {
     store_path = paths.slice(0,2).join("/");
-    imageId = paths[3]; // "profile"
   } else if (image.validImagePath(filePath, [constant.memberPath])) {
     store_path = paths.slice(0,4).join("/");
-    imageId = paths[5]; // "profile", "banner", ...
   }
-
-
-  if (store_path) {
-    const thumbnails = await image.createThumbnail(object, constant.thumbnailSizes)
-    if (thumbnails) {
-      const db = admin.firestore();
-      const image_data_ref = db.doc(store_path);
-      const data = imageId ? {[imageId]:{thumbnails: thumbnails}} : {thumbnails: thumbnails};
-      await image_data_ref.set(data, {merge:true})
-    }
-    return true
-  } else {
->>>>>>> 7920c9b44ea9b77c7c763e7698601a7018790d98
+  
+  const thumbnails = await image.createThumbnail(object, constant.thumbnailSizes)
   if (thumbnails) {
-      const image_data_ref = db.doc(store_path);
-      await image_data_ref.set({thumbnails: thumbnails}, {merge:true})
-    }
+    const db = admin.firestore();
+    const image_data_ref = db.doc(store_path);
+    const data = imageId ? {[imageId]:{thumbnails: thumbnails}} : {thumbnails: thumbnails};
+    await image_data_ref.set(data, {merge:true})
   }
   return true
 });
