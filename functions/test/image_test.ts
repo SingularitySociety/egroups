@@ -6,30 +6,51 @@ import * as constant from '../src/constant'
 should()
 
 describe('image function', () => {
-  it('should return diff', () => {
-    const path1 = "groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q";
-    image.validImagePath(path1, constant.matchImagePaths).should.equal(true);
+  it('should test validImagePath', () => {
+    const path11 = "groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q";
+    image.validImagePath(path11, constant.matchImagePaths).should.equal(true);
 
-    const path2 = "groups/PMVo9s1nCVoncEwju4P3/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q";
-    image.validImagePath(path2, constant.matchImagePaths).should.equal(false);
+    const path12 = "groups/PMVo9s1nCVoncEwju4P3/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q";
+    image.validImagePath(path12, constant.matchImagePaths).should.equal(false);
 
-    const path3 = "groups/PMVo9s1nCVoncEwju4P3/images/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q";
-    image.validImagePath(path3, constant.matchImagePaths).should.equal(true);
+    const path21 = "groups/PMVo9s1nCVoncEwju4P3/images/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q";
+    image.validImagePath(path21, constant.matchImagePaths).should.equal(true);
 
-    const path4 = "groups/PMVo9s1nCVoncEwju4P3/image/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q";
-    image.validImagePath(path4, constant.matchImagePaths).should.equal(false);
+    const path22 = "groups/PMVo9s1nCVoncEwju4P3/image/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q";
+    image.validImagePath(path22, constant.matchImagePaths).should.equal(false);
 
-    const path5 = "groups/PMVo9s1nCVoncEwju4P3/members/6jInK0L8x16NYzh6touo/images/aaa";
-    image.validImagePath(path5, constant.matchImagePaths).should.equal(true);
+    const path23 = "groups/PMVo9s1nCVoncEwju4P3/image/6jInK0L8x16NYzh6touo";
+    image.validImagePath(path23, constant.matchImagePaths).should.equal(false); 
 
-    const path6 = "groups/PMVo9s1nCVoncEwju4P3/members/6jInK0L8x16NYzh6touo";
-    image.validImagePath(path6, constant.matchImagePaths).should.equal(false);
+   
+    const path31 = "groups/PMVo9s1nCVoncEwju4P3/members/6jInK0L8x16NYzh6touo/images/aaa";
+    image.validImagePath(path31, constant.matchImagePaths).should.equal(true);
 
-    const path7 = "groups";
-    image.validImagePath(path7, constant.matchImagePaths).should.equal(false);
+    const path32 = "groups/PMVo9s1nCVoncEwju4P3/members/6jInK0L8x16NYzh6touo";
+    image.validImagePath(path32, constant.matchImagePaths).should.equal(false);
 
-    const path8 = "groups/members";
-    image.validImagePath(path8, constant.matchImagePaths).should.equal(false);
+    const path41 = "groups/PMVo9s1nCVoncEwju4P3/profile/6jInK0L8x16NYzh6touo";
+    image.validImagePath(path41, constant.matchImagePaths).should.equal(false);
+
+    const path42 = "groups/PMVo9s1nCVoncEwju4P3/profile";
+    image.validImagePath(path42, constant.matchImagePaths).should.equal(true);
+
+    const path101 = "groups";
+    image.validImagePath(path101, constant.matchImagePaths).should.equal(false);
+
+    const path102 = "groups/members";
+    image.validImagePath(path102, constant.matchImagePaths).should.equal(false);
     
   })
+
+  it('should test getStorePath', () => {
+    const path1 = "groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q";
+    image.getStorePath(path1).should.equal("groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/sections/E42IMDbmuOAZHYkxhO1Q");
+
+    const path2 = "groups/5ke7ys0xGSdEEHsSPe6y/profile";
+    image.getStorePath(path2).should.equal("groups/5ke7ys0xGSdEEHsSPe6y");
+
+    const path3 = "groups/qIGkgW44sxFn78v8E0xu/members/deOR82RFtWMXTO9xULKYNzvADdq2/images/profile";
+    image.getStorePath(path3).should.equal("groups/qIGkgW44sxFn78v8E0xu/members/deOR82RFtWMXTO9xULKYNzvADdq2");
+  })  
 })
