@@ -7,13 +7,17 @@ const styles = theme => ({
 });
 
 class BlogSettings extends React.Component {
-    render() {
-        return (
-            <Typography component="h2" variant="h5" gutterBottom>
-              BlogSettings
-            </Typography>
-          )
-    }
+  async componentDidMount() {
+    const { match:{params:{articleId}}, selectTab } = this.props;
+    selectTab("blog.settings", `br/${articleId}`);
+  }
+  render() {
+      return (
+          <Typography component="h2" variant="h5" gutterBottom>
+            BlogSettings
+          </Typography>
+        )
+  }
 }
 
 BlogSettings.propTypes = {

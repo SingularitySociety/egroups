@@ -7,13 +7,17 @@ const styles = theme => ({
 });
 
 class ChannelSettings extends React.Component {
-    render() {
-        return (
-            <Typography component="h2" variant="h5" gutterBottom>
-              ChannelSettings
-            </Typography>
-          )
-    }
+  async componentDidMount() {
+    const { match:{params:{channelId}}, selectTab } = this.props;
+    selectTab("channel.settings", `ch/${channelId}`);
+  }
+  render() {
+      return (
+          <Typography component="h2" variant="h5" gutterBottom>
+            ChannelSettings
+          </Typography>
+        )
+  }
 }
 
 ChannelSettings.propTypes = {
