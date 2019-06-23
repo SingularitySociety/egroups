@@ -12,11 +12,11 @@ class ChannelSettings extends React.Component {
     selectTab("channel.settings", `ch/${channelId}`);
   }
   render() {
-      return (
-          <Typography component="h2" variant="h5" gutterBottom>
-            ChannelSettings
-          </Typography>
-        )
+    return (
+      <Typography component="h2" variant="h5" gutterBottom>
+        ChannelSettings
+      </Typography>
+    )
   }
 }
 
