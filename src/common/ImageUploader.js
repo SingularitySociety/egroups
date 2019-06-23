@@ -36,8 +36,12 @@ const styles = theme => ({
 class ImageViewer extends React.Component {
   state = {imageUrl:null};
   async componentDidMount() {
-    const { imagePath, loadImage, imageUrl } = this.props;
+    const { imagePath, loadImage, imageUrl, imageThumbnails } = this.props;
     console.log(imageUrl, imagePath);
+    if (imageThumbnails && imageThumbnails[1200]) {
+      this.setState({imageUrl: imageThumbnails[1200]});
+      return;
+    }
     if (imageUrl) {
       this.setState({imageUrl});
       return;
@@ -45,6 +49,7 @@ class ImageViewer extends React.Component {
     const storagRef = firebase.storage().ref();
     this.imageRef = storagRef.child(imagePath);
     if (loadImage) {
+      console.log(imagePath);
       const imageUrl = await this.imageRef.getDownloadURL();
       this.setState({imageUrl});
     }
@@ -68,11 +73,11 @@ class ImageViewer extends React.Component {
     const { classes, readOnly, displayMode, inline, onImageUpload } = this.props;
     const { imageUrl } = this.state;
     const imageStyle = imageUrl ? { backgroundImage:`url("${imageUrl}")` } : {};
-    const imageElement = (displayMode === "wide") ? (
+    const imageElement = imageUrl ? ((displayMode === "wide") ? (
         <Grid item>
           <img src={imageUrl} className={classes[displayMode]} alt="blog article" />
         </Grid>
-      ) : <Grid item className={classes[displayMode || "thumbLarge"]} style={imageStyle} />;
+      ) : <Grid item className={classes[displayMode || "thumbLarge"]} style={imageStyle} />) : "";
     if (inline) {
       return imageElement;
     }

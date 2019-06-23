@@ -6,6 +6,8 @@ import * as fs from 'fs';
 
 import * as sharp from 'sharp';
 
+import * as UUID from "uuid-v4";
+
 const thumbPrefix = 'thumb_';
 
 const runImageMagick = async (bucket, orinalFilePath, dirName, fileName, size, contentType) => {
@@ -15,24 +17,31 @@ const runImageMagick = async (bucket, orinalFilePath, dirName, fileName, size, c
   // Generate a thumbnail using ImageMagick.
   try {
     const res = await sharp(orinalFilePath).rotate().resize(size).toFile(outFilePath);
-    console.log(res);
     
     // upload
+    const uuid = UUID();
     const metadata = {
       contentType: contentType,
+      metadata: {
+        firebaseStorageDownloadTokens: uuid
+      }      
     };
     
     const thumbFilePath = path.join(dirName, thumbFileName);
-    await bucket.upload(outFilePath, {
+    const ret = await bucket.upload(outFilePath, {
       destination: thumbFilePath,
       metadata: metadata,
     });
+    // generate public image url see: https://stackoverflow.com/questions/42956250/get-download-url-from-file-uploaded-with-cloud-functions-for-firebase
+    const file = ret[0];
+    return "https://firebasestorage.googleapis.com/v0/b/" + bucket.name + "/o/" + encodeURIComponent(file.name) + "?alt=media&token=" + uuid;
   } catch (e) {
     console.log("error", e);
   }
+  return false;
 }
 
-export const createThumbnail = async (object) => {
+export const createThumbnail = async (object, sizes) => {
   const fileBucket = object.bucket; // e-group-test.appspot.com
   const filePath = object.name; // groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q
   const contentType = object.contentType; // image/jpeg
@@ -55,11 +64,19 @@ export const createThumbnail = async (object) => {
   await bucket.file(filePath).download({destination: tempFilePath});
   console.log('Image downloaded locally to', tempFilePath);
 
-  await runImageMagick(bucket, tempFilePath, dirName, fileName, 200, contentType)
-  await runImageMagick(bucket, tempFilePath, dirName, fileName, 600, contentType)
-
+  const ret = {}
+  await asyncForEach(sizes, async(size) => {
+    const res = await runImageMagick(bucket, tempFilePath, dirName, fileName, size, contentType)
+    if (res) ret[size] = res;
+  });
+  
   // Once the thumbnail has been uploaded delete the local file to free up disk space.
   fs.unlinkSync(tempFilePath);
-  return true
+  return ret;
 }
 
+async function asyncForEach(array, callback) {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
+  }
+}
