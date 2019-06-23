@@ -28,7 +28,7 @@ class BlogArticle extends React.Component {
   state = {article:null, sections:[], resouces:null};
   async componentDidMount() {
     const { db, group, article } = this.props;
-    console.log("BlogArticle, articleId", article.articleId);
+    //console.log("BlogArticle, articleId", article.articleId);
     this.refArticle = db.doc(`groups/${group.groupId}/articles/${article.articleId}`);
     this.setState({article});
     this.detatcher = this.refArticle.collection("sections").onSnapshot((snapshot)=>{
@@ -36,7 +36,7 @@ class BlogArticle extends React.Component {
       snapshot.forEach((doc)=>{
         resources[doc.id] = doc.data();
       });
-      console.log("BlogArticle.cdm", article.sections && article.sections.length, Object.keys(resources).length)
+      //console.log("BlogArticle.cdm", article.sections && article.sections.length, Object.keys(resources).length)
       this.setState({resources});
     });
   }

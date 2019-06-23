@@ -37,8 +37,12 @@ class ImageViewer extends React.Component {
   state = {imageUrl:null};
   async componentDidMount() {
     const { imagePath, loadImage, imageUrl, imageThumbnails } = this.props;
-    console.log(imageUrl, imagePath);
+    console.log(imageUrl, imagePath, imageThumbnails);
+    const storagRef = firebase.storage().ref();
+    this.imageRef = storagRef.child(imagePath);
+
     if (imageThumbnails && imageThumbnails[1200]) {
+      console.log("Use thumbnail");
       this.setState({imageUrl: imageThumbnails[1200]});
       return;
     }
@@ -46,8 +50,6 @@ class ImageViewer extends React.Component {
       this.setState({imageUrl});
       return;
     }
-    const storagRef = firebase.storage().ref();
-    this.imageRef = storagRef.child(imagePath);
     if (loadImage) {
       console.log(imagePath);
       const imageUrl = await this.imageRef.getDownloadURL();

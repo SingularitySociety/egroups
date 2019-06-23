@@ -5,6 +5,7 @@ import * as cors from 'cors';
 //import * as fs from 'fs';
 import * as messaging from './messaging';
 import * as image from './image';
+import * as constant from './constant';
 
 admin.initializeApp();
 
@@ -154,8 +155,6 @@ export const updateTopicSubscription = functions.https.onCall(async (data, conte
   return {  };
 });
 
-const thumbnailSizes = [600, 1200];
-
 export const generateThumbnail = functions.storage.object().onFinalize(async (object) => {
   const filePath = object.name; // groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q
   const contentType = object.contentType; // image/jpeg
@@ -163,30 +162,26 @@ export const generateThumbnail = functions.storage.object().onFinalize(async (ob
   if (!filePath) {
     return false;
   }
-  const paths = filePath.split("/")
-  if (paths[0] === "groups" 
-      && (paths[2] === "articles" 
-       || paths[2] === "images"
-       || (paths[2] === "members") && (paths[4] === "images"))) {
-    if (!contentType || !contentType.startsWith("image")) {
-      return false;
-    }
-    const thumbnails = await image.createThumbnail(object, thumbnailSizes)
-    if (thumbnails) {
-      // todo more specific pach check.
-      if (paths.length === 5) {
-        // generate firestora path from image file path;
-        const store_path = paths.slice(0,4).concat(["sections"], paths.slice(4,5)).join("/")
-
-        // update store
-        const db = admin.firestore();
-        const image_data_ref = db.doc(store_path);
-        await image_data_ref.set({thumbnails: thumbnails}, {merge:true})
-      }
-    }
-    return true
-  } else {
+  const paths = filePath.split("/");
+  if (!image.validImagePath(filePath, constant.matchImagePaths)) {
     console.log("not hit", paths);
     return false;
   }
+  if (!contentType || !contentType.startsWith("image")) {
+    return false;
+  }
+  const thumbnails = await image.createThumbnail(object, constant.thumbnailSizes)
+  if (thumbnails) {
+    // todo more specific pach check.
+    if (image.validImagePath(filePath, [constant.articlePath])) {
+      // generate firestora path from image file path;
+      const store_path = paths.slice(0,4).concat(["sections"], paths.slice(4,5)).join("/")
+      
+      // update store
+      const db = admin.firestore();
+      const image_data_ref = db.doc(store_path);
+      await image_data_ref.set({thumbnails: thumbnails}, {merge:true})
+    }
+  }
+  return true
 });

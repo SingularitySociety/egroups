@@ -10,13 +10,13 @@ import * as UUID from "uuid-v4";
 
 const thumbPrefix = 'thumb_';
 
-const runImageMagick = async (bucket, orinalFilePath, dirName, fileName, size, contentType) => {
+const runImageMagick = async (bucket, originalFilePath, dirName, fileName, size, contentType) => {
   const thumbFileName = thumbPrefix + `${fileName}_${size}`;
 
   const outFilePath = path.join(os.tmpdir(), thumbFileName);
   // Generate a thumbnail using ImageMagick.
   try {
-    const res = await sharp(orinalFilePath).rotate().resize(size).toFile(outFilePath);
+    await sharp(originalFilePath).rotate().resize(size).toFile(outFilePath);
     
     // upload
     const uuid = UUID();
@@ -59,7 +59,7 @@ export const createThumbnail = async (object, sizes) => {
   
   // Download file from bucket.
   const bucket = admin.storage().bucket(fileBucket);
-  const tempFilePath = path.join(os.tmpdir(), fileName);
+  const tempFilePath = path.join(os.tmpdir(), UUID()); // fileName is not unique
 
   await bucket.file(filePath).download({destination: tempFilePath});
   console.log('Image downloaded locally to', tempFilePath);
@@ -79,4 +79,13 @@ async function asyncForEach(array, callback) {
   for (let index = 0; index < array.length; index++) {
     await callback(array[index], index, array);
   }
+}
+
+export const validImagePath = (path, match_paths) => {
+  const paths = path.split("/");
+  return match_paths.reduce((ret, match_path) => {
+    return ret || (Object.keys(match_path).reduce((match, key) => {
+      return match && paths[Number(key)] === match_path[key]
+    }, true)) 
+  }, false);
 }
