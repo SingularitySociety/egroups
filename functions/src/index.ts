@@ -164,25 +164,43 @@ export const generateThumbnail = functions.storage.object().onFinalize(async (ob
     return false;
   }
   const paths = filePath.split("/")
-  if (paths[0] === "groups" 
-      && (paths[2] === "articles" 
-       || paths[2] === "images"
-       || (paths[2] === "members") && (paths[4] === "images"))) {
+  if (paths[0] !== "groups") {
+    return false;
+  }
+  let store_path: any = null;
+  let imageId:any = null;
+  switch(paths.length) {
+    case 5:
+      if (paths[2] === "articles") {
+        store_path = paths.slice(0,4).concat(["sections"], paths.slice(4,5)).join("/");
+      }
+      break;
+    case 4:
+      if (paths[2] === "images") {
+        store_path = paths.slice(0,2).join("/");
+        imageId = paths[3]; // "profile"
+      } 
+      break;
+    case 6:
+      if (paths[2] === "members" && paths[4] === "images") {
+        store_path = paths.slice(0,4).join("/");
+        imageId = paths[5]; // "profile", "banner", ...
+      }
+      break;
+    default:
+      break;     
+  }
+
+  if (store_path) {
     if (!contentType || !contentType.startsWith("image")) {
       return false;
     }
     const thumbnails = await image.createThumbnail(object, thumbnailSizes)
     if (thumbnails) {
-      // todo more specific pach check.
-      if (paths.length === 5) {
-        // generate firestora path from image file path;
-        const store_path = paths.slice(0,4).concat(["sections"], paths.slice(4,5)).join("/")
-
-        // update store
-        const db = admin.firestore();
-        const image_data_ref = db.doc(store_path);
-        await image_data_ref.set({thumbnails: thumbnails}, {merge:true})
-      }
+      const db = admin.firestore();
+      const image_data_ref = db.doc(store_path);
+      const data = imageId ? {[imageId]:{thumbnails: thumbnails}} : {thumbnails: thumbnails};
+      await image_data_ref.set(data, {merge:true})
     }
     return true
   } else {
