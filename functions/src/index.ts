@@ -185,7 +185,7 @@ export const generateThumbnail = functions.storage.object().onFinalize(async (ob
   if (thumbnails) {
     const db = admin.firestore();
     const image_data_ref = db.doc(store_path);
-    const data = imageId ? {[imageId]:{thumbnails: thumbnails}} : {thumbnails: thumbnails};
+    const data = {[imageId]:{thumbnails: thumbnails}};
     await image_data_ref.set(data, {merge:true})
   }
   return true
