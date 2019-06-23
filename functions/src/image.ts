@@ -80,3 +80,12 @@ async function asyncForEach(array, callback) {
     await callback(array[index], index, array);
   }
 }
+
+export const validImagePath = (path, match_paths) => {
+  const paths = path.split("/");
+  return match_paths.reduce((ret, match_path) => {
+    return ret || (Object.keys(match_path).reduce((match, key) => {
+      return match && paths[Number(key)] === match_path[key]
+    }, true)) 
+  }, false);
+}
