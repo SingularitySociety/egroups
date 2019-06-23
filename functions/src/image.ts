@@ -10,13 +10,13 @@ import * as UUID from "uuid-v4";
 
 const thumbPrefix = 'thumb_';
 
-const runImageMagick = async (bucket, orinalFilePath, dirName, fileName, size, contentType) => {
+const runImageMagick = async (bucket, originalFilePath, dirName, fileName, size, contentType) => {
   const thumbFileName = thumbPrefix + `${fileName}_${size}`;
 
   const outFilePath = path.join(os.tmpdir(), thumbFileName);
   // Generate a thumbnail using ImageMagick.
   try {
-    await sharp(orinalFilePath).rotate().resize(size).toFile(outFilePath);
+    await sharp(originalFilePath).rotate().resize(size).toFile(outFilePath);
     
     // upload
     const uuid = UUID();
