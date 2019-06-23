@@ -81,11 +81,11 @@ async function asyncForEach(array, callback) {
   }
 }
 
-export const validImagePath = (path, match_paths) => {
-  const paths = path.split("/");
-  return match_paths.reduce((ret, match_path) => {
-    return ret || (Object.keys(match_path).reduce((match, key) => {
-      return match && paths[Number(key)] === match_path[key]
+export const validImagePath = (filePath, matchPaths) => {
+  const paths = filePath.split("/");
+  return matchPaths.reduce((ret, matchPath) => {
+    return ret || (Object.keys(matchPath).reduce((match, key) => {
+      return match && paths[Number(key)] === matchPath[key]
     }, true)) 
   }, false);
 }
