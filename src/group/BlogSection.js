@@ -51,7 +51,8 @@ class BlogSection extends React.Component {
         if (resource.type==="image") {
           const imagePath = `groups/${group.groupId}/articles/${article.articleId}/${sectionId}`;
           return (
-            <ImageUploader imagePath={imagePath} loadImage={resource.hasImage} imageUrl={resource.imageUrl} 
+              <ImageUploader imagePath={imagePath} loadImage={resource.hasImage} imageUrl={resource.imageUrl}
+                imageThumbnails={resource.thumbnails}
                 readOnly={readOnly} displayMode="wide" onImageUpload={this.onImageUpload} />
           );
         }

@@ -1,23 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Grid } from '@material-ui/core';
+import { Grid, Paper } from '@material-ui/core';
+import ChatIcon from '@material-ui/icons/ChatBubble';
 import { Link } from 'react-router-dom';
-
+import MUILink from '@material-ui/core/link';
 
 const styles = theme => ({
+  root: {
+    marginBottom: theme.spacing(1),
+    paddingTop: theme.spacing(1),
+    paddingLeft: theme.spacing(1),
+  },
   read: {
     color: "#000000",
-    textDecoration: "none",
   },
   unread: {
     color: "#000000",
     fontWeight: "bold",
-    textDecoration: "none",
   }
 });
 
-class Channel extends React.Component {
+class ChannelItem extends React.Component {
   render() {
     const { classes, channel, group, history } = this.props;
     let className = classes.unread;
@@ -30,15 +34,20 @@ class Channel extends React.Component {
       }
     }
     return (
-      <Grid container >
-        <Grid item component={Link} to={`/${group.groupName}/ch/${channel.channelId}`} className={className}># { channel.title }</Grid>
-      </Grid>
+      <Paper className={classes.root}>
+        <MUILink component={Link} to={`/${group.groupName}/ch/${channel.channelId}`} >
+          <Grid container spacing={1}>
+            <Grid item><ChatIcon /></Grid>
+            <Grid item className={className}>{ channel.title }</Grid>
+          </Grid>
+        </MUILink>
+      </Paper>
     )
   }
 }
 
-Channel.propTypes = {
+ChannelItem.propTypes = {
     classes: PropTypes.object.isRequired,
   };
   
-export default withStyles(styles)(Channel);
+export default withStyles(styles)(ChannelItem);

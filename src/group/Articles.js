@@ -36,10 +36,10 @@ class Articles extends React.Component {
       const canCreateNew = !!member && member.privilege 
             >= ((group.privileges && group.privileges.article && group.privileges.article.create) || Privileges.member);
       return (
-        <Grid container justify="center">
+        <Grid container justify="center" spacing={1}>
           <Grid item xs={12} style={{textAlign:"center"}}>
             { canCreateNew && <CreateNew createNew={ this.createArticle } 
-                action={<FormattedMessage id="create" />} label={<FormattedMessage id="article.name" />}/> }
+                action={<FormattedMessage id="create" />} label={<FormattedMessage id="article" />}/> }
           </Grid>
           <Grid item xs={12}>
             <ArticleList {...context}/>

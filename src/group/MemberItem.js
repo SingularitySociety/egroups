@@ -27,7 +27,7 @@ class MemberItem extends React.Component {
         <Grid container>
             <ImageUploader imagePath={imagePath} loadImage={item.hasImage} 
                 readOnly={true} displayMode={"thumbMiddle"} inline={true} onImageUpload={this.onImageUpload} />
-            <Grid item class={classes.name}>
+            <Grid item className={classes.name}>
               {item.displayName}
             </Grid>
         </Grid>

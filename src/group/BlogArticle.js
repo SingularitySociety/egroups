@@ -15,10 +15,13 @@ const styles = theme => ({
 
   },
   title: {
-    fontWeight: "900",
-    fontSize: "calc(5.3vmin)",
+    fontWeight: "600",
     marginBottom: theme.spacing(2),
-  }
+    fontSize: "1.4rem",
+    '@media (min-width:480px)': {
+      fontSize: '1.8rem',
+    },
+  },
 });
 
 class BlogArticle extends React.Component {

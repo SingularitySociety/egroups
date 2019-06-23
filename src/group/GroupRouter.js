@@ -30,11 +30,16 @@ const colorMap = { blue, pink, red, green};
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    padding: theme.spacing(1),
-    paddingTop: theme.spacing(3),
   },
   main: {
-    width: theme.spacing(98),
+    width: "100%",
+    padding: theme.spacing(1),
+    '@media (min-width:480px)': {
+      paddingTop: theme.spacing(3),
+      paddingLeft: theme.spacing(5),
+      paddingRight: theme.spacing(5),
+      maxWidth: "50rem",
+    },
   }
 });
 

@@ -154,6 +154,8 @@ export const updateTopicSubscription = functions.https.onCall(async (data, conte
   return {  };
 });
 
+const thumbnailSizes = [600, 1200];
+
 export const generateThumbnail = functions.storage.object().onFinalize(async (object) => {
   const filePath = object.name; // groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q
   const contentType = object.contentType; // image/jpeg
@@ -169,7 +171,20 @@ export const generateThumbnail = functions.storage.object().onFinalize(async (ob
     if (!contentType || !contentType.startsWith("image")) {
       return false;
     }
-    return image.createThumbnail(object);
+    const thumbnails = await image.createThumbnail(object, thumbnailSizes)
+    if (thumbnails) {
+      // todo more specific pach check.
+      if (paths.length === 5) {
+        // generate firestora path from image file path;
+        const store_path = paths.slice(0,4).concat(["sections"], paths.slice(4,5)).join("/")
+
+        // update store
+        const db = admin.firestore();
+        const image_data_ref = db.doc(store_path);
+        await image_data_ref.set({thumbnails: thumbnails}, {merge:true})
+      }
+    }
+    return true
   } else {
     console.log("not hit", paths);
     return false;

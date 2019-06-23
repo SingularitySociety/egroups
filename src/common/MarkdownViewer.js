@@ -17,13 +17,21 @@ const styles = theme => ({
   button: {
     margin: theme.spacing(1),
   },
+  headerOne: {
+    fontWeight: "600",
+    marginBottom: theme.spacing(2),
+    fontSize: "1.4rem",
+    '@media (min-width:480px)': {
+      fontSize: '1.8rem',
+    },
+  },
   blockquote: {
     fontFamily: "'Roboto', sans-serif",
     padding: theme.spacing(1),
     background: "#dddddd",
     fontSize: "0.95rem",
     '@media (min-width:480px)': {
-      fontSize: '1.2rem',
+      fontSize: '1.05rem',
     },
     lineHeight: "2.0em",
   },
@@ -36,13 +44,14 @@ const styles = theme => ({
     paddingLeft: theme.spacing(1),
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
-    fontSize: "1rem",
+    fontFamily:"Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New",
+    fontSize: "0.65rem",
   },
   unstyled: {
     fontFamily: "'Roboto', sans-serif",
     fontSize: "0.95rem",
     '@media (min-width:480px)': {
-      fontSize: '1.2rem',
+      fontSize: '1.05rem',
     },
     lineHeight: "2.0em",
     marginBottom: "1.5em",
