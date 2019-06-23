@@ -16,7 +16,7 @@ const runImageMagick = async (bucket, orinalFilePath, dirName, fileName, size, c
   const outFilePath = path.join(os.tmpdir(), thumbFileName);
   // Generate a thumbnail using ImageMagick.
   try {
-    const res = await sharp(orinalFilePath).rotate().resize(size).toFile(outFilePath);
+    await sharp(orinalFilePath).rotate().resize(size).toFile(outFilePath);
     
     // upload
     const uuid = UUID();
