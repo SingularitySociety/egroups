@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import ErrorMessage from '../ErrorMessage';
+import ErrorMessage from './ErrorMessage';
 import BlogArticle from './BlogArticle';
 
 const styles = theme => ({
@@ -19,9 +19,7 @@ class Blog extends React.Component {
     const { match:{params:{articleId}}, selectTab } = this.props;
     selectTab("article", `bl/${articleId}`);
     const article = (await this.refArticle.get()).data();
-    //console.log("article=", article);
-    // BUGBUG: This is an attempt to catch non-existing but does not work because it causes security error unlike chat. 
-    if (article === null) {
+    if (!article) {
       this.setState({error:{key:"error.invalid.articleId", value:articleId}});
       return;
     }

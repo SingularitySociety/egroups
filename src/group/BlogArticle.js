@@ -5,7 +5,6 @@ import { Typography, Grid, IconButton } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import AccessDenied from './AccessDenied';
 import BlogSection from './BlogSection';
-import ErrorMessage from '../ErrorMessage';
 import { Link } from 'react-router-dom';
 
 const styles = theme => ({
@@ -96,12 +95,9 @@ class BlogArticle extends React.Component {
   }
 
   render() {
-    const { article, resources, error } = this.state;
+    const { article, resources } = this.state;
     const { user, member, classes, refArticle } = this.props;
     const context = { refArticle };
-    if (error) {
-      return <ErrorMessage error={error} />
-    }
     if (!article) {
       return "";
     }
