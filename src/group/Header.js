@@ -199,8 +199,10 @@ class MyAppBar extends React.Component {
             <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/listing`}><FormattedMessage id="listing" /></MenuItem>
           }
           {
-            (member && member.privilege >= Privileges.admin) && 
-            <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/settings`}><FormattedMessage id="settings" /></MenuItem>
+            (member && member.privilege >= Privileges.admin) && [
+            <MenuItem key="settogs" onClick={this.closeMe} component={Link} to={`/${group.groupName}/settings`}><FormattedMessage id="settings" /></MenuItem>,
+            <MenuItem key="pages" onClick={this.closeMe} component={Link} to={`/${group.groupName}/pages`}><FormattedMessage id="pages" /></MenuItem>,
+            ]
           }
           <Divider />
             <MenuItem onClick={this.logout}><FormattedMessage id="logout" /></MenuItem>
