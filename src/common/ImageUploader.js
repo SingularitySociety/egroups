@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Button, Grid, IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
+import UploadButton from '@material-ui/icons/CloudUpload';
 import * as firebase from "firebase/app";
 import "firebase/storage";
 
@@ -90,10 +91,10 @@ class ImageViewer extends React.Component {
         {
           !readOnly && onImageUpload &&
             <Grid item>
-            <Button variant="contained" component="label">
-                Upload Image
+            <IconButton size="small" variant="contained" component="label">
+                <UploadButton />
                 <input type="file" accept="image/*" style={{ display: "none" }} onChange={this.onFileInput} />
-            </Button>
+            </IconButton>
             {
               deleteImage && 
               <IconButton size="small" onClick={deleteImage}><DeleteIcon /></IconButton>
