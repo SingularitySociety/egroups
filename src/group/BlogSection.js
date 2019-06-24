@@ -50,9 +50,10 @@ class BlogSection extends React.Component {
         //console.log("render1", value.toString("markdown"));
         if (resource.type==="image") {
           const imagePath = `groups/${group.groupId}/articles/${article.articleId}/${sectionId}`;
+          const thumbnails = (resource[sectionId] && resource[sectionId].thumbnails) || resource.thumbnails
           return (
               <ImageUploader imagePath={imagePath} loadImage={resource.hasImage} imageUrl={resource.imageUrl}
-                imageThumbnails={resource.thumbnails}
+                imageThumbnails={thumbnails} 
                 readOnly={readOnly} displayMode="wide" onImageUpload={this.onImageUpload} />
           );
         }
