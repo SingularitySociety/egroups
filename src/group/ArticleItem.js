@@ -25,7 +25,7 @@ const styles = theme => ({
 class ArticleItem extends React.Component {
   render() {
     const { classes, article, group, history } = this.props;
-    console.log(article);
+    //console.log(article);
     let className = classes.unread;
     if (!article.updated || !history) {
       className = classes.read;

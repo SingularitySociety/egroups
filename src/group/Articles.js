@@ -8,19 +8,20 @@ import CreateNew from '../common/CreateNew';
 import Privileges from '../const/Privileges';
 import { FormattedMessage } from 'react-intl';
 import { Grid } from '@material-ui/core';
-
+import { Redirect } from 'react-router-dom';
 
 const styles = theme => ({
 });
 
 class Articles extends React.Component {
+  state = {};
   componentDidMount() {
     const { selectTab } = this.props;
     selectTab("articles");
   }
   createArticle = async (title) => {
     const { db, group, user } = this.props;
-    db.collection(`groups/${group.groupId}/articles`).add({
+    const doc = await db.collection(`groups/${group.groupId}/articles`).add({
       title,
       created: firebase.firestore.FieldValue.serverTimestamp(),
       owner: user.uid,
@@ -28,9 +29,14 @@ class Articles extends React.Component {
       comment: group.privileges.article.comment || Privileges.member, 
       sections: [], // ordered list of sectionIds
     });
+    this.setState({redirect:`/${group.groupName}/bl/${doc.id}`});
   }
   render() {
       const { user, db, member, group, history } = this.props;
+      const { redirect } = this.state;
+      if (redirect) {
+        return <Redirect to={redirect} />
+      }
       const context = { user, group, db, member, history };
       const canCreateNew = !!member && member.privilege 
             >= ((group.privileges && group.privileges.article && group.privileges.article.create) || Privileges.member);
