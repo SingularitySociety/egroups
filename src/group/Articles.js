@@ -26,8 +26,8 @@ class Articles extends React.Component {
       title,
       created: firebase.firestore.FieldValue.serverTimestamp(),
       owner: user.uid,
-      read: group.privileges[arp.tabLeaf].read || Privileges.member, 
-      comment: group.privileges[arp.tabLeaf].comment || Privileges.member, 
+      read: group.privileges[arp.tabLeaf].read, 
+      comment: group.privileges[arp.tabLeaf].comment, 
       sections: [], // ordered list of sectionIds
     });
     this.setState({redirect:`/${group.groupName}/${arp.leaf}/${doc.id}`});

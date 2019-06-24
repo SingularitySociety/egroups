@@ -19,6 +19,7 @@ class Blog extends React.Component {
     const { match:{params:{articleId}}, selectTab, arp } = this.props;
     selectTab(arp.tabLeaf, `${arp.leaf}/${articleId}`);
     const article = (await this.refArticle.get()).data();
+    console.log(article);
     if (!article) {
       this.setState({error:{key:"error.invalid.articleId", value:articleId}});
       return;
