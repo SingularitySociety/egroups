@@ -28,7 +28,7 @@ import Listing from './Listing';
 import Profile from './Profile';
 import MemberHome from './MemberHome';
 import ChannelSettings from './ChannelSettings';
-import BlogSettings from './BlogSettings';
+import ArticleSettings from './ArticleSettings';
 
 const colorMap = { red, pink, purple, deepPurple, indigo, 
   blue, lightBlue, cyan, teal, green,
@@ -174,7 +174,7 @@ class GroupRouter extends React.Component {
               <Route exact path={`/${group.groupName}/pr/:userId`} render={(props) => <Profile {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/blog`} render={(props) => <Articles {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/bl/:articleId`} render={(props) => <Blog {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/bl/:articleId/settings`} render={(props) => <BlogSettings {...props} {...context} />} />
+              <Route exact path={`/${group.groupName}/bl/:articleId/settings`} render={(props) => <ArticleSettings {...props} {...context} />} />
             </Grid>
         </Grid>
       </MuiThemeProvider>
