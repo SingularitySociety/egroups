@@ -1,7 +1,22 @@
+Account: Display greay circle if there is no Image
+Members: Highlight Yourself
+Profile: No grey color / Implement
+Blog: Display author & date (along with Members database)
+Blog Setting: Locked area
+Channel Setting: Name and destroy
+Chat: Add Image (implying Members database)
+Chat: Activate the entry
+Image Uploader: Verify the privacy
+
+----- Done -----
+
+
+
+
 ImageUploader
- display style (profile, blog, ...)
- readonly
- icon button ?
+* display style (profile, blog, ...)
+* readonly
+* icon button ?
  store URL
  thumbnail
  design clean-up process
@@ -14,11 +29,11 @@ MarkdownEditor2
  https://github.com/draft-js-plugins/draft-js-plugins
 
 blog/chat
- settings
+* settings
 Account/profile
- Image upload
+* Image upload
 List of members
- Image
+* Image
 List of blog articles
  Image
 Storage
@@ -28,7 +43,7 @@ Storage
  personal profile, user only
 
 Check the author == uid when create something
-Fix font issue with MarkdownEditor (editor and read-onlyl)
+*Fix font issue with MarkdownEditor (editor and read-onlyl)
 Error handling (invalid page)
 UI changes
 Edit title & description (settings page)
