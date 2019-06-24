@@ -77,6 +77,7 @@
     "settings.member.read":"名簿を見る権利",
 
     "error.invalid.groupname":"グループ名が存在しません",
+    "error.invalid.articleId":"この記事は存在しません",
     "warning.access.denied":"アクセスが拒否されました",
 
     "dummy":"dummy"

@@ -24,7 +24,7 @@ const styles = theme => ({
 
 class ArticleItem extends React.Component {
   render() {
-    const { classes, article, group, history } = this.props;
+    const { classes, article, group, history, arp } = this.props;
     //console.log(article);
     let className = classes.unread;
     if (!article.updated || !history) {
@@ -38,7 +38,7 @@ class ArticleItem extends React.Component {
     return (
       <Paper className={classes.item}>
         <MUILink component={Link} className={className}
-          to={`/${group.groupName}/bl/${article.articleId}`}>
+          to={`/${group.groupName}/${arp.leaf}/${article.articleId}`}>
           <Grid container >
             <Grid item xs={7} className={classes.title}>
               { article.title }
@@ -57,6 +57,7 @@ class ArticleItem extends React.Component {
 
 ArticleItem.propTypes = {
     classes: PropTypes.object.isRequired,
+    arp: PropTypes.object.isRequired,
   };
   
 export default withStyles(styles)(ArticleItem);

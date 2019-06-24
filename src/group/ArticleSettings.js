@@ -14,22 +14,25 @@ const styles = theme => ({
 class ArticleSettings extends React.Component {
   constructor(props) {
     super(props);
-    const { db, group, match:{params:{articleId}} } = props;
-    this.refEntity = db.doc(`groups/${group.groupId}/articles/${articleId}`);
+    const { db, group, arp, match:{params:{articleId}} } = props;
+    this.refEntity = db.doc(`groups/${group.groupId}/${arp.collection}/${articleId}`);
     this.state = {entity:null};
   }
   async componentDidMount() {
-    const { match:{params:{articleId}}, selectTab, group } = this.props;
-    selectTab("article.settings", `bl/${articleId}`);
+    const { match:{params:{articleId}}, selectTab, group, arp } = this.props;
+    selectTab("article.settings", `${arp.leaf}/${articleId}`);
 
-    this.refEntity.onSnapshot((doc)=>{
+    this.detacher = this.refEntity.onSnapshot((doc)=>{
       const entity = doc.data();
       if (entity) {
         this.setState({entity});
       } else {
-        this.setState({redirect:`/${group.groupName}/blog`});
+        this.setState({redirect:`/${group.groupName}/${arp.root}`});
       }
     });
+  }
+  componentWillUnmount() {
+    this.detacher();
   }
   onSave = name => async value => {
     await this.refEntity.set({[name]:value}, {merge:true});

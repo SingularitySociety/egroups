@@ -50,6 +50,19 @@ const styles = theme => ({
     },
   }
 });
+// To share code between Blog Articles and Pages 
+const arps = {
+  blog: {
+    collection: "articles",
+    leaf: "bl",
+    root: "blog",
+  },
+  page: {
+    collection: "pages",
+    leaf: "pg",
+    root: "pages",
+  },
+};
 
 class GroupRouter extends React.Component {
   state = {group:null, member:null, error:null, pageInfo:{tabId:"home"}};
@@ -172,9 +185,9 @@ class GroupRouter extends React.Component {
               <Route exact path={`/${group.groupName}/ch/:channelId`} render={(props) => <Chat {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/ch/:channelId/settings`} render={(props) => <ChannelSettings {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/pr/:userId`} render={(props) => <Profile {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/blog`} render={(props) => <Articles {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/bl/:articleId`} render={(props) => <Blog {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/bl/:articleId/settings`} render={(props) => <ArticleSettings {...props} {...context} />} />
+              <Route exact path={`/${group.groupName}/blog`} render={(props) => <Articles {...props} {...context} arp={arps.blog} />} />
+              <Route exact path={`/${group.groupName}/bl/:articleId`} render={(props) => <Blog {...props} {...context} arp={arps.blog} />} />
+              <Route exact path={`/${group.groupName}/bl/:articleId/settings`} render={(props) => <ArticleSettings {...props} {...context} arp={arps.blog} />} />
             </Grid>
         </Grid>
       </MuiThemeProvider>

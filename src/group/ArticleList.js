@@ -9,8 +9,8 @@ const styles = theme => ({
 class ArticleList extends React.Component {
   state = { list:[] }
   componentDidMount() {
-    const { db, group } = this.props;
-    this.detacher = db.collection(`groups/${group.groupId}/articles`).orderBy("created", "desc").onSnapshot((snapshot) => {
+    const { db, group, arp } = this.props;
+    this.detacher = db.collection(`groups/${group.groupId}/${arp.collection}`).orderBy("created", "desc").onSnapshot((snapshot) => {
       //console.log("onSnapshot")
       const list = [];
       snapshot.forEach((doc)=>{
@@ -25,12 +25,13 @@ class ArticleList extends React.Component {
     this.detacher();
   }
   render() {
-    const { group, history } = this.props;
+    const { group, history, arp } = this.props;
+    const context = { group, history, arp }
     return <div>
       <div>
         {
           this.state.list.map((article)=>{
-            return <ArticleItem key={article.articleId} article={article} group={group} history={history} />
+            return <ArticleItem key={article.articleId} article={article} {...context} />
           })
         }
       </div>
@@ -40,6 +41,7 @@ class ArticleList extends React.Component {
 
 ArticleList.propTypes = {
   classes: PropTypes.object.isRequired,
+  arp: PropTypes.object.isRequired,
 };
   
 export default withStyles(styles)(ArticleList);

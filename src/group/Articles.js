@@ -20,8 +20,9 @@ class Articles extends React.Component {
     selectTab("articles");
   }
   createArticle = async (title) => {
-    const { db, group, user } = this.props;
-    const doc = await db.collection(`groups/${group.groupId}/articles`).add({
+    const { db, group, user, arp } = this.props;
+    console.log(arp);
+    const doc = await db.collection(`groups/${group.groupId}/${arp.collection}`).add({
       title,
       created: firebase.firestore.FieldValue.serverTimestamp(),
       owner: user.uid,
@@ -29,15 +30,15 @@ class Articles extends React.Component {
       comment: group.privileges.article.comment || Privileges.member, 
       sections: [], // ordered list of sectionIds
     });
-    this.setState({redirect:`/${group.groupName}/bl/${doc.id}`});
+    this.setState({redirect:`/${group.groupName}/${arp.leaf}/${doc.id}`});
   }
   render() {
-      const { user, db, member, group, history } = this.props;
+      const { user, db, member, group, history, arp } = this.props;
       const { redirect } = this.state;
       if (redirect) {
         return <Redirect to={redirect} />
       }
-      const context = { user, group, db, member, history };
+      const context = { user, group, db, member, history, arp };
       const canCreateNew = !!member && member.privilege 
             >= ((group.privileges && group.privileges.article && group.privileges.article.create) || Privileges.member);
       return (
@@ -56,6 +57,7 @@ class Articles extends React.Component {
 
 Articles.propTypes = {
     classes: PropTypes.object.isRequired,
+    arp: PropTypes.object.isRequired,
   };
   
 export default withStyles(styles)(Articles);

@@ -76,6 +76,7 @@
     "settings.member.read":"Can see the roster",
 
     "error.invalid.groupname":"Invalid Group Name",
+    "error.invalid.articleId":"This article does not exist.",
     "warning.access.denied":"Access Denied",
 
     "dummy":"dummy"

@@ -16,8 +16,8 @@ class Blog extends React.Component {
   }
 
   async componentDidMount() {
-    const { match:{params:{articleId}}, selectTab } = this.props;
-    selectTab("article", `bl/${articleId}`);
+    const { match:{params:{articleId}}, selectTab, arp } = this.props;
+    selectTab("article", `${arp.leaf}/${articleId}`);
     const article = (await this.refArticle.get()).data();
     if (!article) {
       this.setState({error:{key:"error.invalid.articleId", value:articleId}});
@@ -29,8 +29,8 @@ class Blog extends React.Component {
 
   render() {
     const { article, error } = this.state;
-    const { user, member, db } = this.props;
-    const context = { db, user, member, article };
+    const { user, member } = this.props;
+    const context = { user, member, article };
     if (error) {
       return <ErrorMessage error={error} />
     }
