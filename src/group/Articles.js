@@ -19,7 +19,6 @@ class Articles extends React.Component {
     selectTab("articles");
   }
   createArticle = async (title) => {
-    console.log("createArticle:", title)
     const { db, group, user } = this.props;
     db.collection(`groups/${group.groupId}/articles`).add({
       title,

@@ -27,6 +27,7 @@
     "event":"Event",
     "article.settings":"Setting",
     "channel.settings":"Setting",
+    "article.title":"Title",
 
     "channel.name": "Channel Name",
     "group.title": "Group Name",
