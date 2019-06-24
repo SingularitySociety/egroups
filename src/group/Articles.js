@@ -40,7 +40,7 @@ class Articles extends React.Component {
       }
       const context = { user, group, db, member, history, arp };
       const canCreateNew = !!member && member.privilege 
-            >= ((group.privileges && group.privileges.article && group.privileges.article.create) || Privileges.member);
+            >= ((group.privileges && group.privileges[arp.tabLeaf] && group.privileges[arp.tabLeaf].create) || Privileges.member);
       return (
         <Grid container justify="center" spacing={1}>
           <Grid item xs={12} style={{textAlign:"center"}}>
