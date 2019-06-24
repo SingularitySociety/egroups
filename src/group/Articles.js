@@ -45,7 +45,7 @@ class Articles extends React.Component {
         <Grid container justify="center" spacing={1}>
           <Grid item xs={12} style={{textAlign:"center"}}>
             { canCreateNew && <CreateNew createNew={ this.createArticle } 
-                action={<FormattedMessage id="create" />} label={<FormattedMessage id="article" />}/> }
+                action={<FormattedMessage id="create" />} label={<FormattedMessage id={arp.tabLeaf} />}/> }
           </Grid>
           <Grid item xs={12}>
             <ArticleList {...context}/>

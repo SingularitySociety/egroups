@@ -55,6 +55,7 @@ class MyAppBar extends React.Component {
                               to={`/${group.groupName}/events`} component={Link} />;
     this.cramHome = this.breadCram("home", "member", "home");
     this.cramBlog = this.breadCram("blog");
+    this.cramPages = this.breadCram("pages");
     this.cramChannels = this.breadCram("channels");
     this.cramEvents = this.breadCram("events");
     this.cramAccount = this.breadCram("account");
@@ -111,6 +112,18 @@ class MyAppBar extends React.Component {
         crams = [this.cramHome, this.cramBlog, this.breadCram("article", pageInfo.path),
                 this.breadCram(pageInfo.tabId, pageInfo.path+"/settings")];
         break;
+
+      case "pages":
+        crams = [this.cramHome, this.cramPages];
+        break;
+      case "page":
+        crams = [this.cramHome, this.cramPages, this.breadCram(pageInfo.tabId, pageInfo.path)];
+        break;
+      case "page.settings":
+        crams = [this.cramHome, this.cramPages, this.breadCram("page", pageInfo.path),
+                this.breadCram(pageInfo.tabId, pageInfo.path+"/settings")];
+        break;
+    
       case "channels":
         crams = [this.cramHome, this.cramChannels];
         break;
