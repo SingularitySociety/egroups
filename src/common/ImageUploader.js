@@ -36,14 +36,15 @@ const styles = theme => ({
 class ImageViewer extends React.Component {
   state = {imageUrl:null};
   async componentDidMount() {
-    const { imagePath, loadImage, imageUrl, imageThumbnails } = this.props;
+    const { imagePath, loadImage, imageUrl, imageThumbnails, displayMode } = this.props;
     console.log(imageUrl, imagePath, imageThumbnails);
     const storagRef = firebase.storage().ref();
     this.imageRef = storagRef.child(imagePath);
-
-    if (imageThumbnails && imageThumbnails[1200]) {
+    const thumbnailSize = (displayMode === "wide") ? 1200 : 600;
+    
+    if (imageThumbnails && imageThumbnails[thumbnailSize]) {
       console.log("Use thumbnail");
-      this.setState({imageUrl: imageThumbnails[1200]});
+      this.setState({imageUrl: imageThumbnails[thumbnailSize]});
       return;
     }
     if (imageUrl) {
