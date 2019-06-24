@@ -7,7 +7,9 @@ const ColorOptions = (props)=>{
   const { messages } = props.intl;
   return (<React.Fragment>
     { colors.map((color)=>{
-      return <option key={color} value={color}>{messages[color]}</option>
+      return <option key={color} value={color} >
+                  {messages[color]}
+            </option>
     })}
   </React.Fragment>);
 } 
