@@ -57,7 +57,7 @@ const arps = {
     leaf: "bl",
     root: "blog",
   },
-  page: {
+  pages: {
     collection: "pages",
     leaf: "pg",
     root: "pages",
@@ -188,6 +188,9 @@ class GroupRouter extends React.Component {
               <Route exact path={`/${group.groupName}/blog`} render={(props) => <Articles {...props} {...context} arp={arps.blog} />} />
               <Route exact path={`/${group.groupName}/bl/:articleId`} render={(props) => <Blog {...props} {...context} arp={arps.blog} />} />
               <Route exact path={`/${group.groupName}/bl/:articleId/settings`} render={(props) => <ArticleSettings {...props} {...context} arp={arps.blog} />} />
+              <Route exact path={`/${group.groupName}/pages`} render={(props) => <Articles {...props} {...context} arp={arps.pages} />} />
+              <Route exact path={`/${group.groupName}/pg/:articleId`} render={(props) => <Blog {...props} {...context} arp={arps.pages} />} />
+              <Route exact path={`/${group.groupName}/pg/:articleId/settings`} render={(props) => <ArticleSettings {...props} {...context} arp={arps.pages} />} />
             </Grid>
         </Grid>
       </MuiThemeProvider>

@@ -99,6 +99,14 @@ service cloud.firestore {
           && articleInfo(groupId, articleId).owner == request.auth.uid;
       allow read: if isOpenToPublic(articleInfo(groupId, articleId).read);
     }
+		match /groups/{groupId}/pages/{articleId} {
+    	allow read;
+      allow write: if isUserAdmin(groupId, request.auth.uid);
+    }
+		match /groups/{groupId}/pages/{articleId}/sections/{sectionId} {
+    	allow read;
+      allow write: if isUserAdmin(groupId, request.auth.uid);
+    }
 		match /groups/{groupId}/events/{eventId} {
     	allow read;
       allow create: if request.auth.uid != null 

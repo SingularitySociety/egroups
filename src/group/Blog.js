@@ -10,8 +10,8 @@ const styles = theme => ({
 class Blog extends React.Component {
   constructor(props) {
     super(props);
-    const { db, group, match:{params:{articleId}} } = this.props;
-    this.refArticle = db.doc(`groups/${group.groupId}/articles/${articleId}`);
+    const { db, group, arp, match:{params:{articleId}} } = this.props;
+    this.refArticle = db.doc(`groups/${group.groupId}/${arp.collection}/${articleId}`);
     this.state = {article:null, sections:[], resouces:null};
   }
 
