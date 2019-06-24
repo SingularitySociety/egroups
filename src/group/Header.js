@@ -101,7 +101,7 @@ class MyAppBar extends React.Component {
       case "member":
         tabs = [this.tabMember, this.tabChannels, this.tabBlog, this.tabEvents];
         break;
-      case "blog":
+      case "articles":
         crams = [this.cramHome, this.cramBlog];
         break;
       case "article":
