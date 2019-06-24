@@ -54,7 +54,7 @@ class BlogSection extends React.Component {
           return (
               <ImageUploader imagePath={imagePath} loadImage={resource.hasImage} imageUrl={resource.imageUrl}
                 imageThumbnails={thumbnails} 
-                readOnly={readOnly} displayMode="wide" onImageUpload={this.onImageUpload} />
+                readOnly={readOnly} displayMode="wide" onImageUpload={this.onImageUpload} deleteImage={this.onDelete} />
           );
         }
         const textWidth = readOnly ? 12 : 11;
