@@ -75,12 +75,14 @@ class Settings extends React.Component {
     const articleCreate = group.privileges.article.create || Privileges.member;
     const eventCreate = group.privileges.event.create || Privileges.member;
     const memberRead = (group.privileges.member && group.privileges.member.read) || Privileges.member;
-
+    const imageThumbnails = group.profile && group.profile.thumbnails;
     return (
       <div>
         <div className={classes.main}>
           <FormGroup row>
-            <ImageUploader imagePath={`/groups/${group.groupId}/images/profile`} onImageUpload={this.onImageUpload} loadImage={group.hasImage}/>
+            <ImageUploader imagePath={`/groups/${group.groupId}/images/profile`}
+               imageThumbnails={imageThumbnails}
+               onImageUpload={this.onImageUpload} loadImage={group.hasImage}/>
           </FormGroup>
 
           <FormGroup row>
