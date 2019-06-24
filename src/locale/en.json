@@ -25,9 +25,13 @@
     "article":"Article",
     "channel":"Channel",
     "event":"Event",
-    "article.settings":"Setting",
-    "channel.settings":"Setting",
+    "article.settings":"Settings",
+    "channel.settings":"Settings",
     "article.title":"Title",
+
+    "pages":"Pages",
+    "page":"Page",
+    "page.settings":"Settings",
 
     "channel.name": "Channel Name",
     "group.title": "Group Name",

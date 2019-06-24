@@ -29,6 +29,10 @@
     "channel.settings":"設定",
     "article.title":"タイトル",
 
+    "pages":"ページリスト",
+    "page":"ページ",
+    "page.settings":"設定",
+
     "channel.name": "チャンネル名",
     "group.title": "グループ名",
     "group.description": "簡単な説明",

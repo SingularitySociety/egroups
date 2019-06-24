@@ -55,6 +55,7 @@ class MyAppBar extends React.Component {
                               to={`/${group.groupName}/events`} component={Link} />;
     this.cramHome = this.breadCram("home", "member", "home");
     this.cramBlog = this.breadCram("blog");
+    this.cramPages = this.breadCram("pages");
     this.cramChannels = this.breadCram("channels");
     this.cramEvents = this.breadCram("events");
     this.cramAccount = this.breadCram("account");
@@ -111,6 +112,18 @@ class MyAppBar extends React.Component {
         crams = [this.cramHome, this.cramBlog, this.breadCram("article", pageInfo.path),
                 this.breadCram(pageInfo.tabId, pageInfo.path+"/settings")];
         break;
+
+      case "pages":
+        crams = [this.cramHome, this.cramPages];
+        break;
+      case "page":
+        crams = [this.cramHome, this.cramPages, this.breadCram(pageInfo.tabId, pageInfo.path)];
+        break;
+      case "page.settings":
+        crams = [this.cramHome, this.cramPages, this.breadCram("page", pageInfo.path),
+                this.breadCram(pageInfo.tabId, pageInfo.path+"/settings")];
+        break;
+    
       case "channels":
         crams = [this.cramHome, this.cramChannels];
         break;
@@ -186,8 +199,10 @@ class MyAppBar extends React.Component {
             <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/listing`}><FormattedMessage id="listing" /></MenuItem>
           }
           {
-            (member && member.privilege >= Privileges.admin) && 
-            <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/settings`}><FormattedMessage id="settings" /></MenuItem>
+            (member && member.privilege >= Privileges.admin) && [
+            <MenuItem key="settogs" onClick={this.closeMe} component={Link} to={`/${group.groupName}/settings`}><FormattedMessage id="settings" /></MenuItem>,
+            <MenuItem key="pages" onClick={this.closeMe} component={Link} to={`/${group.groupName}/pages`}><FormattedMessage id="pages" /></MenuItem>,
+            ]
           }
           <Divider />
             <MenuItem onClick={this.logout}><FormattedMessage id="logout" /></MenuItem>
