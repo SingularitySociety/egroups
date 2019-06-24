@@ -2,34 +2,46 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import EditableField from '../common/EditableField';
-import { FormGroup } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { FormGroup, Button } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
+import { Redirect } from 'react-router-dom';
 
 
 const styles = theme => ({
 });
 
-class BlogSettings extends React.Component {
+class ArticleSettings extends React.Component {
   constructor(props) {
     super(props);
     const { db, group, match:{params:{articleId}} } = props;
     this.refEntity = db.doc(`groups/${group.groupId}/articles/${articleId}`);
     this.state = {entity:null};
   }
-  onSave = name => async value => {
-    await this.refEntity.set({[name]:value}, {merge:true});
-  }
   async componentDidMount() {
-    const { match:{params:{articleId}}, selectTab } = this.props;
+    const { match:{params:{articleId}}, selectTab, group } = this.props;
     selectTab("article.settings", `bl/${articleId}`);
 
     this.refEntity.onSnapshot((doc)=>{
       const entity = doc.data();
-      this.setState({entity});
+      if (entity) {
+        this.setState({entity});
+      } else {
+        this.setState({redirect:`/${group.groupName}/blog`});
+      }
     });
   }
+  onSave = name => async value => {
+    await this.refEntity.set({[name]:value}, {merge:true});
+  }
+  onDelete = async () => {
+    await this.refEntity.delete();
+  }
   render() {
-    const { entity } = this.state;
+    const { entity, redirect } = this.state;
+    if (redirect) {
+      return <Redirect to={redirect} />
+    }
     if (!entity) {
       return "";
     }
@@ -38,13 +50,16 @@ class BlogSettings extends React.Component {
         <FormGroup row>
           <EditableField label={<FormattedMessage id="article.title"/>} value={entity.title} onSave={this.onSave('title')}/>
         </FormGroup>
+        <Button variant="contained" onClick={this.onDelete}>
+          <DeleteIcon color="error" />
+        </Button>
       </div>
     )
   }
 }
 
-BlogSettings.propTypes = {
+ArticleSettings.propTypes = {
     classes: PropTypes.object.isRequired,
   };
   
-export default withStyles(styles)(BlogSettings);
+export default withStyles(styles)(ArticleSettings);
