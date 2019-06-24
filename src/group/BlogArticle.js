@@ -29,11 +29,10 @@ const styles = theme => ({
 class BlogArticle extends React.Component {
   state = {article:null, sections:[], resouces:null};
   async componentDidMount() {
-    const { db, group, article } = this.props;
+    const { article, refArticle } = this.props;
     //console.log("BlogArticle, articleId", article.articleId);
-    this.refArticle = db.doc(`groups/${group.groupId}/articles/${article.articleId}`);
     this.setState({article});
-    this.detatcher = this.refArticle.collection("sections").onSnapshot((snapshot)=>{
+    this.detatcher = refArticle.collection("sections").onSnapshot((snapshot)=>{
       const resources = {};
       snapshot.forEach((doc)=>{
         resources[doc.id] = doc.data();
@@ -46,9 +45,9 @@ class BlogArticle extends React.Component {
     this.detatcher();
   }
   insertSection = async (resourceId, index, markdown, raw) => {
-    const { user } = this.props;
+    const { user, refArticle } = this.props;
     const { article } = this.state;
-    const doc = await this.refArticle.collection("sections").add({
+    const doc = await refArticle.collection("sections").add({
       type: "markdown",
       markdown,
       raw,
@@ -57,38 +56,41 @@ class BlogArticle extends React.Component {
     });
     article.sections.splice(index, 0, doc.id);
     this.setState(article);
-    await this.refArticle.set(article, {merge:true});
+    await refArticle.set(article, {merge:true});
   }
   updateSection = async (resourceId, index, markdown, raw) => {
-    await this.refArticle.collection("sections").doc(resourceId).set({
+    const { refArticle } = this.props;
+    await refArticle.collection("sections").doc(resourceId).set({
       markdown, 
       raw
     }, {merge:true})
   }
   deleteSection = async (resourceId, index) => {
     console.log("deleteSection", resourceId);
+    const { refArticle } = this.props;
     const { article } = this.state;
     article.sections.splice(index, 1);
     this.setState(article);
-    await this.refArticle.set(article, {merge:true});
-    await this.refArticle.collection("sections").doc(resourceId).delete();
+    await refArticle.set(article, {merge:true});
+    await refArticle.collection("sections").doc(resourceId).delete();
   }
   insertPhoto = async (index) => {
     console.log("insertPhoto", index);
-    const { user } = this.props;
+    const { user, refArticle } = this.props;
     const { article } = this.state;
-    const doc = await this.refArticle.collection("sections").add({
+    const doc = await refArticle.collection("sections").add({
       type: "image",
       created: new Date(),
       author: user.uid,
     });
     article.sections.splice(index, 0, doc.id);
     this.setState(article);
-    await this.refArticle.set(article, {merge:true});
+    await refArticle.set(article, {merge:true});
   }
   onImageUpload = async (resourceId, imageUrl) => {
     //console.log("onImageUpload", resourceId, imageUrl);
-    await this.refArticle.collection("sections").doc(resourceId).set({
+    const { refArticle } = this.props;
+    await refArticle.collection("sections").doc(resourceId).set({
       hasImage: true, imageUrl
     }, {merge:true})
   }
@@ -151,6 +153,7 @@ class BlogArticle extends React.Component {
 
 BlogArticle.propTypes = {
     classes: PropTypes.object.isRequired,
+    refArticle: PropTypes.object.isRequired,
   };
   
 export default withStyles(styles)(BlogArticle);

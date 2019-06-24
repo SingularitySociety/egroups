@@ -69,7 +69,7 @@ class GroupHome extends React.Component {
     return (
       <div>
         { member && <MountDetector didMount={this.memberDidMount} willUnmount={this.memberWillUnmount} value={member} />}
-        { article && <BlogArticle {...context} />}
+        { article && <BlogArticle {...context} refArticle={this.refArticle} />}
       </div>
     )
   }

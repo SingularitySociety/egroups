@@ -8,12 +8,16 @@ const styles = theme => ({
 });
 
 class Blog extends React.Component {
-  state = {article:null, sections:[], resouces:null};
-  async componentDidMount() {
-    const { db, group, match:{params:{articleId}}, selectTab } = this.props;
-    selectTab("article", `bl/${articleId}`);
-
+  constructor(props) {
+    super(props);
+    const { db, group, match:{params:{articleId}} } = this.props;
     this.refArticle = db.doc(`groups/${group.groupId}/articles/${articleId}`);
+    this.state = {article:null, sections:[], resouces:null};
+  }
+
+  async componentDidMount() {
+    const { match:{params:{articleId}}, selectTab } = this.props;
+    selectTab("article", `bl/${articleId}`);
     const article = (await this.refArticle.get()).data();
     //console.log("article=", article);
     // BUGBUG: This is an attempt to catch non-existing but does not work because it causes security error unlike chat. 
@@ -35,7 +39,7 @@ class Blog extends React.Component {
     if (!article) {
       return "";
     }
-    return <BlogArticle {...context} />;
+    return <BlogArticle {...context} refArticle={this.refArticle}/>;
   }
 }
 
