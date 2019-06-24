@@ -97,8 +97,8 @@ class BlogArticle extends React.Component {
 
   render() {
     const { article, resources, error } = this.state;
-    const { user, group, member, classes } = this.props;
-    const context = { user, group, article };
+    const { user, member, classes, refArticle } = this.props;
+    const context = { refArticle };
     if (error) {
       return <ErrorMessage error={error} />
     }
@@ -133,7 +133,7 @@ class BlogArticle extends React.Component {
             </Grid>
           }
         </Grid>
-      { canEdit && <BlogSection index={ 0 } resource={{}} saveSection={this.insertSection} insertPhoto={this.insertPhoto} /> }
+      { canEdit && <BlogSection index={ 0 } resource={{}} saveSection={this.insertSection} insertPhoto={this.insertPhoto} {...context} /> }
         {
           article.sections.map((sectionId, index)=>{
             return <div key={sectionId}>
@@ -142,7 +142,7 @@ class BlogArticle extends React.Component {
                   insertPhoto={this.insertPhoto} onImageUpload={this.onImageUpload} 
                   readOnly={!canEdit} {...context} />
               { canEdit && <BlogSection index={ index+1 } resource={{}}
-                  insertPhoto={this.insertPhoto} saveSection={this.insertSection} /> }
+                  insertPhoto={this.insertPhoto} saveSection={this.insertSection} {...context} /> }
             </div>
           })
         }

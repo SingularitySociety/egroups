@@ -41,7 +41,7 @@ class BlogSection extends React.Component {
     onImageUpload(sectionId, imageUrl);
   }
   render() {
-    const { group, resource, sectionId, article, deleteSection, readOnly } = this.props;
+    const { resource, sectionId, deleteSection, readOnly, refArticle } = this.props;
     const { editing } = this.state;
     if (!editing) {
       if (sectionId) {
@@ -49,7 +49,7 @@ class BlogSection extends React.Component {
         //const value = RichTextEditor.createValueFromString(resource.markdown || "", 'markdown');
         //console.log("render1", value.toString("markdown"));
         if (resource.type==="image") {
-          const imagePath = `groups/${group.groupId}/articles/${article.articleId}/${sectionId}`;
+          const imagePath = `${refArticle.path}/${sectionId}`;
           const thumbnails = (resource[sectionId] && resource[sectionId].thumbnails) || resource.thumbnails
           return (
               <ImageUploader imagePath={imagePath} loadImage={resource.hasImage} imageUrl={resource.imageUrl}
@@ -94,6 +94,7 @@ BlogSection.propTypes = {
     classes: PropTypes.object.isRequired,
     saveSection: PropTypes.func.isRequired,
     resource: PropTypes.object.isRequired,
+    refArticle: PropTypes.object.isRequired,
   };
   
 export default withStyles(styles)(BlogSection);
