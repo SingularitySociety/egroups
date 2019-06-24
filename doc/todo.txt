@@ -2,14 +2,21 @@ Account: Display greay circle if there is no Image
 Members: Highlight Yourself
 Profile: No grey color / Implement
 Blog: Display author & date (along with Members database)
-Blog Setting: Locked area
 Chat: Add Image (implying Members database)
 Chat: Activate the entry
 Image Uploader: Verify the privacy
+Group Setting: Destroy button
+BlogEntry: Delete image when BlogEntry was deleted
+Blog: Delete all images when Blog was deleted
+Page: Don't allow deleting the Home Page
+Pages: Menu access to pages *
+Editor: link
+Editor: H1, H2, h3
+Theme: Match H1, H2, H3
 
 ----- Done -----
 Channel Setting: Name and destroy
-
+Blog Setting: Locked area
 
 
 
