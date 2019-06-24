@@ -90,5 +90,7 @@
     "destroy.article":"記事の完全消去（やり直しが出来ません）",
     "destroy.group":"グループの完全消去（やり直しが出来ません）",
 
+    "article.is.homepage":"このページは、グループのホームページです（消去できません）。",
+
     "dummy":"dummy"
 }

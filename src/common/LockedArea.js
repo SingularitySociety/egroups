@@ -27,7 +27,7 @@ class About extends React.Component {
     const { classes, children, label } = this.props;
     const { locked } = this.state;
     return (
-      <React.Fragment>
+      <div>
       <IconButton onClick={this.toggle} className={classes.button}>
         { locked ? <LockIcon/> : <LockOpenIcon/> }
       </IconButton>
@@ -35,7 +35,7 @@ class About extends React.Component {
       <div className={classes[locked ? "locked" : "unlocked"]}>
         { children }
       </div>
-    </React.Fragment>
+    </div>
     )
   }
 }

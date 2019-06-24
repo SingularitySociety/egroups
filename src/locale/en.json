@@ -89,5 +89,7 @@
     "destroy.article":"Erase this article (undoable)",
     "destroy.group":"Erase this group (undoable)",
 
+    "article.is.homepage":"This is group's homepage.",
+
     "dummy":"dummy"
 }

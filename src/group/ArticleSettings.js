@@ -17,7 +17,7 @@ class ArticleSettings extends React.Component {
     super(props);
     const { db, group, arp, match:{params:{articleId}} } = props;
     this.refEntity = db.doc(`groups/${group.groupId}/${arp.collection}/${articleId}`);
-    this.state = {entity:null};
+    this.state = {entity:null, articleId};
   }
   async componentDidMount() {
     const { match:{params:{articleId}}, selectTab, group, arp } = this.props;
@@ -42,7 +42,8 @@ class ArticleSettings extends React.Component {
     await this.refEntity.delete();
   }
   render() {
-    const { entity, redirect } = this.state;
+    const { group } = this.props;
+    const { entity, redirect, articleId } = this.state;
     if (redirect) {
       return <Redirect to={redirect} />
     }
@@ -54,12 +55,17 @@ class ArticleSettings extends React.Component {
         <FormGroup row>
           <EditableField label={<FormattedMessage id="article.title"/>} value={entity.title} onSave={this.onSave('title')}/>
         </FormGroup>
-        <LockedArea label={<FormattedMessage id="warning.dangerous" />}>
-          <Button variant="contained" onClick={this.onDelete}>
-            <DeleteIcon color="error" />
-            <Typography color="error"><FormattedMessage id="destroy.article" /></Typography>
-          </Button>
-        </LockedArea>
+        {
+          (group.homepageId === articleId) ?
+          <Typography color="textSecondary"><FormattedMessage id="article.is.homepage" /></Typography>
+          :
+            <LockedArea label={<FormattedMessage id="warning.dangerous" />}>
+              <Button variant="contained" onClick={this.onDelete}>
+                <DeleteIcon color="error" />
+                <Typography color="error"><FormattedMessage id="destroy.article" /></Typography>
+              </Button>
+            </LockedArea>
+        }
       </div>
     )
   }
