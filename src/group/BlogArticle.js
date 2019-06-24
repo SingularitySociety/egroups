@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
+import { Typography, Grid, IconButton } from '@material-ui/core';
+import SettingsIcon from '@material-ui/icons/Settings';
 import AccessDenied from './AccessDenied';
 import BlogSection from './BlogSection';
 import ErrorMessage from '../ErrorMessage';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
   readerFrame: {
@@ -114,9 +116,21 @@ class BlogArticle extends React.Component {
 
     return (
       <div className={frameClass}>
-        <Typography component="h2" gutterBottom className={classes.title}>
-          {article.title}
-        </Typography>
+        <Grid container>
+          <Grid item xs={canEdit ? 11 : 12}>
+             <Typography component="h2" gutterBottom className={classes.title}>
+              {article.title}
+            </Typography>
+          </Grid>
+          {
+            canEdit && 
+            <Grid item xs={1}>
+              <IconButton size="small" component={Link} to={window.location.pathname+"/settings"}>
+                <SettingsIcon />
+              </IconButton>
+            </Grid>
+          }
+        </Grid>
       { canEdit && <BlogSection index={ 0 } resource={{}} saveSection={this.insertSection} insertPhoto={this.insertPhoto} /> }
         {
           article.sections.map((sectionId, index)=>{

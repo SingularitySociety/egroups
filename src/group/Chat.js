@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
+import { Typography, IconButton, Grid } from '@material-ui/core';
+import SettingsIcon from '@material-ui/icons/Settings';
 import CreateNew from '../common/CreateNew';
 import AccessDenied from './AccessDenied';
 import Message from './Message';
 import { FormattedMessage } from 'react-intl';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
 });
@@ -64,13 +66,26 @@ class Chat extends React.Component {
     }
     const canRead = ((member && member.privilege) || 0) >= channel.read;
     const canWrite = ((member && member.privilege) || 0) >= channel.write;
+    const canEdit = true; // HACK: 
     if (!canRead) {
       return <AccessDenied />
     }
     return (<div>
-      <Typography component="h2" variant="h5" gutterBottom>
-        { channel.title }
-      </Typography>
+        <Grid container>
+          <Grid item xs={canEdit ? 11 : 12}>
+            <Typography component="h2" variant="h5" gutterBottom>
+             { channel.title }
+            </Typography>
+          </Grid>
+          {
+            canEdit && 
+            <Grid item xs={1}>
+              <IconButton size="small" component={Link} to={window.location.pathname+"/settings"}>
+                <SettingsIcon />
+              </IconButton>
+            </Grid>
+          }
+        </Grid>
       <div>
       { messages.map((message)=>{
         return <Message key={message.messageId} message={message} />
