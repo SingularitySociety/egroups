@@ -49,9 +49,11 @@ class Account extends React.Component {
             return "";
         }
         console.log(user, member);
+        const imageThumbnails = member.profile && member.profile.thumbnails;
         return <div>
           <FormGroup row>
             <ImageUploader imagePath={`/groups/${group.groupId}/members/${user.uid}/images/profile`} 
+                imageThumbnails={imageThumbnails}
                 onImageUpload={this.onImageUpload} loadImage={member.hasImage}/>
           </FormGroup>
           <FormGroup row>

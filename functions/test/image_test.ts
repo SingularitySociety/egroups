@@ -12,16 +12,6 @@ describe('image function', () => {
 
     const path12 = "groups/PMVo9s1nCVoncEwju4P3/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q";
     image.validImagePath(path12, constant.matchImagePaths).should.equal(false);
-
-    const path21 = "groups/PMVo9s1nCVoncEwju4P3/images/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q";
-    image.validImagePath(path21, constant.matchImagePaths).should.equal(true);
-
-    const path22 = "groups/PMVo9s1nCVoncEwju4P3/image/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q";
-    image.validImagePath(path22, constant.matchImagePaths).should.equal(false);
-
-    const path23 = "groups/PMVo9s1nCVoncEwju4P3/image/6jInK0L8x16NYzh6touo";
-    image.validImagePath(path23, constant.matchImagePaths).should.equal(false); 
-
    
     const path31 = "groups/PMVo9s1nCVoncEwju4P3/members/6jInK0L8x16NYzh6touo/images/aaa";
     image.validImagePath(path31, constant.matchImagePaths).should.equal(true);
@@ -29,10 +19,10 @@ describe('image function', () => {
     const path32 = "groups/PMVo9s1nCVoncEwju4P3/members/6jInK0L8x16NYzh6touo";
     image.validImagePath(path32, constant.matchImagePaths).should.equal(false);
 
-    const path41 = "groups/PMVo9s1nCVoncEwju4P3/profile/6jInK0L8x16NYzh6touo";
+    const path41 = "groups/PMVo9s1nCVoncEwju4P3/images/profile/6jInK0L8x16NYzh6touo";
     image.validImagePath(path41, constant.matchImagePaths).should.equal(false);
 
-    const path42 = "groups/PMVo9s1nCVoncEwju4P3/profile";
+    const path42 = "groups/PMVo9s1nCVoncEwju4P3/images/profile";
     image.validImagePath(path42, constant.matchImagePaths).should.equal(true);
 
     const path101 = "groups";
@@ -47,7 +37,7 @@ describe('image function', () => {
     const path1 = "groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q";
     image.getStorePath(path1).should.equal("groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/sections/E42IMDbmuOAZHYkxhO1Q");
 
-    const path2 = "groups/5ke7ys0xGSdEEHsSPe6y/profile";
+    const path2 = "groups/5ke7ys0xGSdEEHsSPe6y/images/profile";
     image.getStorePath(path2).should.equal("groups/5ke7ys0xGSdEEHsSPe6y");
 
     const path3 = "groups/qIGkgW44sxFn78v8E0xu/members/deOR82RFtWMXTO9xULKYNzvADdq2/images/profile";

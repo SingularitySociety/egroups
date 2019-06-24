@@ -94,8 +94,6 @@ export const getStorePath = (filePath) => {
   const paths = filePath.split("/");
   if (validImagePath(filePath, [constant.articlePath])) {
     return paths.slice(0,4).concat(["sections"], paths.slice(4,5)).join("/");
-  } else if (validImagePath(filePath, [constant.imagePath])) {
-    return paths.slice(0,2).join("/");
   } else if (validImagePath(filePath, [constant.groupProfilePath])) {
     return paths.slice(0,2).join("/");
   } else if (validImagePath(filePath, [constant.memberPath])) {
