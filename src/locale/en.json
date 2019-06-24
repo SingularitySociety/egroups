@@ -83,6 +83,11 @@
     "error.invalid.groupname":"Invalid Group Name",
     "error.invalid.articleId":"This article does not exist.",
     "warning.access.denied":"Access Denied",
+    "warning.dangerous":"Dangerous Operation(s)",
+
+    "destroy.channel":"Erase this channel (undoable)",
+    "destroy.article":"Erase this article (undoable)",
+    "destroy.group":"Erase this group (undoable)",
 
     "dummy":"dummy"
 }

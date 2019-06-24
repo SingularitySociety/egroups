@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { FormGroup, Button } from '@material-ui/core';
+import { FormGroup, Button, Typography } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import { Redirect } from 'react-router-dom';
 import EditableField from '../common/EditableField';
-
+import LockedArea from '../common/LockedArea';
 
 const styles = theme => ({
 });
@@ -52,9 +52,12 @@ class ChannelSettings extends React.Component {
         <FormGroup row>
           <EditableField label={<FormattedMessage id="channel.title"/>} value={entity.title} onSave={this.onSave('title')}/>
         </FormGroup>
-        <Button variant="contained" onClick={this.onDelete}>
-          <DeleteIcon color="error" />
-        </Button>
+    <LockedArea label={<FormattedMessage id="warning.dangerous" />}>
+          <Button variant="contained" onClick={this.onDelete}>
+            <DeleteIcon color="error" />
+            <Typography color="error"><FormattedMessage id="destroy.channel" /></Typography>
+          </Button>
+        </LockedArea>
       </div>
     )
   }
