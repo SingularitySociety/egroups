@@ -24,11 +24,11 @@ class GroupHome extends React.Component {
   }
   loadArticle = async () => {
     const { group, db } = this.props;
-    if (group.homepage) {
-      this.refArticle = db.doc(`groups/${group.groupId}/articles/${group.homepage}`);
+    if (group.homepageId) {
+      this.refArticle = db.doc(`groups/${group.groupId}/pages/${group.homepageId}`);
       const article = (await this.refArticle.get()).data();
       console.log(article);
-      article.articleId = group.homepage;
+      article.articleId = group.homepageId;
       this.setState({article});
     }
   }
@@ -37,11 +37,11 @@ class GroupHome extends React.Component {
     const { group, db, user, reloadGroup, intl:{messages} } = this.props;
     if (member.privilege >= Privileges.admin) {
       this.setState({canEdit:true});
-      console.log("isAdmin", group.homepage);
+      console.log("isAdmin", group.homepageId);
 
       // This code is not atomic but it is fine because there is only one owner
-      if (!group.homepage) {
-        const doc = await db.collection(`groups/${group.groupId}/articles`).add({
+      if (!group.homepageId) {
+        const doc = await db.collection(`groups/${group.groupId}/pages`).add({
           title: messages["title.welcome"], // BUGBUG: Localize it
           created: firebase.firestore.FieldValue.serverTimestamp(),
           type: "page",
@@ -51,9 +51,9 @@ class GroupHome extends React.Component {
           sections: [], // ordered list of sectionIds
         });
         await db.doc(`groups/${group.groupId}`).set({
-          homepage: doc.id,
+          homepageId: doc.id,
         }, {merge:true});
-        group.homepage = doc.id;
+        group.homepageId = doc.id;
         reloadGroup();
       }
       this.loadArticle();
