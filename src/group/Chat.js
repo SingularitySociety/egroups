@@ -17,7 +17,6 @@ class Chat extends React.Component {
   async componentDidMount() {
     const { db, group, match:{params:{channelId}}, selectTab } = this.props;
     selectTab("channel", `ch/${channelId}`);
-    console.log(channelId);
     const ref = db.doc(`groups/${group.groupId}/channels/${channelId}`);
     const channel = (await ref.get()).data();
 
@@ -36,7 +35,7 @@ class Chat extends React.Component {
       if (user) {
         const channels = {};
         channels[channelId] = { l:new Date() }; // NOT firebase.firestore.FieldValue.serverTimestamp()
-        console.log("### Updated")
+        //console.log("### Updated")
         db.doc(`groups/${group.groupId}/members/${user.uid}/private/history`).set({
           channels
         }, {merge:true})

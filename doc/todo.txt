@@ -3,12 +3,12 @@ Members: Highlight Yourself
 Profile: No grey color / Implement
 Blog: Display author & date (along with Members database)
 Blog Setting: Locked area
-Channel Setting: Name and destroy
 Chat: Add Image (implying Members database)
 Chat: Activate the entry
 Image Uploader: Verify the privacy
 
 ----- Done -----
+Channel Setting: Name and destroy
 
 
 
