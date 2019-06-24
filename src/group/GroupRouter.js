@@ -56,11 +56,15 @@ const arps = {
     collection: "articles",
     leaf: "bl",
     root: "blog",
+    tabRoot: "articles",
+    tabLeaf: "article",
   },
   pages: {
     collection: "pages",
     leaf: "pg",
     root: "pages",
+    tabRoot: "pages",
+    tabLeaf: "page",
   },
 };
 

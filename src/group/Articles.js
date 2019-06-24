@@ -16,8 +16,8 @@ const styles = theme => ({
 class Articles extends React.Component {
   state = {};
   componentDidMount() {
-    const { selectTab } = this.props;
-    selectTab("articles");
+    const { selectTab, arp } = this.props;
+    selectTab(arp.tabRoot);
   }
   createArticle = async (title) => {
     const { db, group, user, arp } = this.props;
