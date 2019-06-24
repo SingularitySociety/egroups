@@ -4,7 +4,10 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Header from './Header';
 import { MuiThemeProvider } from '@material-ui/core';
-import { blue, pink, red, green } from '@material-ui/core/colors';
+import { red, pink, purple, deepPurple, indigo, 
+         blue, lightBlue, cyan, teal, green,
+         lightGreen, lime, yellow, amber, orange,
+         deepOrange, brown, grey, blueGrey  } from '@material-ui/core/colors';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { Route } from 'react-router-dom';
 import GroupHome from './GroupHome';
@@ -27,7 +30,10 @@ import MemberHome from './MemberHome';
 import ChannelSettings from './ChannelSettings';
 import BlogSettings from './BlogSettings';
 
-const colorMap = { blue, pink, red, green};
+const colorMap = { red, pink, purple, deepPurple, indigo, 
+  blue, lightBlue, cyan, teal, green,
+  lightGreen, lime, yellow, amber, orange,
+  deepOrange, brown, grey, blueGrey };
 
 const styles = theme => ({
   root: {

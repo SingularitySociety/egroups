@@ -8,6 +8,7 @@ import PrivilegeOptions from './PrivilegeOptions';
 import Privileges from '../const/Privileges';
 import EditableField from '../common/EditableField';
 import ImageUploader from '../common/ImageUploader';
+import ColorOptions from './ColorOptions';
 
 const styles = theme => ({
   main: {
@@ -48,6 +49,9 @@ class Settings extends React.Component {
     case "memberRead":
       await ref.set({privileges:{member:{read:parseInt(event.target.value)}}}, {merge:true});
       break;
+    case "themePrimary":
+        await ref.set({theme:{primary:event.target.value}}, {merge:true});
+        break;
     default:
       console.log("no handler", name, event.target.value);
       break;
@@ -76,6 +80,7 @@ class Settings extends React.Component {
     const eventCreate = group.privileges.event.create || Privileges.member;
     const memberRead = (group.privileges.member && group.privileges.member.read) || Privileges.member;
     const imageThumbnails = group.profile && group.profile.thumbnails;
+    const themePrimary = (group.theme && group.theme.primary) || "blue";
     return (
       <div>
         <div className={classes.main}>
@@ -100,6 +105,13 @@ class Settings extends React.Component {
             />
           </FormGroup>
 
+          <FormControl className={classes.formControl}>
+            <InputLabel><FormattedMessage id="settings.theme.primary" /></InputLabel>
+            <Select　native　value={themePrimary}　onChange={this.handleChange('themePrimary')}>
+              <ColorOptions />
+            </Select>
+          </FormControl>
+          <br/>
           <FormControl className={classes.formControl}>
             <InputLabel><FormattedMessage id="settings.member.read" /></InputLabel>
             <Select　native　value={memberRead}　onChange={this.handleChange('memberRead')}>
