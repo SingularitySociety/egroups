@@ -103,8 +103,8 @@ class MarkdownEditor extends React.Component {
     const content = editorState.getCurrentContent();
     const startKey = selection.getStartKey();
     const startOffset = selection.getStartOffset();
-    const blockWIthLinkAtBeginning = content.getBlockForKey(startKey);
-    const linkKey = blockWIthLinkAtBeginning.getEntityAt(startOffset);
+    const blockWithLinkAtBeginning = content.getBlockForKey(startKey);
+    const linkKey = blockWithLinkAtBeginning.getEntityAt(startOffset);
     if (linkKey) {
       const linkInstance = content.getEntity(linkKey);
       url = linkInstance.getData().url;
@@ -124,11 +124,10 @@ class MarkdownEditor extends React.Component {
     console.log("adding a link", link);
     const contentWithEntity = content.createEntity('LINK', 'MUTABLE', { url: link });
     const entityKey = contentWithEntity.getLastCreatedEntityKey();
-    const newEditorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
-    const yetNewEditorState = RichUtils.toggleLink(newEditorState, selection, entityKey);
-
-    //const newEditorState = EditorState.set(editorState, { currentContent: contentWithEntity });
-    //const yetNewEditorState = RichUtils.toggleLink(newEditorState, newEditorState.getSelection(), entityKey);
+    //const newEditorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
+    //const yetNewEditorState = RichUtils.toggleLink(newEditorState, selection, entityKey);
+    const newEditorState = EditorState.set(editorState, { currentContent: contentWithEntity });
+    const yetNewEditorState = RichUtils.toggleLink(newEditorState, newEditorState.getSelection(), entityKey);
 
     this.setState({ editorState: yetNewEditorState} );
   }
