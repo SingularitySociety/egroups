@@ -29,7 +29,7 @@ function ComplexGrid(props) {
       <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
         <Grid item className={classes.main}>
           <Typography style={{marginBottom:"5%"}}>
-            このサービスは、現在、ベータテスト中です。
+            このサービスは、現在、開発中です。
           </Typography>
           <GroupList user={user} db={db} />
         </Grid>
