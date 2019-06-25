@@ -10,7 +10,7 @@ import LinkIcon from '@material-ui/icons/Link';
 import { FormatBold, FormatItalic, FormatUnderlined, FormatQuote } from '@material-ui/icons';
 import { Code } from '@material-ui/icons';
 import { FormatListBulleted, FormatListNumbered, Undo, Redo } from '@material-ui/icons';
-import { Editor, RichUtils, EditorState, convertToRaw, convertFromRaw } from 'draft-js';
+import { Editor, RichUtils, EditorState, convertToRaw, convertFromRaw, CompositeDecorator } from 'draft-js';
 import { blockStyleFn, editorStyles } from './MarkdownViewer';
 
 import { stateToMarkdown } from 'draft-js-export-markdown';
@@ -27,12 +27,46 @@ const customStyleMap = {
   */
 };
 
+const linkStrategy = (contentBlock, callback, contentState) => {
+  contentBlock.findEntityRanges(
+    (character) => {
+      const entityKey = character.getEntity();
+      return (
+        entityKey !== null &&
+        contentState.getEntity(entityKey).getType() === 'LINK'
+      );
+    },
+    callback
+  );
+};
+
+const Link = (props) => {
+  const { contentState, entityKey } = props;
+  const { url } = contentState.getEntity(entityKey).getData();
+  return (
+    <a
+      className="link"
+      href={url}
+      rel="noopener noreferrer"
+      target="_blank"
+      aria-label={url}
+    >{props.children}</a>
+  );
+};
+
+const decorators = [{
+  strategy: linkStrategy,
+  component: Link,
+}];
+
+const compositeDecorator = new CompositeDecorator(decorators);
+
 class MarkdownEditor extends React.Component {
   constructor(props) {
     super(props);
     const { resource } = this.props;
     const contentState = resource.raw ? convertFromRaw(resource.raw) : stateFromMarkdown(resource.markdown || "");
-    const editorState = EditorState.createWithContent(contentState);
+    const editorState = EditorState.createWithContent(contentState, compositeDecorator);
     this.state = {
       editorState,
     }
