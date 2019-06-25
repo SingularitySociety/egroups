@@ -5,11 +5,11 @@ Chat: P 2 P
 Image Uploader: Verify the privacy
 Image Uploader: Image Orientation
 Pages: Menu access to pages *
-Editor: link (https://codepen.io/Kiwka/pen/ZLvPeO?editors=1010)
 Editor: H1, H2, h3
 Theme: Match H1, H2, H3
 
 ----- Done -----
+Editor: link (https://codepen.io/Kiwka/pen/ZLvPeO?editors=1010)
 Member: Use thumbnail instead of original
 Chat: Use Thumb Image (members database)
 Chat: Display the current name (members database)

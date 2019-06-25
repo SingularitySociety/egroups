@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import Link from '@material-ui/core/Link';
 import { Editor, EditorState, convertFromRaw, CompositeDecorator } from 'draft-js';
 import './MarkdownViewer.css';
 
@@ -71,23 +72,19 @@ const linkStrategy = (contentBlock, callback, contentState) => {
   );
 };
 
-const Link = (props) => {
+const linkComponent = (props) => {
   const { contentState, entityKey } = props;
   const { url } = contentState.getEntity(entityKey).getData();
   return (
-    <a
-      className="link"
+    <Link
       href={url}
-      rel="noopener noreferrer"
-      target="_blank"
-      aria-label={url}
-    >{props.children}</a>
+    >{props.children}</Link>
   );
 };
 
 const decorators = [{
   strategy: linkStrategy,
-  component: Link,
+  component: linkComponent,
 }];
 
 export const compositeDecorator = new CompositeDecorator(decorators);

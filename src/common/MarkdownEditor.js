@@ -10,7 +10,7 @@ import LinkIcon from '@material-ui/icons/Link';
 import { FormatBold, FormatItalic, FormatUnderlined, FormatQuote } from '@material-ui/icons';
 import { Code } from '@material-ui/icons';
 import { FormatListBulleted, FormatListNumbered, Undo, Redo } from '@material-ui/icons';
-import { Editor, RichUtils, EditorState, convertToRaw, convertFromRaw, CompositeDecorator } from 'draft-js';
+import { Editor, RichUtils, EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import { blockStyleFn, editorStyles, compositeDecorator } from './MarkdownViewer';
 
 import { stateToMarkdown } from 'draft-js-export-markdown';
@@ -26,8 +26,6 @@ const customStyleMap = {
   }
   */
 };
-
-
 
 class MarkdownEditor extends React.Component {
   constructor(props) {
@@ -100,7 +98,23 @@ class MarkdownEditor extends React.Component {
       console.log("selection is collapsed")
       return;
     }
-    let link = window.prompt("Paste the link");
+
+    let url = ''; // default
+    const content = editorState.getCurrentContent();
+    const startKey = selection.getStartKey();
+    const startOffset = selection.getStartOffset();
+    const blockWIthLinkAtBeginning = content.getBlockForKey(startKey);
+    const linkKey = blockWIthLinkAtBeginning.getEntityAt(startOffset);
+    if (linkKey) {
+      const linkInstance = content.getEntity(linkKey);
+      url = linkInstance.getData().url;
+    }
+
+    let link = window.prompt("Paste the link", url);
+    if (link === null) {
+      console.log("cancelled");
+      return;
+    }
     if (!link) {
       console.log("removing link");
       const newEditorState = RichUtils.toggleLink(editorState, selection, null);
@@ -108,7 +122,6 @@ class MarkdownEditor extends React.Component {
       return;
     }
     console.log("adding a link", link);
-    const content = editorState.getCurrentContent();
     const contentWithEntity = content.createEntity('LINK', 'MUTABLE', { url: link });
     const entityKey = contentWithEntity.getLastCreatedEntityKey();
     const newEditorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
