@@ -113,7 +113,7 @@ class Settings extends React.Component {
 
         <FormControl className={classes.formControl}>
           <InputLabel><FormattedMessage id="settings.theme.primary" /></InputLabel>
-          <Select　native　value={themePrimary}　onChange={this.handleChange('themePrimary')}>
+          <Select native value={themePrimary}　onChange={this.handleChange('themePrimary')}>
             <ColorOptions />
           </Select>
         </FormControl>
