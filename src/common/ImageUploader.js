@@ -51,7 +51,7 @@ class ImageViewer extends React.Component {
   state = {imageUrl:null};
   async componentDidMount() {
     const { imagePath, loadImage, imageUrl, imageThumbnails, displayMode } = this.props;
-    console.log(imageUrl, imagePath, imageThumbnails);
+    //console.log(imageUrl, imagePath, imageThumbnails);
     const storagRef = firebase.storage().ref();
     this.imageRef = storagRef.child(imagePath);
     const thumbnailSize = (displayMode === "wide") ? 1200 : 600;

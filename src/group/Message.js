@@ -34,19 +34,12 @@ class Message extends React.Component {
     const her = members[message.uid];
     const userName = (her && her.displayName) || message.userName;
     const thumbnails = her && her.profile && her.profile.thumbnails;
-    //console.log(message.uid, thumbnails);
+    // HACK: Switching the key for ImageUploader to force the mounting a new component.
     return (
       <div className={classes.frame}>
         <Grid container className={classes.userFrame}>
-          { // HACK: Use two difference ImageUploaders with two keys to for re-bound
-            thumbnails ?
-          <ImageUploader key={1} imagePath={""} imageThumbnails={thumbnails}
+          <ImageUploader key={ thumbnails ? 1 : 2 } imagePath={""} imageThumbnails={thumbnails}
                   readOnly={true} displayMode="thumbSmall" inline={true} />
-          :
-          <ImageUploader key={2} imagePath={""} 
-                  readOnly={true} displayMode="thumbSmall" inline={true} />
-          }
-
           <Typography variant="caption" className={classes.userName} gutterBottom>
             { userName }
           </Typography>
