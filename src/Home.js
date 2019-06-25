@@ -12,6 +12,10 @@ const styles = theme => ({
     flexGrow: 1,
     padding: theme.spacing(1),
   },
+  main: {
+    width:"calc(80vmin)",
+    marginTop: theme.spacing(3),
+  },
   caption: {
     width: "100%",
   },
@@ -23,16 +27,11 @@ function ComplexGrid(props) {
     <React.Fragment>
       <Header user={user} />
       <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
-        <Grid item style={{width:"calc(80vmin)"}}>
+        <Grid item className={classes.main}>
           <Typography style={{marginBottom:"5%"}}>
-            ベータテスト中です。
+            このサービスは、現在、ベータテスト中です。
           </Typography>
-          <Grid className={classes.caption}>
-            <Typography component="h2" variant="h5" gutterBottom>
-              Registered Communities. 
-            </Typography>
-            <GroupList user={user} db={db} />
-          </Grid>
+          <GroupList user={user} db={db} />
         </Grid>
       </Grid>
     </React.Fragment>

@@ -1,12 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { Paper, Grid } from '@material-ui/core';
+import MUILink from '@material-ui/core/Link';
 import { Link } from 'react-router-dom';
 import CreateNew from './common/CreateNew';
 import { FormattedMessage } from 'react-intl';
 import { Redirect } from 'react-router-dom';
 
 const styles = theme => ({
+  createNew: {
+    marginBottom: theme.spacing(1),
+  },
+  paper: {
+    marginBottom: theme.spacing(1),
+    padding: theme.spacing(1),
+  },
+  link: {
+    color: "#333",
+  },
 });
 
 class GroupList extends React.Component {
@@ -35,20 +47,30 @@ class GroupList extends React.Component {
     this.setState({redirect:`/a/new/${doc.id}`});
   }
   render() {
-    const {redirect} = this.state;
+    const { classes } = this.props;
+    const { redirect } = this.state;
     if (redirect) {
       return <Redirect to={redirect} />
     }
-    return <div>
+    return <Grid container justify="center">
+        <Grid item className={classes.createNew}>
+          <CreateNew label={<FormattedMessage id="group" />} 
+            createNew={this.createNew} action={<FormattedMessage id="create" />} />
+        </Grid>
         { 
             this.state.groups.map((group)=> {
-                return <div key={group.groupId}>
-                    <Link  to={"/" + (group.groupName || group.groupId)}>{group.title}</Link>
-                </div>
+                return (
+                  <Grid item key={group.groupId}  xs={12}>
+                  <MUILink component={Link} className={classes.link}
+                    to={"/" + (group.groupName || group.groupId)}>
+                      <Paper className={classes.paper}> 
+                    {group.title}
+                    </Paper>
+                  </MUILink>
+                  </Grid>);
             })
         }
-        <CreateNew label={<FormattedMessage id="group.title" />} createNew={this.createNew} action={<FormattedMessage id="create" />} />
-    </div>
+    </Grid>
   }
 }
 

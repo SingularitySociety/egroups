@@ -55,7 +55,7 @@ class NewGroup extends React.Component {
           event: { read:Privileges.member, create:Privileges.member, attend:Privileges.member },
           member: { read:Privileges.member, write:Privileges.admin },
           invitation: { create:Privileges.admin },
-          membership: { open:false },
+          membership: { open:true },
         }
        }, {merge:true});
     }).then(() => {
