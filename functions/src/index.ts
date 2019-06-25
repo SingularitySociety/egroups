@@ -108,7 +108,15 @@ export const pageDidDelete = functions.firestore.document('groups/{groupId}/page
       await doc.ref.delete();
     });
   });
-  
+
+export const channelDidDelete = functions.firestore.document('groups/{groupId}/channels/{channelId}')
+  .onDelete(async (snapshot, context)=>{
+    const sections = await snapshot.ref.collection("messages").get();
+    sections.forEach(async doc=>{
+      await doc.ref.delete();
+    });
+  });
+
 export const sectionDidDelete = functions.firestore.document('groups/{groupId}/{articles}/{articleId}/sections/{sectionId}')
   .onDelete(async (snapshot, context)=>{
     const { groupId, articles, articleId, sectionId } = context.params;
