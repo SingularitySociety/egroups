@@ -1,7 +1,8 @@
 Profile: No grey color / Implement
 Blog: Display author & date (along with Members database)
 Member: Use thumbnail instead of original
-Chat: Add Image
+Chat: Use Thumb Image (members database)
+Chat: Display the current name (members database)
 Chat: Activate the entry
 Chat: P 2 P
 Image Uploader: Verify the privacy

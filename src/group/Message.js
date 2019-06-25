@@ -30,16 +30,22 @@ class Message extends React.Component {
     callbacks.hitMember(message.uid);
   }
   render() {
-    const { message, classes, group, members } = this.props;
-    // BUGBUG: Use thumbnail, and don't pass loadImage={true}
-    const imagePath = `groups/${group.groupId}/members/${message.uid}/images/profile`; // BUGBUG: use thumbnails
+    const { message, classes, members } = this.props;
     const her = members[message.uid];
     const userName = (her && her.displayName) || message.userName;
+    const thumbnails = her && her.profile && her.profile.thumbnails;
+    //console.log(message.uid, thumbnails);
     return (
       <div className={classes.frame}>
         <Grid container className={classes.userFrame}>
-          <ImageUploader imagePath={imagePath} loadImage={true}
+          { // HACK: Use two difference ImageUploaders with two keys to for re-bound
+            thumbnails ?
+          <ImageUploader key={1} imagePath={""} imageThumbnails={thumbnails}
                   readOnly={true} displayMode="thumbSmall" inline={true} />
+          :
+          <ImageUploader key={2} imagePath={""} 
+                  readOnly={true} displayMode="thumbSmall" inline={true} />
+          }
 
           <Typography variant="caption" className={classes.userName} gutterBottom>
             { userName }
