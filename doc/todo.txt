@@ -1,25 +1,27 @@
 Account: Display greay circle if there is no Image
-Members: Highlight Yourself
 Profile: No grey color / Implement
+Members: Highlight Yourself
 Blog: Display author & date (along with Members database)
 Chat: Add Image (implying Members database)
 Chat: Activate the entry
+Chat: P 2 P
 Image Uploader: Verify the privacy
-Group Setting: Destroy button
-BlogEntry: Delete image when BlogEntry was deleted
-Blog: Delete all images when Blog was deleted
 Pages: Menu access to pages *
 Editor: link
 Editor: H1, H2, h3
 Theme: Match H1, H2, H3
-didArticleDelete: Delete all sections
-didChannelDelete: Delete all messages
-didGropuDelete: Delete all articles, pages, channels, members and owners (privileges?)
 
 ----- Done -----
+Group: Wait cursor when creating a new group
 Channel Setting: Name and destroy
 Blog Setting: Locked area
 Page: Don't allow deleting the Home Page
+didArticleDelete: Delete all sections
+didChannelDelete: Delete all messages
+didGropuDelete: Delete all articles, pages, channels, members and owners (privileges?)
+Group Setting: Destroy button
+BlogEntry: Delete image when BlogEntry was deleted
+Blog: Delete all images when Blog was deleted
 
 
 

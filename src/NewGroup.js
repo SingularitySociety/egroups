@@ -6,6 +6,7 @@ import Header from './Header';
 import { FormattedMessage } from 'react-intl';
 import { Redirect } from 'react-router-dom';
 import Privileges from './const/Privileges';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
   root: {
@@ -103,7 +104,8 @@ class NewGroup extends React.Component {
       return <Redirect to={ redirect } />
     }
     const privilege = privileges && privileges[groupId];
-    const disabledSubmit = invalid || privilege !== Privileges.owner
+    const isOwner = privilege === Privileges.owner; // becomes true when we got JWT
+    const disabledSubmit = invalid || !isOwner;
     return (
       <React.Fragment>
         <Header user={user} />
@@ -126,6 +128,9 @@ class NewGroup extends React.Component {
                 <Button variant="contained" className={classes.button} onClick={this.onCancel}>
                     <FormattedMessage id="cancel" />
                 </Button>
+                {
+                  !isOwner && <CircularProgress style={{position:"absolute"}}/>
+                }
               </div>
             </form>
           </Grid>
