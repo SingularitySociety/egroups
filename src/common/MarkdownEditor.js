@@ -6,6 +6,7 @@ import { IconButton, Grid } from '@material-ui/core';
 import TrashIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
+import LinkIcon from '@material-ui/icons/Link';
 import { FormatBold, FormatItalic, FormatUnderlined, FormatQuote } from '@material-ui/icons';
 import { Code } from '@material-ui/icons';
 import { FormatListBulleted, FormatListNumbered, Undo, Redo } from '@material-ui/icons';
@@ -33,7 +34,7 @@ class MarkdownEditor extends React.Component {
     const contentState = resource.raw ? convertFromRaw(resource.raw) : stateFromMarkdown(resource.markdown || "");
     const editorState = EditorState.createWithContent(contentState);
     this.state = {
-      editorState
+      editorState,
     }
   }
 
@@ -47,6 +48,7 @@ class MarkdownEditor extends React.Component {
     //console.log(stateToMarkdown);
     const markdown = stateToMarkdown(contentState);
     const raw = convertToRaw(contentState);
+    console.log(raw);
     this.props.onSave(markdown, raw);
   }
 
@@ -87,6 +89,33 @@ class MarkdownEditor extends React.Component {
   }
   redo = () => {
     this.onChange(EditorState.redo(this.state.editorState));
+  }
+  // https://bitwiser.in/2017/05/11/creating-rte-part-3-entities-and-decorators.html
+  editLink = () => {
+    const { editorState } = this.state;
+    const selection = editorState.getSelection();
+    if (selection.isCollapsed()) {
+      console.log("selection is collapsed")
+      return;
+    }
+    let link = window.prompt("Paste the link");
+    if (!link) {
+      console.log("removing link");
+      const newEditorState = RichUtils.toggleLink(editorState, selection, null);
+      this.setState({ editorState: newEditorState });
+      return;
+    }
+    console.log("adding a link", link);
+    const content = editorState.getCurrentContent();
+    const contentWithEntity = content.createEntity('LINK', 'MUTABLE', { url: link });
+    const entityKey = contentWithEntity.getLastCreatedEntityKey();
+    const newEditorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
+    const yetNewEditorState = RichUtils.toggleLink(newEditorState, selection, entityKey);
+
+    //const newEditorState = EditorState.set(editorState, { currentContent: contentWithEntity });
+    //const yetNewEditorState = RichUtils.toggleLink(newEditorState, newEditorState.getSelection(), entityKey);
+
+    this.setState({ editorState: yetNewEditorState} );
   }
 
   render() {
@@ -140,6 +169,11 @@ class MarkdownEditor extends React.Component {
           <Grid item>
             <IconButton size="small" onClick={()=>{this.toggleBlockType("code-block")}} onMouseDown={this.onMouseDown}>
               <Code/>
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <IconButton size="small" onClick={this.editLink} onMouseDown={this.onMouseDown}>
+              <LinkIcon/>
             </IconButton>
           </Grid>
         </Grid>
