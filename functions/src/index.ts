@@ -93,6 +93,26 @@ export const memberDidCreate = functions.firestore.document('groups/{groupId}/me
     }, {merge:true});
   });
 
+export const sectionDidDelete = functions.firestore.document('groups/{groupId}/{articles}/{articleId}/sections/{sectionId}')
+  .onDelete(async (snapshot, context)=>{
+    const { groupId, articles, articleId, sectionId } = context.params;
+    const bucket = admin.storage().bucket();
+    const path = `groups/${groupId}/${articles}/${articleId}/${sectionId}`;
+    const pathThumbs = `groups/${groupId}/${articles}/${articleId}/thumb_${sectionId}`;
+    console.log("path", path);
+    if (!(articles === "articles" || articles === "pages")) {
+      console.log("unexpected", articles);
+      return false;
+    }
+    bucket.deleteFiles({prefix:path}, (errors)=>{
+      console.log("deleteFiles: ", path, errors);
+    });
+    bucket.deleteFiles({prefix:pathThumbs}, (errors)=>{
+      console.log("deleteFiles: ", pathThumbs, errors);
+    });
+    return true;
+  });
+
 export const memberDidDelete = functions.firestore.document('groups/{groupId}/members/{userId}')
   .onDelete(async (snapshot, context)=>{
     const { groupId, userId } = context.params;
