@@ -145,8 +145,7 @@ class GroupRouter extends React.Component {
     const her = members[uid];
     if (!her) {
       const member = (await db.doc(`groups/${group.groupId}/members/${uid}`).get()).data();
-      //console.log("mis-hit", uid, member);
-      const { members } = this.state; // One more time
+      const { members } = this.state; // Get the latest one
       members[uid] = member;
       this.setState({members});
     }
