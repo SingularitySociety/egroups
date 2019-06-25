@@ -11,7 +11,7 @@ import { FormatBold, FormatItalic, FormatUnderlined, FormatQuote } from '@materi
 import { Code } from '@material-ui/icons';
 import { FormatListBulleted, FormatListNumbered, Undo, Redo } from '@material-ui/icons';
 import { Editor, RichUtils, EditorState, convertToRaw, convertFromRaw, CompositeDecorator } from 'draft-js';
-import { blockStyleFn, editorStyles } from './MarkdownViewer';
+import { blockStyleFn, editorStyles, compositeDecorator } from './MarkdownViewer';
 
 import { stateToMarkdown } from 'draft-js-export-markdown';
 import { stateFromMarkdown } from 'draft-js-import-markdown';
@@ -27,39 +27,7 @@ const customStyleMap = {
   */
 };
 
-const linkStrategy = (contentBlock, callback, contentState) => {
-  contentBlock.findEntityRanges(
-    (character) => {
-      const entityKey = character.getEntity();
-      return (
-        entityKey !== null &&
-        contentState.getEntity(entityKey).getType() === 'LINK'
-      );
-    },
-    callback
-  );
-};
 
-const Link = (props) => {
-  const { contentState, entityKey } = props;
-  const { url } = contentState.getEntity(entityKey).getData();
-  return (
-    <a
-      className="link"
-      href={url}
-      rel="noopener noreferrer"
-      target="_blank"
-      aria-label={url}
-    >{props.children}</a>
-  );
-};
-
-const decorators = [{
-  strategy: linkStrategy,
-  component: Link,
-}];
-
-const compositeDecorator = new CompositeDecorator(decorators);
 
 class MarkdownEditor extends React.Component {
   constructor(props) {

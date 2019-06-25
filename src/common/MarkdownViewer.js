@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Editor, EditorState, convertFromRaw } from 'draft-js';
+import { Editor, EditorState, convertFromRaw, CompositeDecorator } from 'draft-js';
 import './MarkdownViewer.css';
 
 import {stateFromMarkdown} from 'draft-js-import-markdown';
@@ -58,6 +58,40 @@ const styles = theme => ({
   }
 });
 
+const linkStrategy = (contentBlock, callback, contentState) => {
+  contentBlock.findEntityRanges(
+    (character) => {
+      const entityKey = character.getEntity();
+      return (
+        entityKey !== null &&
+        contentState.getEntity(entityKey).getType() === 'LINK'
+      );
+    },
+    callback
+  );
+};
+
+const Link = (props) => {
+  const { contentState, entityKey } = props;
+  const { url } = contentState.getEntity(entityKey).getData();
+  return (
+    <a
+      className="link"
+      href={url}
+      rel="noopener noreferrer"
+      target="_blank"
+      aria-label={url}
+    >{props.children}</a>
+  );
+};
+
+const decorators = [{
+  strategy: linkStrategy,
+  component: Link,
+}];
+
+export const compositeDecorator = new CompositeDecorator(decorators);
+
 export const editorStyles = styles;
 
 export const blockStyleFn = (classes, contentBlock) => {
@@ -80,7 +114,7 @@ class MarkdownViewer extends React.Component {
     render() {
       const { classes, resource } = this.props;
       const contentState = resource.raw ? convertFromRaw(resource.raw) : stateFromMarkdown(resource.markdown);
-      let editorState = EditorState.createWithContent(contentState);
+      let editorState = EditorState.createWithContent(contentState, compositeDecorator);
       return (
         <Editor readOnly={true} 
           blockStyleFn={(contentBlock) => { return blockStyleFn(classes, contentBlock)}}
