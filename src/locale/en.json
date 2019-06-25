@@ -5,6 +5,7 @@
     "admin":"Admin",
     "owner":"Owner",
     
+    "group": "Group",
     "channels": "Channels",
     "account":"Account",
     "settings":"Settings",

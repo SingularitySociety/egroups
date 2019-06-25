@@ -52,7 +52,7 @@ class ChannelSettings extends React.Component {
         <FormGroup row>
           <EditableField label={<FormattedMessage id="channel.title"/>} value={entity.title} onSave={this.onSave('title')}/>
         </FormGroup>
-    <LockedArea label={<FormattedMessage id="warning.dangerous" />}>
+        <LockedArea label={<FormattedMessage id="warning.dangerous" />}>
           <Button variant="contained" onClick={this.onDelete}>
             <DeleteIcon color="error" />
             <Typography color="error"><FormattedMessage id="destroy.channel" /></Typography>

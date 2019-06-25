@@ -150,6 +150,8 @@ export const memberDidDelete = functions.firestore.document('groups/{groupId}/me
     const db = admin.firestore();
     await db.doc("/groups/" + groupId + "/privileges/" + userId).delete();
 
+    await deleteSubcollection(snapshot, "private");
+
     // This is for custom token to control the access to Firestore Storage.
     const ref = db.doc(`/privileges/${userId}`);
 
