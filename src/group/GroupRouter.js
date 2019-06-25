@@ -69,7 +69,7 @@ const arps = {
 };
 
 class GroupRouter extends React.Component {
-  state = {group:null, member:null, error:null, pageInfo:{tabId:"home"}};
+  state = {group:null, member:null, error:null, members:{}, pageInfo:{tabId:"home"}};
   async componentDidMount() {
     const { db, match:{params:{gp}}, rootGroup } = this.props;
     console.log(rootGroup);
@@ -110,10 +110,11 @@ class GroupRouter extends React.Component {
   memberDidUpdate = async () => {
     const { user, db } = this.props;
     console.log("memberDidUpdate", user && user.uid);
-    const { group } = this.state;
+    const { group, members } = this.state;
     const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
     const member = (await refMember.get()).data();
     if (member) {
+      members[user.uid] = member;
       const privilege = (await db.doc(`groups/${group.groupId}/privileges/${user.uid}`).get()).data();
       member.privilege = (privilege && privilege.value) || 1;
       await refMember.set({lastAccessed:firebase.firestore.FieldValue.serverTimestamp()}, {merge:true})
@@ -125,7 +126,7 @@ class GroupRouter extends React.Component {
         });
       }
     }
-    this.setState({member:member})
+    this.setState({member, members})
   }
   userDidMount = () => {
     this.memberDidUpdate();
@@ -138,12 +139,24 @@ class GroupRouter extends React.Component {
     //console.log("selectTab", tabId)
     this.setState({pageInfo:{tabId, path}});
   }
+  hitMember = async (uid) => {
+    const { db } = this.props;
+    const { group, members } = this.state;
+    const her = members[uid];
+    if (!her) {
+      console.log("mis-hit", uid);
+      const member = (await db.doc(`groups/${group.groupId}/members/${uid}`).get()).data();
+      members[uid] = member;
+      this.setState({members});
+    }
+    // no need to return her (use props.messages instead)
+  }
 
   render() {
     const { classes, user, db, match:{params:{gp}}, rootGroup } = this.props;
     const groupName = gp || rootGroup;
 
-    const { group, member, history, error, pageInfo } = this.state;
+    const { group, member, history, error, pageInfo, members } = this.state;
     if (error) {
       return <ErrorMessage error={error} />
     }
@@ -163,7 +176,13 @@ class GroupRouter extends React.Component {
         secondary: colorMap[(group.theme && group.theme.primary) || "blue"],
       }
     });
-    const context = { user, group, db, member, history, rootGroup, 
+    const callbacks = {
+      selectTab:this.selectTab, 
+      memberDidUpdate:this.memberDidUpdate, 
+      reloadGroup:this.reloadGroup,
+      hitMember:this.hitMember,
+    };
+    const context = { user, group, db, member, history, rootGroup, members, callbacks,
                       selectTab:this.selectTab, memberDidUpdate:this.memberDidUpdate, reloadGroup:this.reloadGroup };
     
     return (

@@ -25,10 +25,16 @@ const styles = theme => ({
 });
 
 class Message extends React.Component {
+  componentDidMount() {
+    const { message, callbacks } = this.props;
+    callbacks.hitMember(message.uid);
+  }
   render() {
-    const { message, classes, group } = this.props;
+    const { message, classes, group, members } = this.props;
     // BUGBUG: Use thumbnail, and don't pass loadImage={true}
     const imagePath = `groups/${group.groupId}/members/${message.uid}/images/profile`; // BUGBUG: use thumbnails
+    const her = members[message.uid];
+    const userName = (her && her.displayName) || message.userName;
     return (
       <div className={classes.frame}>
         <Grid container className={classes.userFrame}>
@@ -36,7 +42,7 @@ class Message extends React.Component {
                   readOnly={true} displayMode="thumbSmall" inline={true} />
 
           <Typography variant="caption" className={classes.userName} gutterBottom>
-            { message.userName }
+            { userName }
           </Typography>
         </Grid>
 

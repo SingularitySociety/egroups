@@ -60,7 +60,7 @@ class Chat extends React.Component {
 
   render() {
     const { channel, messages } = this.state;
-    const { user, member, group } = this.props;
+    const { user, member, group, members, callbacks } = this.props;
     if (!channel) {
       return "";
     }
@@ -72,7 +72,7 @@ class Chat extends React.Component {
     if (!canRead) {
       return <AccessDenied />
     }
-    const context = { group };
+    const context = { group, members, callbacks };
     return (<div>
         <Grid container>
           <Grid item xs={canEdit ? 11 : 12}>
