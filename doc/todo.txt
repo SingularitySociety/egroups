@@ -12,6 +12,9 @@ Pages: Menu access to pages *
 Editor: link
 Editor: H1, H2, h3
 Theme: Match H1, H2, H3
+didArticleDelete: Delete all sections
+didChannelDelete: Delete all messages
+didGropuDelete: Delete all articles, pages, channels, members and owners (privileges?)
 
 ----- Done -----
 Channel Setting: Name and destroy

@@ -93,6 +93,22 @@ export const memberDidCreate = functions.firestore.document('groups/{groupId}/me
     }, {merge:true});
   });
 
+export const articleDidDelete = functions.firestore.document('groups/{groupId}/articles/{articleId}')
+  .onDelete(async (snapshot, context)=>{
+    const sections = await snapshot.ref.collection("sections").get();
+    sections.forEach(async doc=>{
+      await doc.ref.delete();
+    });
+  });
+
+export const pageDidDelete = functions.firestore.document('groups/{groupId}/pages/{articleId}')
+  .onDelete(async (snapshot, context)=>{
+    const sections = await snapshot.ref.collection("sections").get();
+    sections.forEach(async doc=>{
+      await doc.ref.delete();
+    });
+  });
+  
 export const sectionDidDelete = functions.firestore.document('groups/{groupId}/{articles}/{articleId}/sections/{sectionId}')
   .onDelete(async (snapshot, context)=>{
     const { groupId, articles, articleId, sectionId } = context.params;
