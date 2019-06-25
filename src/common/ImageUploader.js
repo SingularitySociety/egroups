@@ -36,6 +36,15 @@ const styles = theme => ({
     border: "1px lightgray solid",
     borderRadius: "2.5em",
   },
+  thumbSmall: {
+    height: "3em",
+    width: "3em",
+    backgroundPosition: "center",
+    backgroundSize: "cover",
+    backgroundColor: "lightgray",
+    border: "1px lightgray solid",
+    borderRadius: "1.5em",
+  },
 });
 
 class ImageViewer extends React.Component {

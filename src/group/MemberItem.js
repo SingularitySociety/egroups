@@ -27,7 +27,7 @@ class MemberItem extends React.Component {
       <MUILink component={Link} to={`/${group.groupName}/pr/${item.uid}`} className={classes.member}>
         <Grid container>
             <ImageUploader imagePath={imagePath} loadImage={item.hasImage} 
-                readOnly={true} displayMode={"thumbMiddle"} inline={true} onImageUpload={this.onImageUpload} />
+                readOnly={true} displayMode={"thumbMiddle"} inline={true} />
             <Grid item className={classes.name}>
               <Typography color={ isMe ? "primary" : "inherit"}>{item.displayName}</Typography>
             </Grid>

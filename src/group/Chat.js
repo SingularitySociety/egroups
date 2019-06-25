@@ -52,14 +52,14 @@ class Chat extends React.Component {
     await this.refMessages.add({
       created: new Date(), // firebase.firestore.FieldValue.serverTimestamp(),
       message,
-      userId: user.uid,
+      uid: user.uid,
       userName: member.displayName
     });
   }
 
   render() {
     const { channel, messages } = this.state;
-    const { member } = this.props;
+    const { member, group } = this.props;
     if (!channel) {
       return "";
     }
@@ -69,6 +69,7 @@ class Chat extends React.Component {
     if (!canRead) {
       return <AccessDenied />
     }
+    const context = { group };
     return (<div>
         <Grid container>
           <Grid item xs={canEdit ? 11 : 12}>
@@ -87,7 +88,7 @@ class Chat extends React.Component {
         </Grid>
       <div>
       { messages.map((message)=>{
-        return <Message key={message.messageId} message={message} />
+        return <Message key={message.messageId} message={message} {...context} />
       }) }
       { canWrite && <CreateNew createNew={ this.postMessgae } 
           action={<FormattedMessage id="post" />} label={<FormattedMessage id="chat.message" />} multiline={true} /> }
