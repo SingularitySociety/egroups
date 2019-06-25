@@ -13,9 +13,10 @@ const styles = theme => ({
   },
   userName: {
     color: "#606060",
+    marginLeft: theme.spacing(1),
   },
   messageFrame: {
-    paddingLeft: "4em",
+    paddingLeft: "3em",
     paddingTop: "1.5em",
   },
   message: {
@@ -41,7 +42,7 @@ class Message extends React.Component {
 
         <div className={classes.messageFrame}>
           <Typography gutterBottom className={classes.message}>
-            { message.message }
+          &nbsp;&nbsp;{ message.message }
           </Typography>
         </div>
       </div>
