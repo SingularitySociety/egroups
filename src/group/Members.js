@@ -20,7 +20,6 @@ class Members extends React.Component {
         list.push(doc.data());
       });
       this.setState({list});
-      console.log(list);
     })
   }
   componentWillUnmount() {

@@ -1,8 +1,6 @@
 Profile: No grey color / Implement
 Blog: Display author & date (along with Members database)
 Member: Use thumbnail instead of original
-Chat: Use Thumb Image (members database)
-Chat: Display the current name (members database)
 Chat: Activate the entry
 Chat: P 2 P
 Image Uploader: Verify the privacy
@@ -12,6 +10,8 @@ Editor: H1, H2, h3
 Theme: Match H1, H2, H3
 
 ----- Done -----
+Chat: Use Thumb Image (members database)
+Chat: Display the current name (members database)
 Members: Highlight Yourself
 Account: Display greay circle if there is no Image
 Group: Wait cursor when creating a new group

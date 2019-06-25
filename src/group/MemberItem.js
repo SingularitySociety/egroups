@@ -23,10 +23,11 @@ class MemberItem extends React.Component {
     const { group, item, classes, user } = this.props;
     const imagePath = `groups/${group.groupId}/members/${item.uid}/images/profile`; // BUGBUG: use thumbnails
     const isMe = item.uid === user.uid;
+    const thumbnails = item.profile && item.profile.thumbnails;
     return (
       <MUILink component={Link} to={`/${group.groupName}/pr/${item.uid}`} className={classes.member}>
         <Grid container>
-            <ImageUploader imagePath={imagePath} loadImage={item.hasImage} 
+            <ImageUploader imagePath={imagePath} loadImage={item.hasImage} imageThumbnails={thumbnails}
                 readOnly={true} displayMode={"thumbMiddle"} inline={true} />
             <Grid item className={classes.name}>
               <Typography color={ isMe ? "primary" : "inherit"}>{item.displayName}</Typography>
