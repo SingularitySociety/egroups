@@ -99,17 +99,17 @@ export const sectionDidDelete = functions.firestore.document('groups/{groupId}/{
     const bucket = admin.storage().bucket();
     const path = `groups/${groupId}/${articles}/${articleId}/${sectionId}`;
     const pathThumbs = `groups/${groupId}/${articles}/${articleId}/thumb_${sectionId}`;
-    console.log("path", path);
     if (!(articles === "articles" || articles === "pages")) {
       console.log("unexpected", articles);
       return false;
     }
-    bucket.deleteFiles({prefix:path}, (errors)=>{
-      console.log("deleteFiles: ", path, errors);
-    });
-    bucket.deleteFiles({prefix:pathThumbs}, (errors)=>{
-      console.log("deleteFiles: ", pathThumbs, errors);
-    });
+    try {
+      await bucket.deleteFiles({prefix:path});
+      await bucket.deleteFiles({prefix:pathThumbs});
+      console.log("deleting section images succeeded:", path);
+    } catch(error) {
+      console.log("deleting section images failed:", path, error);
+    }
     return true;
   });
 
