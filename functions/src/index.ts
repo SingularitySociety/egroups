@@ -73,6 +73,15 @@ export const groupDidDelete = functions.firestore.document('groups/{groupId}')
     if (value && value.groupName) {
       await admin.firestore().doc("/groupNames/" + value.groupName).delete();
     }
+
+    // We need to delete all sub collections (except privileges)
+    await deleteSubcollection(snapshot, "channels");
+    await deleteSubcollection(snapshot, "pages");
+    await deleteSubcollection(snapshot, "articles");
+    await deleteSubcollection(snapshot, "events");
+    await deleteSubcollection(snapshot, "members");
+    await deleteSubcollection(snapshot, "owners");
+
     // We need to remove all the images associated with this user
     const bucket = admin.storage().bucket();
     const path = `groups/${groupId}/`;
