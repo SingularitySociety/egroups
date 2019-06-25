@@ -8,6 +8,7 @@ import AccessDenied from './AccessDenied';
 import Message from './Message';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
+import Privileges from '../const/Privileges';
 
 const styles = theme => ({
 });
@@ -59,13 +60,15 @@ class Chat extends React.Component {
 
   render() {
     const { channel, messages } = this.state;
-    const { member, group } = this.props;
+    const { user, member, group } = this.props;
     if (!channel) {
       return "";
     }
-    const canRead = ((member && member.privilege) || 0) >= channel.read;
-    const canWrite = ((member && member.privilege) || 0) >= channel.write;
-    const canEdit = true; // HACK: 
+    const privilege = (member && member.privilege) || 0;
+    const uid = (user && user.uid) || null;
+    const canRead = privilege >= channel.read;
+    const canWrite = privilege >= channel.write;
+    const canEdit = uid === channel.owner || privilege >= Privileges.admin;  
     if (!canRead) {
       return <AccessDenied />
     }
