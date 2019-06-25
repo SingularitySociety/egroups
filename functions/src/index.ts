@@ -59,6 +59,13 @@ export const groupDidCreate = functions.firestore.document('groups/{groupId}')
     });
   });
 
+const deleteSubcollection = async (snapshot:FirebaseFirestore.DocumentSnapshot, name:string) => {
+  const sections = await snapshot.ref.collection(name).get();
+  sections.forEach(async doc=>{
+    await doc.ref.delete();
+  });
+}  
+
 export const groupDidDelete = functions.firestore.document('groups/{groupId}')
   .onDelete(async (snapshot, context)=>{
     const { groupId } = context.params;
@@ -94,27 +101,18 @@ export const memberDidCreate = functions.firestore.document('groups/{groupId}/me
   });
 
 export const articleDidDelete = functions.firestore.document('groups/{groupId}/articles/{articleId}')
-  .onDelete(async (snapshot, context)=>{
-    const sections = await snapshot.ref.collection("sections").get();
-    sections.forEach(async doc=>{
-      await doc.ref.delete();
-    });
+  .onDelete((snapshot, context)=>{
+    return deleteSubcollection(snapshot, "sections");
   });
 
 export const pageDidDelete = functions.firestore.document('groups/{groupId}/pages/{articleId}')
-  .onDelete(async (snapshot, context)=>{
-    const sections = await snapshot.ref.collection("sections").get();
-    sections.forEach(async doc=>{
-      await doc.ref.delete();
-    });
+  .onDelete((snapshot, context)=>{
+    return deleteSubcollection(snapshot, "sections");
   });
 
 export const channelDidDelete = functions.firestore.document('groups/{groupId}/channels/{channelId}')
-  .onDelete(async (snapshot, context)=>{
-    const sections = await snapshot.ref.collection("messages").get();
-    sections.forEach(async doc=>{
-      await doc.ref.delete();
-    });
+  .onDelete((snapshot, context)=>{
+    return deleteSubcollection(snapshot, "messages");
   });
 
 export const sectionDidDelete = functions.firestore.document('groups/{groupId}/{articles}/{articleId}/sections/{sectionId}')
