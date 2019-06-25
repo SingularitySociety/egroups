@@ -49,6 +49,9 @@ class BlogSection extends React.Component {
         //const value = RichTextEditor.createValueFromString(resource.markdown || "", 'markdown');
         //console.log("render1", value.toString("markdown"));
         if (resource.type==="image") {
+          if (readOnly && !resource.hasImage) {
+            return "";
+          }
           const imagePath = `${refArticle.path}/${sectionId}`;
           const thumbnails = (resource[sectionId] && resource[sectionId].thumbnails) || resource.thumbnails
           return (

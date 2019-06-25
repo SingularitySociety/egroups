@@ -13,7 +13,7 @@ const styles = theme => ({
     marginBottom: theme.spacing(1),
   },
   wideFrame: {
-    backgroundColor: "lightgray",
+    //backgroundColor: "lightgray",
   },
   wide: {
     width: "100%",
