@@ -5,6 +5,9 @@ import AccessDenied from './AccessDenied';
 import MemberItem from './MemberItem';
 
 const styles = theme => ({
+  member: {
+    marginBottom: theme.spacing(1),
+  },
 });
 
 class Members extends React.Component {
@@ -24,7 +27,7 @@ class Members extends React.Component {
     this.detacher();
   }
   render() {
-    const { member, group } = this.props;
+    const { member, group, user, classes } = this.props;
     const { list } = this.state;
     const canRead = ((member && member.privilege) || 0) >= group.privileges.member.read;
     return <div>{ 
@@ -32,8 +35,8 @@ class Members extends React.Component {
     }
     {
       list.map((item)=>{
-        const context = { group, item };
-        return <div key={item.uid}>
+        const context = { group, user, item };
+        return <div key={item.uid} className={classes.member}>
           <MemberItem {...context} />
         </div>
       })

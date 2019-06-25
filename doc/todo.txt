@@ -1,7 +1,7 @@
 Profile: No grey color / Implement
-Members: Highlight Yourself
 Blog: Display author & date (along with Members database)
-Chat: Add Image (implying Members database)
+Member: Use thumbnail instead of original
+Chat: Add Image
 Chat: Activate the entry
 Chat: P 2 P
 Image Uploader: Verify the privacy
@@ -11,6 +11,7 @@ Editor: H1, H2, h3
 Theme: Match H1, H2, H3
 
 ----- Done -----
+Members: Highlight Yourself
 Account: Display greay circle if there is no Image
 Group: Wait cursor when creating a new group
 Channel Setting: Name and destroy

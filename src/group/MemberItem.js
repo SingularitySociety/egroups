@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import MUILink from '@material-ui/core/link';
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import ImageUploader from '../common/ImageUploader';
 
@@ -20,15 +20,16 @@ const styles = theme => ({
 
 class MemberItem extends React.Component {
   render() {
-    const { group, item, classes } = this.props;
-    const imagePath = `groups/${group.groupId}/members/${item.uid}/images/profile`;
+    const { group, item, classes, user } = this.props;
+    const imagePath = `groups/${group.groupId}/members/${item.uid}/images/profile`; // BUGBUG: use thumbnails
+    const isMe = item.uid === user.uid;
     return (
       <MUILink component={Link} to={`/${group.groupName}/pr/${item.uid}`} className={classes.member}>
         <Grid container>
             <ImageUploader imagePath={imagePath} loadImage={item.hasImage} 
                 readOnly={true} displayMode={"thumbMiddle"} inline={true} onImageUpload={this.onImageUpload} />
             <Grid item className={classes.name}>
-              {item.displayName}
+              <Typography color={ isMe ? "primary" : "inherit"}>{item.displayName}</Typography>
             </Grid>
         </Grid>
       </MUILink>
