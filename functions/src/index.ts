@@ -60,10 +60,15 @@ export const groupDidCreate = functions.firestore.document('groups/{groupId}')
   });
 
 const deleteSubcollection = async (snapshot:FirebaseFirestore.DocumentSnapshot, name:string) => {
-  const sections = await snapshot.ref.collection(name).get();
-  sections.forEach(async doc=>{
-    await doc.ref.delete();
-  });
+  const limit = 10;
+  let count:number;
+  do {
+    const sections = await snapshot.ref.collection(name).limit(limit).get();
+    count = sections.size;
+    sections.forEach(async doc=>{
+      await doc.ref.delete();
+    });
+  } while(count === limit);
 }  
 
 export const groupDidDelete = functions.firestore.document('groups/{groupId}')
