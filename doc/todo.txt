@@ -1,4 +1,3 @@
-Account: Display greay circle if there is no Image
 Profile: No grey color / Implement
 Members: Highlight Yourself
 Blog: Display author & date (along with Members database)
@@ -12,6 +11,7 @@ Editor: H1, H2, h3
 Theme: Match H1, H2, H3
 
 ----- Done -----
+Account: Display greay circle if there is no Image
 Group: Wait cursor when creating a new group
 Channel Setting: Name and destroy
 Blog Setting: Locked area

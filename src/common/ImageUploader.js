@@ -12,6 +12,9 @@ const styles = theme => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
+  wideFrame: {
+    backgroundColor: "lightgray",
+  },
   wide: {
     width: "100%",
   },
@@ -78,11 +81,11 @@ class ImageViewer extends React.Component {
     const { classes, readOnly, displayMode, inline, onImageUpload, deleteImage } = this.props;
     const { imageUrl } = this.state;
     const imageStyle = imageUrl ? { backgroundImage:`url("${imageUrl}")` } : {};
-    const imageElement = imageUrl ? ((displayMode === "wide") ? (
-        <Grid item xs={readOnly ? 12 : 11}>
+    const imageElement = (displayMode === "wide") ? (
+        <Grid item xs={readOnly ? 12 : 11} className={ classes.wideFrame }>
           <img src={imageUrl} className={classes[displayMode]} alt="blog article" />
         </Grid>
-      ) : <Grid item className={classes[displayMode || "thumbLarge"]} style={imageStyle} />) : "";
+      ) : <Grid item className={classes[displayMode || "thumbLarge"]} style={imageStyle} />;
     if (inline) {
       return imageElement;
     }
