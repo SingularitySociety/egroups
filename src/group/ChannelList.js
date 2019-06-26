@@ -10,8 +10,12 @@ const styles = theme => ({
 class ChannelList extends React.Component {
   state = { list:[] }
   componentDidMount() {
-    const { db, group } = this.props;
-    this.detacher = db.collection(`groups/${group.groupId}/channels`).orderBy("created", "desc").onSnapshot((snapshot) => {
+    const { db, group, limit } = this.props;
+    let query = db.collection(`groups/${group.groupId}/channels`).orderBy("created", "desc");
+    if (limit) {
+      query = query.limit(limit);
+    }
+    this.detacher = query.onSnapshot((snapshot) => {
       const list = [];
       snapshot.forEach((doc)=>{
         const channel = doc.data();

@@ -10,8 +10,12 @@ const styles = theme => ({
 class ArticleList extends React.Component {
   state = { list:[] }
   componentDidMount() {
-    const { db, group, arp } = this.props;
-    this.detacher = db.collection(`groups/${group.groupId}/${arp.collection}`).orderBy("created", "desc").onSnapshot((snapshot) => {
+    const { db, group, limit, arp } = this.props;
+    let query = db.collection(`groups/${group.groupId}/${arp.collection}`).orderBy("created", "desc");
+    if (limit) {
+      query = query.limit(1);
+    }
+    this.detacher = query.onSnapshot((snapshot) => {
       const list = [];
       snapshot.forEach((doc)=>{
         const article = doc.data();
