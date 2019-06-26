@@ -1,6 +1,5 @@
 Profile: No grey color / Implement
 Blog: Display author & date (along with Members database)
-Chat: Activate the entry
 Chat: P 2 P
 Image Uploader: Verify the privacy
 Image Uploader: Image Orientation
@@ -10,6 +9,7 @@ Theme: Match H1, H2, H3
 Blog: Do not use onSnapshot for read-only mode.
 
 ----- Done -----
+Chat: Activate the entry
 Editor: link (https://codepen.io/Kiwka/pen/ZLvPeO?editors=1010)
 Member: Use thumbnail instead of original
 Chat: Use Thumb Image (members database)

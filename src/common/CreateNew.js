@@ -22,7 +22,8 @@ const useStyles = makeStyles(styles);
 
 function CreateNew(props) {
   const classes = useStyles();
-  const [creating, setCreating] = useState(props.creating || false);
+  const initialStatus = props.creating || false;
+  const [creating, setCreating] = useState(initialStatus);
   const [value, setValue] = useState(props.value || "");
 
   const setCreatingFlag = (flag) => {
@@ -34,7 +35,7 @@ function CreateNew(props) {
   }
   const onSubmit = (e) => {
     e.preventDefault();
-    setCreatingFlag(false);
+    setCreatingFlag(initialStatus);
     props.createNew(value);
   }
   const catchReturn = (e) => {
@@ -58,7 +59,8 @@ function CreateNew(props) {
               onKeyPress={catchReturn} />
           <Button variant="contained" color="primary" className={classes.button} disabled={ disabled }
               onClick={onSubmit} type="submit">{action || "Create"}</Button>
-          <Button variant="contained" className={classes.button} onClick={()=>setCreatingFlag(false)}>
+          <Button variant="contained" className={classes.button} disabled={ disabled && initialStatus }
+              onClick={()=>setCreatingFlag(initialStatus)}>
               <FormattedMessage id="cancel" />
           </Button>
         </form>
@@ -71,7 +73,8 @@ function CreateNew(props) {
         <Button variant="contained" color="primary" className={classes.button} 
             disabled={ disabled }
             onClick={onSubmit} type="submit">{action || "Create"}</Button>
-        <Button variant="contained" className={classes.button} onClick={()=>setCreatingFlag(false)}>
+        <Button variant="contained" className={classes.button} disabled={ disabled && initialStatus }
+            onClick={()=>setCreatingFlag(initialStatus)}>
             <FormattedMessage id="cancel" />
         </Button>
       </form>

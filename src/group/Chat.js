@@ -103,7 +103,7 @@ class Chat extends React.Component {
       { messages.map((message)=>{
         return <Message key={message.messageId} message={message} {...context} />
       }) }
-      { canWrite && <CreateNew createNew={ this.postMessgae } 
+      { canWrite && <CreateNew createNew={ this.postMessgae } creating={true}
           action={<FormattedMessage id="post" />} label={<FormattedMessage id="chat.message" />} multiline={true} /> }
       </div>
     </div>)
