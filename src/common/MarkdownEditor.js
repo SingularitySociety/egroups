@@ -11,7 +11,8 @@ import { FormatBold, FormatItalic, FormatUnderlined, FormatQuote } from '@materi
 import { Code } from '@material-ui/icons';
 import { FormatListBulleted, FormatListNumbered, Undo, Redo } from '@material-ui/icons';
 import { Editor, RichUtils, EditorState, convertToRaw, convertFromRaw } from 'draft-js';
-import { blockStyleFn, editorStyles, compositeDecorator } from './MarkdownViewer';
+import { blockStyleFn, editorStyles } from './MarkdownViewer';
+import MarkdownDecorator from './MarkdownDecorator';
 
 import { stateToMarkdown } from 'draft-js-export-markdown';
 import { stateFromMarkdown } from 'draft-js-import-markdown';
@@ -32,7 +33,7 @@ class MarkdownEditor extends React.Component {
     super(props);
     const { resource } = this.props;
     const contentState = resource.raw ? convertFromRaw(resource.raw) : stateFromMarkdown(resource.markdown || "");
-    const editorState = EditorState.createWithContent(contentState, compositeDecorator);
+    const editorState = EditorState.createWithContent(contentState, MarkdownDecorator());
     this.state = {
       editorState,
     }
