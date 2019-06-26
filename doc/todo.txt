@@ -1,6 +1,7 @@
 Profile: No grey color / Implement
 Blog: Display author & date (along with Members database)
 Chat: P 2 P
+Chat: Debug read/unread
 Image Uploader: Verify the privacy
 Image Uploader: Image Orientation
 Pages: Menu access to pages *

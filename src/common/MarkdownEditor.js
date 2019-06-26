@@ -125,89 +125,89 @@ function MarkdownEditor(props) {
     setEditorState(yetNewEditorState);
   }
 
-    const { onDelete } = props;
-    const canUndo = editorState.getUndoStack().size !== 0;
-    const canRedo = editorState.getRedoStack().size !== 0;
-    return (
-      <div>
-        <Grid container>
-          <Grid item>
-            <IconButton size="small" disabled={!canUndo} onClick={undo} onMouseDown={onMouseDown}>
-              <Undo/>
-            </IconButton>
-          </Grid>
-          <Grid item>
-            <IconButton size="small" disabled={!canRedo} onClick={redo} onMouseDown={onMouseDown}>
-              <Redo/>
-            </IconButton>
-          </Grid>
-          <Grid item>
-            <IconButton size="small" onClick={()=>{toggleStyle("BOLD")}} onMouseDown={onMouseDown}>
-              <FormatBold/>
-            </IconButton>
-          </Grid>
-          <Grid item>
-            <IconButton size="small" onClick={()=>{toggleStyle("ITALIC")}} onMouseDown={onMouseDown}>
-              <FormatItalic/>
-            </IconButton>
-          </Grid>
-          <Grid item>
-            <IconButton size="small" onClick={()=>{toggleStyle("UNDERLINE")}} onMouseDown={onMouseDown}>
-              <FormatUnderlined/>
-            </IconButton>
-          </Grid>
-          <Grid item>
-            <IconButton size="small" onClick={()=>{toggleBlockType("unordered-list-item")}} onMouseDown={onMouseDown}>
-              <FormatListBulleted/>
-            </IconButton>
-          </Grid>
-          <Grid item>
-            <IconButton size="small" onClick={()=>{toggleBlockType("ordered-list-item")}} onMouseDown={onMouseDown}>
-              <FormatListNumbered/>
-            </IconButton>
-          </Grid>
-          <Grid item>
-            <IconButton size="small" onClick={()=>{toggleBlockType("blockquote")}} onMouseDown={onMouseDown}>
-              <FormatQuote/>
-            </IconButton>
-          </Grid>
-          <Grid item>
-            <IconButton size="small" onClick={()=>{toggleBlockType("code-block")}} onMouseDown={onMouseDown}>
-              <Code/>
-            </IconButton>
-          </Grid>
-          <Grid item>
-            <IconButton size="small" onClick={editLink} onMouseDown={onMouseDown}>
-              <LinkIcon/>
-            </IconButton>
-          </Grid>
+  const { onDelete } = props;
+  const canUndo = editorState.getUndoStack().size !== 0;
+  const canRedo = editorState.getRedoStack().size !== 0;
+  return (
+    <div>
+      <Grid container>
+        <Grid item>
+          <IconButton size="small" disabled={!canUndo} onClick={undo} onMouseDown={onMouseDown}>
+            <Undo/>
+          </IconButton>
         </Grid>
-        <Grid container>
-          <Grid item xs={11} className={classes.editorFrame}>
-            <Editor editorState={editorState} 
-              blockStyleFn={(contentBlock) => { return blockStyleFn(classes, contentBlock)}}
-              handleReturn={handleReturn}
-              handleKeyCommand={handleKeyCommand}
-              onChange={onChange} />
-          </Grid>
-          <Grid item xs={1}>
-            <IconButton size="small" onClick={onSave} type="submit">
-              <SaveIcon />
-            </IconButton>
-            <br/>
-            <IconButton size="small" onClick={onCancel}>
-              <CancelIcon />
-            </IconButton>
-            <br/>
-            {
-            onDelete && <IconButton size="small" onClick={onDelete}>
-              <TrashIcon />
-            </IconButton>
-            }
-          </Grid>
+        <Grid item>
+          <IconButton size="small" disabled={!canRedo} onClick={redo} onMouseDown={onMouseDown}>
+            <Redo/>
+          </IconButton>
         </Grid>
-      </div>
-    );
+        <Grid item>
+          <IconButton size="small" onClick={()=>{toggleStyle("BOLD")}} onMouseDown={onMouseDown}>
+            <FormatBold/>
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton size="small" onClick={()=>{toggleStyle("ITALIC")}} onMouseDown={onMouseDown}>
+            <FormatItalic/>
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton size="small" onClick={()=>{toggleStyle("UNDERLINE")}} onMouseDown={onMouseDown}>
+            <FormatUnderlined/>
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton size="small" onClick={()=>{toggleBlockType("unordered-list-item")}} onMouseDown={onMouseDown}>
+            <FormatListBulleted/>
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton size="small" onClick={()=>{toggleBlockType("ordered-list-item")}} onMouseDown={onMouseDown}>
+            <FormatListNumbered/>
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton size="small" onClick={()=>{toggleBlockType("blockquote")}} onMouseDown={onMouseDown}>
+            <FormatQuote/>
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton size="small" onClick={()=>{toggleBlockType("code-block")}} onMouseDown={onMouseDown}>
+            <Code/>
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton size="small" onClick={editLink} onMouseDown={onMouseDown}>
+            <LinkIcon/>
+          </IconButton>
+        </Grid>
+      </Grid>
+      <Grid container>
+        <Grid item xs={11} className={classes.editorFrame}>
+          <Editor editorState={editorState} 
+            blockStyleFn={(contentBlock) => { return blockStyleFn(classes, contentBlock)}}
+            handleReturn={handleReturn}
+            handleKeyCommand={handleKeyCommand}
+            onChange={onChange} />
+        </Grid>
+        <Grid item xs={1}>
+          <IconButton size="small" onClick={onSave} type="submit">
+            <SaveIcon />
+          </IconButton>
+          <br/>
+          <IconButton size="small" onClick={onCancel}>
+            <CancelIcon />
+          </IconButton>
+          <br/>
+          {
+          onDelete && <IconButton size="small" onClick={onDelete}>
+            <TrashIcon />
+          </IconButton>
+          }
+        </Grid>
+      </Grid>
+    </div>
+  );
 }
 
 MarkdownEditor.propTypes = {
