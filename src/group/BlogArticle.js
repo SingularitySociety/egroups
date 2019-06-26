@@ -30,7 +30,7 @@ class BlogArticle extends React.Component {
   async componentDidMount() {
     const { article, refArticle } = this.props;
     //console.log("BlogArticle, articleId", article.articleId);
-    this.setState({article});
+    this.setState({article}); // REVIEW: Why do we need to have it as a sate?
     this.detatcher = refArticle.collection("sections").onSnapshot((snapshot)=>{
       const resources = {};
       snapshot.forEach((doc)=>{
@@ -96,7 +96,7 @@ class BlogArticle extends React.Component {
 
   render() {
     const { article, resources } = this.state;
-    const { user, member, classes, refArticle } = this.props;
+    const { user, member, classes, refArticle, arp, group } = this.props;
     const context = { refArticle };
     if (!article) {
       return "";
@@ -123,7 +123,7 @@ class BlogArticle extends React.Component {
           {
             canEdit && 
             <Grid item xs={1}>
-              <IconButton size="small" component={Link} to={window.location.pathname+"/settings"}>
+              <IconButton size="small" component={Link} to={`/${group.groupName}/${arp.leaf}/${article.articleId}/settings`}>
                 <SettingsIcon />
               </IconButton>
             </Grid>
@@ -151,6 +151,7 @@ BlogArticle.propTypes = {
     classes: PropTypes.object.isRequired,
     refArticle: PropTypes.object.isRequired,
     arp: PropTypes.object.isRequired,
+    group: PropTypes.object.isRequired,
   };
   
 export default withStyles(styles)(BlogArticle);

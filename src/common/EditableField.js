@@ -15,7 +15,7 @@ const styles = theme => ({
   }
 });
 
-class About extends React.Component {
+class EditableField extends React.Component {
   constructor(props) {
     super(props);
     this.refTextField = React.createRef();
@@ -64,9 +64,9 @@ class About extends React.Component {
   }
 }
 
-About.propTypes = {
+EditableField.propTypes = {
     classes: PropTypes.object.isRequired,
     onSave: PropTypes.func.isRequired,
   };
   
-export default withStyles(styles)(About);
+export default withStyles(styles)(EditableField);
