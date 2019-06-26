@@ -6,6 +6,8 @@ import * as messaging from '../src/messaging';
 
 should()
 
+test_helper.initHook();
+
 const admin_db = test_helper.adminDB();
 
 const aliceGroupId = "alice_group";

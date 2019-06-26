@@ -7,7 +7,10 @@ import * as messaging from './messaging';
 import * as image from './image';
 import * as constant from './constant';
 
-admin.initializeApp();
+// for mocha watch
+if (!admin.apps.length) {
+  admin.initializeApp();
+}
 
 export const app = express();
 app.use(cors());
