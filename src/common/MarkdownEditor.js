@@ -11,15 +11,16 @@ import { FormatBold, FormatItalic, FormatUnderlined, FormatQuote } from '@materi
 import { Code } from '@material-ui/icons';
 import { FormatListBulleted, FormatListNumbered, Undo, Redo } from '@material-ui/icons';
 import { Editor, RichUtils, EditorState, convertToRaw, convertFromRaw } from 'draft-js';
-import { blockStyleFn, editorStyles } from './MarkdownViewer';
 import MarkdownDecorator from './MarkdownDecorator';
+import MarkdownStyles, { blockStyleFn } from './MarkdownStyles';
 
 import { stateToMarkdown } from 'draft-js-export-markdown';
 import { stateFromMarkdown } from 'draft-js-import-markdown';
 //import stateFromMarkdown from './markdown/stateFromMarkdown';
 //import stateToMarkdown from './markdown/stateToMarkdown';
 
-const styles = editorStyles;
+const styles = MarkdownStyles;
+const decorator = MarkdownDecorator();
 
 const customStyleMap = {
   /*
@@ -33,7 +34,7 @@ class MarkdownEditor extends React.Component {
     super(props);
     const { resource } = this.props;
     const contentState = resource.raw ? convertFromRaw(resource.raw) : stateFromMarkdown(resource.markdown || "");
-    const editorState = EditorState.createWithContent(contentState, MarkdownDecorator());
+    const editorState = EditorState.createWithContent(contentState, decorator);
     this.state = {
       editorState,
     }
