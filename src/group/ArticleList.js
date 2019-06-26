@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ArticleItem from './ArticleItem';
+import ErrorMessage from './ErrorMessage';
 
 const styles = theme => ({
 });
@@ -11,7 +12,6 @@ class ArticleList extends React.Component {
   componentDidMount() {
     const { db, group, arp } = this.props;
     this.detacher = db.collection(`groups/${group.groupId}/${arp.collection}`).orderBy("created", "desc").onSnapshot((snapshot) => {
-      //console.log("onSnapshot")
       const list = [];
       snapshot.forEach((doc)=>{
         const article = doc.data();
@@ -19,14 +19,22 @@ class ArticleList extends React.Component {
         list.push(article);
       });
       this.setState({list});
+    }, (e) => {
+      console.log(e);
+      const error = { key: "warning.access.denied" };
+      this.setState({error});
     })
   }
   componentWillUnmount() {
     this.detacher();
   }
   render() {
+    const { error } = this.state;
     const { group, history, arp } = this.props;
     const context = { group, history, arp }
+    if (error) {
+      return <ErrorMessage error={error} />
+    }
     return <div>
       <div>
         {

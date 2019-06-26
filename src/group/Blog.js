@@ -18,14 +18,21 @@ class Blog extends React.Component {
   async componentDidMount() {
     const { match:{params:{articleId}}, selectTab, arp } = this.props;
     selectTab(arp.tabLeaf, `${arp.leaf}/${articleId}`);
-    const article = (await this.refArticle.get()).data();
-    //console.log(article);
-    if (!article) {
-      this.setState({error:{key:"error.invalid.articleId", value:articleId}});
-      return;
+
+    const error = {key:"error.invalid.articleId", value:articleId};
+    try {
+      const article = (await this.refArticle.get()).data();
+      if (article) {
+        article.articleId = articleId;
+        this.setState({article});
+        return;
+      }
+    } catch(e) {
+      console.log(e);
+      // LATER: Detect network error case
+      error.key = "warning.access.denied";
     }
-    article.articleId = articleId;
-    this.setState({article});
+    this.setState({ error });
   }
 
   render() {
