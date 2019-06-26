@@ -9,6 +9,8 @@ const anon_db = test_helper.authedDB(null);
 const alice_db = test_helper.authedDB({ uid: aliceUID });
 const bob_db = test_helper.authedDB({ uid: bobUID });
 
+test_helper.initHook();
+
 describe("My app", () => {
   it("require users to log in before creating and reading a profile", async () => {
     const profile = anon_db.doc(`users/${aliceUID}`);
