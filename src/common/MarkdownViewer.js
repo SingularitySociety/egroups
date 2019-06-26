@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
 import { Editor, EditorState, convertFromRaw, CompositeDecorator } from 'draft-js';
@@ -104,7 +105,7 @@ export const blockStyleFn = (classes, contentBlock) => {
 
 const useStyles = makeStyles(styles);
 
-export default function MarkdownViewer(props) {
+function MarkdownViewer(props) {
   const classes = useStyles();
   const { resource } = props;
   const contentState = resource.raw ? convertFromRaw(resource.raw) : stateFromMarkdown(resource.markdown);
@@ -116,3 +117,8 @@ export default function MarkdownViewer(props) {
   )  
 }
 
+MarkdownViewer.propTypes = {
+  resource: PropTypes.object.isRequired,
+};
+
+export default MarkdownViewer;
