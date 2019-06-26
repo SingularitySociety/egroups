@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { TextField, IconButton } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 
@@ -15,58 +15,60 @@ const styles = theme => ({
   }
 });
 
-class EditableField extends React.Component {
-  constructor(props) {
-    super(props);
-    this.refTextField = React.createRef();
-    this.state = {value:props.value, editing:false, ignoreBlur:false};
+const useStyles = makeStyles(styles);
+
+function EditableField(props) {
+  const classes = useStyles();
+  const refTextField = useRef(null);
+  const [value, setValue] = useState(props.value);
+  const [editing, setEditing] = useState(false);
+  const [ignoreBlur, setIgnoreBlur] = useState(false);
+
+  console.log(refTextField);
+
+  const onChange = (e) => {
+    setValue(e.target.value);
+    setEditing(value !== props.value);
+    setIgnoreBlur(false);
   }
-  onChange = (e) => {
-    let value = e.target.value;
-    let editing = (value !== this.props.value)
-    this.setState({value, editing, ignoreBlur:false});
-  }
-  onSubmit = async (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    this.setState({ignoreBlur:true});
-    await this.props.onSave(this.state.value);
-    //console.log("onSubmit end", this.refTextField.current)
-    this.setState({editing:false});
-    this.refTextField.current.blur();
+    setIgnoreBlur(true);
+
+    await props.onSave(value);
+    setEditing(false);
+    refTextField.current.blur();
   }
-  onBlur = (e) => {
-    console.log(this.state.ignoreBlur);
-    if (!this.state.ignoreBlur) {
-      this.setState({ value:this.props.value, editing:false })
+  const onBlur = (e) => {
+    if (!ignoreBlur) {
+      setValue(props.value);
+      setEditing(false);
     }
   }
-  onMouseDown = (e) => {
-    this.setState({ignoreBlur:true});
+  const onMouseDown = (e) => {
+    setIgnoreBlur(true);
   }
-  render() {
-      const { label, classes, multiline, disabled } = this.props;
-      const { value, editing } = this.state;
-      return (
-        <form className={classes.form}>
-          <TextField label={label} value={value} variant="outlined" className={classes.textField}
-            multiline={multiline} rows={2} rowsMax={6} disabled={disabled || false}
-            inputRef={this.refTextField} onChange={this.onChange} onBlur={this.onBlur} />
-          {
-            editing && <React.Fragment>
-            <IconButton type="submit" color="primary" size="small"
-                onClick={this.onSubmit} onMouseDown={this.onMouseDown}>
-              <SaveIcon />
-            </IconButton>
-            </React.Fragment>
-          }
-        </form>
-        )
-  }
+
+  const { label, multiline, disabled } = props;
+  return (
+    <form className={classes.form}>
+      <TextField label={label} value={value} variant="outlined" className={classes.textField}
+        multiline={multiline} rows={2} rowsMax={6} disabled={disabled || false}
+        inputRef={refTextField} onChange={onChange} onBlur={onBlur} />
+      {
+        editing && <React.Fragment>
+        <IconButton type="submit" color="primary" size="small"
+            onClick={onSubmit} onMouseDown={onMouseDown}>
+          <SaveIcon />
+        </IconButton>
+        </React.Fragment>
+      }
+    </form>
+    )
 }
 
 EditableField.propTypes = {
-    classes: PropTypes.object.isRequired,
     onSave: PropTypes.func.isRequired,
   };
   
-export default withStyles(styles)(EditableField);
+export default EditableField;
