@@ -150,6 +150,7 @@ class BlogArticle extends React.Component {
 BlogArticle.propTypes = {
     classes: PropTypes.object.isRequired,
     refArticle: PropTypes.object.isRequired,
+    arp: PropTypes.object.isRequired,
   };
   
 export default withStyles(styles)(BlogArticle);
