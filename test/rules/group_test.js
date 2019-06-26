@@ -10,6 +10,7 @@ const aliceUID = "alice";
 const bobUID = "bob";
 const charlieUID = "charlie";
 
+test_helper.initHook();
 const admin_db = test_helper.adminDB();
 
 const alice_db = test_helper.authedDB({
