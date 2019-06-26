@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 //import theme from '../theme';
 import { IconButton, Grid } from '@material-ui/core';
 import TrashIcon from '@material-ui/icons/Delete';
@@ -22,72 +22,70 @@ import { stateFromMarkdown } from 'draft-js-import-markdown';
 const styles = MarkdownStyles;
 const decorator = MarkdownDecorator();
 
-class MarkdownEditor extends React.Component {
-  constructor(props) {
-    super(props);
-    const { resource } = this.props;
+const useStyles = makeStyles(styles);
+
+function MarkdownEditor(props) {
+  const classes = useStyles();
+  const { resource } = props;
+  function initialEditorState() {
     const contentState = resource.raw ? convertFromRaw(resource.raw) : stateFromMarkdown(resource.markdown || "");
-    const editorState = EditorState.createWithContent(contentState, decorator);
-    this.state = {
-      editorState,
-    }
+    return EditorState.createWithContent(contentState, decorator);
+  }
+  const [editorState, setEditorState] = useState(initialEditorState());
+
+  const onChange = (state) => {
+    setEditorState(state);
   }
 
-  onChange = (editorState) => {
-    this.setState({editorState});
-  }
-
-  onSave = (e) => {
+  const onSave = (e) => {
     e.preventDefault();
-    const contentState = this.state.editorState.getCurrentContent();
-    //console.log(stateToMarkdown);
+    const contentState = editorState.getCurrentContent();
     const markdown = stateToMarkdown(contentState);
     const raw = convertToRaw(contentState);
     console.log(raw);
-    this.props.onSave(markdown, raw);
+    props.onSave(markdown, raw);
   }
 
-  onCancel = (e) => {
-    this.props.onCancel();
+  const onCancel = (e) => {
+    props.onCancel();
   }
 
-  handleKeyCommand = (command, editorState) => {
-    const newState = RichUtils.handleKeyCommand(editorState, command);
+  const handleKeyCommand = (command, state) => {
+    const newState = RichUtils.handleKeyCommand(state, command);
     if (newState) {
-      this.onChange(newState);
+      onChange(newState);
       return 'handled';
     }
     return 'not-handled';
   }
-  handleReturn = (e, editorState) => {
+  const handleReturn = (e, state) => {
     if (e.shiftKey) {
-      const newState = RichUtils.insertSoftNewline(editorState);
+      const newState = RichUtils.insertSoftNewline(state);
       if (newState) {
-        this.onChange(newState);
+        onChange(newState);
         return 'handled';
       }
     }
     return 'not-handled';
   }
 
-  toggleStyle = (style) => {
-    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, style));    
+  const toggleStyle = (style) => {
+    onChange(RichUtils.toggleInlineStyle(editorState, style));    
   }
-  toggleBlockType = (type) => {
-    this.onChange(RichUtils.toggleBlockType(this.state.editorState, type));
+  const toggleBlockType = (type) => {
+    onChange(RichUtils.toggleBlockType(editorState, type));
   }
-  onMouseDown = e => {
+  const onMouseDown = e => {
     e.preventDefault(); // don't steal focus
   }
-  undo = () => {
-    this.onChange(EditorState.undo(this.state.editorState));
+  const undo = () => {
+    onChange(EditorState.undo(editorState));
   }
-  redo = () => {
-    this.onChange(EditorState.redo(this.state.editorState));
+  const redo = () => {
+    onChange(EditorState.redo(editorState));
   }
   // https://bitwiser.in/2017/05/11/creating-rte-part-3-entities-and-decorators.html
-  editLink = () => {
-    const { editorState } = this.state;
+  const editLink = () => {
     const selection = editorState.getSelection();
     if (selection.isCollapsed()) {
       console.log("selection is collapsed")
@@ -113,7 +111,7 @@ class MarkdownEditor extends React.Component {
     if (!link) {
       console.log("removing link");
       const newEditorState = RichUtils.toggleLink(editorState, selection, null);
-      this.setState({ editorState: newEditorState });
+      setEditorState(newEditorState);
       return;
     }
     console.log("adding a link", link);
@@ -124,64 +122,62 @@ class MarkdownEditor extends React.Component {
     const newEditorState = EditorState.set(editorState, { currentContent: contentWithEntity });
     const yetNewEditorState = RichUtils.toggleLink(newEditorState, newEditorState.getSelection(), entityKey);
 
-    this.setState({ editorState: yetNewEditorState} );
+    setEditorState(yetNewEditorState);
   }
 
-  render() {
-    const { classes, onDelete } = this.props;
-    const { editorState } = this.state;
+    const { onDelete } = props;
     const canUndo = editorState.getUndoStack().size !== 0;
     const canRedo = editorState.getRedoStack().size !== 0;
     return (
       <div>
         <Grid container>
           <Grid item>
-            <IconButton size="small" disabled={!canUndo} onClick={this.undo} onMouseDown={this.onMouseDown}>
+            <IconButton size="small" disabled={!canUndo} onClick={undo} onMouseDown={onMouseDown}>
               <Undo/>
             </IconButton>
           </Grid>
           <Grid item>
-            <IconButton size="small" disabled={!canRedo} onClick={this.redo} onMouseDown={this.onMouseDown}>
+            <IconButton size="small" disabled={!canRedo} onClick={redo} onMouseDown={onMouseDown}>
               <Redo/>
             </IconButton>
           </Grid>
           <Grid item>
-            <IconButton size="small" onClick={()=>{this.toggleStyle("BOLD")}} onMouseDown={this.onMouseDown}>
+            <IconButton size="small" onClick={()=>{toggleStyle("BOLD")}} onMouseDown={onMouseDown}>
               <FormatBold/>
             </IconButton>
           </Grid>
           <Grid item>
-            <IconButton size="small" onClick={()=>{this.toggleStyle("ITALIC")}} onMouseDown={this.onMouseDown}>
+            <IconButton size="small" onClick={()=>{toggleStyle("ITALIC")}} onMouseDown={onMouseDown}>
               <FormatItalic/>
             </IconButton>
           </Grid>
           <Grid item>
-            <IconButton size="small" onClick={()=>{this.toggleStyle("UNDERLINE")}} onMouseDown={this.onMouseDown}>
+            <IconButton size="small" onClick={()=>{toggleStyle("UNDERLINE")}} onMouseDown={onMouseDown}>
               <FormatUnderlined/>
             </IconButton>
           </Grid>
           <Grid item>
-            <IconButton size="small" onClick={()=>{this.toggleBlockType("unordered-list-item")}} onMouseDown={this.onMouseDown}>
+            <IconButton size="small" onClick={()=>{toggleBlockType("unordered-list-item")}} onMouseDown={onMouseDown}>
               <FormatListBulleted/>
             </IconButton>
           </Grid>
           <Grid item>
-            <IconButton size="small" onClick={()=>{this.toggleBlockType("ordered-list-item")}} onMouseDown={this.onMouseDown}>
+            <IconButton size="small" onClick={()=>{toggleBlockType("ordered-list-item")}} onMouseDown={onMouseDown}>
               <FormatListNumbered/>
             </IconButton>
           </Grid>
           <Grid item>
-            <IconButton size="small" onClick={()=>{this.toggleBlockType("blockquote")}} onMouseDown={this.onMouseDown}>
+            <IconButton size="small" onClick={()=>{toggleBlockType("blockquote")}} onMouseDown={onMouseDown}>
               <FormatQuote/>
             </IconButton>
           </Grid>
           <Grid item>
-            <IconButton size="small" onClick={()=>{this.toggleBlockType("code-block")}} onMouseDown={this.onMouseDown}>
+            <IconButton size="small" onClick={()=>{toggleBlockType("code-block")}} onMouseDown={onMouseDown}>
               <Code/>
             </IconButton>
           </Grid>
           <Grid item>
-            <IconButton size="small" onClick={this.editLink} onMouseDown={this.onMouseDown}>
+            <IconButton size="small" onClick={editLink} onMouseDown={onMouseDown}>
               <LinkIcon/>
             </IconButton>
           </Grid>
@@ -190,16 +186,16 @@ class MarkdownEditor extends React.Component {
           <Grid item xs={11} className={classes.editorFrame}>
             <Editor editorState={editorState} 
               blockStyleFn={(contentBlock) => { return blockStyleFn(classes, contentBlock)}}
-              handleReturn={this.handleReturn}
-              handleKeyCommand={this.handleKeyCommand}
-              onChange={this.onChange} />
+              handleReturn={handleReturn}
+              handleKeyCommand={handleKeyCommand}
+              onChange={onChange} />
           </Grid>
           <Grid item xs={1}>
-            <IconButton size="small" onClick={this.onSave} type="submit">
+            <IconButton size="small" onClick={onSave} type="submit">
               <SaveIcon />
             </IconButton>
             <br/>
-            <IconButton size="small" onClick={this.onCancel}>
+            <IconButton size="small" onClick={onCancel}>
               <CancelIcon />
             </IconButton>
             <br/>
@@ -212,14 +208,12 @@ class MarkdownEditor extends React.Component {
         </Grid>
       </div>
     );
-  }
 }
 
 MarkdownEditor.propTypes = {
-    classes: PropTypes.object.isRequired,
     onSave: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     resource: PropTypes.object.isRequired,
   };
   
-export default withStyles(styles)(MarkdownEditor);
+export default MarkdownEditor;
