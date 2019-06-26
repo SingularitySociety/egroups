@@ -2,11 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
 import { Editor, EditorState, convertFromRaw, CompositeDecorator } from 'draft-js';
-import './MarkdownViewer.css';
-
 import {stateFromMarkdown} from 'draft-js-import-markdown';
-//import stateFromMarkdown from './markdown/stateFromMarkdown';
-
 
 const styles = theme => ({
  editorFrame: {
