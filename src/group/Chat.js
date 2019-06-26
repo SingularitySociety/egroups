@@ -9,6 +9,7 @@ import Message from './Message';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import Privileges from '../const/Privileges';
+import ErrorMessage from './ErrorMessage';
 
 const styles = theme => ({
 });
@@ -19,9 +20,15 @@ class Chat extends React.Component {
     const { db, group, match:{params:{channelId}}, selectTab } = this.props;
     selectTab("channel", `ch/${channelId}`);
     const ref = db.doc(`groups/${group.groupId}/channels/${channelId}`);
-    const channel = (await ref.get()).data();
-
-    this.setState({channel});
+    try {
+      const channel = (await ref.get()).data();
+      this.setState({channel});
+    } catch(e) {
+      console.log(e);
+      const error = { key: "warning.access.denied", channelId:channelId };
+      this.setState({error});
+      return;
+    }
     this.refMessages = ref.collection("messages");
     this.detacher = this.refMessages.orderBy("created").onSnapshot((snapshot)=>{
       const messages=[];
@@ -59,8 +66,11 @@ class Chat extends React.Component {
   }
 
   render() {
-    const { channel, messages } = this.state;
+    const { channel, messages, error } = this.state;
     const { user, member, group, members, callbacks } = this.props;
+    if (error) {
+      return <ErrorMessage error={error} />
+    }
     if (!channel) {
       return "";
     }

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ChannelItem from './ChannelItem';
+import ErrorMessage from './ErrorMessage';
 
 const styles = theme => ({
 });
@@ -18,6 +19,10 @@ class ChannelList extends React.Component {
         list.push(channel);
       });
       this.setState({list});
+    }, (e) => {
+      console.log(e);
+      const error = { key: "warning.access.denied" };
+      this.setState({error});
     })
   }
   componentWillUnmount() {
@@ -25,6 +30,10 @@ class ChannelList extends React.Component {
   }
   render() {
     const { group, history } = this.props;
+    const { error } = this.state;
+    if (error) {
+      return <ErrorMessage error={error} />
+    }
     return <div>
       <div>
         {
