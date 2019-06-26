@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import LockIcon from '@material-ui/icons/Lock';
 import { Grid, Paper } from '@material-ui/core';
+import SubjectIcon from '@material-ui/icons/Subject';
 import MUILink from '@material-ui/core/link';
 import { Link } from 'react-router-dom';
 import Privileges from '../const/Privileges';
@@ -37,10 +38,11 @@ class ArticleItem extends React.Component {
     }
     return (
       <Paper className={classes.item}>
-        <MUILink component={Link} className={className}
+        <MUILink component={Link} 
           to={`/${group.groupName}/${arp.leaf}/${article.articleId}`}>
           <Grid container >
-            <Grid item xs={7} className={classes.title}>
+            <Grid item><SubjectIcon /></Grid>
+            <Grid item xs={7} className={className}>
               { article.title }
             </Grid>
             <Grid item xs={1}>
