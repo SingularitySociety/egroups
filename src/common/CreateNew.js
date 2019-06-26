@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { Fab, Button, TextField } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { FormattedMessage } from 'react-intl';
@@ -18,74 +18,72 @@ const styles = theme => ({
     }
 });
 
-class CreateNew extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { creating:props.creating || false, value:props.value || "" };
+const useStyles = makeStyles(styles);
+
+function CreateNew(props) {
+    const classes = useStyles();
+    const [creating, setCreating] = useState(props.creating || false);
+    const [value, setValue] = useState(props.value || "");
+
+    const setCreatingFlag = (flag) => {
+        setCreating(flag);
+        setValue("")
     }
-    setCreatingFlag = (creating) => {
-        this.setState({creating, value:""})
+    const onChange = (e) => {
+        setValue(e.target.value);
     }
-    onChange = (e) => {
-        let value = e.target.value;
-        this.setState({value});
-    }
-    onSubmit = (e) => {
+    const onSubmit = (e) => {
         e.preventDefault();
-        this.setCreatingFlag(false);
-        this.props.createNew(this.state.value);
+        setCreatingFlag(false);
+        props.createNew(value);
     }
-    catchReturn = (e) => {
+    const catchReturn = (e) => {
         if (e.key==='Enter' && !e.shiftKey) {
             e.preventDefault();
-            if (this.state.value.length > 0) {
-                this.onSubmit(e);
+            if (value.length > 0) {
+                onSubmit(e);
             }
         }
     }
     
-    render() {
-        const { classes, multiline, label, action } = this.props;
-        const { value, creating } = this.state;
-        if (creating) {
-            if (multiline) {
-                return (
-                    <form className={classes.form}>
-                    <TextField onChange={this.onChange} value={value} autoFocus 
-                      variant="outlined" label={label || "Channel Name"} 
-                      multiline={true} rows={2} rowsMax={6} className={classes.multiline}
-                      onKeyPress={this.catchReturn} />
-                    <Button variant="contained" color="primary" className={classes.button} disabled={ value.length < 3 }
-                      onClick={this.onSubmit} type="submit">{action || "Create"}</Button>
-                    <Button variant="contained" className={classes.button} onClick={()=>this.setCreatingFlag(false)}>
-                        <FormattedMessage id="cancel" />
-                    </Button>
-                  </form>
-                );
-            }
+    const { multiline, label, action } = props;
+    if (creating) {
+        if (multiline) {
             return (
                 <form className={classes.form}>
-                <TextField onChange={this.onChange} value={value} autoFocus 
-                  variant="outlined" label={label || "Channel Name"} />
+                <TextField onChange={onChange} value={value} autoFocus 
+                    variant="outlined" label={label || "Channel Name"} 
+                    multiline={true} rows={2} rowsMax={6} className={classes.multiline}
+                    onKeyPress={catchReturn} />
                 <Button variant="contained" color="primary" className={classes.button} disabled={ value.length < 3 }
-                  onClick={this.onSubmit} type="submit">{action || "Create"}</Button>
-                <Button variant="contained" className={classes.button} onClick={()=>this.setCreatingFlag(false)}>
+                    onClick={onSubmit} type="submit">{action || "Create"}</Button>
+                <Button variant="contained" className={classes.button} onClick={()=>setCreatingFlag(false)}>
                     <FormattedMessage id="cancel" />
                 </Button>
-              </form>
+                </form>
             );
         }
         return (
-            <Fab variant="extended" color="primary" onClick={()=>this.setCreatingFlag(true)}>
-              <AddIcon />{label}
-            </Fab>
+            <form className={classes.form}>
+            <TextField onChange={onChange} value={value} autoFocus 
+                variant="outlined" label={label || "Channel Name"} />
+            <Button variant="contained" color="primary" className={classes.button} disabled={ value.length < 3 }
+                onClick={onSubmit} type="submit">{action || "Create"}</Button>
+            <Button variant="contained" className={classes.button} onClick={()=>setCreatingFlag(false)}>
+                <FormattedMessage id="cancel" />
+            </Button>
+            </form>
         );
     }
+    return (
+        <Fab variant="extended" color="primary" onClick={()=>setCreatingFlag(true)}>
+            <AddIcon />{label}
+        </Fab>
+    );
 }
 
 CreateNew.propTypes = {
-    classes: PropTypes.object.isRequired,
     createNew: PropTypes.func.isRequired,
   };
   
-export default withStyles(styles)(CreateNew);
+export default CreateNew;
