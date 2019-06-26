@@ -7,6 +7,7 @@ Image Uploader: Image Orientation
 Pages: Menu access to pages *
 Editor: H1, H2, h3
 Theme: Match H1, H2, H3
+Blog: Do not use onSnapshot for read-only mode.
 
 ----- Done -----
 Editor: link (https://codepen.io/Kiwka/pen/ZLvPeO?editors=1010)
