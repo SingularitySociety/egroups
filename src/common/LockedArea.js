@@ -17,7 +17,7 @@ const styles = theme => ({
   }
 });
 
-class About extends React.Component {
+class LockedArea extends React.Component {
   state = { locked: true }
   toggle = () => {
     const locked = !this.state.locked;
@@ -40,8 +40,8 @@ class About extends React.Component {
   }
 }
 
-About.propTypes = {
+LockedArea.propTypes = {
     classes: PropTypes.object.isRequired,
   };
   
-export default withStyles(styles)(About);
+export default withStyles(styles)(LockedArea);
