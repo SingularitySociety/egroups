@@ -1,6 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
 import { Editor, EditorState, convertFromRaw, CompositeDecorator } from 'draft-js';
 import './MarkdownViewer.css';
@@ -107,22 +106,17 @@ export const blockStyleFn = (classes, contentBlock) => {
   }
 }
 
-class MarkdownViewer extends React.Component {
-    render() {
-      const { classes, resource } = this.props;
-      const contentState = resource.raw ? convertFromRaw(resource.raw) : stateFromMarkdown(resource.markdown);
-      let editorState = EditorState.createWithContent(contentState, compositeDecorator);
-      return (
-        <Editor readOnly={true} 
-          blockStyleFn={(contentBlock) => { return blockStyleFn(classes, contentBlock)}}
-          editorState={editorState} />
-      )  
-    }
+const useStyles = makeStyles(styles);
+
+export default function MarkdownViewer(props) {
+  const classes = useStyles();
+  const { resource } = props;
+  const contentState = resource.raw ? convertFromRaw(resource.raw) : stateFromMarkdown(resource.markdown);
+  const editorState = EditorState.createWithContent(contentState, compositeDecorator);
+  return (
+    <Editor readOnly={true} 
+      blockStyleFn={(contentBlock) => { return blockStyleFn(classes, contentBlock)}}
+      editorState={editorState} />
+  )  
 }
 
-MarkdownViewer.propTypes = {
-    classes: PropTypes.object.isRequired,
-    resource: PropTypes.object.isRequired,
-  };
-  
-export default withStyles(styles)(MarkdownViewer);
