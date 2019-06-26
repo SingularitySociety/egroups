@@ -22,13 +22,6 @@ import { stateFromMarkdown } from 'draft-js-import-markdown';
 const styles = MarkdownStyles;
 const decorator = MarkdownDecorator();
 
-const customStyleMap = {
-  /*
-  BOLD: {
-  }
-  */
-};
-
 class MarkdownEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -196,7 +189,6 @@ class MarkdownEditor extends React.Component {
         <Grid container>
           <Grid item xs={11} className={classes.editorFrame}>
             <Editor editorState={editorState} 
-              customStyleMap={customStyleMap}
               blockStyleFn={(contentBlock) => { return blockStyleFn(classes, contentBlock)}}
               handleReturn={this.handleReturn}
               handleKeyCommand={this.handleKeyCommand}
@@ -206,9 +198,11 @@ class MarkdownEditor extends React.Component {
             <IconButton size="small" onClick={this.onSave} type="submit">
               <SaveIcon />
             </IconButton>
+            <br/>
             <IconButton size="small" onClick={this.onCancel}>
               <CancelIcon />
             </IconButton>
+            <br/>
             {
             onDelete && <IconButton size="small" onClick={onDelete}>
               <TrashIcon />
