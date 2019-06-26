@@ -82,14 +82,14 @@ service cloud.firestore {
       allow read, write: if false;
     }
 		match /groups/{groupId}/channels/{channelId} {
-    	allow read;
+      allow read: if groupInfo(groupId).privileges.channel.read <= userPrivilege(groupId, request.auth.uid);
       allow create: if request.auth.uid != null 
           && groupInfo(groupId).privileges.channel.create <= userPrivilege(groupId, request.auth.uid);
       allow update, delete: if resource.data.owner == request.auth.uid;
       allow update, delete: if isUserAdmin(groupId, request.auth.uid);
     }
 		match /groups/{groupId}/articles/{articleId} {
-    	allow read;
+      allow read: if groupInfo(groupId).privileges.article.read <= userPrivilege(groupId, request.auth.uid);
       allow create: if request.auth.uid != null 
           && groupInfo(groupId).privileges.article.create <= userPrivilege(groupId, request.auth.uid);
       allow update, delete: if resource.data.owner == request.auth.uid;
