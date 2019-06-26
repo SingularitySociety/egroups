@@ -58,6 +58,9 @@ service cloud.firestore {
           && request.resource.data.title != null && request.resource.data.privileges != null; // to avoid fogotten merge
       allow delete: if request.auth.uid != null && isUserOwner(groupId, request.auth.uid);
     }
+    match /groups/{groupId}/private/{anything=**} {
+      allow read, write: if request.auth.uid != null && isUserAdmin(groupId, request.auth.uid)
+    }
 		match /groups/{groupId}/members/{userId} {
     	allow read: if request.auth.uid == userId || isUserAdmin(groupId, request.auth.uid);
       allow read: if isUserMember(groupId, request.auth.uid) 

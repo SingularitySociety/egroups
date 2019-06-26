@@ -8,6 +8,8 @@ import * as UUID from "uuid-v4";
 
 import * as constant from './constant';
 
+import * as utils from './utils'
+
 const thumbPrefix = 'thumb_';
 
 const runImageMagick = async (bucket, originalFilePath, dirName, fileName, size, contentType) => {
@@ -65,7 +67,7 @@ export const createThumbnail = async (object, sizes) => {
   console.log('Image downloaded locally to', tempFilePath);
 
   const ret = {}
-  await asyncForEach(sizes, async(size) => {
+  await utils.asyncForEach(sizes, async(size) => {
     const res = await runImageMagick(bucket, tempFilePath, dirName, fileName, size, contentType)
     if (res) ret[size] = res;
   });
@@ -74,13 +76,6 @@ export const createThumbnail = async (object, sizes) => {
   fs.unlinkSync(tempFilePath);
   return ret;
 }
-
-async function asyncForEach(array, callback) {
-  for (let index = 0; index < array.length; index++) {
-    await callback(array[index], index, array);
-  }
-}
-
 export const validImagePath = (filePath, matchPaths) => {
   const paths = filePath.split("/");
   return matchPaths.reduce((ret, matchPath) => {

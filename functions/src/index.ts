@@ -2,10 +2,16 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import * as express from 'express';
 import * as cors from 'cors';
+
+import * as merge from 'deepmerge';
+
 //import * as fs from 'fs';
 import * as messaging from './messaging';
 import * as image from './image';
 import * as constant from './constant';
+import * as utils from './utils'
+
+import * as stripe from './stripe';
 
 // for mocha watch
 if (!admin.apps.length) {
@@ -19,6 +25,12 @@ app.get('/api/hello', async (req:any, res) => {
   console.log('hello');
   res.send("hello world with Express");
 });
+
+// for test, db is not immutable
+let db = admin.firestore();
+export const updateDb = (_db) => {
+  db = _db;
+}
 
 export const api = functions.https.onRequest(app);
 
@@ -35,7 +47,6 @@ export const api = functions.https.onRequest(app);
 // (7) Select "Service Account Token Creator" and Save
 export const getJWT = functions.https.onCall(async (data, context) => {
   if (context.auth) {
-    const db = admin.firestore();
     const privileges = (await db.doc(`/privileges/${context.auth.uid}`).get()).data();    
     const token = await admin.auth().createCustomToken(context.auth.uid, {privileges});
     return { token, privileges }
@@ -46,7 +57,6 @@ export const getJWT = functions.https.onCall(async (data, context) => {
 export const groupDidCreate = functions.firestore.document('groups/{groupId}')
   .onCreate(async (snapshot, context)=>{
     const { groupId } = context.params;
-    const db = admin.firestore();
     console.log(context);
     const newValue = snapshot.data(); // BUGBUG: this is a hack because I can't access context.auth.uid for some reason
     const userId = newValue && newValue.owner;
@@ -62,6 +72,37 @@ export const groupDidCreate = functions.firestore.document('groups/{groupId}')
     });
   });
 
+export const groupDidUpdate = functions.firestore.document('groups/{groupId}')
+  .onUpdate(async (change, context) => {
+    const { groupId } = context.params;
+    const after = change.after.exists ? change.after.data() ||{} : {};
+    if (after.subscription) {
+      const stripeRef = db.doc(`/groups/${groupId}/private/stripe`);
+      const stripeData = (await stripeRef.get()).data();
+      if (!stripeData || !stripeData.production) {
+        const production = await stripe.createProduct(after.groupName, after.groupName, groupId);
+        await stripeRef.set({production: production}, {merge:true});
+      }
+
+      if (after.plans) {
+        const existPlans = (stripeData && stripeData.plans) || {};
+        const newPlans = {};
+        await utils.asyncForEach(after.plans, async(plan) => {
+          // todp validate plan
+          if (stripeData && (!stripeData.plans || !stripeData.plans[plan])) {
+            const stripePlan = await stripe.createPlan(groupId, plan);
+            newPlans[plan] = stripePlan;
+          }
+        });
+        if (Object.keys(newPlans).length > 0) {
+          const updatedPlan = merge(existPlans, newPlans);
+          await stripeRef.set({plans: updatedPlan}, {merge:true});
+        }
+      }
+      // const value = snapshot.data();
+    }
+  });
+            
 const deleteSubcollection = async (snapshot:FirebaseFirestore.DocumentSnapshot, name:string) => {
   const limit = 10;
   let count:number;
@@ -101,7 +142,6 @@ export const groupDidDelete = functions.firestore.document('groups/{groupId}')
 export const memberDidCreate = functions.firestore.document('groups/{groupId}/members/{userId}')
   .onCreate(async (snapshot, context)=>{
     const { groupId, userId } = context.params;
-    const db = admin.firestore();
     const owner = (await db.doc(`/groups/${groupId}/owners/${userId}`).get()).data();
     // We set the privilege of the owner here so that the owner can leave and join. 
     const privilege = owner ? 0x2000000 : 1; // owner or member
@@ -155,7 +195,6 @@ export const sectionDidDelete = functions.firestore.document('groups/{groupId}/{
 export const memberDidDelete = functions.firestore.document('groups/{groupId}/members/{userId}')
   .onDelete(async (snapshot, context)=>{
     const { groupId, userId } = context.params;
-    const db = admin.firestore();
     await db.doc("/groups/" + groupId + "/privileges/" + userId).delete();
 
     await deleteSubcollection(snapshot, "private");
@@ -203,13 +242,11 @@ export const tokenDidCreate = functions.firestore.document('users/{userId}/priva
     const newTokens = change.after.exists ? ((change.after.data() || {}).tokens || []) : [];
     const oldTokens = change.before ? ((change.before.data() || {}).tokens || []) : [];
 
-    const db = admin.firestore();
     return messaging.subscribe_group(newTokens, oldTokens, userId, db, messaging.subscribe_topic, messaging.unsubscribe_topic);
   });
 
 export const updateTopicSubscription = functions.https.onCall(async (data, context) => {
   if (context.auth) {
-    const db = admin.firestore();
     await messaging.subscribe_all_groups(context.auth.uid, db, messaging.subscribe_topic);
     return {  }
   }
@@ -237,7 +274,6 @@ export const generateThumbnail = functions.storage.object().onFinalize(async (ob
   
   const thumbnails = await image.createThumbnail(object, constant.thumbnailSizes)
   if (thumbnails) {
-    const db = admin.firestore();
     const image_data_ref = db.doc(store_path);
     const data = {[imageId]:{thumbnails: thumbnails}};
     await image_data_ref.set(data, {merge:true})
