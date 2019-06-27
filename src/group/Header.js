@@ -11,7 +11,7 @@ import "firebase/auth";
 import { FormattedMessage } from 'react-intl';
 import Privileges from '../const/Privileges';
 import theme from '../theme';
-import JoinButton from './JoinButton';
+import JoinButton from './join/JoinButton';
 
 const styles = {
   root: {

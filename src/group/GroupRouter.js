@@ -13,7 +13,6 @@ import { Route } from 'react-router-dom';
 import GroupHome from './GroupHome';
 import Events from './Events';
 import MountDetector from '../common/MountDetector';
-import Join from './Join';
 import Account from './Account';
 import Processing from '../Processing';
 import Chat from './Chat';
@@ -29,8 +28,9 @@ import Profile from './Profile';
 import MemberHome from './MemberHome';
 import ChannelSettings from './ChannelSettings';
 import ArticleSettings from './ArticleSettings';
-import SettingsBilling from './SettingsBilling';
-import Subscribe from './Subscribe';
+import Join from './join/Join';
+import SettingsBilling from './join/SettingsBilling';
+import Subscribe from './join/Subscribe';
 
 const colorMap = { red, pink, purple, deepPurple, indigo, 
   blue, lightBlue, cyan, teal, green,
