@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { FormGroup, Switch, FormControlLabel, Fab, TextField, Grid, Button } from '@material-ui/core';
+import { FormGroup, Switch, FormControlLabel, Fab, TextField, Grid, Button, IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { FormattedMessage } from 'react-intl';
 
 const styles = theme => ({
@@ -40,19 +41,19 @@ function SettingsBilling(props) {
     props.reloadGroup();
   };
   function addPlan() {
-    const newPlans = plans.concat([{}]);
+    const newPlans = plans.concat([{name:"", price:""}]);
     setPlans(newPlans);
     console.log(newPlans);
   }
   function deletePlan(index) {
-    let newPlans = plans;
+    let newPlans = plans.concat([]); // deep copy
     newPlans.splice(index, 1);
     setPlans(newPlans);
     console.log(newPlans);
   }
   function onChange(e, field, index) {
-    let newPlans = plans;
-    let plan = plans[index];
+    let newPlans = plans.concat([]); // deep copy
+    let plan = {...plans[index]}; // deep copy
     plan[field] = e.target.value;
     newPlans[index] = plan;
     setPlans(newPlans);
@@ -81,6 +82,11 @@ function SettingsBilling(props) {
                 <Grid item xs={3}>
                   <TextField label={"plan.price"} value={plan.price} variant="outlined" 
                     onChange={(e)=>onChange(e, "price", index)} />
+                </Grid>
+                <Grid item xs={1}>
+                  <IconButton onClick={()=>{deletePlan(index)}}>
+                    <DeleteIcon />
+                  </IconButton>
                 </Grid>
               </Grid>
               );
