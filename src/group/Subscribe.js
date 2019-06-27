@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
-
+import PleaseLogin from './PleaseLogin';
 
 const styles = theme => ({
   about: {
@@ -22,7 +22,7 @@ function Subscribe(props) {
   }, [selectTab]);
 
   if (!user) {
-    return <p>Please login</p>
+    return <PleaseLogin />
   }
 
   return (
