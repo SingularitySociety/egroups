@@ -20,10 +20,13 @@ function JoinButton(props) {
     || pageInfo.tabId==="subscribe") {
       return "";
   }
+  const path = `/${group.groupName}/` 
+          + (group.subscription ? "subscribe" : "join");
+
   return (
     <Grid container justify="center" className={classes.join}>
       <Grid item>
-        <Button variant="contained" color="primary" component={Link} to={"/" + group.groupName + "/join"}><FormattedMessage id="join" /></Button>
+        <Button variant="contained" color="primary" component={Link} to={path}><FormattedMessage id="join" /></Button>
       </Grid>
     </Grid>
 )
