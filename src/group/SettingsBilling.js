@@ -28,6 +28,7 @@ function SettingsBilling(props) {
   const { group, db, selectTab } = props;
   const [subscription, setSubscription] = useState(group.subscription);
   const [plans, setPlans] = useState(group.plans || []);
+  const [modified, setModified] = useState(false);
   const refGroup = db.doc(`groups/${group.groupId}`);
 
   useEffect(()=>{
@@ -40,27 +41,31 @@ function SettingsBilling(props) {
     await refGroup.set({[name]:event.target.checked}, {merge:true});
     props.reloadGroup();
   };
+
   function addPlan() {
     const newPlans = plans.concat([{name:"", price:""}]);
     setPlans(newPlans);
-    console.log(newPlans);
+    setModified(true);
   }
   function deletePlan(index) {
     let newPlans = plans.concat([]); // deep copy
     newPlans.splice(index, 1);
     setPlans(newPlans);
-    console.log(newPlans);
+    setModified(true);
   }
-  function onChange(e, field, index) {
+  function onChange(value, field, index) {
     let newPlans = plans.concat([]); // deep copy
     let plan = {...plans[index]}; // deep copy
-    plan[field] = e.target.value;
+    plan[field] = value;
     newPlans[index] = plan;
     setPlans(newPlans);
+    setModified(true);
   }
   function onCancel() {
     setPlans(group.plans || []);
-  }  
+    setModified(false);
+  }
+  let isValid = true;
   return (
     <React.Fragment>
       <FormGroup row className={classes.subsciption}>
@@ -73,15 +78,18 @@ function SettingsBilling(props) {
         subscription && <form>
           {
             plans.map((plan, index)=>{
+              const isNameValid = plan.name.length > 0;
+              const isPriceValid = plan.price > 0;
+              isValid = isValid && isNameValid && isPriceValid;
               return (
               <Grid container key={index} className={classes.plan}>
                 <Grid item xs={5}>
-                  <TextField label={"plan.name"} value={plan.name} variant="outlined" 
-                    onChange={(e)=>onChange(e, "name", index)} />
+                  <TextField error={!isNameValid} label={"plan.name"} value={plan.name} variant="outlined" 
+                    onChange={(e)=>onChange(e.target.value, "name", index)} />
                 </Grid>
                 <Grid item xs={3}>
-                  <TextField label={"plan.price"} value={plan.price} variant="outlined" 
-                    onChange={(e)=>onChange(e, "price", index)} />
+                  <TextField error={!isPriceValid} label={"plan.price"} value={plan.price} variant="outlined" 
+                    onChange={(e)=>onChange(parseInt(e.target.value) || "", "price", index)} />
                 </Grid>
                 <Grid item xs={1}>
                   <IconButton onClick={()=>{deletePlan(index)}}>
@@ -96,8 +104,8 @@ function SettingsBilling(props) {
               <AddIcon />{"plan.add"}
           </Fab>
           <div className={classes.buttons}>
-            <Button variant="contained" color="primary" className={classes.button}>submit</Button>
-            <Button variant="contained" onClick={onCancel}>cancel</Button>
+            <Button variant="contained" color="primary" className={classes.button} disabled={!modified || !isValid}>update</Button>
+            <Button variant="contained" onClick={onCancel} disabled={!modified}>cancel</Button>
           </div>
         </form>
       }
