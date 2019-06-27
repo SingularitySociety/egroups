@@ -50,7 +50,8 @@ function SettingsBilling(props) {
   };
 
   function addPlan() {
-    const newPlans = plans.concat([{name:"", price:""}]);
+    // LATER: jpy is default for now. In usd, the price is in cents not in dollar. 
+    const newPlans = plans.concat([{name:"", price:"", currency:"jpy"}]);
     setPlans(newPlans);
     setModified(true);
   }
