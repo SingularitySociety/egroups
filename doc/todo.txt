@@ -1,13 +1,18 @@
 Profile: No grey color / Implement
 Blog: Display author & date (along with Members database)
 Chat: P 2 P
-Chat: Debug read/unread
+Channels/Blog: Debug read/unread
+Chat: Scroll to the bottom
+Chat: Infinit scroll
 Image Uploader: Verify the privacy
 Image Uploader: Image Orientation
 Pages: Menu access to pages *
 Editor: H1, H2, h3
 Theme: Match H1, H2, H3
 Blog: Do not use onSnapshot for read-only mode.
+Group: Invitation
+Account: Owner can not leave
+Account: Put "leave" button in dangerous switch
 
 ----- Done -----
 Chat: Activate the entry

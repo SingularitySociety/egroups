@@ -17,6 +17,10 @@ const styles = theme => ({
   formControl: {
     width:theme.spacing(38),
     marginBottom: theme.spacing(2),
+  },
+  billing: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
   }
 });
 
@@ -104,11 +108,16 @@ class Settings extends React.Component {
             multiline={true} onSave={this.onSave('description')}/>
         </FormGroup>
 
-        <FormGroup row>
+        <FormGroup row className={classes.billing}>
           <FormControlLabel 
             control={ <Switch checked={open} onChange={this.handleCheck('open')} value="open" /> }
             label={<FormattedMessage id="settings.open" />}
           />
+          { !open && 
+            <Button variant="contained" color="primary">
+              <FormattedMessage id="settings.billing" />
+            </Button>
+          }
         </FormGroup>
 
         <FormControl className={classes.formControl}>
