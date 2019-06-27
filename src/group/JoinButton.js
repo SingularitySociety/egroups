@@ -33,7 +33,8 @@ function JoinButton(props) {
 }
 
 JoinButton.propTypes = {
-  ///classes: PropTypes.object.isRequired,
+  pageInfo: PropTypes.object.isRequired,
+  group: PropTypes.object.isRequired,
 };
   
 export default JoinButton;
