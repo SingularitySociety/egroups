@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+//import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Button } from '@material-ui/core';
-import { FormattedMessage } from 'react-intl';
+//import { FormattedMessage } from 'react-intl';
 import { injectStripe, CardElement } from 'react-stripe-elements';
 
 const styles = theme => ({
   about: {
     color: "red",
   },
+  cardElement: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+  }
 });
 const useStyles = makeStyles(styles);
 
@@ -17,7 +20,7 @@ function CheckoutForm(props) {
   const classes = useStyles();
   const { stripe } = props;
   const [ error, setError ] = useState(null);
-
+  
   async function onSubmit(e) {
     e.preventDefault();
     setError(null);
@@ -28,10 +31,18 @@ function CheckoutForm(props) {
     }
   }
 
+  const styleCard = {
+    base: {
+      fontSize: '14px',
+    }
+  };
+
   return (
-    <form>
-      <CardElement />
-      <Button variant="contained" color="primary" onClick={onSubmit} type="submit">submit</Button>
+    <form onSubmit={onSubmit}>
+      <div className={classes.cardElement} >
+        <CardElement style={styleCard} />
+      </div>
+      <Button variant="contained" color="primary" type="submit">submit</Button>
       {
         error &&
           <Typography color="error">{error}</Typography>

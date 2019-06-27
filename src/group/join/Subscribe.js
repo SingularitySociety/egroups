@@ -29,7 +29,7 @@ function Subscribe(props) {
   }
 
   return (
-    <StripeProvider apiKey="pk_test_12345">
+    <StripeProvider apiKey="pk_test_iVo1YToPedpru7AJDpAj43cF00ftQJpoj8">
       <Elements>
         <InjectedCheckoutForm />
       </Elements>
