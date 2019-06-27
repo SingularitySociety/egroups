@@ -60,6 +60,7 @@ class MyAppBar extends React.Component {
     this.cramEvents = this.breadCram("events");
     this.cramAccount = this.breadCram("account");
     this.cramSettings = this.breadCram("settings");
+    this.cramSettingsBilling = this.breadCram("settings.billing", "settings/billing");
     this.cramListing = this.breadCram("listing");
     this.cramJoin = this.breadCram("join", null, "application");
     this.cramHomePage = <MUILink key="page.home" color="inherit" component={Link} to={`/${group.groupName}`}>
@@ -146,7 +147,10 @@ class MyAppBar extends React.Component {
       case "settings":
         crams = [this.cramHome, this.cramSettings];
         break;
-      case "join":
+      case "settings.billing":
+          crams = [this.cramHome, this.cramSettings, this.cramSettingsBilling];
+          break;
+        case "join":
         crams = [this.cramHomePage, this.cramJoin];
         break;
       case "listing":

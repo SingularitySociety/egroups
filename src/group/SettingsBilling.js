@@ -16,10 +16,11 @@ const useStyles = makeStyles(styles);
 
 function SettingsBilling(props) {
   const classes = useStyles();
+  const { selectTab } = props;
 
   useEffect(()=>{
-    console.log("useEffect");
-  }, []);
+    selectTab("settings.billing");
+  }, [selectTab]);
 
   return (
     <React.Fragment>
