@@ -28,6 +28,8 @@ function Subscribe(props) {
     return <PleaseLogin />
   }
 
+  // Test card numbers
+  // 4242 4242 4242 4242
   return (
     <StripeProvider apiKey="pk_test_iVo1YToPedpru7AJDpAj43cF00ftQJpoj8">
       <Elements>
