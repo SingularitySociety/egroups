@@ -48,6 +48,7 @@
 
     "settings.theme.primary":"Primary Color",
     "settings.billing":"Billing",
+    "subscription.enabled":"Enable Subscription",
 
     "red":"red",
     "pink":"pink",
