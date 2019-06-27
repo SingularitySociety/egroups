@@ -16,8 +16,11 @@ const styles = theme => ({
   add: {
     marginLeft: theme.spacing(1),
   },
+  textField: {
+    width: "100%",
+  },
   buttons: {
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(2),
   },
   button: {
     marginRight: theme.spacing(1),
@@ -92,15 +95,15 @@ function SettingsBilling(props) {
               const isPriceValid = plan.price > 0;
               isValid = isValid && isNameValid && isPriceValid;
               return (
-              <Grid container key={index} className={classes.plan}>
-                <Grid item xs={5}>
+              <Grid container direction="row" key={index} className={classes.plan} spacing={1}>
+                <Grid item xs={6}>
                   <TextField error={!isNameValid} label={<FormattedMessage id="plan.name" />} 
-                    value={plan.name} variant="outlined" 
+                    value={plan.name} variant="outlined" className={classes.textField}
                     onChange={(e)=>onChange(e.target.value, "name", index)} />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4}>
                   <TextField error={!isPriceValid} label={<FormattedMessage id="plan.price" />} 
-                    value={plan.price} variant="outlined" 
+                    value={plan.price} variant="outlined" className={classes.textField}
                     onChange={(e)=>onChange(parseInt(e.target.value) || "", "price", index)} />
                 </Grid>
                 <Grid item xs={1}>
