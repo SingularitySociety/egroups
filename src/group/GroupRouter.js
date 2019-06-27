@@ -74,7 +74,7 @@ class GroupRouter extends React.Component {
   state = {group:null, member:null, error:null, members:{}, pageInfo:{tabId:"home"}};
   async componentDidMount() {
     const { db, match:{params:{gp}}, rootGroup } = this.props;
-    console.log(rootGroup);
+    //console.log(rootGroup);
     const groupName = gp || rootGroup;
     if (groupName.length < 3) {
       return;

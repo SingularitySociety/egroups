@@ -4,6 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 //import { FormattedMessage } from 'react-intl';
 import PleaseLogin from './PleaseLogin';
+import { StripeProvider, Elements } from 'react-stripe-elements';
+import InjectedCheckoutForm from './CheckoutForm';
 
 const styles = theme => ({
   about: {
@@ -25,7 +27,14 @@ function Subscribe(props) {
   }
 
   return (
-      <Typography className={classes.about}>Subscribe</Typography>
+    <StripeProvider apiKey="pk_test_12345">
+      <div>
+        <Typography className={classes.about}>Subscribe</Typography>
+        <Elements>
+          <InjectedCheckoutForm />
+        </Elements>
+      </div>
+    </StripeProvider>
   )
 }
 
