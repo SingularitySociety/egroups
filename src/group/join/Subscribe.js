@@ -18,7 +18,7 @@ const useStyles = makeStyles(styles);
 
 function Subscribe(props) {
   //const classes = useStyles();
-  const { selectTab, user } = props;
+  const { selectTab, user, group } = props;
 
   useEffect(()=>{
     selectTab("subscribe");
@@ -33,7 +33,7 @@ function Subscribe(props) {
   return (
     <StripeProvider apiKey="pk_test_iVo1YToPedpru7AJDpAj43cF00ftQJpoj8">
       <Elements>
-        <InjectedCheckoutForm />
+        <InjectedCheckoutForm group={group} />
       </Elements>
     </StripeProvider>
   )
