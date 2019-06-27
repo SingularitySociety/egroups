@@ -1,21 +1,23 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
+//import { makeStyles } from '@material-ui/core/styles';
+//import { Typography } from '@material-ui/core';
 //import { FormattedMessage } from 'react-intl';
 import PleaseLogin from './PleaseLogin';
 import { StripeProvider, Elements } from 'react-stripe-elements';
 import InjectedCheckoutForm from './CheckoutForm';
 
+/*
 const styles = theme => ({
   about: {
     color: "red",
   },
 });
 const useStyles = makeStyles(styles);
+*/
 
 function Subscribe(props) {
-  const classes = useStyles();
+  //const classes = useStyles();
   const { selectTab, user } = props;
 
   useEffect(()=>{
@@ -28,12 +30,9 @@ function Subscribe(props) {
 
   return (
     <StripeProvider apiKey="pk_test_12345">
-      <div>
-        <Typography className={classes.about}>Subscribe</Typography>
-        <Elements>
-          <InjectedCheckoutForm />
-        </Elements>
-      </div>
+      <Elements>
+        <InjectedCheckoutForm />
+      </Elements>
     </StripeProvider>
   )
 }
