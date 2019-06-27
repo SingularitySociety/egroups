@@ -7,17 +7,21 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { FormattedMessage } from 'react-intl';
 
 const styles = theme => ({
+  subsciption: {
+    marginBottom: theme.spacing(1),
+  },
   plan: {
     marginBottom: theme.spacing(1),
   },
   add: {
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(1),
   },
   buttons: {
     marginTop: theme.spacing(1),
   },
   button: {
     marginRight: theme.spacing(1),
+    width: "6rem",
   }
 });
 
@@ -65,6 +69,11 @@ function SettingsBilling(props) {
     setPlans(group.plans || []);
     setModified(false);
   }
+  async function onUpdate() {
+    await refGroup.set({plans:plans}, {merge:true});
+    props.reloadGroup();
+    setModified(false);
+  }
   let isValid = true;
   return (
     <React.Fragment>
@@ -84,11 +93,13 @@ function SettingsBilling(props) {
               return (
               <Grid container key={index} className={classes.plan}>
                 <Grid item xs={5}>
-                  <TextField error={!isNameValid} label={"plan.name"} value={plan.name} variant="outlined" 
+                  <TextField error={!isNameValid} label={<FormattedMessage id="plan.name" />} 
+                    value={plan.name} variant="outlined" 
                     onChange={(e)=>onChange(e.target.value, "name", index)} />
                 </Grid>
                 <Grid item xs={3}>
-                  <TextField error={!isPriceValid} label={"plan.price"} value={plan.price} variant="outlined" 
+                  <TextField error={!isPriceValid} label={<FormattedMessage id="plan.price" />} 
+                    value={plan.price} variant="outlined" 
                     onChange={(e)=>onChange(parseInt(e.target.value) || "", "price", index)} />
                 </Grid>
                 <Grid item xs={1}>
@@ -101,11 +112,15 @@ function SettingsBilling(props) {
             })
           }
           <Fab variant="extended" onClick={addPlan} size="small" className={classes.add}>
-              <AddIcon />{"plan.add"}
+              <AddIcon /><FormattedMessage id="plan.add"/>
           </Fab>
           <div className={classes.buttons}>
-            <Button variant="contained" color="primary" className={classes.button} disabled={!modified || !isValid}>update</Button>
-            <Button variant="contained" onClick={onCancel} disabled={!modified}>cancel</Button>
+            <Button variant="contained" color="primary" onClick={onUpdate} className={classes.button} disabled={!modified || !isValid}>
+              <FormattedMessage id="update" />
+            </Button>
+            <Button variant="contained" onClick={onCancel} className={classes.button} disabled={!modified}>
+            <FormattedMessage id="cancel" />
+            </Button>
           </div>
         </form>
       }

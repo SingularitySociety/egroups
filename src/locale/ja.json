@@ -49,6 +49,10 @@
     "settings.theme.primary":"プライマリー・カラー",
     "settings.billing":"課金設定",
     "subscription.enabled":"有料会員募集",
+    "plan.name":"プラン名",
+    "plan.price":"月額",
+    "plan.add":"月額プラン",
+    "update":"更新",
 
     "red":"red",
     "pink":"pink",

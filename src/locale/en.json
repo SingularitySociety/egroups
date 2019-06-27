@@ -49,6 +49,10 @@
     "settings.theme.primary":"Primary Color",
     "settings.billing":"Billing",
     "subscription.enabled":"Enable Subscription",
+    "plan.name":"Plan Name",
+    "plan.price":"Monthly Fee",
+    "plan.add":"Monthly Plan",
+    "update":"Update",
 
     "red":"red",
     "pink":"pink",
