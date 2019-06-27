@@ -27,9 +27,17 @@ describe('Group function test', () => {
       groupName: "hello",
       subscription: true,
       plans: [{ price: 2000,
-                title: "学生会員"},
+                title: "学生会員",
+                currency: "jpy",
+              },
               { price: 3000,
-                title: "一般会員"}],
+                title: "一般会員",
+                currency: "jpy",
+              },
+              { price: 30,
+                title: "student",
+                currency: "usd",
+              }],
     }, `groups/${groupId}`);
     const change = test.makeChange(beforeGroupDataSnap, afterGroupDataSnap);
 
@@ -47,12 +55,12 @@ describe('Group function test', () => {
     const data = (await admin_db.doc(`/groups/${groupId}/private/stripe`).get()).data()
 
     const planData = data.plans;
-    const planData2000 = planData["2000"];
+    const planData2000 = planData["2000_jpy"];
     planData2000.active.should.equal(true);
     planData2000.amount.should.equal(2000);
     planData2000.billing_scheme.should.equal('per_unit');
     planData2000.currency.should.equal('jpy');
-    planData2000.id.should.equal('plan_123_2000');
+    planData2000.id.should.equal('plan_123_2000_jpy');
     planData2000.interval.should.equal('month');
     planData2000.interval_count.should.equal(1);
     planData2000.livemode.should.equal(false);
@@ -60,12 +68,12 @@ describe('Group function test', () => {
     planData2000.product.should.equal('prod_123');
     planData2000.usage_type.should.equal('licensed');
       
-    const planData3000 = planData["3000"];
+    const planData3000 = planData["3000_jpy"];
     planData3000.active.should.equal(true);
     planData3000.amount.should.equal(3000);
     planData3000.billing_scheme.should.equal('per_unit');
     planData3000.currency.should.equal('jpy');
-    planData3000.id.should.equal('plan_123_3000');
+    planData3000.id.should.equal('plan_123_3000_jpy');
     planData3000.interval.should.equal('month');
     planData3000.interval_count.should.equal(1);
     planData3000.livemode.should.equal(false);
