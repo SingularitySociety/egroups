@@ -11,7 +11,7 @@ import EditableField from '../common/EditableField';
 import ImageUploader from '../common/ImageUploader';
 import ColorOptions from './ColorOptions';
 import LockedArea from '../common/LockedArea';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 
 const styles = theme => ({
   formControl: {
@@ -114,7 +114,7 @@ class Settings extends React.Component {
             label={<FormattedMessage id="settings.open" />}
           />
           { !open && 
-            <Button variant="contained" color="primary">
+            <Button variant="contained" color="primary" component={Link} to={`/${group.groupName}/settings/billing`}>
               <FormattedMessage id="settings.billing" />
             </Button>
           }

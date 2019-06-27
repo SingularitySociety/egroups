@@ -29,6 +29,7 @@ import Profile from './Profile';
 import MemberHome from './MemberHome';
 import ChannelSettings from './ChannelSettings';
 import ArticleSettings from './ArticleSettings';
+import SettingsBilling from './SettingsBilling';
 
 const colorMap = { red, pink, purple, deepPurple, indigo, 
   blue, lightBlue, cyan, teal, green,
@@ -204,6 +205,8 @@ class GroupRouter extends React.Component {
                 render={(props) => <Account {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/settings`} 
                 render={(props) => <Settings {...props} {...context} />} />
+              <Route exact path={`/${group.groupName}/settings/billing`} 
+                render={(props) => <SettingsBilling {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/channels`} render={(props) => <Channels {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/ch/:channelId`} render={(props) => <Chat {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/ch/:channelId/settings`} render={(props) => <ChannelSettings {...props} {...context} />} />
