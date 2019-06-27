@@ -89,9 +89,10 @@ export const groupDidUpdate = functions.firestore.document('groups/{groupId}')
         const newPlans = {};
         await utils.asyncForEach(after.plans, async(plan) => {
           // todp validate plan
-          if (stripeData && (!stripeData.plans || !stripeData.plans[plan])) {
-            const stripePlan = await stripe.createPlan(groupId, plan);
-            newPlans[plan] = stripePlan;
+          const price = plan.price;
+          if (stripeData && (!stripeData.plans || !stripeData.plans[price])) {
+            const stripePlan = await stripe.createPlan(groupId, price);
+            newPlans[price] = stripePlan;
           }
         });
         if (Object.keys(newPlans).length > 0) {

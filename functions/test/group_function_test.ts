@@ -26,7 +26,10 @@ describe('Group function test', () => {
     const afterGroupDataSnap = test.firestore.makeDocumentSnapshot({
       groupName: "hello",
       subscription: true,
-      plans: [2000, 3000],
+      plans: [{ price: 2000,
+                title: "学生会員"},
+              { price: 3000,
+                title: "一般会員"}],
     }, `groups/${groupId}`);
     const change = test.makeChange(beforeGroupDataSnap, afterGroupDataSnap);
 
