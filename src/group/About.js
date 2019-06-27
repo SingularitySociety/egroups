@@ -1,24 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
+import { FormattedMessage } from 'react-intl';
+
 
 const styles = theme => ({
+  about: {
+    color: "red",
+  },
 });
+const useStyles = makeStyles(styles);
 
-class About extends React.Component {
-    render() {
-        const { group } = this.props;
-        return (
-            <Typography component="h2" variant="h5" gutterBottom>
-              { group.description }
-            </Typography>
-          )
-    }
+function About(props) {
+  const classes = useStyles();
+  return (
+      <Typography className={classes.about}>"about"</Typography>
+  )
 }
 
 About.propTypes = {
-    classes: PropTypes.object.isRequired,
-  };
+  ///classes: PropTypes.object.isRequired,
+};
   
-export default withStyles(styles)(About);
+export default About;
