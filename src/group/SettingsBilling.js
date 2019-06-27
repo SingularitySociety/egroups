@@ -70,6 +70,7 @@ function SettingsBilling(props) {
     setModified(false);
   }
   async function onUpdate() {
+    plans.sort((a, b) => { return a.price - b.price });
     await refGroup.set({plans:plans}, {merge:true});
     props.reloadGroup();
     setModified(false);
