@@ -3,7 +3,7 @@ import * as functions from 'firebase-functions';
 
 let stripe;
 
-const getStripe = () => {
+export const getStripe = () => {
   if (!stripe) {
     const secret = functions.config() && functions.config().stripe &&  functions.config().stripe.secret_key;
     stripe = new Stripe(secret)
@@ -33,8 +33,8 @@ export const getProductId = (groupId) => {
   return "prod_" + groupId;
 }
 
-export const getPlanId = (groupId, amount) => {
-  return ["plan", groupId, String(amount)].join("_");
+export const getPlanId = (groupId, amount, currency) => {
+  return ["plan", groupId, String(amount), currency].join("_");
 }
 
 export const createProduct = async (name, description, groupId) => {
@@ -52,15 +52,13 @@ export const createProduct = async (name, description, groupId) => {
       statement_descriptor: description
     });
   }
-  // todo insert to firestore
-  
   return product;
   
 }
 
-export const createPlan = async(groupId, amount) => {
+export const createPlan = async(groupId, amount, currency = "jpy") => {
   const productId = "prod_" + groupId;
-  const planId = getPlanId(groupId, amount);
+  const planId = getPlanId(groupId, amount, currency);
 
   let plan = await getExistPlan(planId);
   if (!plan) {
@@ -69,11 +67,9 @@ export const createPlan = async(groupId, amount) => {
       amount: amount,
       interval: "month",
       product: productId,
-      currency: "jpy",
+      currency: currency,
     });
   }
-  // todo insert to firestore
-  
-  
   return plan;
 };
+
