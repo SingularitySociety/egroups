@@ -1,4 +1,5 @@
 //import * as supertest from 'supertest';
+import * as functions_test_helper from "./functions_test_helper";
 import * as stripe from '../src/stripe';
 import { should } from 'chai';
 // import * as utils from '../src/utils'
@@ -54,6 +55,7 @@ describe('Stripe test', () => {
     plan_usd.livemode.should.equal(false);
     (plan_usd.product as string).should.equal('prod_unit_test_plan');
     plan_usd.usage_type.should.equal('licensed');
+
   });
 
   it('token', async function() {
@@ -61,23 +63,12 @@ describe('Stripe test', () => {
     const uuid = UUID();
     const userId =  "test_customer_" + uuid;
 
-    const stripeInstance = stripe.getStripe()
-    const visa_source = await stripeInstance.tokens.create({
-      card: {
-        number: '4242424242424242',
-        exp_month: 8,
-        exp_year: 2025,
-      },
-    });
+    const visa_source = await functions_test_helper.createVisaCard();
     const visa_token = visa_source.id;
-    const master_source = await stripeInstance.tokens.create({
-      card: {
-        number: '5555555555554444',
-        exp_month: 8,
-        exp_year: 2025,
-      },
-    });
+
+    const master_source = await functions_test_helper.createMasterCard();
     const master_token = master_source.id;
+
     const customer = await stripe.createCustomer(visa_token, userId);
 
     const customerId = stripe.getCustomerId(userId);
@@ -118,4 +109,63 @@ describe('Stripe test', () => {
     
     await stripe.deleteCustomer(userId);
   });
+
+  it('subscription', async function() {
+    this.timeout(10000);
+    const uuid = UUID();
+    const userId =  "test_customer_" + uuid;
+
+    const visa_source = await functions_test_helper.createVisaCard();
+    const visa_token = visa_source.id;
+
+    const customer = await stripe.createCustomer(visa_token, userId);
+
+    await stripe.createProduct("unit_test", "hello", groupId);
+    const plan = await stripe.createPlan(groupId, 5000, "jpy");
+
+    const subscription = await stripe.createSubscription(userId, plan.id);
+    subscription.object.should.equal('subscription');
+    subscription.customer.should.equal(customer.id)
+
+    subscription.billing.should.equal('charge_automatically');
+    subscription.collection_method.should.equal('charge_automatically');
+    (subscription.current_period_end - subscription.current_period_start).should.equal(2592000);
+
+    subscription.items.object.should.equal('list');
+    subscription.items.total_count.should.equal(1);
+
+    subscription.plan.id.should.equal(plan.id);
+    
+    subscription.plan.object.should.equal('plan');
+    subscription.plan.active.should.equal(true);
+    subscription.plan.amount.should.equal(5000);
+    subscription.plan.billing_scheme.should.equal('per_unit');
+    subscription.plan.currency.should.equal('jpy');
+    subscription.plan.interval.should.equal('month');
+    subscription.plan.interval_count.should.equal(1);
+    subscription.plan.product.should.equal('prod_unit_test_plan');
+
+    subscription.quantity.should.equal(1);
+    subscription.start.should.equal(subscription.current_period_start);
+    subscription.start_date.should.equal(subscription.current_period_start);
+    subscription.status.should.equal('active');
+
+    subscription.items.object.should.equal('list');
+
+    subscription.items.data[0].plan.object.should.equal('plan');
+    subscription.items.data[0].plan.active.should.equal(true);
+    subscription.items.data[0].plan.amount.should.equal(5000);
+    subscription.items.data[0].plan.billing_scheme.should.equal('per_unit');
+    subscription.items.data[0].plan.currency.should.equal('jpy');
+    subscription.items.data[0].plan.interval.should.equal('month');
+    subscription.items.data[0].plan.interval_count.should.equal(1);
+    subscription.items.data[0].plan.product.should.equal('prod_unit_test_plan');
+    
+    subscription.items.data[0].quantity.should.equal(1);
+
+    const subscription2 = await stripe.createSubscription(userId, plan.id);
+    subscription2.id.should.equal(subscription2.id);
+    
+  });
+
 })

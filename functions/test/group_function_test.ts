@@ -1,4 +1,5 @@
 import * as test_helper from "../../lib/test/rules/test_helper";
+import * as functions_test_helper from "./functions_test_helper";
 import * as index from '../src/index';
 import * as stripe from '../src/stripe';
 
@@ -105,14 +106,7 @@ describe('Group function test', () => {
       uid: aliceUID,
     })
 
-    const stripeInstance = stripe.getStripe()
-    const visa_source = await stripeInstance.tokens.create({
-      card: {
-        number: '4242424242424242',
-        exp_month: 8,
-        exp_year: 2025,
-      },
-    });
+    const visa_source = await functions_test_helper.createVisaCard();
     const visa_token = visa_source.id;
     
     const test = Test();

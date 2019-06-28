@@ -114,12 +114,28 @@ export const createCustomer = async (token, userId) => {
 }
 
 
-export const deleteCustomer  = async (userId) => {
+export const deleteCustomer = async (userId) => {
   const customerId = getCustomerId(userId);
   try {
     await getStripe().customers.del(customerId);
     return true;
   } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+export const createSubscription = async (userId, plan) => {
+  const customerId = getCustomerId(userId);
+  const idempotency_key = ["sub", customerId, plan].join("_")
+  try {
+    const subscription = await getStripe().subscriptions.create({
+      customer: customerId,
+      items: [{ plan: plan }]
+    }, {idempotency_key: idempotency_key})
+    return subscription;
+  } catch (e) {
+    console.log(e);
     return false;
   }
 }
