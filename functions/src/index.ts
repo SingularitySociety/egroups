@@ -80,6 +80,24 @@ export const createCustomer = functions.https.onCall(async (data, context) => {
   };
 });
 
+export const createSubscribe = functions.https.onCall(async (data, context) => {
+  if (!context.auth || !context.auth.uid) {
+    return {result: false};
+  }
+  if (!data || !data.groupId || !data.plan) {
+    return {result: false};
+  }
+  const userId = context.auth.uid;
+
+  const user = (await db.doc(`users/${userId}`).get());
+  if (!user.exists) {
+    return {result: false};
+  }
+
+  // get group
+  // TBD
+  
+})
 
 export const groupDidCreate = functions.firestore.document('groups/{groupId}')
   .onCreate(async (snapshot, context)=>{
