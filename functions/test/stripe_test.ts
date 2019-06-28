@@ -2,12 +2,14 @@
 import * as stripe from '../src/stripe';
 import { should } from 'chai';
 // import * as utils from '../src/utils'
+import * as UUID from "uuid-v4";
 
 should()
 
 const groupId = "unit_test_plan";
 
 describe('Stripe test', () => {
+
   it ('id test', () => {
     stripe.getProductId(groupId).should.equal("prod_unit_test_plan");
     stripe.getPlanId(groupId, 5000, "jpy").should.equal("plan_unit_test_plan_5000_jpy");
@@ -54,4 +56,66 @@ describe('Stripe test', () => {
     plan_usd.usage_type.should.equal('licensed');
   });
 
+  it('token', async function() {
+    this.timeout(10000);
+    const uuid = UUID();
+    const userId =  "test_customer_" + uuid;
+
+    const stripeInstance = stripe.getStripe()
+    const visa_source = await stripeInstance.tokens.create({
+      card: {
+        number: '4242424242424242',
+        exp_month: 8,
+        exp_year: 2025,
+      },
+    });
+    const visa_token = visa_source.id;
+    const master_source = await stripeInstance.tokens.create({
+      card: {
+        number: '5555555555554444',
+        exp_month: 8,
+        exp_year: 2025,
+      },
+    });
+    const master_token = master_source.id;
+    const customer = await stripe.createCustomer(visa_token, userId);
+
+    const customerId = stripe.getCustomerId(userId);
+
+    customer.sources.data.length.should.equal(1);
+
+    customer.id.should.equal(customerId);
+    customer.object.should.equal('customer');
+    customer.default_source.should.equal(customer.sources.data[0].id);
+    customer.default_source.should.equal(visa_source.card.id);
+
+    customer.sources.data[0].brand.should.equal('Visa');
+    customer.sources.data[0].customer.should.equal(customerId);
+    customer.sources.data[0].country.should.equal('US');
+    customer.sources.data[0].exp_month.should.equal(8);
+    customer.sources.data[0].exp_year.should.equal(2025);
+    customer.sources.data[0].funding.should.equal('credit');
+    customer.sources.data[0].last4.should.equal('4242');
+    customer.sources.data[0].object.should.equal('card');
+    
+    const customer2 = await stripe.createCustomer(master_token, userId);
+
+    customer2.sources.data.length.should.equal(1);
+
+    customer2.id.should.equal(customerId);
+    customer2.object.should.equal('customer');
+    customer2.default_source.should.equal(customer2.sources.data[0].id);
+    customer2.default_source.should.equal(master_source.card.id);
+
+    customer2.sources.data[0].brand.should.equal('MasterCard');
+    customer2.sources.data[0].customer.should.equal(customerId);
+    customer2.sources.data[0].country.should.equal('US');
+    customer2.sources.data[0].exp_month.should.equal(8);
+    customer2.sources.data[0].exp_year.should.equal(2025);
+    customer2.sources.data[0].funding.should.equal('credit');
+    customer2.sources.data[0].last4.should.equal('4444');
+    customer2.sources.data[0].object.should.equal('card');
+    
+    await stripe.deleteCustomer(userId);
+  });
 })
