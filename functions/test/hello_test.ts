@@ -1,7 +1,7 @@
 import * as supertest from 'supertest';
 import * as index from '../src/index';
 import { should } from 'chai';
-import * as utils from '../src/utils'
+import * as utils from '../src/utils/utils'
 
 should()
 

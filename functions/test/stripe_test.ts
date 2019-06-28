@@ -1,7 +1,5 @@
-//import * as supertest from 'supertest';
 import * as stripe from '../src/stripe';
 import { should } from 'chai';
-// import * as utils from '../src/utils'
 import * as UUID from "uuid-v4";
 
 should()
