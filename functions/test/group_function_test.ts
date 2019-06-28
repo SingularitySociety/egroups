@@ -55,7 +55,7 @@ describe('Group function test', () => {
         groupId: groupId,
       }
     });
-    const data = (await admin_db.doc(`/groups/${groupId}/private/stripe`).get()).data()
+    const data = (await admin_db.doc(`/groups/${groupId}/secret/stripe`).get()).data()
 
     const planData = data.plans;
     const planData2000 = planData["2000_jpy"];
@@ -124,23 +124,26 @@ describe('Group function test', () => {
 
     await wrapped(req, context);
 
-    const stripeCustomer = (await admin_db.doc(`users/${aliceUID}/private/stripe`).get())
-    const stripeCustomerData = stripeCustomer.data();
-
+    const stripeCustomerSecret = (await admin_db.doc(`users/${aliceUID}/secret/stripe`).get())
+    const stripeCustomerSecretData = stripeCustomerSecret.data();
     const customerId = stripe.getCustomerId(aliceUID);
-    stripeCustomerData.customer.id.should.equal(customerId);
-    stripeCustomerData.customer.object.should.equal('customer');
-    stripeCustomerData.customer.default_source.should.equal(stripeCustomerData.customer.sources.data[0].id);
+    stripeCustomerSecretData.customer.id.should.equal(customerId);
+    stripeCustomerSecretData.customer.object.should.equal('customer');
+    stripeCustomerSecretData.customer.default_source.should.equal(stripeCustomerSecretData.customer.sources.data[0].id);
 
-    stripeCustomerData.customer.sources.data[0].brand.should.equal('Visa');
-    stripeCustomerData.customer.sources.data[0].customer.should.equal(customerId);
-    stripeCustomerData.customer.sources.data[0].country.should.equal('US');
-    stripeCustomerData.customer.sources.data[0].exp_month.should.equal(8);
-    stripeCustomerData.customer.sources.data[0].exp_year.should.equal(2025);
-    stripeCustomerData.customer.sources.data[0].funding.should.equal('credit');
-    stripeCustomerData.customer.sources.data[0].last4.should.equal('4242');
-    stripeCustomerData.customer.sources.data[0].object.should.equal('card');
+    stripeCustomerSecretData.customer.sources.data[0].brand.should.equal('Visa');
+    stripeCustomerSecretData.customer.sources.data[0].customer.should.equal(customerId);
+    stripeCustomerSecretData.customer.sources.data[0].country.should.equal('US');
+    stripeCustomerSecretData.customer.sources.data[0].exp_month.should.equal(8);
+    stripeCustomerSecretData.customer.sources.data[0].exp_year.should.equal(2025);
+    stripeCustomerSecretData.customer.sources.data[0].funding.should.equal('credit');
+    stripeCustomerSecretData.customer.sources.data[0].last4.should.equal('4242');
+    stripeCustomerSecretData.customer.sources.data[0].object.should.equal('card');
 
+    const stripeCustomerPrivate = (await admin_db.doc(`users/${aliceUID}/private/stripe`).get())
+    const stripeCustomerPrivateData = stripeCustomerPrivate.data();
+    console.log(stripeCustomerPrivateData);
+    
     await stripe.deleteCustomer(aliceUID);
   });
 
