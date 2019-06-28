@@ -59,6 +59,8 @@
     "jpy":"JPY",
     "usd":"USD",
     "plus.tax":"(plus tax)",
+    "card.register":"Register",
+    "card.registering":"Registering...",
 
     "red":"red",
     "pink":"pink",

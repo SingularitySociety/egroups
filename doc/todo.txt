@@ -14,6 +14,7 @@ Group: Invitation
 Account: Owner can not leave
 Account: Put "leave" button in dangerous switch
 Firebase: Introduce rosters
+Join: Wait until JWT is retrieved
 
 ----- Done -----
 Chat: Activate the entry

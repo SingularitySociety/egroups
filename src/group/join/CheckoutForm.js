@@ -7,6 +7,7 @@ import { injectStripe, CardElement } from 'react-stripe-elements';
 import PlanOptions from './PlanOptions';
 import * as firebase from "firebase/app";
 import "firebase/functions";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
   about: {
@@ -20,6 +21,13 @@ const styles = theme => ({
     width:theme.spacing(38),
     marginBottom: theme.spacing(2),
   },
+  button: {
+    marginRight: theme.spacing(1),
+  },
+  processing: {
+    marginLeft: theme.spacing(1),
+    position: "absolute",
+  }
 });
 const useStyles = makeStyles(styles);
 
@@ -28,11 +36,13 @@ function CheckoutForm(props) {
   const { stripe, group, intl } = props;
   const [ error, setError ] = useState(null);
   const [ planIndex, setPlanIndex ] = useState(0);
+  const [ processing, setProcessing] = useState(false);
   
   // 4242 4242 4242 4242
   async function onSubmit(e) {
     e.preventDefault();
     setError(null);
+    setProcessing(true);
     const {error, token} = await stripe.createToken({type: 'card', name: 'Jenny Rosen'});
     if (token) {
       console.log(token);
@@ -44,6 +54,7 @@ function CheckoutForm(props) {
     } else {
       console.log("### unexpected ###");
     }
+    setProcessing(false);
   }
 
   const styleCard = {
@@ -75,9 +86,15 @@ function CheckoutForm(props) {
       <div className={classes.cardElement} >
         <CardElement style={styleCard} />
       </div>
-      <Button variant="contained" color="primary" type="submit">
-        <FormattedMessage id="subscribe" />
+      <Button variant="contained" color="primary" type="submit" className={classes.button}>
+        <FormattedMessage id="card.register" />
       </Button>
+      {
+        processing && <React.Fragment>
+          <FormattedMessage id="card.registering" />
+          <CircularProgress size={22} className={classes.processing} />
+        </React.Fragment>
+      }
       {
         error &&
           <Typography color="error">{error}</Typography>
