@@ -11,6 +11,7 @@ import "firebase/auth";
 import { FormattedMessage } from 'react-intl';
 import Privileges from '../const/Privileges';
 import theme from '../theme';
+import JoinButton from './join/JoinButton';
 
 const styles = {
   root: {
@@ -26,9 +27,6 @@ const styles = {
   breadcrums: {
     marginTop: theme.spacing(2),
   },
-  join: {
-    marginTop: theme.spacing(1),
-  }
 };
 
 class MyAppBar extends React.Component {
@@ -63,6 +61,7 @@ class MyAppBar extends React.Component {
     this.cramSettingsBilling = this.breadCram("settings.billing", "settings/billing");
     this.cramListing = this.breadCram("listing");
     this.cramJoin = this.breadCram("join", null, "application");
+    this.cramSubscribe = this.breadCram("subscribe");
     this.cramHomePage = <MUILink key="page.home" color="inherit" component={Link} to={`/${group.groupName}`}>
             <FormattedMessage id="page.home" />
           </MUILink>;
@@ -150,9 +149,12 @@ class MyAppBar extends React.Component {
       case "settings.billing":
           crams = [this.cramHome, this.cramSettings, this.cramSettingsBilling];
           break;
-        case "join":
+      case "join":
         crams = [this.cramHomePage, this.cramJoin];
         break;
+      case "subscribe":
+          crams = [this.cramHomePage, this.cramSubscribe];
+          break;
       case "listing":
         crams = [this.cramHome, this.cramListing];
         break;
@@ -212,14 +214,7 @@ class MyAppBar extends React.Component {
             <MenuItem onClick={this.logout}><FormattedMessage id="logout" /></MenuItem>
         </Menu>
         { subbar }
-        {
-          !member && pageInfo.tabId!=="join" && 
-            <Grid container justify="center" className={classes.join}>
-              <Grid item>
-                <Button variant="contained" color="primary" component={Link} to={"/" + group.groupName + "/join"}><FormattedMessage id="join" /></Button>
-              </Grid>
-            </Grid>
-        }
+        <JoinButton member={member} pageInfo={pageInfo} group={group} />
       </div>
     );
   }

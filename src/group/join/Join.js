@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Typography, Button } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
+import PleaseLogin from './PleaseLogin';
 
 const styles = theme => ({
     login: {
@@ -48,12 +49,7 @@ class Join extends React.Component {
                     <FormattedMessage id="application" />
                   </Typography>;
     if (!user) {
-        return <div>
-            {title}
-            <Typography >
-                In order to join {group.title}, please create your account by choosing Login first.
-            </Typography>
-        </div>
+        return <PleaseLogin />;
     }
     if (member) {
         console.log("Become a member or already a member. Redireting to the group home.");

@@ -13,7 +13,6 @@ import { Route } from 'react-router-dom';
 import GroupHome from './GroupHome';
 import Events from './Events';
 import MountDetector from '../common/MountDetector';
-import Join from './Join';
 import Account from './Account';
 import Processing from '../Processing';
 import Chat from './Chat';
@@ -29,7 +28,9 @@ import Profile from './Profile';
 import MemberHome from './MemberHome';
 import ChannelSettings from './ChannelSettings';
 import ArticleSettings from './ArticleSettings';
-import SettingsBilling from './SettingsBilling';
+import Join from './join/Join';
+import SettingsBilling from './join/SettingsBilling';
+import Subscribe from './join/Subscribe';
 
 const colorMap = { red, pink, purple, deepPurple, indigo, 
   blue, lightBlue, cyan, teal, green,
@@ -73,7 +74,7 @@ class GroupRouter extends React.Component {
   state = {group:null, member:null, error:null, members:{}, pageInfo:{tabId:"home"}};
   async componentDidMount() {
     const { db, match:{params:{gp}}, rootGroup } = this.props;
-    console.log(rootGroup);
+    //console.log(rootGroup);
     const groupName = gp || rootGroup;
     if (groupName.length < 3) {
       return;
@@ -201,6 +202,7 @@ class GroupRouter extends React.Component {
               <Route exact path={`/${group.groupName}/events`} render={(props) => <Events {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/listing`} render={(props) => <Listing {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/join`} render={(props) => <Join {...props} {...context} />} />
+              <Route exact path={`/${group.groupName}/subscribe`} render={(props) => <Subscribe {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/account`} 
                 render={(props) => <Account {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/settings`} 
