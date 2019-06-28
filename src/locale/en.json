@@ -61,6 +61,7 @@
     "plus.tax":"(plus tax)",
     "card.register":"Register",
     "card.registering":"Registering...",
+    "card.info":"Card Info:{brand} Exp:{exp_month}/{exp_year} Last4:{last4}",
 
     "red":"red",
     "pink":"pink",

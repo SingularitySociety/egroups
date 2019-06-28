@@ -73,14 +73,17 @@ function CheckoutForm(props) {
   }
 
   if (customer) {
-    const { sources:{data:[cardInfo]}} = customer;
-    console.log(cardInfo);
+    const { sources:{data:cardInfos}} = customer;
+    console.log(cardInfos);
+    // 4242 4242 4242 4242
+    // 5555555555554444
     return (
       <form>
-        {cardInfo.brand}
-        {cardInfo.exp_month}
-        {cardInfo.exp_year}
-        {cardInfo.last4}
+        {
+          cardInfos.map((cardInfo)=>{
+            return <FormattedMessage key={cardInfo.id} id="card.info" values={cardInfo} />;
+          })
+        }
         <br/>
         <FormControl className={classes.formControl}>
           <InputLabel><FormattedMessage id="plan.name" /></InputLabel>
