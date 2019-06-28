@@ -58,11 +58,11 @@ export const createCustomer = functions.https.onCall(async (data, context) => {
   if (!context.auth || !context.auth.uid) {
     return {result: false};
   }
-  if (!data.query || !data.query.token) {
+  if (!data || !data.token) {
     return {result: false};
   }
   const userId = context.auth.uid;
-  const token = data.query.token;
+  const token = data.token;
 
   const user = (await db.doc(`users/${userId}`).get());
   if (!user.exists) {

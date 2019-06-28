@@ -118,7 +118,7 @@ describe('Group function test', () => {
     const test = Test();
     test.mockConfig({ stripe: { secret_key: process.env.STRIPE_SECRET }});
 
-    const req = { query: {token: visa_token} };
+    const req = {token: visa_token};
     const context = {auth: {uid: aliceUID}};
     const wrapped = test.wrap(index.createCustomer);
 
