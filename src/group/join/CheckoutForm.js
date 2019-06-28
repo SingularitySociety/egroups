@@ -37,7 +37,7 @@ function CheckoutForm(props) {
     if (token) {
       console.log(token);
       const createCustomer = firebase.functions().httpsCallable('createCustomer');
-      const customer = (await createCustomer({token})).data; 
+      const customer = (await createCustomer({token:token.id})).data; 
       console.log(customer);
     } else if (error) {
       setError(error.message);
