@@ -36,8 +36,9 @@ function CheckoutForm(props) {
   const { stripe, group, intl } = props;
   const [ error, setError ] = useState(null);
   const [ planIndex, setPlanIndex ] = useState(0);
-  const [ processing, setProcessing] = useState(false);
-  
+  const [ processing, setProcessing ] = useState(false);
+  const [ customer, setCustomer ] = useState(null);
+
   // 4242 4242 4242 4242
   async function onSubmit(e) {
     e.preventDefault();
@@ -47,8 +48,11 @@ function CheckoutForm(props) {
     if (token) {
       console.log(token);
       const createCustomer = firebase.functions().httpsCallable('createCustomer');
-      const customer = (await createCustomer({token:token.id})).data; 
-      console.log(customer);
+      const result = (await createCustomer({token:token.id})).data; 
+      console.log(result);
+      if (result.result && result.customer) {
+        setCustomer(result.customer);
+      }
     } else if (error) {
       setError(error.message);
     } else {
@@ -68,21 +72,36 @@ function CheckoutForm(props) {
     setPlanIndex(e.target.value);
   }
 
-  return (
-    <form onSubmit={onSubmit}>
-      <FormControl className={classes.formControl}>
-        <InputLabel><FormattedMessage id="plan.name" /></InputLabel>
-        <Select native value={planIndex}　onChange={onChangePlan}>
-          <PlanOptions plans={group.plans} />
-        </Select>
-      </FormControl>
-      <br/>
-      <FormControl className={classes.formControl}>
+  if (customer) {
+    const { sources:{data:[cardInfo]}} = customer;
+    console.log(cardInfo);
+    return (
+      <form>
+        {cardInfo.brand}
+        {cardInfo.exp_month}
+        {cardInfo.exp_year}
+        {cardInfo.last4}
+        <br/>
+        <FormControl className={classes.formControl}>
+          <InputLabel><FormattedMessage id="plan.name" /></InputLabel>
+          <Select native value={planIndex}　onChange={onChangePlan}>
+            <PlanOptions plans={group.plans} />
+          </Select>
+        </FormControl>
+        <br/>
+        <FormControl className={classes.formControl}>
         {intl.formatMessage({id:"monthly.fee"})}
         :&nbsp;{group.plans[planIndex].price}
         &nbsp;{intl.formatMessage({id:group.plans[planIndex].currency})}
         &nbsp;{intl.formatMessage({id:"plus.tax"})}
-      </FormControl>
+        </FormControl>
+        <br/>
+      </form>
+    )    
+  }
+
+  return (
+    <form onSubmit={onSubmit}>
       <div className={classes.cardElement} >
         <CardElement style={styleCard} />
       </div>
