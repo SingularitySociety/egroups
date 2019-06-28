@@ -5,6 +5,8 @@ import { Typography, Button, FormControl, Select, InputLabel } from '@material-u
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { injectStripe, CardElement } from 'react-stripe-elements';
 import PlanOptions from './PlanOptions';
+import * as firebase from "firebase/app";
+import "firebase/functions";
 
 const styles = theme => ({
   about: {
@@ -27,13 +29,20 @@ function CheckoutForm(props) {
   const [ error, setError ] = useState(null);
   const [ planIndex, setPlanIndex ] = useState(0);
   
+  // 4242 4242 4242 4242
   async function onSubmit(e) {
     e.preventDefault();
     setError(null);
-    const token = await stripe.createToken({type: 'card', name: 'Jenny Rosen'});
-    console.log(token);
-    if (token.error) {
-      setError(token.error.message);
+    const {error, token} = await stripe.createToken({type: 'card', name: 'Jenny Rosen'});
+    if (token) {
+      console.log(token);
+      const createCustomer = firebase.functions().httpsCallable('createCustomer');
+      const customer = (await createCustomer({token})).data; 
+      console.log(customer);
+    } else if (error) {
+      setError(error.message);
+    } else {
+      console.log("### unexpected ###");
     }
   }
 
