@@ -142,7 +142,6 @@ describe('Group function test', () => {
 
     const stripeCustomerPrivate = (await admin_db.doc(`users/${aliceUID}/private/stripe`).get())
     const stripeCustomerPrivateData = stripeCustomerPrivate.data();
-    console.log(stripeCustomerPrivateData);
     
     await stripe.deleteCustomer(aliceUID);
   });
