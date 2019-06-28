@@ -1,9 +1,11 @@
 import * as test_helper from "../../lib/test/rules/test_helper";
 import * as index from '../src/index';
+import * as stripe from '../src/stripe';
 
 import * as Test from 'firebase-functions-test';
 
 import { should } from 'chai';
+import * as UUID from "uuid-v4";
 
 const admin_db = test_helper.adminDB();
 index.updateDb(admin_db);
@@ -11,7 +13,8 @@ index.updateDb(admin_db);
 should()
 
 describe('Group function test', () => {
-  it ('update test', async () => {
+  it ('update test', async function() {
+    this.timeout(10000);
 
     const groupId = "123"
 
@@ -92,4 +95,53 @@ describe('Group function test', () => {
     production.type.should.equal('service');
     
   });
+
+  it ('stripe create customer test', async function() {
+    this.timeout(10000);
+    const uuid = UUID();
+    const aliceUID = "test_customer_" + uuid;
+
+    await admin_db.doc(`users/${aliceUID}`).set({
+      uid: aliceUID,
+    })
+
+    const stripeInstance = stripe.getStripe()
+    const visa_source = await stripeInstance.tokens.create({
+      card: {
+        number: '4242424242424242',
+        exp_month: 8,
+        exp_year: 2025,
+      },
+    });
+    const visa_token = visa_source.id;
+    
+    const test = Test();
+    test.mockConfig({ stripe: { secret_key: process.env.STRIPE_SECRET }});
+
+    const req = { query: {token: visa_token} };
+    const context = {auth: {uid: aliceUID}};
+    const wrapped = test.wrap(index.createCustomer);
+
+    await wrapped(req, context);
+
+    const stripeCustomer = (await admin_db.doc(`users/${aliceUID}/private/stripe`).get())
+    const stripeCustomerData = stripeCustomer.data();
+
+    const customerId = stripe.getCustomerId(aliceUID);
+    stripeCustomerData.customer.id.should.equal(customerId);
+    stripeCustomerData.customer.object.should.equal('customer');
+    stripeCustomerData.customer.default_source.should.equal(stripeCustomerData.customer.sources.data[0].id);
+
+    stripeCustomerData.customer.sources.data[0].brand.should.equal('Visa');
+    stripeCustomerData.customer.sources.data[0].customer.should.equal(customerId);
+    stripeCustomerData.customer.sources.data[0].country.should.equal('US');
+    stripeCustomerData.customer.sources.data[0].exp_month.should.equal(8);
+    stripeCustomerData.customer.sources.data[0].exp_year.should.equal(2025);
+    stripeCustomerData.customer.sources.data[0].funding.should.equal('credit');
+    stripeCustomerData.customer.sources.data[0].last4.should.equal('4242');
+    stripeCustomerData.customer.sources.data[0].object.should.equal('card');
+
+    await stripe.deleteCustomer(aliceUID);
+  });
+
 });

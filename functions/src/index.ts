@@ -54,6 +54,33 @@ export const getJWT = functions.https.onCall(async (data, context) => {
   return { token: null };
 });
 
+export const createCustomer = functions.https.onCall(async (data, context) => {
+  if (!context.auth || !context.auth.uid) {
+    return {result: false};
+  }
+  if (!data.query || !data.query.token) {
+    return {result: false};
+  }
+  const userId = context.auth.uid;
+  const token = data.query.token;
+
+  const user = (await db.doc(`users/${userId}`).get());
+  if (!user.exists) {
+    return {result: false};
+  }
+  const customer = await stripe.createCustomer(token, userId);
+  
+  (await db.doc(`users/${userId}/private/stripe`).set({
+    customer: customer,
+  }, {merge:true}));
+
+  return {
+    customer: customer,
+    result: true,
+  };
+});
+
+
 export const groupDidCreate = functions.firestore.document('groups/{groupId}')
   .onCreate(async (snapshot, context)=>{
     const { groupId } = context.params;
@@ -283,3 +310,5 @@ export const generateThumbnail = functions.storage.object().onFinalize(async (ob
   }
   return true
 });
+
+
