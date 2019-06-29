@@ -36,7 +36,7 @@ function CardRegistration(props) {
   const [ error, setError ] = useState(null);
   const [ processing, setProcessing ] = useState(false);
 
-  // 4242 4242 4242 4242
+  // 4242424242424242
   // 5555555555554444
   async function onSubmit(e) {
     e.preventDefault();
