@@ -13,8 +13,8 @@ export const convProductData = (stripeProductData) => {
       const {active, amount, currency, id, interval, interval_count} = plans[key];
       return {active, amount, currency, id, interval, interval_count};
     }),
-    production: ((production) => {
-      const {active, id, name, statement_descriptor, type} = production;
+    production: ((pr) => {
+      const {active, id, name, statement_descriptor, type} = pr;
       return {active, id, name, statement_descriptor, type};
     })(production)
   };
