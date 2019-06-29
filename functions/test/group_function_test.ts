@@ -142,6 +142,17 @@ describe('Group function test', () => {
 
     const stripeCustomerPrivate = (await admin_db.doc(`users/${aliceUID}/private/stripe`).get())
     const stripeCustomerPrivateData = stripeCustomerPrivate.data();
+
+    stripeCustomerPrivateData.should.deep.equal({
+      customer:
+      [ { brand: 'Visa',
+          country: 'US',
+          exp_month: 8,
+          exp_year: 2025,
+          funding: 'credit',
+          last4: '4242' } ]
+    })
+                                               
     
     await stripe.deleteCustomer(aliceUID);
   });
