@@ -56,7 +56,7 @@ describe('Group function test', () => {
       }
     });
     const data = (await admin_db.doc(`/groups/${groupId}/secret/stripe`).get()).data()
-
+    
     const planData = data.plans;
     const planData2000 = planData["2000_jpy"];
     planData2000.active.should.equal(true);
@@ -93,7 +93,34 @@ describe('Group function test', () => {
     production.object.should.equal('product');
     production.statement_descriptor.should.equal('hello');
     production.type.should.equal('service');
-    
+
+    const data2 = (await admin_db.doc(`/groups/${groupId}/private/stripe`).get()).data()
+    data2.should.deep.equal({ plans:
+                              [ { active: true,
+                                  amount: 2000,
+                                  currency: 'jpy',
+                                  id: 'plan_123_2000_jpy',
+                                  interval: 'month',
+                                  interval_count: 1 },
+                                { active: true,
+                                  amount: 3000,
+                                  currency: 'jpy',
+                                  id: 'plan_123_3000_jpy',
+                                  interval: 'month',
+                                  interval_count: 1 },
+                                { active: true,
+                                  amount: 30,
+                                  currency: 'usd',
+                                  id: 'plan_123_30_usd',
+                                  interval: 'month',
+                                  interval_count: 1 } ],
+                              production:
+                              { active: true,
+                                id: 'prod_123',
+                                name: 'hello',
+                                statement_descriptor: 'hello',
+                                type: 'service' } });
+
   });
 
   it ('stripe create customer test', async function() {
