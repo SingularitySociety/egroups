@@ -133,6 +133,11 @@ export const groupDidUpdate = functions.firestore.document('groups/{groupId}')
           await stripeRef.set({plans: updatedPlan}, {merge:true});
         }
       }
+      const secretData = await stripeRef.get();
+      if (secretData.exists) {
+        const privateData = stripeUtils.convProductData(secretData.data());
+        db.doc(`/groups/${groupId}/private/stripe`).set(privateData, {merge:true});
+      }
       // const value = snapshot.data();
     }
   });
