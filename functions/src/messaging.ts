@@ -1,5 +1,5 @@
 import * as admin from 'firebase-admin';
-import * as utils from './utils'
+import * as utils from './utils/utils'
 
 const groupId_to_topic = (groupId) => {
   return "g_" + groupId;

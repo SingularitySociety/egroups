@@ -2,7 +2,6 @@
 import * as functions_test_helper from "./functions_test_helper";
 import * as stripe from '../src/stripe';
 import { should } from 'chai';
-// import * as utils from '../src/utils'
 import * as UUID from "uuid-v4";
 
 should()

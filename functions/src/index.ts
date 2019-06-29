@@ -5,11 +5,11 @@ import * as cors from 'cors';
 
 import * as merge from 'deepmerge';
 
-//import * as fs from 'fs';
 import * as messaging from './messaging';
 import * as image from './image';
 import * as constant from './constant';
-import * as utils from './utils'
+import * as utils from './utils/utils'
+import * as stripeUtils from './utils/stripe';
 
 import * as stripe from './stripe';
 
@@ -70,10 +70,14 @@ export const createCustomer = functions.https.onCall(async (data, context) => {
   }
   const customer = await stripe.createCustomer(token, userId);
   
-  (await db.doc(`users/${userId}/private/stripe`).set({
+  (await db.doc(`users/${userId}/secret/stripe`).set({
     customer: customer,
   }, {merge:true}));
 
+  (await db.doc(`users/${userId}/private/stripe`).set({
+    customer: stripeUtils.convCustomerData(customer),
+  }, {merge:true}));
+  
   return {
     customer: customer,
     result: true,
@@ -122,7 +126,7 @@ export const groupDidUpdate = functions.firestore.document('groups/{groupId}')
     const { groupId } = context.params;
     const after = change.after.exists ? change.after.data() ||{} : {};
     if (after.subscription) {
-      const stripeRef = db.doc(`/groups/${groupId}/private/stripe`);
+      const stripeRef = db.doc(`/groups/${groupId}/secret/stripe`);
       const stripeData = (await stripeRef.get()).data();
       if (!stripeData || !stripeData.production) {
         const production = await stripe.createProduct(after.groupName, after.groupName, groupId);
@@ -146,6 +150,11 @@ export const groupDidUpdate = functions.firestore.document('groups/{groupId}')
           const updatedPlan = merge(existPlans, newPlans);
           await stripeRef.set({plans: updatedPlan}, {merge:true});
         }
+      }
+      const secretData = await stripeRef.get();
+      if (secretData.exists) {
+        const privateData = stripeUtils.convProductData(secretData.data());
+        await db.doc(`/groups/${groupId}/private/stripe`).set(privateData, {merge:true});
       }
       // const value = snapshot.data();
     }

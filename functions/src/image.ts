@@ -8,7 +8,7 @@ import * as UUID from "uuid-v4";
 
 import * as constant from './constant';
 
-import * as utils from './utils'
+import * as utils from './utils/utils'
 
 const thumbPrefix = 'thumb_';
 

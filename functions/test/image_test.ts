@@ -6,7 +6,8 @@ import * as constant from '../src/constant'
 should()
 
 describe('image function', () => {
-  it('should test validImagePath', () => {
+  it('should test validImagePath', function() {
+    this.timeout(10000);
     const path11 = "groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q";
     image.validImagePath(path11, constant.matchImagePaths).should.equal(true);
 
@@ -33,7 +34,8 @@ describe('image function', () => {
     
   })
 
-  it('should test getStorePath', () => {
+  it('should test getStorePath', function() {
+    this.timeout(10000);
     const path1 = "groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q";
     image.getStorePath(path1).should.equal("groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/sections/E42IMDbmuOAZHYkxhO1Q");
 
