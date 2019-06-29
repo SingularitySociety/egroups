@@ -1,6 +1,6 @@
 //import * as supertest from 'supertest';
 import * as functions_test_helper from "./functions_test_helper";
-import * as stripe from '../src/stripe';
+import * as stripe from '../src/apis/stripe';
 import { should } from 'chai';
 import * as UUID from "uuid-v4";
 

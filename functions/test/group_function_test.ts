@@ -1,7 +1,7 @@
 import * as test_helper from "../../lib/test/rules/test_helper";
 import * as functions_test_helper from "./functions_test_helper";
 import * as index from '../src/index';
-import * as stripe from '../src/stripe';
+import * as stripe from '../src/apis/stripe';
 
 import * as Test from 'firebase-functions-test';
 
@@ -178,4 +178,30 @@ describe('Group function test', () => {
     await stripe.deleteCustomer(aliceUID);
   });
 
+
+  it ('stripe create subscription test', async function() {
+    this.timeout(10000);
+    const uuid = UUID();
+    const aliceUID = "test_customer_" + uuid;
+
+    // need group, product, plan, 
+    await admin_db.doc(`users/${aliceUID}`).set({
+      uid: aliceUID,
+    })
+
+    const test = Test();
+    test.mockConfig({ stripe: { secret_key: process.env.STRIPE_SECRET }});
+
+    const groupId = "sub_test";
+
+    await stripe.createProduct(groupId, "hello", groupId);
+    const plan = await stripe.createPlan(groupId, 5000, "jpy");
+    
+    const req = {groupId, plan: plan.id};
+    const context = {auth: {uid: aliceUID}};
+    const wrapped = test.wrap(index.createSubscribe);
+
+    await wrapped(req, context);
+
+  });
 });
