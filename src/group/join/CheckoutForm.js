@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { FormControl, Select, InputLabel } from '@material-ui/core';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import PlanOptions from './PlanOptions';
 import CardRegistration from './CardRegistration';
 
@@ -19,7 +19,7 @@ const useStyles = makeStyles(styles);
 
 function CheckoutForm(props) {
   const classes = useStyles();
-  const { group, intl } = props;
+  const { group } = props;
   const [ planIndex, setPlanIndex ] = useState(0);
   const [ customer, setCustomer ] = useState(null);
 
@@ -46,10 +46,10 @@ function CheckoutForm(props) {
         </FormControl>
         <br/>
         <FormControl className={classes.formControl}>
-          {intl.formatMessage({id:"monthly.fee"})}
-          :&nbsp;{group.plans[planIndex].price}
-          &nbsp;{intl.formatMessage({id:group.plans[planIndex].currency})}
-          &nbsp;{intl.formatMessage({id:"plus.tax"})}
+          <FormattedMessage id={"monthly.fee."+group.plans[planIndex].currency}
+            values = {{
+              price: group.plans[planIndex].price,
+            }} />
         </FormControl>
       </form>
   }
@@ -60,4 +60,4 @@ CheckoutForm.propTypes = {
   group: PropTypes.object.isRequired,
 };
   
-export default injectIntl(CheckoutForm);
+export default CheckoutForm;

@@ -16,6 +16,9 @@ const styles = theme => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
+  form: {
+    marginBottom: theme.spacing(2),
+  },
   formControl: {
     width:theme.spacing(38),
     marginBottom: theme.spacing(2),
@@ -62,7 +65,7 @@ function CardRegistration(props) {
   const styleCard = {
     base: {
       fontSize: '14px',
-    }
+    },
   };
 
   if (customer) {
@@ -72,8 +75,8 @@ function CardRegistration(props) {
     // 4242 4242 4242 4242
     // 5555555555554444
     return (
-      <form>
-        <FormattedMessage key={cardInfo.id} id="card.info" values={cardInfo} />;
+      <form className={classes.form}>
+        <FormattedMessage key={cardInfo.id} id="card.info" values={cardInfo} />
       </form>
     )    
   }
@@ -101,7 +104,7 @@ function CardRegistration(props) {
 }
 
 CardRegistration.propTypes = {
-  group: PropTypes.object.isRequired,
+  didUpdate: PropTypes.func.isRequired,
 };
   
 export default injectStripe(CardRegistration);
