@@ -73,17 +73,14 @@ function CheckoutForm(props) {
   }
 
   if (customer) {
-    const { sources:{data:cardInfos}} = customer;
-    console.log(cardInfos);
+    // NOTE: We deal with only the default card (index=0)
+    const { sources:{data:[cardInfo]}} = customer;
+    console.log(cardInfo);
     // 4242 4242 4242 4242
     // 5555555555554444
     return (
       <form>
-        {
-          cardInfos.map((cardInfo)=>{
-            return <FormattedMessage key={cardInfo.id} id="card.info" values={cardInfo} />;
-          })
-        }
+        <FormattedMessage key={cardInfo.id} id="card.info" values={cardInfo} />;
         <br/>
         <FormControl className={classes.formControl}>
           <InputLabel><FormattedMessage id="plan.name" /></InputLabel>
