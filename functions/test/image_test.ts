@@ -1,7 +1,7 @@
 // import * as supertest from 'supertest';
-import * as image from '../src/image';
+import * as image from '../src/utils/image';
 import { should } from 'chai';
-import * as constant from '../src/constant'
+import * as constant from '../src/utils/constant'
 
 should()
 

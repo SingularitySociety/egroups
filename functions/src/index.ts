@@ -3,15 +3,10 @@ import * as admin from 'firebase-admin';
 import * as express from 'express';
 import * as cors from 'cors';
 
-import * as merge from 'deepmerge';
-
 import * as messaging from './messaging';
-import * as image from './image';
-import * as constant from './constant';
-import * as utils from './utils/utils'
-import * as stripeUtils from './utils/stripe';
 
-import * as stripe from './stripe';
+import * as stripeFunctions from './functions/stripe';
+import * as imageFunctions from './functions/image';
 
 // for mocha watch
 if (!admin.apps.length) {
@@ -55,35 +50,16 @@ export const getJWT = functions.https.onCall(async (data, context) => {
 });
 
 export const createCustomer = functions.https.onCall(async (data, context) => {
-  if (!context.auth || !context.auth.uid) {
-    return {result: false};
-  }
-  if (!data || !data.token) {
-    return {result: false};
-  }
-  const userId = context.auth.uid;
-  const token = data.token;
-
-  const user = (await db.doc(`users/${userId}`).get());
-  if (!user.exists) {
-    return {result: false};
-  }
-  const customer = await stripe.createCustomer(token, userId);
-  
-  (await db.doc(`users/${userId}/secret/stripe`).set({
-    customer: customer,
-  }, {merge:true}));
-
-  (await db.doc(`users/${userId}/private/stripe`).set({
-    customer: stripeUtils.convCustomerData(customer),
-  }, {merge:true}));
-  
-  return {
-    customer: customer,
-    result: true,
-  };
+  return await stripeFunctions.createCustomer(db, data, context);
 });
 
+export const createSubscribe = functions.https.onCall(async (data, context) => {
+  return await stripeFunctions.createSubscribe(db, data, context);
+})
+
+export const groupDidUpdate = functions.firestore.document('groups/{groupId}').onUpdate(async (change, context) => {
+  await stripeFunctions.groupDidUpdate(db, change, context);
+});
 
 export const groupDidCreate = functions.firestore.document('groups/{groupId}')
   .onCreate(async (snapshot, context)=>{
@@ -103,44 +79,6 @@ export const groupDidCreate = functions.firestore.document('groups/{groupId}')
     });
   });
 
-export const groupDidUpdate = functions.firestore.document('groups/{groupId}')
-  .onUpdate(async (change, context) => {
-    const { groupId } = context.params;
-    const after = change.after.exists ? change.after.data() ||{} : {};
-    if (after.subscription) {
-      const stripeRef = db.doc(`/groups/${groupId}/secret/stripe`);
-      const stripeData = (await stripeRef.get()).data();
-      if (!stripeData || !stripeData.production) {
-        const production = await stripe.createProduct(after.groupName, after.groupName, groupId);
-        await stripeRef.set({production: production}, {merge:true});
-      }
-
-      if (after.plans) {
-        const existPlans = (stripeData && stripeData.plans) || {};
-        const newPlans = {};
-        await utils.asyncForEach(after.plans, async(plan) => {
-          // todp validate plan
-          const price = plan.price;
-          const currency = plan.currency || "jpy";
-          const key = [String(price), currency].join("_")
-          if (stripeData && (!stripeData.plans || !stripeData.plans[key])) {
-            const stripePlan = await stripe.createPlan(groupId, price, currency);
-            newPlans[key] = stripePlan;
-          }
-        });
-        if (Object.keys(newPlans).length > 0) {
-          const updatedPlan = merge(existPlans, newPlans);
-          await stripeRef.set({plans: updatedPlan}, {merge:true});
-        }
-      }
-      const secretData = await stripeRef.get();
-      if (secretData.exists) {
-        const privateData = stripeUtils.convProductData(secretData.data());
-        await db.doc(`/groups/${groupId}/private/stripe`).set(privateData, {merge:true});
-      }
-      // const value = snapshot.data();
-    }
-  });
             
 const deleteSubcollection = async (snapshot:FirebaseFirestore.DocumentSnapshot, name:string) => {
   const limit = 10;
@@ -293,31 +231,7 @@ export const updateTopicSubscription = functions.https.onCall(async (data, conte
 });
 
 export const generateThumbnail = functions.storage.object().onFinalize(async (object) => {
-  const filePath = object.name; // groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q
-  const contentType = object.contentType; // image/jpeg
-  
-  if (!contentType || !contentType.startsWith("image")) {
-    return false;
-  }
-  if (!filePath) {
-    return false;
-  }
-  const paths = filePath.split("/");
-  if (!image.validImagePath(filePath, constant.matchImagePaths)) {
-    console.log("not hit", paths);
-    return false;
-  }
-
-  const imageId = paths[paths.length -1];
-  const store_path = image.getStorePath(filePath);
-  
-  const thumbnails = await image.createThumbnail(object, constant.thumbnailSizes)
-  if (thumbnails) {
-    const image_data_ref = db.doc(store_path);
-    const data = {[imageId]:{thumbnails: thumbnails}};
-    await image_data_ref.set(data, {merge:true})
-  }
-  return true
+  return imageFunctions.generateThumbnail(db, object);
 });
 
 
