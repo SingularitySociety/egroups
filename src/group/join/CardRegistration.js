@@ -68,15 +68,25 @@ function CardRegistration(props) {
     },
   };
 
+  function onUpdate(e) {
+    e.preventDefault();
+    console.log("onUpdate");
+  }
+
   if (customer) {
     // NOTE: We deal with only the default card (index=0)
     const { sources:{data:[cardInfo]}} = customer;
     console.log(cardInfo);
-    // 4242 4242 4242 4242
+    // 4242424242424242
     // 5555555555554444
     return (
-      <form className={classes.form}>
-        <FormattedMessage key={cardInfo.id} id="card.info" values={cardInfo} />
+      <form className={classes.form} onSubmit={onUpdate}>
+        <div>
+          <FormattedMessage key={cardInfo.id} id="card.info" values={cardInfo} />
+        </div>
+        <Button variant="contained" type="submit" className={classes.button}>
+          <FormattedMessage id="card.update" />
+        </Button>
       </form>
     )    
   }

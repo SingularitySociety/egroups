@@ -60,6 +60,7 @@
     "plus.tax":"(+消費税)",
     "card.register":"カード登録",
     "card.registering":"登録中です...",
+    "card.update":"カード更新",
     "card.info":"カード情報：{brand} 有効期限：{exp_month}/{exp_year} 下四桁：{last4}",
 
     "red":"red",
