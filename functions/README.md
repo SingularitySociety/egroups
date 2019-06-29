@@ -53,3 +53,27 @@ groups/{groupId}
 これらの情報を使って課金します。
 
 TBD
+
+
+### Stripe model
+
+Stripeのデータとegroupのデータの関連は、()内がegroupとして、
+
+Product(Group) -> Plan(Plan)  -> Subscription <- Customer(User) <- Sources(Payment method)
+
+
+# グループ
+グループで課金を開始すると、ProductとPlanを作成する。
+課金プランを増やすとPlanを複数追加していく。
+グループとPlanは1:1
+
+# ユーザ
+ユーザとCustomerは1:1で紐づく
+StripeのSpecではカード情報は1:nで複数ひもづけ可能だが、egroupでは、1:1としてある。
+
+# 削除のタイミング
+
+ユーザが課金をやめる時/グループを退会する時に、Subscriptionを削除。
+ユーザがegroupを退会する時は、Customerを削除。(Subscriptionも同時に削除される）
+管理人がグループを削除する時にProductを削除（すると、紐づくPlanも一緒に削除される）
+
