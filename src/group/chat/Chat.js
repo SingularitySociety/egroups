@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, IconButton, Grid } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
-import CreateNew from '../common/CreateNew';
-import AccessDenied from './AccessDenied';
+import CreateNew from '../../common/CreateNew';
+import AccessDenied from '../AccessDenied';
 import Message from './Message';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
-import Privileges from '../const/Privileges';
-import ErrorMessage from './ErrorMessage';
+import Privileges from '../../const/Privileges';
+import ErrorMessage from '../ErrorMessage';
 
 const styles = theme => ({
 });

@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ChannelList from './ChannelList';
 import * as firebase from "firebase/app";
-import Privileges from '../const/Privileges';
+import Privileges from '../../const/Privileges';
 import { FormattedMessage } from 'react-intl';
-import CreateNew from '../common/CreateNew';
+import CreateNew from '../../common/CreateNew';
 import { Grid } from '@material-ui/core';
 
 

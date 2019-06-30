@@ -5,8 +5,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { FormGroup, Button, Typography } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import { Redirect } from 'react-router-dom';
-import EditableField from '../common/EditableField';
-import LockedArea from '../common/LockedArea';
+import EditableField from '../../common/EditableField';
+import LockedArea from '../../common/LockedArea';
 
 const styles = theme => ({
 });

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, Grid } from '@material-ui/core';
-import ImageUploader from '../common/ImageUploader';
+import ImageUploader from '../../common/ImageUploader';
 
 const styles = theme => ({
   frame: {
