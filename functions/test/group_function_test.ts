@@ -2,6 +2,7 @@ import * as test_helper from "../../lib/test/rules/test_helper";
 import * as functions_test_helper from "./functions_test_helper";
 import * as index from '../src/index';
 import * as stripe from '../src/apis/stripe';
+import * as stripeUtils from "../src/utils/stripe"
 
 import * as Test from 'firebase-functions-test';
 
@@ -147,7 +148,7 @@ describe('Group function test', () => {
 
     const stripeCustomerSecret = (await admin_db.doc(`users/${aliceUID}/secret/stripe`).get())
     const stripeCustomerSecretData = stripeCustomerSecret.data();
-    const customerId = stripe.getCustomerId(aliceUID);
+    const customerId = stripeUtils.getCustomerId(aliceUID);
     stripeCustomerSecretData.customer.id.should.equal(customerId);
     stripeCustomerSecretData.customer.object.should.equal('customer');
     stripeCustomerSecretData.customer.default_source.should.equal(stripeCustomerSecretData.customer.sources.data[0].id);
@@ -174,7 +175,6 @@ describe('Group function test', () => {
           last4: '4242' } ]
     })
                                                
-    
     await stripe.deleteCustomer(aliceUID);
   });
 
@@ -200,17 +200,25 @@ describe('Group function test', () => {
     const currency = "jpy";
     const plan = await stripe.createPlan(groupId, price, currency);
     const plan_key = [String(price), currency].join("_")
-    
+
     await stripeGroupSecretRef.set({
       production: production,
       plans: {[plan_key]: plan},
     }, {merge:true}); 
-   
+
+    // need customer
+    const visa_source = await functions_test_helper.createVisaCard();
+    const visa_token = visa_source.id;
+
+    await stripe.createCustomer(visa_token, aliceUID);
+    
     // end of create
+
+    // run test
     const test = Test();
     test.mockConfig({ stripe: { secret_key: process.env.STRIPE_SECRET }});
     
-    const req = {groupId, plan: plan.id};
+    const req = {groupId, plan: {price, currency}};
     const context = {auth: {uid: aliceUID}};
     const wrapped = test.wrap(index.createSubscribe);
 

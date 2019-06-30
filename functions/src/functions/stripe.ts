@@ -47,7 +47,7 @@ export const createSubscribe = async (db, data, context) => {
   }
   
   const userId = context.auth.uid;
-  const {groupId, plan} = data;
+  const {groupId, plan, displayName} = data;
   const {price, currency} = plan;
   const plan_key = [String(price), currency].join("_")
   
@@ -80,17 +80,33 @@ export const createSubscribe = async (db, data, context) => {
   }
 
   // everything ok
-  
-  //   groups/{groupId}/members/{userId}
-  //  /groups/{groupId}/members/{userId}/private/stripe
+  const planId = stripeUtils.getPlanId(groupId, price, currency);
+  const subscription = await stripe.createSubscription(userId, planId);
 
-  // users/${userId}/secret/stripe
+  if (!subscription) {
+    return {result: false};
+  }
 
-  // subscription: {
-  //  groupId: {subscription}
-  // }
-  
-  // TBD
+  // raw data
+  await db.doc(`/groups/${groupId}/members/${userId}/secret/stripe`).set({subscription: subscription})
+
+  await db.doc(`/groups/${groupId}/members/${userId}`).set({
+    created: new Date(),
+    displayName: displayName || "---",
+    uid: userId,
+    groupId: groupId,
+  });
+
+  await db.doc(`/groups/${groupId}/members/${userId}/private/stripe`).set({
+    subscription: stripeUtils.convSubscriptionData(subscription),
+  });
+
+  await db.doc(`users/${userId}/private/stripe`).set({
+    subscription: {
+      [groupId]: stripeUtils.convSubscriptionData(subscription),
+    }
+  }, {merge:true});
+
   return {result: true};
 }
 
