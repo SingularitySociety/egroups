@@ -24,8 +24,6 @@ function EditableField(props) {
   const [editing, setEditing] = useState(false);
   const [ignoreBlur, setIgnoreBlur] = useState(false);
 
-  console.log(refTextField);
-
   const onChange = (e) => {
     setValue(e.target.value);
     setEditing(value !== props.value);

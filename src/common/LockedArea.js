@@ -9,7 +9,8 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
   },
   locked: {
-    display: "none",
+    //display: "none",
+    visibility: "hidden",
   },
   unlocked: {
     padding: theme.spacing(1),

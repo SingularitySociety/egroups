@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography, Button, FormGroup } from '@material-ui/core';
+import { Button, FormGroup } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import EditableField from '../common/EditableField';
@@ -49,7 +49,7 @@ render() {
     if (!member) {
       return "";
     }
-    console.log(user, member);
+    //console.log(user, member);
     const imageThumbnails = member.profile && member.profile.thumbnails;
     return <div>
       <FormGroup row>
@@ -78,7 +78,6 @@ render() {
             value={member.github || ""} onSave={this.onSave('github')}/>
       </FormGroup>
       <LockedArea label={<FormattedMessage id="warning.dangerous" />}>
-        <Typography>Click the "LEAVE" button below to leave this community.</Typography>
         <Button variant="contained" className={classes.button} onClick={this.handleLeave}>
           <FormattedMessage id="leave" />
         </Button>
