@@ -19,6 +19,15 @@ export const convCustomerData = (stripeCustomerData) => {
   });
 }
 
+const convPlanData = (planData) => {
+  const {active, amount, currency, id, interval, interval_count} = planData;
+  return {active, amount, currency, id, interval, interval_count};
+}
+const convProductionData = (productionData) => {
+  const {active, id, name, statement_descriptor, type} = productionData;
+  return {active, id, name, statement_descriptor, type};
+}
+
 export const convProductData = (stripeProductData) => {
   const {plans, production} = stripeProductData; 
   const ret = {
@@ -28,15 +37,6 @@ export const convProductData = (stripeProductData) => {
     production: convProductionData(production),
   };
   return ret;
-}
-
-const convPlanData = (planData) => {
-  const {active, amount, currency, id, interval, interval_count} = planData;
-  return {active, amount, currency, id, interval, interval_count};
-}
-const convProductionData = (productionData) => {
-  const {active, id, name, statement_descriptor, type} = productionData;
-  return {active, id, name, statement_descriptor, type};
 }
 
 export const convSubscriptionData = (stripeSubscriptionData) => {
