@@ -121,6 +121,9 @@ export const memberDidCreate = functions.firestore.document('groups/{groupId}/me
     const { groupId, userId } = context.params;
     const owner = (await db.doc(`/groups/${groupId}/owners/${userId}`).get()).data();
     // We set the privilege of the owner here so that the owner can leave and join. 
+
+    // todo get subscription
+
     const privilege = owner ? 0x2000000 : 1; // owner or member
     await db.doc("/groups/" + groupId + "/privileges/" + userId).set({
       value: privilege,

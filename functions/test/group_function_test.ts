@@ -183,19 +183,32 @@ describe('Group function test', () => {
     this.timeout(10000);
     const uuid = UUID();
     const aliceUID = "test_customer_" + uuid;
+    const groupId = "sub_test";
 
     // need group, product, plan, 
     await admin_db.doc(`users/${aliceUID}`).set({
       uid: aliceUID,
     })
 
+    const alice_group = admin_db.doc(`groups/${groupId}`);
+    await test_helper.create_group(alice_group, "hello", "hello", true);
+    
+    const stripeGroupSecretRef = admin_db.doc(`/groups/${groupId}/secret/stripe`);
+    const production = await stripe.createProduct(groupId, "hello", groupId);
+
+    const price = 5000;
+    const currency = "jpy";
+    const plan = await stripe.createPlan(groupId, price, currency);
+    const plan_key = [String(price), currency].join("_")
+    
+    await stripeGroupSecretRef.set({
+      production: production,
+      plans: {[plan_key]: plan},
+    }, {merge:true}); 
+   
+    // end of create
     const test = Test();
     test.mockConfig({ stripe: { secret_key: process.env.STRIPE_SECRET }});
-
-    const groupId = "sub_test";
-
-    await stripe.createProduct(groupId, "hello", groupId);
-    const plan = await stripe.createPlan(groupId, 5000, "jpy");
     
     const req = {groupId, plan: plan.id};
     const context = {auth: {uid: aliceUID}};

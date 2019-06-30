@@ -5,6 +5,8 @@ import * as utils from '../utils/utils'
 
 import * as stripe from '../apis/stripe';
 
+import Privileges from "../../../lib/src/const/Privileges.js";
+
 export const createCustomer = async (db, data, context) => {
   if (!context.auth || !context.auth.uid) {
     return {result: false};
@@ -36,21 +38,58 @@ export const createCustomer = async (db, data, context) => {
 }
 
 export const createSubscribe = async (db, data, context) => {
+  // plan = {price, currency}
   if (!context.auth || !context.auth.uid) {
     return {result: false};
   }
-  if (!data || !data.groupId || !data.plan) {
+  if (!data || !data.groupId || !data.plan || !data.plan.price || !data.plan.currency) {
     return {result: false};
   }
+  
   const userId = context.auth.uid;
   const {groupId, plan} = data;
+  const {price, currency} = plan;
+  const plan_key = [String(price), currency].join("_")
   
   const user = (await db.doc(`users/${userId}`).get());
   if (!user.exists) {
     return {result: false};
   }
-  console.log(userId, groupId, plan)
-  // get group
+
+  // check group
+  const group = await db.doc(`groups/${groupId}`).get();
+  if (!group.exists) {
+    return {result: false};
+  }
+  
+  // check plan
+  const stripeGroup = await db.doc(`/groups/${groupId}/secret/stripe`).get(); 
+
+  if (!stripeGroup.exists) {
+    return {result: false};
+  }
+  const stripeGroupSecretData = stripeGroup.data();
+  if (!stripeGroupSecretData || !stripeGroupSecretData.plans || !stripeGroupSecretData.plans[plan_key]) {
+    return {result: false};
+  }
+
+  // check not subscription member yet.
+  const privileges = await db.doc(`groups/{groupId}/privileges/${userId}`).get();
+  if (privileges.exists && privileges.data().value && privileges.data().value >= Privileges.subscriber) {
+    return {result: false};
+  }
+
+  // everything ok
+  
+  //   groups/{groupId}/members/{userId}
+  //  /groups/{groupId}/members/{userId}/private/stripe
+
+  // users/${userId}/secret/stripe
+
+  // subscription: {
+  //  groupId: {subscription}
+  // }
+  
   // TBD
   return {result: true};
 }
