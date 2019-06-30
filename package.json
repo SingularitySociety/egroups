@@ -27,7 +27,7 @@
     "stage_functions": "firebase use staging && firebase deploy --only functions && firebase use default",
     "eject": "react-scripts eject",
     "mocha": "mocha --require @babel/register --recursive",
-    "babel": "babel src/const -d lib/src/const && babel test -d lib/test",
+    "babel": "babel src/const -d ./functions/react-lib/src/const && babel test -d lib/test",
     "deploy": "react-scripts build && firebase deploy"
   },
   "eslintConfig": {

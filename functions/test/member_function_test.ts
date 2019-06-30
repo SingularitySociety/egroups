@@ -1,4 +1,4 @@
-import Privileges from '../../lib/const/Privileges.js';
+import Privileges from '../react-lib/src/const/Privileges.js';
 import * as test_helper from "../../lib/test/rules/test_helper";
 // import * as functions_test_helper from "./functions_test_helper";
 import * as index from '../src/index';

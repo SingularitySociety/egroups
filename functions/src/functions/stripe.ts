@@ -5,7 +5,7 @@ import * as utils from '../utils/utils'
 
 import * as stripe from '../apis/stripe';
 
-import Privileges from "../../../lib/src/const/Privileges.js";
+import Privileges from "../../react-lib/src/const/Privileges.js";
 
 export const createCustomer = async (db, data, context) => {
   if (!context.auth || !context.auth.uid) {
