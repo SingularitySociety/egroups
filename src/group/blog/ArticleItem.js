@@ -6,7 +6,7 @@ import { Grid, Paper } from '@material-ui/core';
 import SubjectIcon from '@material-ui/icons/Subject';
 import MUILink from '@material-ui/core/link';
 import { Link } from 'react-router-dom';
-import Privileges from '../const/Privileges';
+import Privileges from '../../const/Privileges';
 
 const styles = theme => ({
   item: {

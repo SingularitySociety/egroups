@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import ArticleList from './ArticleList';
+import ArticleList from './blog/ArticleList';
 import ChannelList from './ChannelList';
 import { Grid } from '@material-ui/core';
 
