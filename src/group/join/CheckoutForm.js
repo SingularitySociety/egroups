@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { FormControl, Select, InputLabel } from '@material-ui/core';
@@ -19,9 +19,22 @@ const useStyles = makeStyles(styles);
 
 function CheckoutForm(props) {
   const classes = useStyles();
-  const { group } = props;
-  const [ planIndex, setPlanIndex ] = useState(0);
+  const { db, group, user } = props;
+  const planLength = (group.plans && group.plans.length) || 0;
+  const [ planIndex, setPlanIndex ] = useState(planLength - 1);
   const [ customer, setCustomer ] = useState(null);
+
+  useEffect(()=>{
+    async function foo() {
+      const ref = db.doc(`users/${user.uid}/private/stripe`);
+      const doc = await ref.get();
+      const stripe = doc.data();
+      if (stripe && stripe.customer) {
+        setCustomer({sources:{data:stripe.customer}});
+      }
+    }
+    foo();
+  },[db, group, user]);
 
   // 4242424242424242
   // 5555555555554444
@@ -36,7 +49,7 @@ function CheckoutForm(props) {
 
   return <React.Fragment>
     <CardRegistration customer={customer} didUpdate={customerDidUpdate} />
-    { customer &&
+    { customer && planLength > 0 &&
       <form>
         <FormControl className={classes.formControl}>
           <InputLabel><FormattedMessage id="plan.name" /></InputLabel>
@@ -57,6 +70,8 @@ function CheckoutForm(props) {
 }
 
 CheckoutForm.propTypes = {
+  db: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
   group: PropTypes.object.isRequired,
 };
   

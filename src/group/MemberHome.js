@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import ArticleList from './ArticleList';
-import ChannelList from './ChannelList';
+import ArticleList from './blog/ArticleList';
+import ChannelList from './chat/ChannelList';
 import { Grid } from '@material-ui/core';
 
 const styles = theme => ({

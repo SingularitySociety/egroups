@@ -1,26 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import ArticleItem from './ArticleItem';
-import ErrorMessage from './ErrorMessage';
+import ChannelItem from './ChannelItem';
+import ErrorMessage from '../ErrorMessage';
 
 const styles = theme => ({
 });
 
-class ArticleList extends React.Component {
+class ChannelList extends React.Component {
   state = { list:[] }
   componentDidMount() {
-    const { db, group, limit, arp } = this.props;
-    let query = db.collection(`groups/${group.groupId}/${arp.collection}`).orderBy("created", "desc");
+    const { db, group, limit } = this.props;
+    let query = db.collection(`groups/${group.groupId}/channels`).orderBy("created", "desc");
     if (limit) {
-      query = query.limit(1);
+      query = query.limit(limit);
     }
     this.detacher = query.onSnapshot((snapshot) => {
       const list = [];
       snapshot.forEach((doc)=>{
-        const article = doc.data();
-        article.articleId = doc.id;
-        list.push(article);
+        const channel = doc.data();
+        channel.channelId = doc.id;
+        list.push(channel);
       });
       this.setState({list});
     }, (e) => {
@@ -33,17 +33,16 @@ class ArticleList extends React.Component {
     this.detacher();
   }
   render() {
+    const { group, history } = this.props;
     const { error } = this.state;
-    const { group, history, arp } = this.props;
-    const context = { group, history, arp }
     if (error) {
       return <ErrorMessage error={error} />
     }
     return <div>
       <div>
         {
-          this.state.list.map((article)=>{
-            return <ArticleItem key={article.articleId} article={article} {...context} />
+          this.state.list.map((channel)=>{
+            return <ChannelItem key={channel.channelId} channel={channel} group={group} history={history} />
           })
         }
       </div>
@@ -51,9 +50,8 @@ class ArticleList extends React.Component {
   }
 }
 
-ArticleList.propTypes = {
+ChannelList.propTypes = {
   classes: PropTypes.object.isRequired,
-  arp: PropTypes.object.isRequired,
 };
   
-export default withStyles(styles)(ArticleList);
+export default withStyles(styles)(ChannelList);

@@ -5,7 +5,7 @@ import MountDetector from '../common/MountDetector';
 import Privileges from '../const/Privileges';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
-import BlogArticle from './BlogArticle';
+import BlogArticle from './blog/BlogArticle';
 import { injectIntl } from 'react-intl';
 
 

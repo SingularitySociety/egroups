@@ -38,6 +38,7 @@ function CardRegistration(props) {
   const { stripe, customer, didUpdate } = props;
   const [ error, setError ] = useState(null);
   const [ processing, setProcessing ] = useState(false);
+  const [ updating, setUpdating ] = useState(false);
 
   // 4242424242424242
   // 5555555555554444
@@ -60,6 +61,7 @@ function CardRegistration(props) {
       console.log("### unexpected ###");
     }
     setProcessing(false);
+    setUpdating(false);
   }
 
   const styleCard = {
@@ -68,23 +70,34 @@ function CardRegistration(props) {
     },
   };
 
+  /*
   function onUpdate(e) {
     e.preventDefault();
     console.log("onUpdate");
+    setUpdating(true);
   }
+  */
 
-  if (customer) {
+  const cardInfo = (()=>{
+    try {
+      const { sources:{data:[info]}} = customer;
+      return info;
+    } catch {
+      return null;
+    }
+  })();
+
+  if (cardInfo && !updating) {
     // NOTE: We deal with only the default card (index=0)
-    const { sources:{data:[cardInfo]}} = customer;
     console.log(cardInfo);
     // 4242424242424242
     // 5555555555554444
     return (
-      <form className={classes.form} onSubmit={onUpdate}>
+      <form className={classes.form}>
         <div>
           <FormattedMessage key={cardInfo.id} id="card.info" values={cardInfo} />
         </div>
-        <Button variant="contained" type="submit" className={classes.button}>
+        <Button variant="contained" type="submit" className={classes.button} onClick={()=>{setUpdating(true)}}>
           <FormattedMessage id="card.update" />
         </Button>
       </form>
@@ -92,13 +105,25 @@ function CardRegistration(props) {
   }
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit} className={classes.form}>
+      {
+        cardInfo && // updating 
+        <div>
+          <FormattedMessage key={cardInfo.id} id="card.info" values={cardInfo} />
+        </div>
+      }
       <div className={classes.cardElement} >
         <CardElement style={styleCard} />
       </div>
       <Button variant="contained" color="primary" type="submit" className={classes.button}>
         <FormattedMessage id="card.register" />
       </Button>
+      {
+        updating && 
+        <Button variant="contained" onClick={()=>{setUpdating(false)}} className={classes.button}>
+          <FormattedMessage id="cancel" />
+        </Button>
+      }
       {
         processing && <React.Fragment>
           <FormattedMessage id="card.registering" />

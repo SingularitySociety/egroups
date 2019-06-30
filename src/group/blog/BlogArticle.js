@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, Grid, IconButton } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
-import AccessDenied from './AccessDenied';
+import AccessDenied from './../AccessDenied';
 import BlogSection from './BlogSection';
 import { Link } from 'react-router-dom';
 
