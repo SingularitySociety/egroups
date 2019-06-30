@@ -1,4 +1,4 @@
-import Privileges from '../../../lib/const/Privileges.js';
+import Privileges from '../../react-lib/src/const/Privileges.js';
 import * as messaging from '../utils/messaging';
 
 export const groupDidCreate = async (db, snapshot, context) => {
@@ -23,6 +23,7 @@ export const memberDidCreate = async (db, snapshot, context) => {
   const owner = (await db.doc(`/groups/${groupId}/owners/${userId}`).get()).data();
   // We set the privilege of the owner here so that the owner can leave and join. 
   const stripeData = (await db.doc(`/groups/${groupId}/members/${userId}/secret/stripe`).get()).data();
+  // todo check valid subscription and set expire
   
   // owner or member
   const privilege = owner ? 0x2000000 : (stripeData && stripeData.subscription ? Privileges.subscriber : 1);
