@@ -224,5 +224,49 @@ describe('Group function test', () => {
 
     await wrapped(req, context);
 
+    const subscriptionRaw = (await admin_db.doc(`/groups/${groupId}/members/${aliceUID}/secret/stripe`).get()).data()
+    subscriptionRaw.subscription.billing.should.equal('charge_automatically');
+    subscriptionRaw.subscription.collection_method.should.equal('charge_automatically');
+    subscriptionRaw.subscription.object.should.equal('subscription');
+    subscriptionRaw.subscription.plan.active.should.equal(true);
+    subscriptionRaw.subscription.plan.amount.should.equal(5000);
+    subscriptionRaw.subscription.plan.billing_scheme.should.equal('per_unit');
+    subscriptionRaw.subscription.plan.currency.should.equal('jpy');
+    subscriptionRaw.subscription.plan.id.should.equal('plan_sub_test_5000_jpy');
+    subscriptionRaw.subscription.plan.interval.should.equal('month');
+    subscriptionRaw.subscription.plan.interval_count.should.equal(1);
+    subscriptionRaw.subscription.plan.object.should.equal('plan');
+    subscriptionRaw.subscription.plan.usage_type.should.equal('licensed');
+    subscriptionRaw.subscription.quantity.should.equal(1);
+    subscriptionRaw.subscription.status.should.equal('active');
+
+    const member = (await admin_db.doc(`/groups/${groupId}/members/${aliceUID}`).get()).data();
+    member.displayName.should.equal('---');
+    member.groupId.should.equal('sub_test');
+    member.uid.should.equal(aliceUID);
+      
+    const memberStripe = (await admin_db.doc(`/groups/${groupId}/members/${aliceUID}/private/stripe`).get()).data();
+    memberStripe.subscription.billing.should.equal('charge_automatically');
+    memberStripe.subscription.object.should.equal('subscription');
+    memberStripe.subscription.plan.active.should.equal(true);
+    memberStripe.subscription.plan.amount.should.equal(5000);
+    memberStripe.subscription.plan.currency.should.equal('jpy');
+    memberStripe.subscription.plan.interval.should.equal('month');
+    memberStripe.subscription.plan.interval_count.should.equal(1);
+    memberStripe.subscription.quantity.should.equal(1);
+    memberStripe.subscription.status.should.equal('active');
+    
+
+    const userPrivate = (await admin_db.doc(`users/${aliceUID}/private/stripe`).get()).data();
+    
+    userPrivate.subscription.sub_test.billing.should.equal('charge_automatically');
+    userPrivate.subscription.sub_test.object.should.equal('subscription');
+    userPrivate.subscription.sub_test.plan.active.should.equal(true);
+    userPrivate.subscription.sub_test.plan.amount.should.equal(5000);
+    userPrivate.subscription.sub_test.plan.currency.should.equal('jpy');
+    userPrivate.subscription.sub_test.plan.interval.should.equal('month');
+    userPrivate.subscription.sub_test.plan.interval_count.should.equal(1);
+    userPrivate.subscription.sub_test.quantity.should.equal(1);
+    userPrivate.subscription.sub_test.status.should.equal('active');
   });
 });
