@@ -2,6 +2,7 @@ import * as test_helper from "../../lib/test/rules/test_helper";
 import * as functions_test_helper from "./functions_test_helper";
 import * as index from '../src/index';
 import * as stripe from '../src/apis/stripe';
+import * as stripeUtils from "../src/utils/stripe"
 
 import * as Test from 'firebase-functions-test';
 
@@ -147,7 +148,7 @@ describe('Group function test', () => {
 
     const stripeCustomerSecret = (await admin_db.doc(`users/${aliceUID}/secret/stripe`).get())
     const stripeCustomerSecretData = stripeCustomerSecret.data();
-    const customerId = stripe.getCustomerId(aliceUID);
+    const customerId = stripeUtils.getCustomerId(aliceUID);
     stripeCustomerSecretData.customer.id.should.equal(customerId);
     stripeCustomerSecretData.customer.object.should.equal('customer');
     stripeCustomerSecretData.customer.default_source.should.equal(stripeCustomerSecretData.customer.sources.data[0].id);
@@ -174,7 +175,6 @@ describe('Group function test', () => {
           last4: '4242' } ]
     })
                                                
-    
     await stripe.deleteCustomer(aliceUID);
   });
 
@@ -183,25 +183,90 @@ describe('Group function test', () => {
     this.timeout(10000);
     const uuid = UUID();
     const aliceUID = "test_customer_" + uuid;
+    const groupId = "sub_test";
 
     // need group, product, plan, 
     await admin_db.doc(`users/${aliceUID}`).set({
       uid: aliceUID,
     })
 
+    const alice_group = admin_db.doc(`groups/${groupId}`);
+    await test_helper.create_group(alice_group, "hello", "hello", true);
+    
+    const stripeGroupSecretRef = admin_db.doc(`/groups/${groupId}/secret/stripe`);
+    const production = await stripe.createProduct(groupId, "hello", groupId);
+
+    const price = 5000;
+    const currency = "jpy";
+    const plan = await stripe.createPlan(groupId, price, currency);
+    const plan_key = [String(price), currency].join("_")
+
+    await stripeGroupSecretRef.set({
+      production: production,
+      plans: {[plan_key]: plan},
+    }, {merge:true}); 
+
+    // need customer
+    const visa_source = await functions_test_helper.createVisaCard();
+    const visa_token = visa_source.id;
+
+    await stripe.createCustomer(visa_token, aliceUID);
+    
+    // end of create
+
+    // run test
     const test = Test();
     test.mockConfig({ stripe: { secret_key: process.env.STRIPE_SECRET }});
-
-    const groupId = "sub_test";
-
-    await stripe.createProduct(groupId, "hello", groupId);
-    const plan = await stripe.createPlan(groupId, 5000, "jpy");
     
-    const req = {groupId, plan: plan.id};
+    const req = {groupId, plan: {price, currency}};
     const context = {auth: {uid: aliceUID}};
     const wrapped = test.wrap(index.createSubscribe);
 
     await wrapped(req, context);
 
+    const subscriptionRaw = (await admin_db.doc(`/groups/${groupId}/members/${aliceUID}/secret/stripe`).get()).data()
+    subscriptionRaw.subscription.billing.should.equal('charge_automatically');
+    subscriptionRaw.subscription.collection_method.should.equal('charge_automatically');
+    subscriptionRaw.subscription.object.should.equal('subscription');
+    subscriptionRaw.subscription.plan.active.should.equal(true);
+    subscriptionRaw.subscription.plan.amount.should.equal(5000);
+    subscriptionRaw.subscription.plan.billing_scheme.should.equal('per_unit');
+    subscriptionRaw.subscription.plan.currency.should.equal('jpy');
+    subscriptionRaw.subscription.plan.id.should.equal('plan_sub_test_5000_jpy');
+    subscriptionRaw.subscription.plan.interval.should.equal('month');
+    subscriptionRaw.subscription.plan.interval_count.should.equal(1);
+    subscriptionRaw.subscription.plan.object.should.equal('plan');
+    subscriptionRaw.subscription.plan.usage_type.should.equal('licensed');
+    subscriptionRaw.subscription.quantity.should.equal(1);
+    subscriptionRaw.subscription.status.should.equal('active');
+
+    const member = (await admin_db.doc(`/groups/${groupId}/members/${aliceUID}`).get()).data();
+    member.displayName.should.equal('---');
+    member.groupId.should.equal('sub_test');
+    member.uid.should.equal(aliceUID);
+      
+    const memberStripe = (await admin_db.doc(`/groups/${groupId}/members/${aliceUID}/private/stripe`).get()).data();
+    memberStripe.subscription.billing.should.equal('charge_automatically');
+    memberStripe.subscription.object.should.equal('subscription');
+    memberStripe.subscription.plan.active.should.equal(true);
+    memberStripe.subscription.plan.amount.should.equal(5000);
+    memberStripe.subscription.plan.currency.should.equal('jpy');
+    memberStripe.subscription.plan.interval.should.equal('month');
+    memberStripe.subscription.plan.interval_count.should.equal(1);
+    memberStripe.subscription.quantity.should.equal(1);
+    memberStripe.subscription.status.should.equal('active');
+    
+
+    const userPrivate = (await admin_db.doc(`users/${aliceUID}/private/stripe`).get()).data();
+    
+    userPrivate.subscription.sub_test.billing.should.equal('charge_automatically');
+    userPrivate.subscription.sub_test.object.should.equal('subscription');
+    userPrivate.subscription.sub_test.plan.active.should.equal(true);
+    userPrivate.subscription.sub_test.plan.amount.should.equal(5000);
+    userPrivate.subscription.sub_test.plan.currency.should.equal('jpy');
+    userPrivate.subscription.sub_test.plan.interval.should.equal('month');
+    userPrivate.subscription.sub_test.plan.interval_count.should.equal(1);
+    userPrivate.subscription.sub_test.quantity.should.equal(1);
+    userPrivate.subscription.sub_test.status.should.equal('active');
   });
 });

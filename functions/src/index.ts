@@ -3,10 +3,11 @@ import * as admin from 'firebase-admin';
 import * as express from 'express';
 import * as cors from 'cors';
 
-import * as messaging from './messaging';
+import * as messaging from './utils/messaging';
 
 import * as stripeFunctions from './functions/stripe';
 import * as imageFunctions from './functions/image';
+import * as groupFunctions from './functions/group';
 
 // for mocha watch
 if (!admin.apps.length) {
@@ -61,24 +62,9 @@ export const groupDidUpdate = functions.firestore.document('groups/{groupId}').o
   await stripeFunctions.groupDidUpdate(db, change, context);
 });
 
-export const groupDidCreate = functions.firestore.document('groups/{groupId}')
-  .onCreate(async (snapshot, context)=>{
-    const { groupId } = context.params;
-    console.log(context);
-    const newValue = snapshot.data(); // BUGBUG: this is a hack because I can't access context.auth.uid for some reason
-    const userId = newValue && newValue.owner;
-    await db.doc(`/groups/${groupId}/owners/${userId}`).set({
-      created: new Date()
-    });
-    // The owner becomes a member automatically. memberDidCreate will automatically create the privilege for the owner. 
-    return db.doc(`/groups/${groupId}/members/${userId}`).set({
-      created: new Date(),
-      displayName: (newValue && newValue.ownerName) || "admin",
-      uid: userId,
-      groupId: groupId,
-    });
-  });
-
+export const groupDidCreate = functions.firestore.document('groups/{groupId}').onCreate(async (snapshot, context)=>{
+  await groupFunctions.groupDidCreate(db, snapshot, context);
+});
             
 const deleteSubcollection = async (snapshot:FirebaseFirestore.DocumentSnapshot, name:string) => {
   const limit = 10;
@@ -116,23 +102,9 @@ export const groupDidDelete = functions.firestore.document('groups/{groupId}')
     });
   });
 
-export const memberDidCreate = functions.firestore.document('groups/{groupId}/members/{userId}')
-  .onCreate(async (snapshot, context)=>{
-    const { groupId, userId } = context.params;
-    const owner = (await db.doc(`/groups/${groupId}/owners/${userId}`).get()).data();
-    // We set the privilege of the owner here so that the owner can leave and join. 
-    const privilege = owner ? 0x2000000 : 1; // owner or member
-    await db.doc("/groups/" + groupId + "/privileges/" + userId).set({
-      value: privilege,
-      created: new Date(),
-    });
-    await messaging.subscribe_new_group(userId, groupId, db, messaging.subscribe_topic);
-    
-    // This is for custom token to control the access to Firestore Storage.
-    return db.doc(`/privileges/${userId}`).set({
-      [groupId]: privilege 
-    }, {merge:true});
-  });
+export const memberDidCreate = functions.firestore.document('groups/{groupId}/members/{userId}').onCreate(async (snapshot, context)=>{
+  await groupFunctions.memberDidCreate(db, snapshot, context);
+});
 
 export const articleDidDelete = functions.firestore.document('groups/{groupId}/articles/{articleId}')
   .onDelete((snapshot, context)=>{

@@ -1,5 +1,6 @@
 import * as Stripe from "stripe"
 import * as functions from 'firebase-functions';
+import * as stripeUtils from "../utils/stripe"
 
 let stripe;
 
@@ -38,22 +39,8 @@ const getExistCustomer = async (id) => {
   }
 }
 
-// ids
-export const getProductId = (groupId) => {
-  return "prod_" + groupId;
-}
-
-export const getPlanId = (groupId, amount, currency) => {
-  return ["plan", groupId, String(amount), currency].join("_");
-}
-
-export const getCustomerId = (customerId) => {
-  return "cus_" + customerId;
-}
-
-
 export const createProduct = async (name, description, groupId) => {
-  const productId = getProductId(groupId);
+  const productId = stripeUtils.getProductId(groupId);
   let product = await getExistProduct(productId);
   
   if (!product) {
@@ -73,7 +60,7 @@ export const createProduct = async (name, description, groupId) => {
 
 export const createPlan = async(groupId, amount, currency = "jpy") => {
   const productId = "prod_" + groupId;
-  const planId = getPlanId(groupId, amount, currency);
+  const planId = stripeUtils.getPlanId(groupId, amount, currency);
 
   let plan = await getExistPlan(planId);
   if (!plan) {
@@ -94,7 +81,7 @@ export const createCustomer = async (token, userId) => {
     return false;
   }
 
-  const customerId = getCustomerId(userId);
+  const customerId = stripeUtils.getCustomerId(userId);
   let customer = await getExistCustomer(customerId)
 
   if (!customer) {
@@ -115,7 +102,7 @@ export const createCustomer = async (token, userId) => {
 
 
 export const deleteCustomer = async (userId) => {
-  const customerId = getCustomerId(userId);
+  const customerId = stripeUtils.getCustomerId(userId);
   try {
     await getStripe().customers.del(customerId);
     return true;
@@ -126,7 +113,7 @@ export const deleteCustomer = async (userId) => {
 }
 
 export const createSubscription = async (userId, plan) => {
-  const customerId = getCustomerId(userId);
+  const customerId = stripeUtils.getCustomerId(userId);
   const idempotency_key = ["sub", customerId, plan].join("_")
   try {
     const subscription = await getStripe().subscriptions.create({

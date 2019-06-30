@@ -211,4 +211,125 @@ describe('Stripe data test', () => {
                                  statement_descriptor: 'hello',
                                  type: 'service' } });
   });
+
+  it ('conv subscription test', async function() {
+    const subscription = {
+      "id": "sub_FLfIizkDkcLJUo",
+      "object": "subscription",
+      "application_fee_percent": null,
+      "billing": "charge_automatically",
+      "billing_cycle_anchor": 1561881653,
+      "billing_thresholds": null,
+      "cancel_at": null,
+      "cancel_at_period_end": false,
+      "canceled_at": null,
+      "collection_method": "charge_automatically",
+      "created": 1561881653,
+      "current_period_end": 1564473653,
+      "current_period_start": 1561881653,
+      "customer": "cus_test_customer_50886411-d259-4e13-91cc-c9997ca94a1a",
+      "days_until_due": null,
+      "default_payment_method": null,
+      "default_source": null,
+      "default_tax_rates": [],
+      "discount": null,
+      "ended_at": null,
+      "items": {
+        "object": "list",
+        "data": [
+          {
+            "id": "si_FLfImKGNWfDxUq",
+            "object": "subscription_item",
+            "billing_thresholds": null,
+            "created": 1561881653,
+            "metadata": {},
+            "plan": {
+              "id": "plan_sub_test_5000_jpy",
+              "object": "plan",
+              "active": true,
+              "aggregate_usage": null,
+              "amount": 5000,
+              "billing_scheme": "per_unit",
+              "created": 1561845631,
+              "currency": "jpy",
+              "interval": "month",
+              "interval_count": 1,
+              "livemode": false,
+              "metadata": {},
+              "nickname": null,
+              "product": "prod_sub_test",
+              "tiers": null,
+              "tiers_mode": null,
+              "transform_usage": null,
+              "trial_period_days": null,
+              "usage_type": "licensed"
+            },
+            "quantity": 1,
+            "subscription": "sub_FLfIizkDkcLJUo",
+            "tax_rates": []
+          }
+        ],
+        "has_more": false,
+        "total_count": 1,
+        "url": "/v1/subscription_items?subscription=sub_FLfIizkDkcLJUo"
+      },
+      "latest_invoice": "in_1EqxxxJRcJsJLSj6Bcgwu4Fn",
+      "livemode": false,
+      "metadata": {},
+      "plan": {
+        "id": "plan_sub_test_5000_jpy",
+        "object": "plan",
+        "active": true,
+        "aggregate_usage": null,
+        "amount": 5000,
+        "billing_scheme": "per_unit",
+        "created": 1561845631,
+        "currency": "jpy",
+        "interval": "month",
+        "interval_count": 1,
+        "livemode": false,
+        "metadata": {},
+        "nickname": null,
+        "product": "prod_sub_test",
+        "tiers": null,
+        "tiers_mode": null,
+        "transform_usage": null,
+        "trial_period_days": null,
+        "usage_type": "licensed"
+      },
+      "quantity": 1,
+      "schedule": null,
+      "start": 1561881653,
+      "start_date": 1561881653,
+      "status": "active",
+      "tax_percent": null,
+      "trial_end": null,
+      "trial_start": null
+    }
+    const res1 = stripeUtils.convSubscriptionData(subscription);
+    console.log(res1);
+    console.log(JSON.stringify(res1, undefined, 1));
+    res1.should.deep.equal({
+      "object": "subscription",
+      "billing": "charge_automatically",
+      "created": 1561881653,
+      "current_period_end": 1564473653,
+      "current_period_start": 1561881653,
+      "plan": {
+        "active": true,
+        "amount": 5000,
+        "currency": "jpy",
+        "id": "plan_sub_test_5000_jpy",
+        "interval": "month",
+        "interval_count": 1
+      },
+      "quantity": 1,
+      "start": 1561881653,
+      "start_date": 1561881653,
+      "status": "active",
+      "tax_percent": null,
+      "trial_end": null,
+      "trial_start": null
+    });
+  });
 });

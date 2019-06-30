@@ -2,7 +2,7 @@ import * as test_helper from "../../lib/test/rules/test_helper";
 import * as firebase from "@firebase/testing";
 import { should } from 'chai';
 
-import * as messaging from '../src/messaging';
+import * as messaging from '../src/utils/messaging';
 
 should()
 

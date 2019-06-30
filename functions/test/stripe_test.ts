@@ -1,6 +1,7 @@
 //import * as supertest from 'supertest';
 import * as functions_test_helper from "./functions_test_helper";
 import * as stripe from '../src/apis/stripe';
+import * as stripeUtils from "../src/utils/stripe"
 import { should } from 'chai';
 import * as UUID from "uuid-v4";
 
@@ -11,14 +12,14 @@ const groupId = "unit_test_plan";
 describe('Stripe test', () => {
 
   it ('id test', () => {
-    stripe.getProductId(groupId).should.equal("prod_unit_test_plan");
-    stripe.getPlanId(groupId, 5000, "jpy").should.equal("plan_unit_test_plan_5000_jpy");
-    stripe.getPlanId(groupId, 30, "usd").should.equal("plan_unit_test_plan_30_usd");
+    stripeUtils.getProductId(groupId).should.equal("prod_unit_test_plan");
+    stripeUtils.getPlanId(groupId, 5000, "jpy").should.equal("plan_unit_test_plan_5000_jpy");
+    stripeUtils.getPlanId(groupId, 30, "usd").should.equal("plan_unit_test_plan_30_usd");
   });
 
   it('hello', async () => {
     const product = await stripe.createProduct("unit_test", "hello", groupId);
-    product.id.should.equal(stripe.getProductId(groupId));
+    product.id.should.equal(stripeUtils.getProductId(groupId));
     
     product.object.should.equal('product');
     product.active.should.equal(true);
@@ -70,7 +71,7 @@ describe('Stripe test', () => {
 
     const customer = await stripe.createCustomer(visa_token, userId);
 
-    const customerId = stripe.getCustomerId(userId);
+    const customerId = stripeUtils.getCustomerId(userId);
 
     customer.sources.data.length.should.equal(1);
 
