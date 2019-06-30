@@ -20,7 +20,8 @@ const useStyles = makeStyles(styles);
 function CheckoutForm(props) {
   const classes = useStyles();
   const { db, group, user } = props;
-  const [ planIndex, setPlanIndex ] = useState(0);
+  const planLength = (group.plans && group.plans.length) || 0;
+  const [ planIndex, setPlanIndex ] = useState(planLength - 1);
   const [ customer, setCustomer ] = useState(null);
 
   useEffect(()=>{
@@ -48,7 +49,7 @@ function CheckoutForm(props) {
 
   return <React.Fragment>
     <CardRegistration customer={customer} didUpdate={customerDidUpdate} />
-    { customer &&
+    { customer && planLength > 0 &&
       <form>
         <FormControl className={classes.formControl}>
           <InputLabel><FormattedMessage id="plan.name" /></InputLabel>
