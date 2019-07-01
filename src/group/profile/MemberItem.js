@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import MUILink from '@material-ui/core/link';
 import { Grid, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
@@ -18,28 +18,31 @@ const styles = theme => ({
   }
 });
 
-class MemberItem extends React.Component {
-  render() {
-    const { group, item, classes, user } = this.props;
-    const imagePath = `groups/${group.groupId}/members/${item.uid}/images/profile`; // BUGBUG: use thumbnails
-    const isMe = item.uid === user.uid;
-    const thumbnails = item.profile && item.profile.thumbnails;
-    return (
-      <MUILink component={Link} to={`/${group.groupName}/pr/${item.uid}`} className={classes.member}>
-        <Grid container>
-            <ImageUploader imagePath={imagePath} loadImage={item.hasImage} imageThumbnails={thumbnails}
-                readOnly={true} displayMode={"thumbMiddle"} inline={true} />
-            <Grid item className={classes.name}>
-              <Typography color={ isMe ? "primary" : "inherit"}>{item.displayName}</Typography>
-            </Grid>
-        </Grid>
-      </MUILink>
-    )
-  }
+const useStyles = makeStyles(styles);
+
+function MemberItem(props) {
+  const classes = useStyles();
+  const { group, item, user } = props;
+  const imagePath = `groups/${group.groupId}/members/${item.uid}/images/profile`; 
+  const isMe = item.uid === user.uid;
+  const thumbnails = item.profile && item.profile.thumbnails;
+  return (
+    <MUILink component={Link} to={`/${group.groupName}/pr/${item.uid}`} className={classes.member}>
+      <Grid container>
+          <ImageUploader imagePath={imagePath} loadImage={item.hasImage} imageThumbnails={thumbnails}
+              readOnly={true} displayMode={"thumbMiddle"} inline={true} />
+          <Grid item className={classes.name}>
+            <Typography color={ isMe ? "primary" : "inherit"}>{item.displayName}</Typography>
+          </Grid>
+      </Grid>
+    </MUILink>
+  )
 }
 
 MemberItem.propTypes = {
-    classes: PropTypes.object.isRequired,
-  };
+  group: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  item: PropTypes.object.isRequired,
+};
   
-export default withStyles(styles)(MemberItem);
+export default MemberItem;
