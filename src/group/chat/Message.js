@@ -29,11 +29,14 @@ const useStyles = makeStyles(styles);
 function Message(props) {
   const classes = useStyles();
   const { message, callbacks, profiles } = props;
-  useEffect(()=> {
-    console.log('hitProfile', message.uid);
-  }, [message, callbacks]);
-
   const her = profiles[message.uid];
+  useEffect(()=> {
+    if (!her) {
+      console.log('hitProfile', message.uid);
+      callbacks.hitProfile(message.uid);
+    }    
+  }, [message, callbacks, her]);
+
   const userName = (her && her.displayName) || message.userName;
   const thumbnails = her && her.profile && her.profile.thumbnails;
   // HACK: Switching the key for ImageUploader to force the mounting a new component.
@@ -58,6 +61,7 @@ function Message(props) {
 
 Message.propTypes = {
     message: PropTypes.object.isRequired,
+    profiles: PropTypes.object.isRequired,
   };
   
 export default Message;

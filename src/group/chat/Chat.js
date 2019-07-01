@@ -5,23 +5,25 @@ import { Typography, IconButton, Grid } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import CreateNew from '../../common/CreateNew';
 import AccessDenied from '../AccessDenied';
-import Message from './Message';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import Privileges from '../../const/Privileges';
 import ErrorMessage from '../ErrorMessage';
+import Messages from './Messages';
 
 const styles = theme => ({
 });
 
 class Chat extends React.Component {
-  state = {channel:null, messages:[]}
+  state = {channel:null}
   async componentDidMount() {
     const { db, group, match:{params:{channelId}}, callbacks } = this.props;
     callbacks.setTabbar("channel", `ch/${channelId}`);
     const ref = db.doc(`groups/${group.groupId}/channels/${channelId}`);
+    this.refMessages = ref.collection("messages");
     try {
       const channel = (await ref.get()).data();
+      channel.channelId = channelId;
       this.setState({channel});
     } catch(e) {
       console.log(e);
@@ -29,32 +31,8 @@ class Chat extends React.Component {
       this.setState({error});
       return;
     }
-    this.refMessages = ref.collection("messages");
-    this.detacher = this.refMessages.orderBy("created").onSnapshot((snapshot)=>{
-      const messages=[];
-      snapshot.forEach((doc) => {
-        const message = doc.data();
-        message.messageId = doc.id;
-        messages.push(message);
-      })
-      this.setState({messages});
-
-      const {user, db} = this.props; // DO NOT MOVE to TOP 
-      if (user) {
-        const channels = {};
-        channels[channelId] = { l:new Date() }; // NOT firebase.firestore.FieldValue.serverTimestamp()
-        //console.log("### Updated")
-        db.doc(`groups/${group.groupId}/members/${user.uid}/private/history`).set({
-          channels
-        }, {merge:true})
-      }
-    });
   }
 
-  componentWillUnmount() {
-    this.detacher && this.detacher();
-  }
-  
   postMessgae = async (message) => {
     const { user, member } = this.props;
     await this.refMessages.add({
@@ -66,8 +44,8 @@ class Chat extends React.Component {
   }
 
   render() {
-    const { channel, messages, error } = this.state;
-    const { user, group, profiles, callbacks } = this.props;
+    const { channel, error } = this.state;
+    const { user, group, profiles, callbacks, db } = this.props;
     if (error) {
       return <ErrorMessage error={error} />
     }
@@ -82,7 +60,7 @@ class Chat extends React.Component {
     if (!canRead) {
       return <AccessDenied />
     }
-    const context = { group, profiles, callbacks };
+    const context = { group, profiles, callbacks, channel, refMessages:this.refMessages, user, db };
     return (<div>
         <Grid container>
           <Grid item xs={canEdit ? 11 : 12}>
@@ -100,9 +78,7 @@ class Chat extends React.Component {
           }
         </Grid>
       <div>
-      { messages.map((message)=>{
-        return <Message key={message.messageId} message={message} {...context} />
-      }) }
+        <Messages {...context} />
       { canWrite && <CreateNew createNew={ this.postMessgae } creating={true}
           action={<FormattedMessage id="post" />} label={<FormattedMessage id="chat.message" />} multiline={true} /> }
       </div>
