@@ -21,7 +21,7 @@ const styles = theme => ({
   },
 });
 
-function ComplexGrid(props) {
+function Home(props) {
   const { classes, user, db } = props;
   return (
     <React.Fragment>
@@ -38,8 +38,8 @@ function ComplexGrid(props) {
   );
 }
 
-ComplexGrid.propTypes = {
+Home.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ComplexGrid);
+export default withStyles(styles)(Home);
