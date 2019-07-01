@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import AccessDenied from './AccessDenied';
 import MemberItem from './MemberItem';
 
@@ -10,26 +10,27 @@ const styles = theme => ({
   },
 });
 
-class Members extends React.Component {
-  state = { list:[] };
-  componentDidMount() {
-    const { db, group } = this.props;
-    this.detacher = db.collection(`groups/${group.groupId}/members`).orderBy("lastAccessed", "desc").onSnapshot((snapshot) => {
-      const list = [];
+const useStyles = makeStyles(styles);
+
+function Members(props) {
+  const classes = useStyles();
+  const { db, group, user, callbacks } = props;
+  const [ list, setList ] = useState([]);
+
+  useEffect(() => {
+    const detacher = db.collection(`groups/${group.groupId}/members`).orderBy("lastAccessed", "desc").onSnapshot((snapshot) => {
+      const newList = [];
       snapshot.forEach((doc)=>{
-        list.push(doc.data());
+        newList.push(doc.data());
       });
-      this.setState({list});
+      setList(newList);
     })
-  }
-  componentWillUnmount() {
-    this.detacher();
-  }
-  render() {
-    const { group, user, classes, callbacks } = this.props;
-    const { list } = this.state;
-    const canRead = callbacks.memberPrivilege() >= group.privileges.member.read;
-    return <div>{ 
+    return detacher;
+  }, [db, group]);
+
+  const canRead = callbacks.memberPrivilege() >= group.privileges.member.read;
+  return <div>
+    { 
       !canRead && <AccessDenied />
     }
     {
@@ -39,12 +40,15 @@ class Members extends React.Component {
           <MemberItem {...context} />
         </div>
       })
-    }</div>
-  }
+    }
+  </div>
 }
 
 Members.propTypes = {
-    classes: PropTypes.object.isRequired,
-  };
+  callbacks: PropTypes.object.isRequired,
+  db: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  group: PropTypes.object.isRequired,
+};
   
-export default withStyles(styles)(Members);
+export default Members;
