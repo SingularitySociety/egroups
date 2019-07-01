@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { FormGroup } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import EditableField from '../common/EditableField';
+import EditableField from '../../common/EditableField';
 
 const styles = theme => ({
     button: {

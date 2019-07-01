@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import AccessDenied from './AccessDenied';
+import AccessDenied from '../AccessDenied';
 import MemberItem from './MemberItem';
 
 const styles = theme => ({

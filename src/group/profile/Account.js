@@ -4,10 +4,10 @@ import { withStyles } from '@material-ui/core/styles';
 import { Button, FormGroup } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import EditableField from '../common/EditableField';
-import ImageUploader from '../common/ImageUploader';
-import LockedArea from '../common/LockedArea';
-import Privileges from '../const/Privileges';
+import EditableField from '../../common/EditableField';
+import ImageUploader from '../../common/ImageUploader';
+import LockedArea from '../../common/LockedArea';
+import Privileges from '../../const/Privileges';
 
 const styles = theme => ({
   button: {

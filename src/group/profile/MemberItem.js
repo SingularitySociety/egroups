@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import MUILink from '@material-ui/core/link';
 import { Grid, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import ImageUploader from '../common/ImageUploader';
+import ImageUploader from '../../common/ImageUploader';
 
 
 const styles = theme => ({
