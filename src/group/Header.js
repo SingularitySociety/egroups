@@ -85,7 +85,7 @@ class MyAppBar extends React.Component {
   };
 
   render() {
-    const { classes, user, group, member, callbacks, rootGroup, pageInfo } = this.props;
+    const { classes, user, group, callbacks, rootGroup, pageInfo } = this.props;
     const { anchorEl } = this.state;
     const cmd = { cmd:"redirect", path:window.location.pathname };
     const loginUrl = "/a/login/cmd/"+encodeURIComponent(JSON.stringify(cmd));
@@ -215,7 +215,7 @@ class MyAppBar extends React.Component {
             <MenuItem onClick={this.logout}><FormattedMessage id="logout" /></MenuItem>
         </Menu>
         { subbar }
-        <JoinButton member={member} pageInfo={pageInfo} group={group} />
+        <JoinButton privilege={privilege} pageInfo={pageInfo} group={group} />
       </div>
     );
   }

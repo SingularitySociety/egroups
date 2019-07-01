@@ -13,9 +13,9 @@ const styles = theme => ({
 const useStyles = makeStyles(styles);
 
 function JoinButton(props) {
-  const { member, pageInfo, group } = props;
+  const { privilege, pageInfo, group } = props;
   const classes = useStyles();
-  if (member 
+  if (privilege 
     || pageInfo.tabId==="join" 
     || pageInfo.tabId==="subscribe") {
       return "";
