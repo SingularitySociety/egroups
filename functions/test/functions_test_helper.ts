@@ -1,3 +1,6 @@
+import * as test_helper from "../../lib/test/rules/test_helper";
+import * as index from '../src/index';
+import * as Test from 'firebase-functions-test';
 import * as stripe from '../src/apis/stripe';
 
 export const createVisaCard = async () => {
@@ -22,4 +25,13 @@ export const createMasterCard = async () => {
     },
   });
   return master_source;
+}
+
+export const initFunctionsTest = () => {
+  const admin_db = test_helper.adminDB();
+  index.updateDb(admin_db);
+
+  const test = Test();
+  test.mockConfig({ stripe: { secret_key: process.env.STRIPE_SECRET }});
+  return {index, admin_db, test};
 }
