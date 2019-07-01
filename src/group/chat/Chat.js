@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import { Typography, IconButton, Grid } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import CreateNew from '../../common/CreateNew';
@@ -10,9 +9,6 @@ import { Link } from 'react-router-dom';
 import Privileges from '../../const/Privileges';
 import ErrorMessage from '../ErrorMessage';
 import Messages from './Messages';
-
-const styles = theme => ({
-});
 
 class Chat extends React.Component {
   state = {channel:null}
@@ -87,7 +83,7 @@ class Chat extends React.Component {
 }
 
 Chat.propTypes = {
-    classes: PropTypes.object.isRequired,
+    group: PropTypes.object.isRequired,
   };
   
-export default withStyles(styles)(Chat);
+export default Chat;
