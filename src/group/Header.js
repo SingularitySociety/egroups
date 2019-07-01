@@ -85,7 +85,7 @@ class MyAppBar extends React.Component {
   };
 
   render() {
-    const { classes, user, group, member, rootGroup, pageInfo } = this.props;
+    const { classes, user, group, member, callbacks, rootGroup, pageInfo } = this.props;
     const { anchorEl } = this.state;
     const cmd = { cmd:"redirect", path:window.location.pathname };
     const loginUrl = "/a/login/cmd/"+encodeURIComponent(JSON.stringify(cmd));
@@ -177,6 +177,7 @@ class MyAppBar extends React.Component {
             </Breadcrumbs>
           </Grid>
         </Grid>;
+    const privilege = callbacks.memberPrivilege();
 
     return (
       <div className={classes.root}>
@@ -197,15 +198,15 @@ class MyAppBar extends React.Component {
         </AppBar>
         <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={this.closeMe}>
           {
-            member && 
+            privilege && 
             <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/account`}><FormattedMessage id="account" /></MenuItem>
           }
           {
-            member && 
+            privilege && 
             <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/listing`}><FormattedMessage id="listing" /></MenuItem>
           }
           {
-            (member && member.privilege >= Privileges.admin) && [
+            (privilege >= Privileges.admin) && [
             <MenuItem key="settogs" onClick={this.closeMe} component={Link} to={`/${group.groupName}/settings`}><FormattedMessage id="settings" /></MenuItem>,
             <MenuItem key="pages" onClick={this.closeMe} component={Link} to={`/${group.groupName}/pages`}><FormattedMessage id="pages" /></MenuItem>,
             ]
