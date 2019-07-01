@@ -27,11 +27,11 @@ const styles = theme => ({
 class Message extends React.Component {
   componentDidMount() {
     const { message, callbacks } = this.props;
-    callbacks.hitMember(message.uid);
+    callbacks.hitProfile(message.uid);
   }
   render() {
-    const { message, classes, members } = this.props;
-    const her = members[message.uid];
+    const { message, classes, profiles } = this.props;
+    const her = profiles[message.uid];
     const userName = (her && her.displayName) || message.userName;
     const thumbnails = her && her.profile && her.profile.thumbnails;
     // HACK: Switching the key for ImageUploader to force the mounting a new component.
