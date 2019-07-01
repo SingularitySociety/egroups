@@ -1,5 +1,4 @@
-The MIT License
-
 Copyright (c) 2019-2019 Satoshi Nakajima. https://github.com/snakajima
+Copyright (c) 2019-2019 Isamu Arimoto. https://github.com/isamu
 
 This is NOT an open source software. 
