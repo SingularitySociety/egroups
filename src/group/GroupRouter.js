@@ -100,7 +100,7 @@ class GroupRouter extends React.Component {
   componentWillUnmount() {
     this.detacher && this.detacher();    
   }
-  reloadGroup = async () => {
+  groupDidUpdate = async () => {
     const prev = this.state.group;
     const group = (await this.refGroup.get()).data();
     group.groupId = prev.groupId;
@@ -187,12 +187,12 @@ class GroupRouter extends React.Component {
     const callbacks = {
       setTabbar:this.setTabbar, 
       memberDidUpdate:this.memberDidUpdate, 
-      reloadGroup:this.reloadGroup,
+      groupDidUpdate:this.groupDidUpdate,
       hitProfile:this.hitProfile,
       memberPrivilege:this.memberPrivilege,
     };
     const context = { user, group, db, member, history, rootGroup, profiles, callbacks,
-                      memberDidUpdate:this.memberDidUpdate, reloadGroup:this.reloadGroup };
+                      memberDidUpdate:this.memberDidUpdate };
     
     return (
       <MuiThemeProvider theme={theme}>

@@ -46,7 +46,7 @@ function SettingsBilling(props) {
   const handleCheck = name => async event => {
     setSubscription(event.target.checked);
     await refGroup.set({[name]:event.target.checked}, {merge:true});
-    props.reloadGroup();
+    props.callbacks.groupDidUpdate();
   };
 
   function addPlan() {
@@ -76,7 +76,7 @@ function SettingsBilling(props) {
   async function onUpdate() {
     plans.sort((a, b) => { return a.price - b.price });
     await refGroup.set({plans:plans}, {merge:true});
-    props.reloadGroup();
+    props.callbacks.groupDidUpdate();
     setModified(false);
   }
   let isValid = true;
@@ -134,7 +134,7 @@ function SettingsBilling(props) {
 }
 
 SettingsBilling.propTypes = {
-  reloadGroup: PropTypes.func.isRequired,
+  callbacks: PropTypes.object.isRequired,
 };
 
 export default SettingsBilling;

@@ -54,7 +54,7 @@ class GroupHome extends React.Component {
           homepageId: doc.id,
         }, {merge:true});
         group.homepageId = doc.id;
-        callbacks.reloadGroup();
+        callbacks.groupDidUpdate();
       }
       this.loadArticle();
     }

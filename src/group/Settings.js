@@ -38,7 +38,7 @@ class Settings extends React.Component {
   }
   handleCheck = name => async event => {
     await this.refGroup.set({privileges:{membership:{[name]:event.target.checked}}}, {merge:true});
-    this.props.reloadGroup();
+    this.props.callbacks.groupDidUpdate();
   };    
   handleChange = name => async event => {
     switch(name) {
@@ -62,17 +62,17 @@ class Settings extends React.Component {
       console.log("no handler", name, event.target.value);
       break;
     }
-    this.props.reloadGroup();
+    this.props.callbacks.groupDidUpdate();
   };
   onSave = name => async value => {
     //console.log(name, value);
     await this.refGroup.set({[name]:value}, {merge:true});
-    this.props.reloadGroup();
+    this.props.callbacks.groupDidUpdate();
   }
   onImageUpload = async (imageUrl) => {
     console.log("onImageUpload", imageUrl);
     await this.refGroup.set({hasImage:true}, {merge:true});
-    this.props.reloadGroup();
+    this.props.callbacks.groupDidUpdate();
   }
   onDelete = async () => {
     console.log("onDelete");
@@ -170,7 +170,7 @@ class Settings extends React.Component {
 
 Settings.propTypes = {
     classes: PropTypes.object.isRequired,
-    reloadGroup: PropTypes.func.isRequired,
+    callbacks: PropTypes.object.isRequired,
     group: PropTypes.object.isRequired,
     db: PropTypes.object.isRequired,
   };
