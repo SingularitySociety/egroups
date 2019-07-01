@@ -7,7 +7,7 @@ function Messages(props) {
   const [messages, setMessages] = useState([]);
 
   useEffect(()=>{
-    console.log("Messages:useEffect");
+    console.log("useEffect getting messages");
     const refMessages = db.collection(`groups/${group.groupId}/channels/${channel.channelId}/messages`);
     const detacher = refMessages.orderBy("created").onSnapshot((snapshot)=>{
       const messages=[];

@@ -21,8 +21,8 @@ function Chat(props) {
     setTabbar("channel", `ch/${channelId}`);
   }, [setTabbar, channelId]);
   useEffect(()=> {
-    console.log("useEffect foo");
-    async function foo() {
+    console.log("useEffect getChannel", channelId);
+    async function getChannel() {
       try {
         const ref = db.doc(`groups/${group.groupId}/channels/${channelId}`);
         const channel = (await ref.get()).data();
@@ -34,7 +34,7 @@ function Chat(props) {
         setError(error);
       }
     }
-    foo();
+    getChannel();
   }, [channelId, db, group.groupId]);
 
   const postMessgae = async (message) => {
