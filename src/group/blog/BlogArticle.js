@@ -96,13 +96,13 @@ class BlogArticle extends React.Component {
 
   render() {
     const { article, resources } = this.state;
-    const { user, member, classes, refArticle, arp, group } = this.props;
+    const { user, member, classes, refArticle, arp, group, callbacks } = this.props;
     const context = { refArticle };
     if (!article) {
       return "";
     }
     const canEdit = (user && article.owner === user.uid);
-    const canRead = ((member && member.privilege) || 0) >= article.read;
+    const canRead = callbacks.memberPrivilege() >= article.read;
     if (!canRead) {
       return <AccessDenied />
     }

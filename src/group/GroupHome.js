@@ -34,8 +34,8 @@ class GroupHome extends React.Component {
   }
   memberDidMount = async (member) => {
     console.log("memberDidMount");
-    const { group, db, user, reloadGroup, intl:{messages} } = this.props;
-    if (member.privilege >= Privileges.admin) {
+    const { group, db, user, callbacks, intl:{messages} } = this.props;
+    if (callbacks.memberPrivilege() >= Privileges.admin) {
       this.setState({canEdit:true});
       console.log("isAdmin", group.homepageId);
 
@@ -54,7 +54,7 @@ class GroupHome extends React.Component {
           homepageId: doc.id,
         }, {merge:true});
         group.homepageId = doc.id;
-        reloadGroup();
+        callbacks.reloadGroup();
       }
       this.loadArticle();
     }

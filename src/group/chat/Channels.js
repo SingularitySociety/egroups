@@ -32,9 +32,9 @@ class Channels extends React.Component {
     });
   }
   render() {
-      const { user, db, member, group, history } = this.props;
+      const { user, db, member, group, history, callbacks } = this.props;
       const context = { user, group, db, member, history };
-      const canCreateNew = !!member && member.privilege 
+      const canCreateNew = callbacks.memberPrivilege() 
               >= ((group.privileges && group.privileges.channel && group.privileges.channel.create) || 2);
       return (
         <Grid container justify="center" spacing={1}>
