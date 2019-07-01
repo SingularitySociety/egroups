@@ -32,16 +32,16 @@ const useStyles = makeStyles(styles);
 
 function SettingsBilling(props) {
   const classes = useStyles();
-  const { group, db, selectTab } = props;
+  const { group, db, callbacks } = props;
   const [subscription, setSubscription] = useState(group.subscription);
   const [plans, setPlans] = useState(group.plans || []);
   const [modified, setModified] = useState(false);
   const refGroup = db.doc(`groups/${group.groupId}`);
 
   useEffect(()=>{
-    selectTab("settings.billing");
+    callbacks.setTabbar("settings.billing");
     console.log("useEffect");
-  }, [selectTab]);
+  }, [callbacks]);
 
   const handleCheck = name => async event => {
     setSubscription(event.target.checked);

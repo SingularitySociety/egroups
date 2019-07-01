@@ -15,8 +15,8 @@ const styles = theme => ({
 class Profile extends React.Component {
     state = { member:null };
     async componentDidMount() {
-        const { db, group, selectTab, match:{params:{userId}} } = this.props;
-        selectTab("profile", `pr/${userId}`);
+        const { db, group, callbacks, match:{params:{userId}} } = this.props;
+        callbacks.setTabbar("profile", `pr/${userId}`);
         const member = (await db.doc(`groups/${group.groupId}/members/${userId}`).get()).data();
         this.setState({member});
     }

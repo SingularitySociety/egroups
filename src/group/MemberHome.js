@@ -10,8 +10,8 @@ const styles = theme => ({
 
 class MemberHome extends React.Component {
     componentDidMount() {
-      const { selectTab } = this.props;
-      selectTab("member");
+      const { callbacks } = this.props;
+      callbacks.setTabbar("member");
     }
     render() {
       const { user, db, member, group, history, arps } = this.props;

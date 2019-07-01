@@ -39,8 +39,8 @@ class Join extends React.Component {
     }
   }
   componentDidMount() {
-    const { selectTab } = this.props;
-    selectTab("join");
+    const { callbacks } = this.props;
+    callbacks.setTabbar("join");
   }
   render() {
     const { user, classes, group, member } = this.props;

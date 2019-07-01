@@ -19,8 +19,8 @@ class ChannelSettings extends React.Component {
     this.state = {entity:null};
   }
   async componentDidMount() {
-    const { match:{params:{channelId}}, selectTab, group } = this.props;
-    selectTab("channel.settings", `ch/${channelId}`);
+    const { match:{params:{channelId}}, callbacks, group } = this.props;
+    callbacks.setTabbar("channel.settings", `ch/${channelId}`);
     this.detacher = this.refEntity.onSnapshot((doc)=>{
       const entity = doc.data();
       if (entity) {

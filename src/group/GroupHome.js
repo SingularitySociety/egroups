@@ -18,8 +18,8 @@ const styles = theme => ({
 class GroupHome extends React.Component {
   state = {};
   componentDidMount() {
-    const { selectTab } = this.props;
-    selectTab("home");
+    const { callbacks } = this.props;
+    callbacks.setTabbar("home");
     this.loadArticle();
   }
   loadArticle = async () => {

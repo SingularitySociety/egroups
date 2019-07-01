@@ -16,8 +16,8 @@ class Blog extends React.Component {
   }
 
   async componentDidMount() {
-    const { match:{params:{articleId}}, selectTab, arp } = this.props;
-    selectTab(arp.tabLeaf, `${arp.leaf}/${articleId}`);
+    const { match:{params:{articleId}}, callbacks, arp } = this.props;
+    callbacks.setTabbar(arp.tabLeaf, `${arp.leaf}/${articleId}`);
 
     const error = {key:"error.invalid.articleId", value:articleId};
     try {

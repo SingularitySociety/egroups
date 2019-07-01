@@ -7,8 +7,8 @@ const styles = theme => ({
 
 class Events extends React.Component {
   componentDidMount() {
-    const { selectTab } = this.props;
-    selectTab("events");
+    const { callbacks } = this.props;
+    callbacks.setTabbar("events");
   }
   render() {
       return (

@@ -9,8 +9,8 @@ const styles = theme => ({
 class Listing extends React.Component {
   state = { list:[] };
   componentDidMount() {
-    const { selectTab } = this.props;
-    selectTab("listing");
+    const { callbacks } = this.props;
+    callbacks.setTabbar("listing");
   }
   render() {
     const { user, db, member, group, history, callbacks } = this.props;

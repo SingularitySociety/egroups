@@ -144,8 +144,7 @@ class GroupRouter extends React.Component {
     console.log("userWillUnmount");
     this.setState({member:null, history:null})
   }
-  selectTab = (tabId, path) => {
-    //console.log("selectTab", tabId)
+  setTabbar = (tabId, path) => {
     this.setState({pageInfo:{tabId, path}});
   }
   hitProfile = async (uid) => {
@@ -186,14 +185,14 @@ class GroupRouter extends React.Component {
       }
     });
     const callbacks = {
-      selectTab:this.selectTab, 
+      setTabbar:this.setTabbar, 
       memberDidUpdate:this.memberDidUpdate, 
       reloadGroup:this.reloadGroup,
       hitProfile:this.hitProfile,
       memberPrivilege:this.memberPrivilege,
     };
     const context = { user, group, db, member, history, rootGroup, profiles, callbacks,
-                      selectTab:this.selectTab, memberDidUpdate:this.memberDidUpdate, reloadGroup:this.reloadGroup };
+                      memberDidUpdate:this.memberDidUpdate, reloadGroup:this.reloadGroup };
     
     return (
       <MuiThemeProvider theme={theme}>

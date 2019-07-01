@@ -18,11 +18,11 @@ const useStyles = makeStyles(styles);
 
 function Subscribe(props) {
   //const classes = useStyles();
-  const { selectTab, user, group, db } = props;
+  const { callbacks, user, group, db } = props;
 
   useEffect(()=>{
-    selectTab("subscribe");
-  }, [selectTab]);
+    callbacks.setTabbar("subscribe");
+  }, [callbacks]);
 
   if (!user) {
     return <PleaseLogin />

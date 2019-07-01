@@ -32,8 +32,8 @@ class Settings extends React.Component {
     this.state = {};
   }
   componentDidMount() {
-    const { selectTab } = this.props;
-    selectTab("settings");
+    const { callbacks } = this.props;
+    callbacks.setTabbar("settings");
     console.log(this.props.group);
   }
   handleCheck = name => async event => {

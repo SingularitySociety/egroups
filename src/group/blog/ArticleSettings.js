@@ -20,8 +20,8 @@ class ArticleSettings extends React.Component {
     this.state = {entity:null, articleId};
   }
   async componentDidMount() {
-    const { match:{params:{articleId}}, selectTab, group, arp } = this.props;
-    selectTab(`${arp.tabLeaf}.settings`, `${arp.leaf}/${articleId}`);
+    const { match:{params:{articleId}}, callbacks, group, arp } = this.props;
+    callbacks.setTabbar(`${arp.tabLeaf}.settings`, `${arp.leaf}/${articleId}`);
 
     this.detacher = this.refEntity.onSnapshot((doc)=>{
       const entity = doc.data();

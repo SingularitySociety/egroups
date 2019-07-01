@@ -16,8 +16,8 @@ const styles = theme => ({
 
 class Account extends React.Component {
   componentDidMount() {
-    const { selectTab } = this.props;
-    selectTab("account");
+    const { callbacks } = this.props;
+    callbacks.setTabbar("account");
 }
 handleLeave = async () => {
     const { db, user, group } = this.props;

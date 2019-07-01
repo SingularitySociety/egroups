@@ -17,8 +17,8 @@ const styles = theme => ({
 
 class Channels extends React.Component {
   componentDidMount() {
-    const { selectTab } = this.props;
-    selectTab("channels");
+    const { callbacks } = this.props;
+    callbacks.setTabbar("channels");
   }
   createChannel = async (title) => {
     console.log("createChannel:", title)
