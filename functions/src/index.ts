@@ -121,25 +121,9 @@ export const channelDidDelete = functions.firestore.document('groups/{groupId}/c
     return deleteSubcollection(snapshot, "messages");
   });
 
-export const sectionDidDelete = functions.firestore.document('groups/{groupId}/{articles}/{articleId}/sections/{sectionId}')
-  .onDelete(async (snapshot, context)=>{
-    const { groupId, articles, articleId, sectionId } = context.params;
-    const bucket = admin.storage().bucket();
-    const path = `groups/${groupId}/${articles}/${articleId}/${sectionId}`;
-    const pathThumbs = `groups/${groupId}/${articles}/${articleId}/thumb_${sectionId}`;
-    if (!(articles === "articles" || articles === "pages")) {
-      console.log("unexpected", articles);
-      return false;
-    }
-    try {
-      await bucket.deleteFiles({prefix:path});
-      await bucket.deleteFiles({prefix:pathThumbs});
-      console.log("deleting section images succeeded:", path);
-    } catch(error) {
-      console.log("deleting section images failed:", path, error);
-    }
-    return true;
-  });
+export const sectionDidDelete = functions.firestore.document('groups/{groupId}/{articles}/{articleId}/sections/{sectionId}').onDelete(async (snapshot, context) => {
+  await imageFunctions.deleteImage(snapshot, context);
+});
 
 export const memberDidDelete = functions.firestore.document('groups/{groupId}/members/{userId}')
   .onDelete(async (snapshot, context)=>{
