@@ -67,14 +67,14 @@ class Chat extends React.Component {
 
   render() {
     const { channel, messages, error } = this.state;
-    const { user, member, group, profiles, callbacks } = this.props;
+    const { user, group, profiles, callbacks } = this.props;
     if (error) {
       return <ErrorMessage error={error} />
     }
     if (!channel) {
       return "";
     }
-    const privilege = (member && member.privilege) || 0;
+    const privilege = callbacks.memberPrivilege() ;
     const uid = (user && user.uid) || null;
     const canRead = privilege >= channel.read;
     const canWrite = privilege >= channel.write;

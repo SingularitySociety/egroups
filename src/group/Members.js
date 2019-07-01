@@ -26,9 +26,9 @@ class Members extends React.Component {
     this.detacher();
   }
   render() {
-    const { member, group, user, classes } = this.props;
+    const { group, user, classes, callbacks } = this.props;
     const { list } = this.state;
-    const canRead = ((member && member.privilege) || 0) >= group.privileges.member.read;
+    const canRead = callbacks.memberPrivilege() >= group.privileges.member.read;
     return <div>{ 
       !canRead && <AccessDenied />
     }

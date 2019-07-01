@@ -96,7 +96,7 @@ class BlogArticle extends React.Component {
 
   render() {
     const { article, resources } = this.state;
-    const { user, member, classes, refArticle, arp, group, callbacks } = this.props;
+    const { user, classes, refArticle, arp, group, callbacks } = this.props;
     const context = { refArticle };
     if (!article) {
       return "";

@@ -33,12 +33,12 @@ class Articles extends React.Component {
     this.setState({redirect:`/${group.groupName}/${arp.leaf}/${doc.id}`});
   }
   render() {
-      const { user, db, member, group, history, arp, callbacks } = this.props;
+      const { user, db, group, history, arp, callbacks } = this.props;
       const { redirect } = this.state;
       if (redirect) {
         return <Redirect to={redirect} />
       }
-      const context = { user, group, db, member, history, arp };
+      const context = { user, group, db, history, arp };
       const canCreateNew = callbacks.memberPrivilege() 
             >= ((group.privileges && group.privileges[arp.tabLeaf] && group.privileges[arp.tabLeaf].create) || Privileges.member);
       return (

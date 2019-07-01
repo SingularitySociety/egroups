@@ -13,8 +13,8 @@ class Listing extends React.Component {
     selectTab("listing");
   }
   render() {
-    const { user, db, member, group, history } = this.props;
-    const context = { user, group, db, member, history };
+    const { user, db, member, group, history, callbacks } = this.props;
+    const context = { user, group, db, member, history, callbacks };
     return <Members {...context} />
   }
 }
