@@ -1,3 +1,5 @@
+import * as admin from 'firebase-admin';
+
 import * as image from '../utils/image';
 import * as constant from '../utils/constant';
 
@@ -27,4 +29,22 @@ export const generateThumbnail = async (db, object) => {
     await image_data_ref.set(data, {merge:true})
   }
   return true
+}
+export const deleteImage = async (snapshot, context) => {
+  const { groupId, articles, articleId, sectionId } = context.params;
+  const bucket = admin.storage().bucket();
+  const path = `groups/${groupId}/${articles}/${articleId}/${sectionId}`;
+  const pathThumbs = `groups/${groupId}/${articles}/${articleId}/thumb_${sectionId}`;
+  if (!(articles === "articles" || articles === "pages")) {
+    console.log("unexpected", articles);
+    return false;
+  }
+  try {
+    await bucket.deleteFiles({prefix:path});
+    await bucket.deleteFiles({prefix:pathThumbs});
+    console.log("deleting section images succeeded:", path);
+  } catch(error) {
+    console.log("deleting section images failed:", path, error);
+  }
+  return true;
 }
