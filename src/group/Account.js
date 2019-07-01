@@ -7,6 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import EditableField from '../common/EditableField';
 import ImageUploader from '../common/ImageUploader';
 import LockedArea from '../common/LockedArea';
+import Privileges from '../const/Privileges';
 
 const styles = theme => ({
   button: {
@@ -42,7 +43,7 @@ onImageUpload = async (imageUrl) => {
 }
     
 render() {
-    const { classes, group, user, member } = this.props;
+    const { classes, group, user, member, callbacks } = this.props;
     if (!user) {
       return <Redirect to={`/${group.groupName}`} />
     }
@@ -77,11 +78,14 @@ render() {
         <EditableField label={<FormattedMessage id="member.github"/>} 
             value={member.github || ""} onSave={this.onSave('github')}/>
       </FormGroup>
-      <LockedArea label={<FormattedMessage id="warning.dangerous" />}>
-        <Button variant="contained" className={classes.button} onClick={this.handleLeave}>
-          <FormattedMessage id="leave" />
-        </Button>
-      </LockedArea>
+      {
+        callbacks.memberPrivilege() < Privileges.owner &&    
+        <LockedArea label={<FormattedMessage id="warning.dangerous" />}>
+          <Button variant="contained" className={classes.button} onClick={this.handleLeave}>
+            <FormattedMessage id="leave" />
+          </Button>
+        </LockedArea>
+      }
     </div>
   }
 }

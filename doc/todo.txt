@@ -11,12 +11,12 @@ Editor: H1, H2, h3
 Theme: Match H1, H2, H3
 Blog: Do not use onSnapshot for read-only mode.
 Group: Invitation
-Account: Owner can not leave
 Blog: Homepage can not be deleted
 Firebase: Introduce rosters
 Join: Wait until JWT is retrieved
 
 ----- Done -----
+Account: Owner can not leave
 Account: Put "leave" button in dangerous switch
 Chat: Activate the entry
 Editor: link (https://codepen.io/Kiwka/pen/ZLvPeO?editors=1010)
