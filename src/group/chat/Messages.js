@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import Message from './Message';
 
 function Messages(props) {
-  const { channel, group, refMessages, user, db, profiles, callbacks } = props;
+  const { channel, group, user, db, profiles, callbacks } = props;
   const [messages, setMessages] = useState([]);
 
   useEffect(()=>{
     console.log("Messages:useEffect");
+    const refMessages = db.collection(`groups/${group.groupId}/channels/${channel.channelId}/messages`);
     const detacher = refMessages.orderBy("created").onSnapshot((snapshot)=>{
       const messages=[];
       snapshot.forEach((doc) => {
@@ -26,7 +27,7 @@ function Messages(props) {
       }
     });
     return detacher;
-  }, [refMessages, group, user, db, channel]);
+  }, [group, user, db, channel]);
 
   const context = { callbacks, profiles }; 
   return (

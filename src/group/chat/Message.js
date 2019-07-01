@@ -30,12 +30,13 @@ function Message(props) {
   const classes = useStyles();
   const { message, callbacks, profiles } = props;
   const her = profiles[message.uid];
+  const hitProfile = callbacks.hitProfile;
   useEffect(()=> {
     if (!her) {
       console.log('hitProfile', message.uid);
-      callbacks.hitProfile(message.uid);
+      hitProfile(message.uid);
     }    
-  }, [message, callbacks, her]);
+  }, [message, hitProfile, her]);
 
   const userName = (her && her.displayName) || message.userName;
   const thumbnails = her && her.profile && her.profile.thumbnails;
