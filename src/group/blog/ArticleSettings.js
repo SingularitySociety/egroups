@@ -42,7 +42,7 @@ class ArticleSettings extends React.Component {
     await this.refEntity.delete();
   }
   render() {
-    const { group } = this.props;
+    const { group, arp } = this.props;
     const { entity, redirect, articleId } = this.state;
     if (redirect) {
       return <Redirect to={redirect} />
@@ -50,13 +50,14 @@ class ArticleSettings extends React.Component {
     if (!entity) {
       return "";
     }
+    const isGroupHomepage = group.homepageId === articleId && arp.collection === "pages";
     return (
       <div>
         <FormGroup row>
           <EditableField label={<FormattedMessage id="article.title"/>} value={entity.title} onSave={this.onSave('title')}/>
         </FormGroup>
         {
-          (group.homepageId === articleId) ?
+          isGroupHomepage ?
           <Typography color="textSecondary"><FormattedMessage id="article.is.homepage" /></Typography>
           :
             <LockedArea label={<FormattedMessage id="warning.dangerous" />}>
