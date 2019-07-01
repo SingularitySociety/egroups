@@ -1,15 +1,10 @@
 import Privileges from '../react-lib/src/const/Privileges.js';
 import * as test_helper from "../../lib/test/rules/test_helper";
-// import * as functions_test_helper from "./functions_test_helper";
-import * as index from '../src/index';
-
-import * as Test from 'firebase-functions-test';
+import * as functions_test_helper from "./functions_test_helper";
 
 import { should } from 'chai';
-// import * as UUID from "uuid-v4";
 
-const admin_db = test_helper.adminDB();
-index.updateDb(admin_db);
+const {index, admin_db, test} = functions_test_helper.initFunctionsTest();
 
 test_helper.initHook()
 
@@ -20,8 +15,6 @@ describe('Member function test', () => {
     const groupId = "member_test";
     const userId = "user1";
     
-    const test = Test();
-    test.mockConfig({ stripe: { secret_key: process.env.STRIPE_SECRET }});
     const snap = test.database.makeDataSnapshot({}, `groups/${groupId}/members/${userId}`);
 
     // not subscriber member

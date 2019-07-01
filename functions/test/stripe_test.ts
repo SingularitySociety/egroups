@@ -129,7 +129,7 @@ describe('Stripe test', () => {
 
     subscription.billing.should.equal('charge_automatically');
     subscription.collection_method.should.equal('charge_automatically');
-    (subscription.current_period_end - subscription.current_period_start).should.equal(2592000);
+    [2419200, 2505600, 2592000, 2678400].should.include(subscription.current_period_end - subscription.current_period_start)
 
     subscription.items.object.should.equal('list');
     subscription.items.total_count.should.equal(1);

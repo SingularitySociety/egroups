@@ -1,16 +1,12 @@
 import * as test_helper from "../../lib/test/rules/test_helper";
 import * as functions_test_helper from "./functions_test_helper";
-import * as index from '../src/index';
 import * as stripe from '../src/apis/stripe';
 import * as stripeUtils from "../src/utils/stripe"
-
-import * as Test from 'firebase-functions-test';
 
 import { should } from 'chai';
 import * as UUID from "uuid-v4";
 
-const admin_db = test_helper.adminDB();
-index.updateDb(admin_db);
+const {index, admin_db, test} = functions_test_helper.initFunctionsTest();
 
 should()
 
@@ -19,9 +15,6 @@ describe('Group function test', () => {
     this.timeout(10000);
 
     const groupId = "123"
-
-    const test = Test();
-    test.mockConfig({ stripe: { secret_key: process.env.STRIPE_SECRET }});
 
     const wrapped = test.wrap(index.groupDidUpdate);
     
@@ -137,9 +130,6 @@ describe('Group function test', () => {
     const visa_source = await functions_test_helper.createVisaCard();
     const visa_token = visa_source.id;
     
-    const test = Test();
-    test.mockConfig({ stripe: { secret_key: process.env.STRIPE_SECRET }});
-
     const req = {token: visa_token};
     const context = {auth: {uid: aliceUID}};
     const wrapped = test.wrap(index.createCustomer);
@@ -215,9 +205,6 @@ describe('Group function test', () => {
     // end of create
 
     // run test
-    const test = Test();
-    test.mockConfig({ stripe: { secret_key: process.env.STRIPE_SECRET }});
-    
     const req = {groupId, plan: {price, currency}};
     const context = {auth: {uid: aliceUID}};
     const wrapped = test.wrap(index.createSubscribe);
