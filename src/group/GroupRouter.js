@@ -31,6 +31,7 @@ import ArticleSettings from './blog/ArticleSettings';
 import Join from './join/Join';
 import SettingsBilling from './join/SettingsBilling';
 import Subscribe from './join/Subscribe';
+import Privileges from '../const/Privileges';
 
 const colorMap = { red, pink, purple, deepPurple, indigo, 
   blue, lightBlue, cyan, teal, green,
@@ -135,7 +136,7 @@ class GroupRouter extends React.Component {
   memberPrivilege = () => {
     const { privileges } = this.props;
     const { group } = this.state;
-    return privileges && privileges[group.groupId];
+    return (privileges && privileges[group.groupId]) || Privileges.guest;
   }
   userDidMount = () => {
     this.memberDidUpdate();
