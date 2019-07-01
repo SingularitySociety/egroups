@@ -4,9 +4,11 @@ import Members from './Members';
 
 function Listing(props) {
   const { user, db, group, history, callbacks } = props;
+  const setTabbar = callbacks.setTabbar;
+
   useEffect(() => {
-    callbacks.setTabbar("listing");
-  }, [callbacks]);
+    setTabbar("listing");
+  }, [setTabbar]);
 
   const context = { user, group, db, history, callbacks };
   return <Members {...context} />

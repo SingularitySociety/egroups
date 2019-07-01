@@ -146,6 +146,7 @@ class GroupRouter extends React.Component {
     this.setState({member:null, history:null})
   }
   setTabbar = (tabId, path) => {
+    console.log("setTabbar:", tabId); // NOTE: Keep this code to detect infinit useEffect bug
     this.setState({pageInfo:{tabId, path}});
   }
   hitProfile = async (uid) => {

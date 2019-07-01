@@ -7,6 +7,7 @@ function Messages(props) {
   const [messages, setMessages] = useState([]);
 
   useEffect(()=>{
+    console.log("Messages:useEffect");
     const detacher = refMessages.orderBy("created").onSnapshot((snapshot)=>{
       const messages=[];
       snapshot.forEach((doc) => {
