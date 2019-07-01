@@ -18,7 +18,7 @@ const styles = theme => ({
 class Join extends React.Component {
   state = { error:null };
   handleJoin = async () => {
-    const { db, user, group } = this.props;
+    const { db, user, group, callbacks } = this.props;
     const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
     try {
         await refMember.set({ 
@@ -31,7 +31,7 @@ class Join extends React.Component {
         await refMember.collection("private").doc("history").set({
             // empty object
         }, {merge:true});
-        this.props.memberDidUpdate();
+        callbacks.memberDidUpdate();
         //window.location.pathname = "/" + group.groupName;
     } catch(e) {
         console.log(e);

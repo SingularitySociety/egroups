@@ -20,25 +20,25 @@ class Account extends React.Component {
     callbacks.setTabbar("account");
 }
 handleLeave = async () => {
-    const { db, user, group } = this.props;
+    const { db, user, group, callbacks } = this.props;
     const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
     await refMember.delete();
-    this.props.memberDidUpdate();
+    callbacks.memberDidUpdate();
     window.location.pathname = "/" + group.groupName;
 }
 onSave = name => async value => {
     //console.log(name, value);
-    const { db, user, group } = this.props;
+    const { db, user, group, callbacks } = this.props;
     const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
     await refMember.set({[name]:value}, {merge:true});
-    this.props.memberDidUpdate();
+    callbacks.memberDidUpdate();
 }    
 onImageUpload = async (imageUrl) => {
     console.log("onImageUpload", imageUrl);
-    const { db, user, group } = this.props;
+    const { db, user, group, callbacks } = this.props;
     const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
     await refMember.set({hasImage:true}, {merge:true});
-    this.props.memberDidUpdate();
+    callbacks.memberDidUpdate();
 }
     
 render() {
@@ -88,7 +88,7 @@ render() {
 
 Account.propTypes = {
   classes: PropTypes.object.isRequired,
-  memberDidUpdate: PropTypes.func.isRequired,
+  callbacks: PropTypes.object.isRequired,
 };
   
 export default withStyles(styles)(Account);

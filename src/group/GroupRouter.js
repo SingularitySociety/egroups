@@ -191,8 +191,7 @@ class GroupRouter extends React.Component {
       hitProfile:this.hitProfile,
       memberPrivilege:this.memberPrivilege,
     };
-    const context = { user, group, db, member, history, rootGroup, profiles, callbacks,
-                      memberDidUpdate:this.memberDidUpdate };
+    const context = { user, group, db, member, history, rootGroup, profiles, callbacks };
     
     return (
       <MuiThemeProvider theme={theme}>
