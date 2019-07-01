@@ -44,7 +44,7 @@ class Members extends React.Component {
 }
 
 Members.propTypes = {
-    classes: PropTypes.object.isRequired,
-  };
+  classes: PropTypes.object.isRequired,
+};
   
 export default withStyles(styles)(Members);
