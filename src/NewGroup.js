@@ -26,7 +26,13 @@ const styles = theme => ({
   },
 });
 
-const groupTypes = ["group.free.open", "group.free.closed", "group.paid.open", "group.paid.closed"];
+const groupTypeKeys = ["group.free.open", "group.free.closed", "group.paid.open", "group.paid.closed"];
+const groupTypes = [
+  { open:true, subscription:false },
+  { open:false, subscription:false },
+  { open:true, subscription:true },
+  { open:false, subscription:true },
+]
 
 class NewGroup extends React.Component {
   state = { title:"", path:"", invalid:true, conflict:false, processing:false, groupType:-1 };
@@ -40,8 +46,8 @@ class NewGroup extends React.Component {
     }
   }
 
-  createGroupName = async (db, context) => {
-    const { groupId, path, title } = context;
+  createGroupName = async (db, context ) => {
+    const { groupId, path, title, types } = context;
     const refName = db.doc(`groupNames/${path}`);
     const refGroup = db.doc(`groups/${groupId}`);
     return db.runTransaction(async (tr)=>{
@@ -70,9 +76,10 @@ class NewGroup extends React.Component {
           event: { read:Privileges.member, create:Privileges.member, attend:Privileges.member },
           member: { read:Privileges.member, write:Privileges.admin },
           invitation: { create:Privileges.admin },
-          membership: { open:true },
-        }
-       }, {merge:true});
+        },
+        open:types.open,
+        subscription:types.subscription,
+      }, {merge:true});
     }).then(() => {
       return { result: true };
     }).catch((e) => {
@@ -86,8 +93,8 @@ class NewGroup extends React.Component {
     e.preventDefault();
     console.log("onSubmit");
     const { db, match:{params:{groupId}} } = this.props;
-    const { path, title } = this.state;
-    const context = { groupId, path, title };
+    const { path, title, groupType } = this.state;
+    const context = { groupId, path, title, types:groupTypes[groupType] };
     this.setState({processing:true});
     const result = await this.createGroupName(db, context);
     if (result.result) {
@@ -139,8 +146,8 @@ class NewGroup extends React.Component {
     }
     const privilege = privileges && privileges[groupId];
     const isOwner = privilege === Privileges.owner; // becomes true when we got JWT
-    const disabledSubmit = invalid || !isOwner || groupType==-1;
-    const descriptions = groupTypes.map((key, index)=>{
+    const disabledSubmit = invalid || !isOwner || groupType<0;
+    const descriptions = groupTypeKeys.map((key, index)=>{
       return <ListItem button key={key} selected={index===groupType} onClick={()=>{this.onGroupType(index)}}>
         <Grid container direction="row">
           <Grid item>
