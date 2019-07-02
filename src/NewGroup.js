@@ -30,7 +30,9 @@ class NewGroup extends React.Component {
     console.log(window.location);
     const { db, match:{params:{groupId}} } = this.props;
     const doc = (await db.doc(`groups/${groupId}`).get()).data();
-    this.setState({title:doc.title});
+    if (doc) {
+      this.setState({title:doc.title});
+    }
   }
 
   onSubmit = async (e) => {
@@ -41,10 +43,23 @@ class NewGroup extends React.Component {
     const refName = db.doc(`groupNames/${path}`);
     const refGroup = db.doc(`groups/${groupId}`);
     db.runTransaction(async (tr)=>{
-      const doc = await tr.get(refName);
-      if (doc.exits) {
-        throw new Error("This path is already taken");
+      const docName = await tr.get(refName);
+      const dataName = docName.data();
+      if (dataName) {
+        console.log("error 1");
+        throw new Error("group.name.taken");
       }
+      const docGroup = await tr.get(refGroup);
+      const dataGroup = docGroup.data();
+      if (!dataGroup) {
+        console.log("error 2");
+        throw new Error("group.missing");
+      }
+      if (dataGroup.groupName) {
+        console.log("error 3");
+        throw new Error("group.has.name");
+      }
+
       tr.set(refName, { groupId:groupId });
       tr.set(refGroup, { 
         groupName:path, 
