@@ -49,7 +49,7 @@ function CheckoutForm(props) {
 
   return <React.Fragment>
     <CardRegistration customer={customer} didUpdate={customerDidUpdate} />
-    { (customer && planLength > 0) ?
+    { planLength > 0 ?
       <form>
         <FormControl className={classes.formControl}>
           <InputLabel><FormattedMessage id="plan.name" /></InputLabel>

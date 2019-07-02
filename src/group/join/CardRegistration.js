@@ -92,7 +92,7 @@ function CardRegistration(props) {
 
   if (cardInfo && !updating) {
     // NOTE: We deal with only the default card (index=0)
-    console.log(cardInfo);
+    //console.log(cardInfo);
     // 4242424242424242
     // 5555555555554444
     return (
