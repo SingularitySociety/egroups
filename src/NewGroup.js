@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography, Grid, Button, TextField, FormControl, InputLabel, Select } from '@material-ui/core';
+import { Typography, Grid, Button, TextField, FormControl, FormLabel, List, ListItem } from '@material-ui/core';
 import Header from './Header';
 import { FormattedMessage } from 'react-intl';
 import { Redirect } from 'react-router-dom';
 import Privileges from './const/Privileges';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import ColorOptions from './group/ColorOptions';
 
 const styles = theme => ({
   root: {
@@ -24,15 +23,11 @@ const styles = theme => ({
   },
   formControl: {
     width:theme.spacing(38),
-    marginBottom: theme.spacing(2),
     marginTop: theme.spacing(1),
   },
 });
 
 const groupTypes = ["group.free.open", "group.free.closed", "group.paid.open", "group.paid.closed"];
-const options = groupTypes.map((key,index)=>{
-  return <option key={key} value={index}>{key}</option>      
-});
 
 class NewGroup extends React.Component {
   state = { title:"", path:"", invalid:true, conflict:false, processing:false, groupType:0 };
@@ -133,6 +128,9 @@ class NewGroup extends React.Component {
       }
     }
   };
+  onGroupType = (groupType) => {
+    this.setState({groupType});
+  }
 
   render() {
     const { classes, user, privileges, match:{params:{groupId}} } = this.props;
@@ -144,8 +142,13 @@ class NewGroup extends React.Component {
     const isOwner = privilege === Privileges.owner; // becomes true when we got JWT
     const disabledSubmit = invalid || !isOwner;
     const descriptions = groupTypes.map((key, index)=>{
-      return <li key={key}>{`${key}.desc`}</li>
+      return <ListItem button key={key} selected={index===groupType} onClick={()=>{this.onGroupType(index)}}>
+          {key}
+          <br/>
+          {`${key}.desc`}
+          </ListItem>
     });
+    console.log(groupType);
     return (
       <React.Fragment>
         <Header user={user} />
@@ -160,23 +163,18 @@ class NewGroup extends React.Component {
                   onChange={this.handleChange('title')} className={classes.textField} margin="normal" />
               </FormControl>
               <br/>
+              <FormControl className={classes.formControl}>
+                <FormLabel><FormattedMessage id="settings.theme.primary" /></FormLabel>
+                <List>
+                  { descriptions }
+                </List>
+              </FormControl>              
+              <br/>
               <FormControl>
               <TextField label={<FormattedMessage id={conflict ? "path.conflict" : "group.path"} />} value={path} autoFocus={true} error={ invalid }
                   onChange={this.handleChange('path')} className={classes.textField} margin="normal" />
               <span>Group URL: {`https:/${window.location.host}/${path || "..."}`}</span>
               </FormControl>
-              <br/>
-              <FormControl className={classes.formControl}>
-                <InputLabel><FormattedMessage id="settings.theme.primary" /></InputLabel>
-                <Select native value={groupType}　onChange={this.handleChange('groupType')}>
-                  {options}
-                </Select>
-                <div>
-                  <ul>
-                    { descriptions }
-                  </ul>
-                </div>
-              </FormControl>              
               <div>
                 { processing ?
                   <CircularProgress />
