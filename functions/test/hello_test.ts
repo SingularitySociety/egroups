@@ -22,9 +22,9 @@ describe('Hello function', () => {
 
   it('should return hello world', async () => {
     const request = supertest(express.app);
-    const response = await request.get("/api/hello");
+    const response = await request.get("/1.0/hello");
 
     response.status.should.equal(200);
-    response.text.should.equal("hello world with Express");
+    response.text.should.equal('{"message":"hello"}');
   });
 });
