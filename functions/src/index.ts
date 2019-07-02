@@ -1,7 +1,5 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import * as express from 'express';
-import * as cors from 'cors';
 
 import * as messaging from './utils/messaging';
 
@@ -9,18 +7,12 @@ import * as stripeFunctions from './functions/stripe';
 import * as imageFunctions from './functions/image';
 import * as groupFunctions from './functions/group';
 
+import * as express from './functions/express';
+
 // for mocha watch
 if (!admin.apps.length) {
   admin.initializeApp();
 }
-
-export const app = express();
-app.use(cors());
-
-app.get('/api/hello', async (req:any, res) => {
-  console.log('hello');
-  res.send("hello world with Express");
-});
 
 // for test, db is not immutable
 let db = admin.firestore();
@@ -28,7 +20,7 @@ export const updateDb = (_db) => {
   db = _db;
 }
 
-export const api = functions.https.onRequest(app);
+export const api = functions.https.onRequest(express.app);
 
 // MEMO: In order to make this work, you need to go to add "Servie Account Toke Creator" role to 
 // the associated App Engine default service account. 

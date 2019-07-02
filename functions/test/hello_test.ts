@@ -1,5 +1,5 @@
 import * as supertest from 'supertest';
-import * as index from '../src/index';
+import * as express from '../src/functions/express';
 import { should } from 'chai';
 import * as utils from '../src/utils/utils'
 
@@ -21,10 +21,10 @@ describe('Hello function', () => {
   });
 
   it('should return hello world', async () => {
-    const request = supertest(index.app);
-    const response = await request.get("/api/hello");
+    const request = supertest(express.app);
+    const response = await request.get("/1.0/hello");
 
     response.status.should.equal(200);
-    response.text.should.equal("hello world with Express");
+    response.text.should.equal('{"message":"hello"}');
   });
 });
