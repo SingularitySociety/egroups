@@ -35,28 +35,22 @@ class NewGroup extends React.Component {
     }
   }
 
-  onSubmit = async (e) => {
-    e.preventDefault();
-    console.log("onSubmit");
-    const { db, match:{params:{groupId}} } = this.props;
-    const { path, title } = this.state;
+  createGroupName = async (db, context) => {
+    const { groupId, path, title } = context;
     const refName = db.doc(`groupNames/${path}`);
     const refGroup = db.doc(`groups/${groupId}`);
-    db.runTransaction(async (tr)=>{
+    return db.runTransaction(async (tr)=>{
       const docName = await tr.get(refName);
       const dataName = docName.data();
       if (dataName) {
-        console.log("error 1");
         throw new Error("group.name.taken");
       }
       const docGroup = await tr.get(refGroup);
       const dataGroup = docGroup.data();
       if (!dataGroup) {
-        console.log("error 2");
         throw new Error("group.missing");
       }
       if (dataGroup.groupName) {
-        console.log("error 3");
         throw new Error("group.has.name");
       }
 
@@ -75,13 +69,28 @@ class NewGroup extends React.Component {
         }
        }, {merge:true});
     }).then(() => {
+      return { result: true };
+    }).catch((e) => {
+      // Handle Error
+      console.log(e.message);
+      return { result: false, message: e.message };
+    });
+  }
+
+  onSubmit = async (e) => {
+    e.preventDefault();
+    console.log("onSubmit");
+    const { db, match:{params:{groupId}} } = this.props;
+    const { path, title } = this.state;
+    const context = { groupId, path, title };
+    const result = await this.createGroupName(db, context);
+    if (result.result) {
       // BUGBUG: For some reason, redirect does not work (infinit spiral)
       //  this.setState({redirect:`/${path}`});
       window.location.pathname = `/${path}`;
-    }).catch((e) => {
-      // Handle Error
-      console.log(e);
-    });
+    } else {
+      console.log(result.message);
+    }
   }
   onCancel = async (e) => {
     e.preventDefault();
