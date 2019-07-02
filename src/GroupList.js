@@ -9,6 +9,7 @@ import { FormattedMessage } from 'react-intl';
 import { Redirect } from 'react-router-dom';
 import * as firebase from "firebase/app";
 import "firebase/functions";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
   createNew: {
@@ -24,7 +25,7 @@ const styles = theme => ({
 });
 
 class GroupList extends React.Component {
-  state = { groups:[] };
+  state = { groups:[], processing:false };
   async componentDidMount() {
     const { db } = this.props;
     const ref = db.collection("groups").where("groupName", ">", "");
@@ -41,19 +42,13 @@ class GroupList extends React.Component {
 
   createNew = async (value) => {
     console.log("createNew", value);
-    /*
-    const { db, user } = this.props;
-    const doc = await db.collection("groups").add(
-      { title:value, owner:user.uid, ownerName:user.displayName } // HACK: see groupDidCreate cloud function
-    )
-    console.log(doc.id);
-    this.setState({redirect:`/a/new/${doc.id}`});
-    */
-   const { user } = this.props;
-   const createGroup = firebase.functions().httpsCallable('createGroup');
+    const { user } = this.props;
+    const createGroup = firebase.functions().httpsCallable('createGroup');
+    this.setState({processing:true});
     const result = (await createGroup({
       title:value, ownerName:user.displayName
     })).data;
+    this.setState({processing:false});
     console.log(result);
     if (result.result && result.groupId) {
       this.setState({redirect:`/a/new/${result.groupId}`});
@@ -64,14 +59,19 @@ class GroupList extends React.Component {
   }
   render() {
     const { classes } = this.props;
-    const { redirect } = this.state;
+    const { redirect, processing } = this.state;
     if (redirect) {
       return <Redirect to={redirect} />
     }
     return <Grid container justify="center">
         <Grid item className={classes.createNew}>
-          <CreateNew label={<FormattedMessage id="group" />} 
-            createNew={this.createNew} action={<FormattedMessage id="create" />} />
+          {
+            processing ?
+              <CircularProgress />
+            :
+              <CreateNew label={<FormattedMessage id="group" />} 
+                createNew={this.createNew} action={<FormattedMessage id="create" />} />
+          }
         </Grid>
         { 
             this.state.groups.map((group)=> {
