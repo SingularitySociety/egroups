@@ -68,7 +68,7 @@ class GroupHome extends React.Component {
     //const context = { user, group, db, member, history };
     return (
       <div>
-        { privilege && <MountDetector didMount={this.privilegeDidMount} willUnmount={this.privilegeWillUnmount} value={privilege} />}
+        { privilege > 0 && <MountDetector didMount={this.privilegeDidMount} willUnmount={this.privilegeWillUnmount} value={privilege} />}
         { article && <BlogArticle {...context} refArticle={this.refArticle} />}
       </div>
     )
