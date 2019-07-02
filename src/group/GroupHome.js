@@ -62,9 +62,9 @@ class GroupHome extends React.Component {
   privilegeWillUnmount = () => {
   }
   render() {
-    const { group, member, user, db, arp, callbacks, privilege } = this.props;
+    const { group, user, db, arp, callbacks, privilege } = this.props;
     const { article } = this.state;
-    const context = { group, member, user, db, article, arp, callbacks, privilege }
+    const context = { group, user, db, article, arp, callbacks, privilege }
     //const context = { user, group, db, member, history };
     return (
       <div>
