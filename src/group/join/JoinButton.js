@@ -17,9 +17,11 @@ function JoinButton(props) {
   const classes = useStyles();
   if (privilege 
     || pageInfo.tabId==="join" 
-    || pageInfo.tabId==="subscribe") {
-      return "";
+    || pageInfo.tabId==="subscribe"
+    || !group.open) {
+      return false;
   }
+  
   const path = `/${group.groupName}/` 
           + (group.subscription ? "subscribe" : "join");
 
