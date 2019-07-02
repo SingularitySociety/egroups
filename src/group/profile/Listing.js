@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import Members from './Members';
 
 function Listing(props) {
-  const { user, db, group, history, callbacks } = props;
+  const { user, db, group, history, callbacks, privilege } = props;
   const setTabbar = callbacks.setTabbar;
 
   useEffect(() => {
     setTabbar("listing");
   }, [setTabbar]);
 
-  const context = { user, group, db, history, callbacks };
+  const context = { user, group, db, history, privilege };
   return <Members {...context} />
 }
 
