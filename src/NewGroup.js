@@ -19,10 +19,9 @@ const styles = theme => ({
   },
   textField: {
     marginRight: theme.spacing(1),
-    width: 200,
   },
   formControl: {
-    width:theme.spacing(38),
+    width:"70%",
     marginTop: theme.spacing(1),
   },
 });
@@ -143,10 +142,15 @@ class NewGroup extends React.Component {
     const disabledSubmit = invalid || !isOwner || groupType==-1;
     const descriptions = groupTypes.map((key, index)=>{
       return <ListItem button key={key} selected={index===groupType} onClick={()=>{this.onGroupType(index)}}>
+        <Grid container direction="row">
+          <Grid item>
           <Typography style={{fontWeight:"bold"}}><FormattedMessage id={key} /></Typography>
-          <br/>
+          </Grid>
+          <Grid item>
           <Typography><FormattedMessage id={`${key}.desc`} /></Typography>
-          </ListItem>
+          </Grid>
+        </Grid> 
+      </ListItem>
     });
     console.log(groupType);
     return (
@@ -158,7 +162,7 @@ class NewGroup extends React.Component {
               <FormattedMessage id="new.group" />
             </Typography>
             <form className={classes.form}>
-              <FormControl>
+              <FormControl className={classes.formControl}>
               <TextField label={<FormattedMessage id="group.title" />} value={title} 
                   onChange={this.handleChange('title')} className={classes.textField} margin="normal" />
               </FormControl>
@@ -171,10 +175,10 @@ class NewGroup extends React.Component {
                 </List>
               </FormControl>              
               <br/>
-              <FormControl>
+              <FormControl className={classes.formControl}>
               <TextField label={<FormattedMessage id={conflict ? "path.conflict" : "group.path"} />} value={path} autoFocus={true} error={ invalid }
                   onChange={this.handleChange('path')} className={classes.textField} margin="normal" />
-              <span>Group URL: {`https:/${window.location.host}/${path || "..."}`}</span>
+              <span>URL: {`https:/${window.location.host}/${path || "..."}`}</span>
               </FormControl>
               <div>
                 { processing ?

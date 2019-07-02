@@ -108,5 +108,15 @@
 
     "article.is.homepage":"This is group's homepage.",
 
+    "group.choose.type":"Please choose the right type（you can not change it later）",
+    "group.free.open":"Open, Free",
+    "group.free.closed":"Invitation-only, Free", 
+    "group.paid.open":"Open, Subscription",
+    "group.paid.closed":"Invitation-only, Subscription",
+    "group.free.open.desc":"Free and open community, anybody can join for free.",
+    "group.free.closed.desc":"Free, but invitation-only community.", 
+    "group.paid.open.desc":"Paid subscription service anybody can join.",
+    "group.paid.closed.desc":"Paid subscription service, which requires an invitation to join.",
+
     "dummy":"dummy"
 }
