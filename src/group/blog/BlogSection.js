@@ -82,7 +82,6 @@ function BlogSection(props) {
 }
 
 BlogSection.propTypes = {
-    classes: PropTypes.object.isRequired,
     saveSection: PropTypes.func.isRequired,
     resource: PropTypes.object.isRequired,
     refArticle: PropTypes.object.isRequired,
