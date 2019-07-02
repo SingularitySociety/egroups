@@ -163,10 +163,11 @@ class GroupRouter extends React.Component {
   }
 
   render() {
-    const { classes, user, db, match:{params:{gp}}, rootGroup } = this.props;
+    const { classes, user, db, match:{params:{gp}}, rootGroup, privileges } = this.props;
     const groupName = gp || rootGroup;
-
     const { group, member, history, error, pageInfo, profiles } = this.state;
+    const privilege = (privileges && group && privileges[group.groupId]) || Privileges.guest;
+
     if (error) {
       return <ErrorMessage error={error} />
     }
@@ -193,7 +194,7 @@ class GroupRouter extends React.Component {
       hitProfile:this.hitProfile,
       memberPrivilege:this.memberPrivilege,
     };
-    const context = { user, group, db, member, history, rootGroup, profiles, callbacks };
+    const context = { user, group, db, member, history, rootGroup, profiles, callbacks, privilege };
     
     return (
       <MuiThemeProvider theme={theme}>
