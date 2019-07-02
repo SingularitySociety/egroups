@@ -33,9 +33,10 @@ class GroupHome extends React.Component {
     }
   }
   memberDidMount = async (member) => {
-    console.log("memberDidMount");
     const { group, db, user, callbacks, intl:{messages} } = this.props;
-    if (callbacks.memberPrivilege() >= Privileges.admin) {
+    const privilege = callbacks.memberPrivilege();
+    console.log("memberDidMount", privilege);
+    if (privilege >= Privileges.admin) {
       this.setState({canEdit:true});
       console.log("isAdmin", group.homepageId);
 
