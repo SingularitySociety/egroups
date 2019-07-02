@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { FormGroup, Switch, FormControlLabel, Fab, TextField, Grid, Button, IconButton } from '@material-ui/core';
+import { Fab, TextField, Grid, Button, IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { FormattedMessage } from 'react-intl';

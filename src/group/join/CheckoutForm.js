@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { FormControl, Select, InputLabel } from '@material-ui/core';
+import { FormControl, Select, InputLabel, Typography } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import PlanOptions from './PlanOptions';
 import CardRegistration from './CardRegistration';
@@ -49,7 +49,7 @@ function CheckoutForm(props) {
 
   return <React.Fragment>
     <CardRegistration customer={customer} didUpdate={customerDidUpdate} />
-    { customer && planLength > 0 &&
+    { (customer && planLength > 0) ?
       <form>
         <FormControl className={classes.formControl}>
           <InputLabel><FormattedMessage id="plan.name" /></InputLabel>
@@ -65,7 +65,9 @@ function CheckoutForm(props) {
             }} />
         </FormControl>
       </form>
-  }
+    :
+      <Typography color="error"><FormattedMessage id="plan.empty" /></Typography>
+    }
   </React.Fragment>;
 }
 

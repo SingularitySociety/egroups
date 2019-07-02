@@ -16,6 +16,9 @@ const styles = theme => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
+  cardInfo:{
+    marginBottom: theme.spacing(1),
+  },
   form: {
     marginBottom: theme.spacing(2),
   },
@@ -94,7 +97,7 @@ function CardRegistration(props) {
     // 5555555555554444
     return (
       <form className={classes.form}>
-        <div>
+        <div className={classes.cardInfo}>
           <FormattedMessage key={cardInfo.id} id="card.info" values={cardInfo} />
         </div>
         <Button variant="contained" type="submit" className={classes.button} onClick={()=>{setUpdating(true)}}>
