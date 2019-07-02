@@ -1,22 +1,40 @@
 import Privileges from '../../react-lib/src/const/Privileges.js';
 import * as messaging from '../utils/messaging';
 
-export const groupDidCreate = async (db, snapshot, context) => {
-  const { groupId } = context.params;
-  console.log(context);
-  const newValue = snapshot.data(); // BUGBUG: this is a hack because I can't access context.auth.uid for some reason
-  const userId = newValue && newValue.owner;
-  await db.doc(`/groups/${groupId}/owners/${userId}`).set({
-    created: new Date()
+export const createGroup = async (db:FirebaseFirestore.Firestore, data, context) => {
+  if (!context.auth || !context.auth.uid) {
+    return {result: false};
+  }
+  const userId = context.auth.uid;
+  if (!data || !data.title || !data.ownerName) {
+    return {result: false};
+  }
+  const { title, ownerName } = data;
+  const created = new Date();
+
+  const doc = await db.collection("groups").add({
+    created,
+    title, 
+    owner:userId, 
+    ownerName
   });
-  // The owner becomes a member automatically. memberDidCreate will automatically create the privilege for the owner. 
-  return db.doc(`/groups/${groupId}/members/${userId}`).set({
-    created: new Date(),
-    displayName: (newValue && newValue.ownerName) || "admin",
+  const groupId = doc.id;
+
+  await db.doc(`/groups/${groupId}/owners/${userId}`).set({
+    created
+  });
+  await db.doc(`/groups/${groupId}/members/${userId}`).set({
+    created,
+    displayName:ownerName,
     uid: userId,
     groupId: groupId,
   });
-};
+
+  return {
+    groupId,
+    result: true,
+  };  
+}
 
 export const memberDidCreate = async (db, snapshot, context) => {
   const { groupId, userId } = context.params;

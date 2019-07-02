@@ -54,10 +54,10 @@ export const groupDidUpdate = functions.firestore.document('groups/{groupId}').o
   await stripeFunctions.groupDidUpdate(db, change, context);
 });
 
-export const groupDidCreate = functions.firestore.document('groups/{groupId}').onCreate(async (snapshot, context)=>{
-  await groupFunctions.groupDidCreate(db, snapshot, context);
+export const createGroup = functions.https.onCall(async (data, context) => {
+  return await groupFunctions.createGroup(db, data, context);
 });
-            
+
 const deleteSubcollection = async (snapshot:FirebaseFirestore.DocumentSnapshot, name:string) => {
   const limit = 10;
   let count:number;
