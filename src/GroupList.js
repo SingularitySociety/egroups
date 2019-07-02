@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import CreateNew from './common/CreateNew';
 import { FormattedMessage } from 'react-intl';
 import { Redirect } from 'react-router-dom';
+import * as firebase from "firebase/app";
+import "firebase/functions";
 
 const styles = theme => ({
   createNew: {
@@ -39,12 +41,26 @@ class GroupList extends React.Component {
 
   createNew = async (value) => {
     console.log("createNew", value);
+    /*
     const { db, user } = this.props;
     const doc = await db.collection("groups").add(
       { title:value, owner:user.uid, ownerName:user.displayName } // HACK: see groupDidCreate cloud function
     )
     console.log(doc.id);
     this.setState({redirect:`/a/new/${doc.id}`});
+    */
+   const { user } = this.props;
+   const createGroup = firebase.functions().httpsCallable('createGroup');
+    const result = (await createGroup({
+      title:value, ownerName:user.displayName
+    })).data;
+    console.log(result);
+    if (result.result && result.groupId) {
+      this.setState({redirect:`/a/new/${result.groupId}`});
+    } else {
+      // BUGBUG: Display Error
+      console.log("#### createGroup failed")
+    }
   }
   render() {
     const { classes } = this.props;
