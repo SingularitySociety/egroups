@@ -33,21 +33,18 @@ const useStyles = makeStyles(styles);
 function SettingsBilling(props) {
   const classes = useStyles();
   const { group, db, callbacks } = props;
-  const [subscription, setSubscription] = useState(group.subscription);
+  console.log(group);
+  const subscription = group.subscription;
   const [plans, setPlans] = useState(group.plans || []);
   const [modified, setModified] = useState(false);
   const refGroup = db.doc(`groups/${group.groupId}`);
+  const setTabbar = callbacks.setTabbar;
+  console.log("subscriptionsubscription", subscription)
 
   useEffect(()=>{
-    callbacks.setTabbar("settings.billing");
+    setTabbar("settings.billing");
     console.log("useEffect");
-  }, [callbacks]);
-
-  const handleCheck = name => async event => {
-    setSubscription(event.target.checked);
-    await refGroup.set({[name]:event.target.checked}, {merge:true});
-    props.callbacks.groupDidUpdate();
-  };
+  }, [setTabbar]);
 
   function addPlan() {
     // LATER: jpy is default for now. In usd, the price is in cents not in dollar. 
@@ -82,12 +79,6 @@ function SettingsBilling(props) {
   let isValid = true;
   return (
     <React.Fragment>
-      <FormGroup row className={classes.subsciption}>
-        <FormControlLabel 
-          control={ <Switch checked={subscription} onChange={handleCheck('subscription')} /> }
-          label={<FormattedMessage id="subscription.enabled" />}
-        />
-      </FormGroup>
       {
         subscription && <form>
           {

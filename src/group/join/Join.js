@@ -55,7 +55,7 @@ class Join extends React.Component {
         console.log("Become a member or already a member. Redireting to the group home.");
         return <Redirect to={"/" + group.groupName} />
     }
-    if (!(group && group.privileges && group.privileges.membership && group.privileges.membership.open)) {
+    if (!(group && group.open)) {
         return <div>
             {title}
             <Typography>This community is invitation only.</Typography>

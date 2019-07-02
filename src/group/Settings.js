@@ -85,7 +85,8 @@ class Settings extends React.Component {
       return <Redirect to={redirect} />
     }
     const { classes, group } = this.props;
-    const open = group.privileges.membership.open || false;
+    //const open = group.open || false;
+    const subscription = group.subscription || false;
     const channelCreate = group.privileges.channel.create || Privileges.member;
     const articleCreate = group.privileges.article.create || Privileges.member;
     const eventCreate = group.privileges.event.create || Privileges.member;
@@ -109,11 +110,7 @@ class Settings extends React.Component {
         </FormGroup>
 
         <FormGroup row className={classes.billing}>
-          <FormControlLabel 
-            control={ <Switch checked={open} onChange={this.handleCheck('open')} value="open" /> }
-            label={<FormattedMessage id="settings.open" />}
-          />
-          { !open && 
+          { subscription && 
             <Button variant="contained" color="primary" component={Link} to={`/${group.groupName}/settings/billing`}>
               <FormattedMessage id="settings.billing" />
             </Button>
