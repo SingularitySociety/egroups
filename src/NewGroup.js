@@ -30,7 +30,7 @@ const styles = theme => ({
 const groupTypes = ["group.free.open", "group.free.closed", "group.paid.open", "group.paid.closed"];
 
 class NewGroup extends React.Component {
-  state = { title:"", path:"", invalid:true, conflict:false, processing:false, groupType:0 };
+  state = { title:"", path:"", invalid:true, conflict:false, processing:false, groupType:-1 };
 
   async componentDidMount() {
     console.log(window.location);
@@ -140,12 +140,12 @@ class NewGroup extends React.Component {
     }
     const privilege = privileges && privileges[groupId];
     const isOwner = privilege === Privileges.owner; // becomes true when we got JWT
-    const disabledSubmit = invalid || !isOwner;
+    const disabledSubmit = invalid || !isOwner || groupType==-1;
     const descriptions = groupTypes.map((key, index)=>{
       return <ListItem button key={key} selected={index===groupType} onClick={()=>{this.onGroupType(index)}}>
-          {key}
+          <Typography style={{fontWeight:"bold"}}><FormattedMessage id={key} /></Typography>
           <br/>
-          {`${key}.desc`}
+          <Typography><FormattedMessage id={`${key}.desc`} /></Typography>
           </ListItem>
     });
     console.log(groupType);
@@ -163,8 +163,9 @@ class NewGroup extends React.Component {
                   onChange={this.handleChange('title')} className={classes.textField} margin="normal" />
               </FormControl>
               <br/>
-              <FormControl className={classes.formControl}>
-                <FormLabel><FormattedMessage id="settings.theme.primary" /></FormLabel>
+              <br/>
+              <FormControl>
+                <FormLabel><FormattedMessage id="group.choose.type" /></FormLabel>
                 <List>
                   { descriptions }
                 </List>
