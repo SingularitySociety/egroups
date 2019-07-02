@@ -24,7 +24,7 @@ const styles = theme => ({
 });
 
 class NewGroup extends React.Component {
-  state = { title:"", path:"", invalid:true, conflict:false };
+  state = { title:"", path:"", invalid:true, conflict:false, processing:false };
 
   async componentDidMount() {
     console.log(window.location);
@@ -83,12 +83,14 @@ class NewGroup extends React.Component {
     const { db, match:{params:{groupId}} } = this.props;
     const { path, title } = this.state;
     const context = { groupId, path, title };
+    this.setState({processing:true});
     const result = await this.createGroupName(db, context);
     if (result.result) {
       // BUGBUG: For some reason, redirect does not work (infinit spiral)
       //  this.setState({redirect:`/${path}`});
       window.location.pathname = `/${path}`;
     } else {
+      this.setState({processing:false});
       console.log(result.message);
     }
   }
@@ -123,7 +125,7 @@ class NewGroup extends React.Component {
 
   render() {
     const { classes, user, privileges, match:{params:{groupId}} } = this.props;
-    const { redirect, title, path, invalid, conflict } = this.state;
+    const { redirect, title, path, invalid, conflict, processing } = this.state;
     if (redirect) {
       return <Redirect to={ redirect } />
     }
@@ -147,13 +149,19 @@ class NewGroup extends React.Component {
               <br/>
               <div>Group URL: {`https:/${window.location.host}/${path || "..."}`}</div>
               <div>
-                <Button variant="contained" color="primary" className={classes.button} disabled={ disabledSubmit }
-                  onClick={this.onSubmit} type="submit"><FormattedMessage id="create" /></Button>
-                <Button variant="contained" className={classes.button} onClick={this.onCancel}>
-                    <FormattedMessage id="cancel" />
-                </Button>
-                {
-                  !isOwner && <CircularProgress style={{position:"absolute"}}/>
+                { processing ?
+                  <CircularProgress />
+                :
+                  <React.Fragment>
+                    <Button variant="contained" color="primary" className={classes.button} disabled={ disabledSubmit }
+                      onClick={this.onSubmit} type="submit"><FormattedMessage id="create" /></Button>
+                    <Button variant="contained" className={classes.button} onClick={this.onCancel}>
+                        <FormattedMessage id="cancel" />
+                    </Button>
+                    {
+                      !isOwner && <CircularProgress style={{position:"absolute"}}/>
+                    }
+                  </React.Fragment>
                 }
               </div>
             </form>
