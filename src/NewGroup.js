@@ -150,10 +150,10 @@ class NewGroup extends React.Component {
     const descriptions = groupTypeKeys.map((key, index)=>{
       return <ListItem button key={key} selected={index===groupType} onClick={()=>{this.onGroupType(index)}}>
         <Grid container direction="row">
-          <Grid item>
+          <Grid item xs={12}>
           <Typography style={{fontWeight:"bold"}}><FormattedMessage id={key} /></Typography>
           </Grid>
-          <Grid item>
+          <Grid item xs={12}>
           <Typography><FormattedMessage id={`${key}.desc`} /></Typography>
           </Grid>
         </Grid> 
