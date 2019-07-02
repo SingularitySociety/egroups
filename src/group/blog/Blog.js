@@ -37,8 +37,8 @@ class Blog extends React.Component {
 
   render() {
     const { article, error } = this.state;
-    const { user, arp, group, callbacks } = this.props;
-    const context = { user, article, arp, group, callbacks };
+    const { user, arp, group, privilege } = this.props;
+    const context = { user, article, arp, group, privilege };
     if (error) {
       return <ErrorMessage error={error} />
     }
