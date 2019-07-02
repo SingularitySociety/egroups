@@ -133,11 +133,6 @@ class GroupRouter extends React.Component {
     }
     this.setState({member, profiles})
   }
-  memberPrivilege = () => {
-    const { privileges } = this.props;
-    const { group } = this.state;
-    return (privileges && privileges[group.groupId]) || Privileges.guest;
-  }
   userDidMount = () => {
     this.memberDidUpdate();
   }
@@ -192,7 +187,6 @@ class GroupRouter extends React.Component {
       memberDidUpdate:this.memberDidUpdate, 
       groupDidUpdate:this.groupDidUpdate,
       hitProfile:this.hitProfile,
-      memberPrivilege:this.memberPrivilege,
     };
     const context = { user, group, db, member, history, rootGroup, profiles, callbacks, privilege };
     
