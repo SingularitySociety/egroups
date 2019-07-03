@@ -57,3 +57,56 @@ export const memberDidCreate = async (db, snapshot, context) => {
     [groupId]: privilege 
   }, {merge:true});
 };
+
+export const createGroupName = async (db:FirebaseFirestore.Firestore, data, context) => {
+  if (!context.auth || !context.auth.uid) {
+    return {result: false, message:"missing.uid"};
+  }
+  const { groupId, path, title, types } = data;
+  if (!groupId || !path || !title || !types) {
+    return {result: false, message:"missing.params"};
+  }
+
+  const refName = db.doc(`groupNames/${path}`);
+  const refGroup = db.doc(`groups/${groupId}`);
+  return db.runTransaction(async (tr)=>{
+    const docName = await tr.get(refName);
+    const dataName = docName.data();
+    if (dataName) {
+      throw new Error("group.name.taken");
+    }
+    const docGroup = await tr.get(refGroup);
+    const dataGroup = docGroup.data();
+    if (!dataGroup) {
+      throw new Error("group.missing");
+    }
+    if (dataGroup.groupName) {
+      throw new Error("group.has.name");
+    }
+    if (dataGroup.owner !== context.auth.uid) {
+      throw new Error("group.different.owner");
+    }
+
+    tr.set(refName, { groupId:groupId });
+    tr.set(refGroup, { 
+      groupName:path, 
+      title,
+      privileges: {
+        channel: { read:Privileges.member, write:Privileges.member, create:Privileges.member },
+        article: { read:Privileges.member, create:Privileges.member, comment:Privileges.member },
+        page: { read:Privileges.guest, create:Privileges.admin, comment:Privileges.admin },
+        event: { read:Privileges.member, create:Privileges.member, attend:Privileges.member },
+        member: { read:Privileges.member, write:Privileges.admin },
+        invitation: { create:Privileges.admin },
+      },
+      open:types.open,
+      subscription:types.subscription,
+    }, {merge:true});
+  }).then(() => {
+    return { result: true };
+  }).catch((e) => {
+    // Handle Error
+    console.log(e.message);
+    return { result: false, message: e.message };
+  });
+}

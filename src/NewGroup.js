@@ -7,6 +7,8 @@ import { FormattedMessage } from 'react-intl';
 import { Redirect } from 'react-router-dom';
 import Privileges from './const/Privileges';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import * as firebase from "firebase/app";
+import "firebase/functions";
 
 const styles = theme => ({
   root: {
@@ -95,15 +97,19 @@ class NewGroup extends React.Component {
     const { db, match:{params:{groupId}} } = this.props;
     const { path, title, groupType } = this.state;
     const context = { groupId, path, title, types:groupTypes[groupType] };
+    console.log(context);
     this.setState({processing:true});
-    const result = await this.createGroupName(db, context);
+    const createGroupName = firebase.functions().httpsCallable('createGroupName');
+    const result = (await createGroupName(context)).data;
+
+    //const result = await this.createGroupName(db, context);
     if (result.result) {
       // BUGBUG: For some reason, redirect does not work (infinit spiral)
       //  this.setState({redirect:`/${path}`});
       window.location.pathname = `/${path}`;
     } else {
       this.setState({processing:false});
-      console.log(result.message);
+      console.log(result);
     }
   }
   onCancel = async (e) => {
