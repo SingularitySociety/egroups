@@ -48,61 +48,16 @@ class NewGroup extends React.Component {
     }
   }
 
-  createGroupName = async (db, context ) => {
-    const { groupId, path, title, types } = context;
-    const refName = db.doc(`groupNames/${path}`);
-    const refGroup = db.doc(`groups/${groupId}`);
-    return db.runTransaction(async (tr)=>{
-      const docName = await tr.get(refName);
-      const dataName = docName.data();
-      if (dataName) {
-        throw new Error("group.name.taken");
-      }
-      const docGroup = await tr.get(refGroup);
-      const dataGroup = docGroup.data();
-      if (!dataGroup) {
-        throw new Error("group.missing");
-      }
-      if (dataGroup.groupName) {
-        throw new Error("group.has.name");
-      }
-
-      tr.set(refName, { groupId:groupId });
-      tr.set(refGroup, { 
-        groupName:path, 
-        title,
-        privileges: {
-          channel: { read:Privileges.member, write:Privileges.member, create:Privileges.member },
-          article: { read:Privileges.member, create:Privileges.member, comment:Privileges.member },
-          page: { read:Privileges.guest, create:Privileges.admin, comment:Privileges.admin },
-          event: { read:Privileges.member, create:Privileges.member, attend:Privileges.member },
-          member: { read:Privileges.member, write:Privileges.admin },
-          invitation: { create:Privileges.admin },
-        },
-        open:types.open,
-        subscription:types.subscription,
-      }, {merge:true});
-    }).then(() => {
-      return { result: true };
-    }).catch((e) => {
-      // Handle Error
-      console.log(e.message);
-      return { result: false, message: e.message };
-    });
-  }
-
   onSubmit = async (e) => {
     e.preventDefault();
     console.log("onSubmit");
-    const { db, match:{params:{groupId}} } = this.props;
+    const { match:{params:{groupId}} } = this.props;
     const { path, title, groupType } = this.state;
     const context = { groupId, path, title, types:groupTypes[groupType] };
     console.log(context);
     this.setState({processing:true});
     const createGroupName = firebase.functions().httpsCallable('createGroupName');
     const result = (await createGroupName(context)).data;
-
-    //const result = await this.createGroupName(db, context);
     if (result.result) {
       // BUGBUG: For some reason, redirect does not work (infinit spiral)
       //  this.setState({redirect:`/${path}`});
