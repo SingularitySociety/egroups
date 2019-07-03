@@ -13,7 +13,7 @@ import Messages from './Messages';
 function Chat(props) {
   const [channel, setChannel] = useState(null);
   const [error, setError] = useState(null);
-  const { db, group, user, member, match:{params:{channelId}}, callbacks, profiles } = props;
+  const { db, group, user, member, match:{params:{channelId}}, callbacks, profiles, privilege } = props;
   const refMessages = db.collection(`groups/${group.groupId}/channels/${channelId}/messages`);
   const setTabbar = callbacks.setTabbar;
 
@@ -52,7 +52,6 @@ function Chat(props) {
   if (!channel) {
     return "";
   }
-  const privilege = callbacks.memberPrivilege() ;
   const uid = (user && user.uid) || null;
   const canRead = privilege >= channel.read;
   const canWrite = privilege >= channel.write;

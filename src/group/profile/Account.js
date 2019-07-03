@@ -43,7 +43,7 @@ onImageUpload = async (imageUrl) => {
 }
     
 render() {
-    const { classes, group, user, member, callbacks } = this.props;
+    const { classes, group, user, member, privilege } = this.props;
     if (!user) {
       return <Redirect to={`/${group.groupName}`} />
     }
@@ -79,7 +79,7 @@ render() {
             value={member.github || ""} onSave={this.onSave('github')}/>
       </FormGroup>
       {
-        callbacks.memberPrivilege() < Privileges.owner &&    
+        privilege < Privileges.owner &&    
         <LockedArea label={<FormattedMessage id="warning.dangerous" />}>
           <Button variant="contained" className={classes.button} onClick={this.handleLeave}>
             <FormattedMessage id="leave" />

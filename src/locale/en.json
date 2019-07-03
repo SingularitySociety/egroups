@@ -62,6 +62,9 @@
     "card.registering":"Registering...",
     "card.update":"Update",
     "card.info":"Card Info:{brand} Exp:{exp_month}/{exp_year} Last4:{last4}",
+    "plan.empty":"There is no subscription plan created by the administrator yet.",
+    "do.subscribe":"Subscribe",
+
 
     "red":"red",
     "pink":"pink",
@@ -107,6 +110,21 @@
     "destroy.group":"Erase this group (undoable)",
 
     "article.is.homepage":"This is group's homepage.",
+
+    "group.choose.type":"Please choose the right type（you can not change it later）",
+    "group.free.open":"Open, Free",
+    "group.free.closed":"Invitation-only, Free", 
+    "group.paid.open":"Open, Subscription",
+    "group.paid.closed":"Invitation-only, Subscription",
+    "group.free.open.desc":"Free and open community, anybody can join for free.",
+    "group.free.closed.desc":"Free, but invitation-only community.", 
+    "group.paid.open.desc":"Paid subscription service anybody can join.",
+    "group.paid.closed.desc":"Paid subscription service, which requires an invitation to join.",
+
+    "underconstruction.service":"This service is under construction.",
+    "underconstruction.feature":"This feature is under construction.",
+    "groups.subs":"Subscription Services",
+    "groups.free":"Free Groups",
 
     "dummy":"dummy"
 }

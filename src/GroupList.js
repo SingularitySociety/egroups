@@ -1,15 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Paper, Grid } from '@material-ui/core';
 import MUILink from '@material-ui/core/Link';
 import { Link } from 'react-router-dom';
-import CreateNew from './common/CreateNew';
-import { FormattedMessage } from 'react-intl';
-import { Redirect } from 'react-router-dom';
 
 const styles = theme => ({
-  createNew: {
+  root: {
     marginBottom: theme.spacing(1),
   },
   paper: {
@@ -21,57 +18,57 @@ const styles = theme => ({
   },
 });
 
-class GroupList extends React.Component {
-  state = { groups:[] };
-  async componentDidMount() {
-    const { db } = this.props;
-    const ref = db.collection("groups").where("groupName", ">", "");
-    const snapshot = await ref.get();
-    //console.log(snapshot);
-    const groups = [];
-    snapshot.forEach((doc)=>{
-        const group = doc.data();
-        group.groupId = doc.id;
-        groups.push(group);
-    });
-    this.setState({groups:groups});
-  }
-
-  createNew = async (value) => {
-    console.log("createNew", value);
-    const { db, user } = this.props;
-    const doc = await db.collection("groups").add(
-      { title:value, owner:user.uid, ownerName:user.displayName } // HACK: see groupDidCreate cloud function
-    )
-    console.log(doc.id);
-    this.setState({redirect:`/a/new/${doc.id}`});
-  }
-  render() {
-    const { classes } = this.props;
-    const { redirect } = this.state;
-    if (redirect) {
-      return <Redirect to={redirect} />
+function GroupList(props) {
+  const [groups, setGroups] = useState([]);
+  const { db, classes, filter, groupIds } = props;
+  useEffect(()=>{
+    async function query() {
+      const ref = db.collection("groups").where("groupName", ">", "").where("open", "==", true);
+      const query = filter ? filter(ref) : ref;
+      const snapshot = await query.get();
+      //console.log(snapshot);
+      const groups = [];
+      snapshot.forEach((doc)=>{
+          const group = doc.data();
+          group.groupId = doc.id;
+          groups.push(group);
+      });
+      setGroups(groups);
     }
-    return <Grid container justify="center">
-        <Grid item className={classes.createNew}>
-          <CreateNew label={<FormattedMessage id="group" />} 
-            createNew={this.createNew} action={<FormattedMessage id="create" />} />
-        </Grid>
-        { 
-            this.state.groups.map((group)=> {
-                return (
-                  <Grid item key={group.groupId}  xs={12}>
-                  <MUILink component={Link} className={classes.link}
-                    to={"/" + (group.groupName || group.groupId)}>
-                      <Paper className={classes.paper}> 
-                    {group.title}
-                    </Paper>
-                  </MUILink>
-                  </Grid>);
-            })
+    async function fetch() {
+      const promises = groupIds.map(async (groupId)=>{
+        const ref = db.doc(`groups/${groupId}`);
+        const group = (await ref.get()).data();
+        if (group) {
+          group.groupId = groupId;
         }
-    </Grid>
-  }
+        return group;
+      });
+      const groups = await Promise.all(promises);
+      setGroups(groups.filter(group => group));
+    } 
+    if (groupIds) {
+      fetch();
+    } else {
+      query();   
+    }
+  }, [db, filter, groupIds]);
+
+  return <Grid container justify="center" className={classes.root}>
+    { 
+      groups.map((group)=> {
+        return (
+          <Grid item key={group.groupId} xs={12}>
+            <MUILink component={Link} className={classes.link}
+              to={"/" + (group.groupName || group.groupId)}>
+                <Paper className={classes.paper}> 
+              {group.title}
+              </Paper>
+            </MUILink>
+          </Grid>);
+      })
+    }
+  </Grid>
 }
 
 GroupList.propTypes = {

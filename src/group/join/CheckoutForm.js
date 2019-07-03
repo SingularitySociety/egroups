@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { FormControl, Select, InputLabel } from '@material-ui/core';
+import { FormControl, Select, InputLabel, Typography, Button } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import PlanOptions from './PlanOptions';
 import CardRegistration from './CardRegistration';
+import * as firebase from "firebase/app";
+import "firebase/functions";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
   about: {
@@ -23,6 +26,7 @@ function CheckoutForm(props) {
   const planLength = (group.plans && group.plans.length) || 0;
   const [ planIndex, setPlanIndex ] = useState(planLength - 1);
   const [ customer, setCustomer ] = useState(null);
+  const [ processing, setProcessing ] = useState(false);
 
   useEffect(()=>{
     async function foo() {
@@ -47,9 +51,23 @@ function CheckoutForm(props) {
     setCustomer(customer);
   }
 
+  async function subscribe() {
+    const plan = group.plans[planIndex];
+    const displayName = user.displayName;
+    const groupId = group.groupId;
+    const context = { groupId, plan, displayName };
+    console.log("subscribe", context);
+    
+    const createSubscribe = firebase.functions().httpsCallable('createSubscribe');
+    setProcessing(true);
+    const result = (await createSubscribe(context)).data;
+    setProcessing(false);
+    console.log(result);
+  }
+
   return <React.Fragment>
     <CardRegistration customer={customer} didUpdate={customerDidUpdate} />
-    { customer && planLength > 0 &&
+    { planLength > 0 ?
       <form>
         <FormControl className={classes.formControl}>
           <InputLabel><FormattedMessage id="plan.name" /></InputLabel>
@@ -64,8 +82,17 @@ function CheckoutForm(props) {
               price: group.plans[planIndex].price,
             }} />
         </FormControl>
+        <Button variant="contained" color="primary" onClick={subscribe}>
+          <FormattedMessage id="do.subscribe" />
+        </Button>
+        {
+          processing && 
+          <CircularProgress size={24} />
+        }
       </form>
-  }
+    :
+      <Typography color="error"><FormattedMessage id="plan.empty" /></Typography>
+    }
   </React.Fragment>;
 }
 

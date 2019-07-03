@@ -54,10 +54,14 @@ export const groupDidUpdate = functions.firestore.document('groups/{groupId}').o
   await stripeFunctions.groupDidUpdate(db, change, context);
 });
 
-export const groupDidCreate = functions.firestore.document('groups/{groupId}').onCreate(async (snapshot, context)=>{
-  await groupFunctions.groupDidCreate(db, snapshot, context);
+export const createGroup = functions.https.onCall(async (data, context) => {
+  return await groupFunctions.createGroup(db, data, context);
 });
-            
+
+export const createGroupName = functions.https.onCall(async (data, context) => {
+  return await groupFunctions.createGroupName(db, data, context);
+});
+
 const deleteSubcollection = async (snapshot:FirebaseFirestore.DocumentSnapshot, name:string) => {
   const limit = 10;
   let count:number;
@@ -85,6 +89,8 @@ export const groupDidDelete = functions.firestore.document('groups/{groupId}')
     await deleteSubcollection(snapshot, "events");
     await deleteSubcollection(snapshot, "members");
     await deleteSubcollection(snapshot, "owners");
+    await deleteSubcollection(snapshot, "private");
+    await deleteSubcollection(snapshot, "secret");
 
     // We need to remove all the images associated with this user
     const bucket = admin.storage().bucket();

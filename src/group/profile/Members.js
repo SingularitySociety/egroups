@@ -14,7 +14,7 @@ const useStyles = makeStyles(styles);
 
 function Members(props) {
   const classes = useStyles();
-  const { db, group, user, callbacks } = props;
+  const { db, group, user, privilege } = props;
   const [ list, setList ] = useState([]);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ function Members(props) {
     return detacher;
   }, [db, group]);
 
-  const canRead = callbacks.memberPrivilege() >= group.privileges.member.read;
+  const canRead = privilege >= group.privileges.member.read;
   return <div>
     { 
       !canRead && <AccessDenied />
@@ -45,7 +45,7 @@ function Members(props) {
 }
 
 Members.propTypes = {
-  callbacks: PropTypes.object.isRequired,
+  privilege: PropTypes.number.isRequired,
   db: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   group: PropTypes.object.isRequired,

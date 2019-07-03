@@ -18,8 +18,8 @@ service cloud.firestore {
       return request.auth.token.privileges[groupId];
       //return get(/databases/$(database)/documents/groups/$(groupId)/privileges/$(userId)).data.value;
     }
-    function isGroupOpen(groupId) {
-      return groupInfo(groupId).privileges.membership.open == true;
+    function isGroupOpenToPublic(groupId) {
+      return groupInfo(groupId).open == true && groupInfo(groupId).subscription == false;
     }
     function isUserAdmin(groupId, userId) {
       return userPrivilege(groupId, userId) >= 16777216; // 0x1000000
@@ -47,9 +47,8 @@ service cloud.firestore {
       allow read: if request.auth.uid == userId;
     }
 		match /groupNames/{groupName} {
-      // NEVER allow the client to modify or delete. 
+      // NEVER allow the client to write. 
     	allow read;
-      allow create: if request.auth.uid != null;
     }
 		match /groups/{groupId} {
     	allow read;
@@ -65,7 +64,7 @@ service cloud.firestore {
     	allow read: if request.auth.uid == userId || isUserAdmin(groupId, request.auth.uid);
       allow read: if isUserMember(groupId, request.auth.uid) 
           && groupInfo(groupId).privileges.member.read <= userPrivilege(groupId, request.auth.uid);
-      allow create: if request.auth.uid == userId && isGroupOpen(groupId) 
+      allow create: if request.auth.uid == userId && isGroupOpenToPublic(groupId) 
                       && userId == request.resource.data.uid && groupId == request.resource.data.groupId;
       allow create: if request.auth.uid == userId && isUserOwner(groupId, request.auth.uid)
                       && userId == request.resource.data.uid && groupId == request.resource.data.groupId;

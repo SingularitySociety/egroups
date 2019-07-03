@@ -1,22 +1,40 @@
 import Privileges from '../../react-lib/src/const/Privileges.js';
 import * as messaging from '../utils/messaging';
 
-export const groupDidCreate = async (db, snapshot, context) => {
-  const { groupId } = context.params;
-  console.log(context);
-  const newValue = snapshot.data(); // BUGBUG: this is a hack because I can't access context.auth.uid for some reason
-  const userId = newValue && newValue.owner;
-  await db.doc(`/groups/${groupId}/owners/${userId}`).set({
-    created: new Date()
+export const createGroup = async (db:FirebaseFirestore.Firestore, data, context) => {
+  if (!context.auth || !context.auth.uid) {
+    return {result: false};
+  }
+  const userId = context.auth.uid;
+  if (!data || !data.title || !data.ownerName) {
+    return {result: false};
+  }
+  const { title, ownerName } = data;
+  const created = new Date();
+
+  const doc = await db.collection("groups").add({
+    created,
+    title, 
+    owner:userId, 
+    ownerName
   });
-  // The owner becomes a member automatically. memberDidCreate will automatically create the privilege for the owner. 
-  return db.doc(`/groups/${groupId}/members/${userId}`).set({
-    created: new Date(),
-    displayName: (newValue && newValue.ownerName) || "admin",
+  const groupId = doc.id;
+
+  await db.doc(`/groups/${groupId}/owners/${userId}`).set({
+    created
+  });
+  await db.doc(`/groups/${groupId}/members/${userId}`).set({
+    created,
+    displayName:ownerName,
     uid: userId,
     groupId: groupId,
   });
-};
+
+  return {
+    groupId,
+    result: true,
+  };  
+}
 
 export const memberDidCreate = async (db, snapshot, context) => {
   const { groupId, userId } = context.params;
@@ -39,3 +57,56 @@ export const memberDidCreate = async (db, snapshot, context) => {
     [groupId]: privilege 
   }, {merge:true});
 };
+
+export const createGroupName = async (db:FirebaseFirestore.Firestore, data, context) => {
+  if (!context.auth || !context.auth.uid) {
+    return {result: false, message:"missing.uid"};
+  }
+  const { groupId, path, title, types } = data;
+  if (!groupId || !path || !title || !types) {
+    return {result: false, message:"missing.params"};
+  }
+
+  const refName = db.doc(`groupNames/${path}`);
+  const refGroup = db.doc(`groups/${groupId}`);
+  return db.runTransaction(async (tr)=>{
+    const docName = await tr.get(refName);
+    const dataName = docName.data();
+    if (dataName) {
+      throw new Error("group.name.taken");
+    }
+    const docGroup = await tr.get(refGroup);
+    const dataGroup = docGroup.data();
+    if (!dataGroup) {
+      throw new Error("group.missing");
+    }
+    if (dataGroup.groupName) {
+      throw new Error("group.has.name");
+    }
+    if (dataGroup.owner !== context.auth.uid) {
+      throw new Error("group.different.owner");
+    }
+
+    tr.set(refName, { groupId:groupId });
+    tr.set(refGroup, { 
+      groupName:path, 
+      title,
+      privileges: {
+        channel: { read:Privileges.member, write:Privileges.member, create:Privileges.member },
+        article: { read:Privileges.member, create:Privileges.member, comment:Privileges.member },
+        page: { read:Privileges.guest, create:Privileges.admin, comment:Privileges.admin },
+        event: { read:Privileges.member, create:Privileges.member, attend:Privileges.member },
+        member: { read:Privileges.member, write:Privileges.admin },
+        invitation: { create:Privileges.admin },
+      },
+      open:types.open,
+      subscription:types.subscription,
+    }, {merge:true});
+  }).then(() => {
+    return { result: true };
+  }).catch((e) => {
+    // Handle Error
+    console.log(e.message);
+    return { result: false, message: e.message };
+  });
+}

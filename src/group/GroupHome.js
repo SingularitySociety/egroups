@@ -27,15 +27,15 @@ class GroupHome extends React.Component {
     if (group.homepageId) {
       this.refArticle = db.doc(`groups/${group.groupId}/pages/${group.homepageId}`);
       const article = (await this.refArticle.get()).data();
-      console.log(article);
+      //console.log(article);
       article.articleId = group.homepageId;
       this.setState({article});
     }
   }
-  memberDidMount = async (member) => {
-    console.log("memberDidMount");
+  privilegeDidMount = async (privilege) => {
     const { group, db, user, callbacks, intl:{messages} } = this.props;
-    if (callbacks.memberPrivilege() >= Privileges.admin) {
+    console.log("privilegeDidMount", privilege);
+    if (privilege >= Privileges.admin) {
       this.setState({canEdit:true});
       console.log("isAdmin", group.homepageId);
 
@@ -59,16 +59,16 @@ class GroupHome extends React.Component {
       this.loadArticle();
     }
   }
-  memberWillUnmount = () => {
+  privilegeWillUnmount = () => {
   }
   render() {
-    const { group, member, user, db, arp, callbacks } = this.props;
+    const { group, user, db, arp, callbacks, privilege } = this.props;
     const { article } = this.state;
-    const context = { group, member, user, db, article, arp, callbacks }
+    const context = { group, user, db, article, arp, callbacks, privilege }
     //const context = { user, group, db, member, history };
     return (
       <div>
-        { member && <MountDetector didMount={this.memberDidMount} willUnmount={this.memberWillUnmount} value={member} />}
+        { privilege > 0 && <MountDetector didMount={this.privilegeDidMount} willUnmount={this.privilegeWillUnmount} value={privilege} />}
         { article && <BlogArticle {...context} refArticle={this.refArticle} />}
       </div>
     )

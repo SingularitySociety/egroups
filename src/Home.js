@@ -5,7 +5,8 @@ import Grid from '@material-ui/core/Grid';
 import Header from './Header';
 import { Typography } from '@material-ui/core';
 import GroupList from './GroupList';
-
+import NewGroupButton from './NewGroupButton';
+import { FormattedMessage } from 'react-intl';
 
 const styles = theme => ({
   root: {
@@ -22,16 +23,21 @@ const styles = theme => ({
 });
 
 function Home(props) {
-  const { classes, user, db } = props;
+  const { classes, user, db, privileges } = props;
   return (
     <React.Fragment>
       <Header user={user} />
       <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
         <Grid item className={classes.main}>
-          <Typography style={{marginBottom:"5%"}}>
-            このサービスは、現在、開発中です。
+          <Typography color="error" style={{marginBottom:"5%"}}>
+            <FormattedMessage id="underconstruction.service" />
           </Typography>
-          <GroupList user={user} db={db} />
+          <NewGroupButton user={user} db={db} />
+          <GroupList user={user} db={db} groupIds={privileges ? Object.keys(privileges) : []}/>
+          <Typography component="h2" variant="h5"><FormattedMessage id="groups.subs" /></Typography>
+          <GroupList user={user} db={db} filter={(q)=>{return q.where("subscription", "==", true)}} />
+          <Typography component="h2" variant="h5"><FormattedMessage id="groups.free" /></Typography>
+          <GroupList user={user} db={db} filter={(q)=>{return q.where("subscription", "==", false)}} />
         </Grid>
       </Grid>
     </React.Fragment>

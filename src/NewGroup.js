@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography, Grid, Button, TextField } from '@material-ui/core';
+import { Typography, Grid, Button, TextField, FormControl, FormLabel, List, ListItem } from '@material-ui/core';
 import Header from './Header';
 import { FormattedMessage } from 'react-intl';
 import { Redirect } from 'react-router-dom';
 import Privileges from './const/Privileges';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import * as firebase from "firebase/app";
+import "firebase/functions";
 
 const styles = theme => ({
   root: {
@@ -19,54 +21,51 @@ const styles = theme => ({
   },
   textField: {
     marginRight: theme.spacing(1),
-    width: 200,
+  },
+  formControl: {
+    width:"100%",
+    marginTop: theme.spacing(1),
   },
 });
 
+const groupTypeKeys = ["group.free.open", "group.free.closed", "group.paid.open", "group.paid.closed"];
+const groupTypes = [
+  { open:true, subscription:false },
+  { open:false, subscription:false },
+  { open:true, subscription:true },
+  { open:false, subscription:true },
+]
+
 class NewGroup extends React.Component {
-  state = { title:"", path:"", invalid:true, conflict:false };
+  state = { title:"", path:"", invalid:true, conflict:false, processing:false, groupType:-1 };
 
   async componentDidMount() {
     console.log(window.location);
     const { db, match:{params:{groupId}} } = this.props;
     const doc = (await db.doc(`groups/${groupId}`).get()).data();
-    this.setState({title:doc.title});
+    if (doc) {
+      this.setState({title:doc.title});
+    }
   }
 
   onSubmit = async (e) => {
     e.preventDefault();
     console.log("onSubmit");
-    const { db, match:{params:{groupId}} } = this.props;
-    const { path, title } = this.state;
-    const refName = db.doc(`groupNames/${path}`);
-    const refGroup = db.doc(`groups/${groupId}`);
-    db.runTransaction(async (tr)=>{
-      const doc = await tr.get(refName);
-      if (doc.exits) {
-        throw new Error("This path is already taken");
-      }
-      tr.set(refName, { groupId:groupId });
-      tr.set(refGroup, { 
-        groupName:path, 
-        title,
-        privileges: {
-          channel: { read:Privileges.member, write:Privileges.member, create:Privileges.member },
-          article: { read:Privileges.member, create:Privileges.member, comment:Privileges.member },
-          page: { read:Privileges.guest, create:Privileges.admin, comment:Privileges.admin },
-          event: { read:Privileges.member, create:Privileges.member, attend:Privileges.member },
-          member: { read:Privileges.member, write:Privileges.admin },
-          invitation: { create:Privileges.admin },
-          membership: { open:true },
-        }
-       }, {merge:true});
-    }).then(() => {
+    const { match:{params:{groupId}} } = this.props;
+    const { path, title, groupType } = this.state;
+    const context = { groupId, path, title, types:groupTypes[groupType] };
+    console.log(context);
+    this.setState({processing:true});
+    const createGroupName = firebase.functions().httpsCallable('createGroupName');
+    const result = (await createGroupName(context)).data;
+    if (result.result) {
       // BUGBUG: For some reason, redirect does not work (infinit spiral)
       //  this.setState({redirect:`/${path}`});
       window.location.pathname = `/${path}`;
-    }).catch((e) => {
-      // Handle Error
-      console.log(e);
-    });
+    } else {
+      this.setState({processing:false});
+      console.log(result);
+    }
   }
   onCancel = async (e) => {
     e.preventDefault();
@@ -96,16 +95,32 @@ class NewGroup extends React.Component {
       }
     }
   };
+  onGroupType = (groupType) => {
+    this.setState({groupType});
+  }
 
   render() {
     const { classes, user, privileges, match:{params:{groupId}} } = this.props;
-    const { redirect, title, path, invalid, conflict } = this.state;
+    const { redirect, title, path, invalid, conflict, processing, groupType } = this.state;
     if (redirect) {
       return <Redirect to={ redirect } />
     }
     const privilege = privileges && privileges[groupId];
     const isOwner = privilege === Privileges.owner; // becomes true when we got JWT
-    const disabledSubmit = invalid || !isOwner;
+    const disabledSubmit = invalid || !isOwner || groupType<0;
+    const descriptions = groupTypeKeys.map((key, index)=>{
+      return <ListItem button key={key} selected={index===groupType} onClick={()=>{this.onGroupType(index)}}>
+        <Grid container direction="row">
+          <Grid item xs={12}>
+          <Typography style={{fontWeight:"bold"}}><FormattedMessage id={key} /></Typography>
+          </Grid>
+          <Grid item xs={12}>
+          <Typography><FormattedMessage id={`${key}.desc`} /></Typography>
+          </Grid>
+        </Grid> 
+      </ListItem>
+    });
+    console.log(groupType);
     return (
       <React.Fragment>
         <Header user={user} />
@@ -115,21 +130,38 @@ class NewGroup extends React.Component {
               <FormattedMessage id="new.group" />
             </Typography>
             <form className={classes.form}>
+              <FormControl className={classes.formControl}>
               <TextField label={<FormattedMessage id="group.title" />} value={title} 
                   onChange={this.handleChange('title')} className={classes.textField} margin="normal" />
+              </FormControl>
               <br/>
+              <br/>
+              <FormControl>
+                <FormLabel><FormattedMessage id="group.choose.type" /></FormLabel>
+                <List>
+                  { descriptions }
+                </List>
+              </FormControl>              
+              <br/>
+              <FormControl className={classes.formControl}>
               <TextField label={<FormattedMessage id={conflict ? "path.conflict" : "group.path"} />} value={path} autoFocus={true} error={ invalid }
                   onChange={this.handleChange('path')} className={classes.textField} margin="normal" />
-              <br/>
-              <div>Group URL: {`https:/${window.location.host}/${path || "..."}`}</div>
+              <span>URL: {`https:/${window.location.host}/${path || "..."}`}</span>
+              </FormControl>
               <div>
-                <Button variant="contained" color="primary" className={classes.button} disabled={ disabledSubmit }
-                  onClick={this.onSubmit} type="submit"><FormattedMessage id="create" /></Button>
-                <Button variant="contained" className={classes.button} onClick={this.onCancel}>
-                    <FormattedMessage id="cancel" />
-                </Button>
-                {
-                  !isOwner && <CircularProgress style={{position:"absolute"}}/>
+                { processing ?
+                  <CircularProgress />
+                :
+                  <React.Fragment>
+                    <Button variant="contained" color="primary" className={classes.button} disabled={ disabledSubmit }
+                      onClick={this.onSubmit} type="submit"><FormattedMessage id="create" /></Button>
+                    <Button variant="contained" className={classes.button} onClick={this.onCancel}>
+                        <FormattedMessage id="cancel" />
+                    </Button>
+                    {
+                      !isOwner && <CircularProgress style={{position:"absolute"}}/>
+                    }
+                  </React.Fragment>
                 }
               </div>
             </form>

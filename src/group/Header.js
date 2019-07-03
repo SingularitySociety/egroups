@@ -85,7 +85,7 @@ class MyAppBar extends React.Component {
   };
 
   render() {
-    const { classes, user, group, callbacks, rootGroup, pageInfo } = this.props;
+    const { classes, user, group, rootGroup, pageInfo, privilege } = this.props;
     const { anchorEl } = this.state;
     const cmd = { cmd:"redirect", path:window.location.pathname };
     const loginUrl = "/a/login/cmd/"+encodeURIComponent(JSON.stringify(cmd));
@@ -177,7 +177,6 @@ class MyAppBar extends React.Component {
             </Breadcrumbs>
           </Grid>
         </Grid>;
-    const privilege = callbacks.memberPrivilege();
 
     return (
       <div className={classes.root}>
