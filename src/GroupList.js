@@ -6,9 +6,6 @@ import MUILink from '@material-ui/core/Link';
 import { Link } from 'react-router-dom';
 
 const styles = theme => ({
-  createNew: {
-    marginBottom: theme.spacing(1),
-  },
   paper: {
     marginBottom: theme.spacing(1),
     padding: theme.spacing(1),

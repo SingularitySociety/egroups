@@ -13,13 +13,6 @@ const styles = theme => ({
   createNew: {
     marginBottom: theme.spacing(1),
   },
-  paper: {
-    marginBottom: theme.spacing(1),
-    padding: theme.spacing(1),
-  },
-  link: {
-    color: "#333",
-  },
 });
 
 class GroupList extends React.Component {
