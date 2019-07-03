@@ -17,9 +17,9 @@ const styles = theme => ({
 
 function GroupList(props) {
   const [groups, setGroups] = useState([]);
-  const { db, classes, filter } = props;
+  const { db, classes, filter, groupIds } = props;
   useEffect(()=>{
-    async function fetchList() {
+    async function query() {
       const ref = db.collection("groups").where("groupName", ">", "");
       const query = filter ? filter(ref) : ref;
       const snapshot = await query.get();
@@ -31,9 +31,25 @@ function GroupList(props) {
           groups.push(group);
       });
       setGroups(groups);
+    }
+    async function fetch() {
+      const promises = groupIds.map(async (groupId)=>{
+        const ref = db.doc(`groups/${groupId}`);
+        const group = (await ref.get()).data();
+        group.groupId = groupId;
+        return group;
+      });
+      console.log(promises);
+      const groups = await Promise.all(promises);
+      console.log(groups);
+      setGroups(groups);
     } 
-    fetchList();   
-  }, [db, filter]);
+    if (groupIds) {
+      fetch();
+    } else {
+      query();   
+    }
+  }, [db, filter, groupIds]);
 
   return <Grid container justify="center">
     { 

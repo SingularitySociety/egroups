@@ -22,7 +22,7 @@ const styles = theme => ({
 });
 
 function Home(props) {
-  const { classes, user, db } = props;
+  const { classes, user, db, privileges } = props;
   return (
     <React.Fragment>
       <Header user={user} />
@@ -32,8 +32,8 @@ function Home(props) {
             このサービスは、現在、開発中です。
           </Typography>
           <NewGroupButton user={user} db={db} />
-          <GroupList user={user} db={db} />
-          <br/>
+          <GroupList user={user} db={db} groupIds={privileges ? Object.keys(privileges) : []}/>
+          <Typography>Open Groups</Typography>
           <GroupList user={user} db={db} filter={(q)=>{return q.where("open", "==", true)}} />
         </Grid>
       </Grid>
