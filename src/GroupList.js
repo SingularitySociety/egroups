@@ -39,11 +39,13 @@ function GroupList(props) {
       const promises = groupIds.map(async (groupId)=>{
         const ref = db.doc(`groups/${groupId}`);
         const group = (await ref.get()).data();
-        group.groupId = groupId;
+        if (group) {
+          group.groupId = groupId;
+        }
         return group;
       });
       const groups = await Promise.all(promises);
-      setGroups(groups);
+      setGroups(groups.filter(group => group));
     } 
     if (groupIds) {
       fetch();

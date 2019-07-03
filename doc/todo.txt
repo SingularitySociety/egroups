@@ -14,6 +14,7 @@ Group: Invitation
 Blog: Homepage can not be deleted
 Firebase: Introduce rosters
 Join: Wait until JWT is retrieved
+GroupList: Deal with null group case.
 
 ----- Done -----
 Account: Owner can not leave
