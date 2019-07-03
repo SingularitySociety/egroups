@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
@@ -15,48 +15,46 @@ const styles = theme => ({
   },
 });
 
-class GroupList extends React.Component {
-  state = { processing:false };
+function GroupList(props) {
+  const [ processing, setProcessing ] = useState(false);
+  const [ redirect, setRedirect ] = useState(null);
+  const { user, classes } = props;
 
-  createNew = async (value) => {
+  const createNew = async (value) => {
     console.log("createNew", value);
-    const { user } = this.props;
     const createGroup = firebase.functions().httpsCallable('createGroup');
-    this.setState({processing:true});
+    setProcessing(true);
     const result = (await createGroup({
       title:value, ownerName:user.displayName
     })).data;
-    this.setState({processing:false});
+    setProcessing(false);
     console.log(result);
     if (result.result && result.groupId) {
-      this.setState({redirect:`/a/new/${result.groupId}`});
+      setRedirect(`/a/new/${result.groupId}`);
     } else {
       // BUGBUG: Display Error
       console.log("#### createGroup failed")
     }
   }
-  render() {
-    const { classes } = this.props;
-    const { redirect, processing } = this.state;
-    if (redirect) {
-      return <Redirect to={redirect} />
-    }
-    return <Grid container justify="center">
-        <Grid item className={classes.createNew}>
-          {
-            processing ?
-              <CircularProgress />
-            :
-              <CreateNew label={<FormattedMessage id="group" />} 
-                createNew={this.createNew} action={<FormattedMessage id="create" />} />
-          }
-        </Grid>
-    </Grid>
+
+  if (redirect) {
+    return <Redirect to={redirect} />
   }
+  return <Grid container justify="center">
+    <Grid item className={classes.createNew}>
+      {
+        processing ?
+          <CircularProgress />
+        :
+          <CreateNew label={<FormattedMessage id="group" />} 
+            createNew={createNew} action={<FormattedMessage id="create" />} />
+      }
+    </Grid>
+  </Grid>
 }
 
 GroupList.propTypes = {
-    classes: PropTypes.object.isRequired,
-  };
+  classes: PropTypes.object.isRequired,
+};
   
 export default withStyles(styles)(GroupList);
