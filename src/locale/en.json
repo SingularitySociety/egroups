@@ -63,6 +63,8 @@
     "card.update":"Update",
     "card.info":"Card Info:{brand} Exp:{exp_month}/{exp_year} Last4:{last4}",
     "plan.empty":"There is no subscription plan created by the administrator yet.",
+    "do.subscribe":"Subscribe",
+
 
     "red":"red",
     "pink":"pink",

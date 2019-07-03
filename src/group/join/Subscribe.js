@@ -31,10 +31,11 @@ function Subscribe(props) {
 
   // Test card numbers
   // 4242 4242 4242 4242
+  const context = { group, db, user };
   return (
     <StripeProvider apiKey="pk_test_iVo1YToPedpru7AJDpAj43cF00ftQJpoj8">
       <Elements>
-        <InjectedCheckoutForm group={group} db={db} user={user} />
+        <InjectedCheckoutForm {...context} />
       </Elements>
     </StripeProvider>
   )

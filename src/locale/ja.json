@@ -63,6 +63,7 @@
     "card.update":"カード更新",
     "card.info":"カード情報：{brand} 有効期限：{exp_month}/{exp_year} 下四桁：{last4}",
     "plan.empty":"課金設定が未設定です。",
+    "do.subscribe":"加入する",
 
     "red":"red",
     "pink":"pink",
