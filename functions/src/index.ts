@@ -58,6 +58,10 @@ export const createGroup = functions.https.onCall(async (data, context) => {
   return await groupFunctions.createGroup(db, data, context);
 });
 
+export const createGroupName = functions.https.onCall(async (data, context) => {
+  return await groupFunctions.createGroupName(db, data, context);
+});
+
 const deleteSubcollection = async (snapshot:FirebaseFirestore.DocumentSnapshot, name:string) => {
   const limit = 10;
   let count:number;
