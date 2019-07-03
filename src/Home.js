@@ -6,6 +6,7 @@ import Header from './Header';
 import { Typography } from '@material-ui/core';
 import GroupList from './GroupList';
 import NewGroupButton from './NewGroupButton';
+import { FormattedMessage } from 'react-intl';
 
 const styles = theme => ({
   root: {
@@ -28,13 +29,15 @@ function Home(props) {
       <Header user={user} />
       <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
         <Grid item className={classes.main}>
-          <Typography style={{marginBottom:"5%"}}>
-            このサービスは、現在、開発中です。
+          <Typography color="error" style={{marginBottom:"5%"}}>
+            <FormattedMessage id="underconstruction.service" />
           </Typography>
           <NewGroupButton user={user} db={db} />
           <GroupList user={user} db={db} groupIds={privileges ? Object.keys(privileges) : []}/>
-          <Typography>Open Groups</Typography>
-          <GroupList user={user} db={db} filter={(q)=>{return q.where("open", "==", true)}} />
+          <Typography component="h2" variant="h5"><FormattedMessage id="groups.subs" /></Typography>
+          <GroupList user={user} db={db} filter={(q)=>{return q.where("subscription", "==", true)}} />
+          <Typography component="h2" variant="h5"><FormattedMessage id="groups.free" /></Typography>
+          <GroupList user={user} db={db} filter={(q)=>{return q.where("subscription", "==", false)}} />
         </Grid>
       </Grid>
     </React.Fragment>

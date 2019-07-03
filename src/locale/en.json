@@ -121,5 +121,10 @@
     "group.paid.open.desc":"Paid subscription service anybody can join.",
     "group.paid.closed.desc":"Paid subscription service, which requires an invitation to join.",
 
+    "underconstruction.service":"This service is under construction.",
+    "underconstruction.feature":"This feature is under construction.",
+    "groups.subs":"Subscription Services",
+    "groups.free":"Free Groups",
+
     "dummy":"dummy"
 }

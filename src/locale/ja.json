@@ -121,5 +121,10 @@
     "group.paid.open.desc":"会費を払えば誰でも参加できるグループです。有料サロン、ファンクラブ、情報サービスなどに適しています。",
     "group.paid.closed.desc":"招待状をもらった人だけが参加出来る会費制のグループです。会費徴収が必要な同好会・サークルに適しています。",
 
+    "underconstruction.service":"このサービスは、現在、開発中です。",
+    "underconstruction.feature":"この昨日は、現在、開発中です。",
+    "groups.subs":"有料サロン",
+    "groups.free":"無料サロン",
+
     "dummy":"dummy"
 }

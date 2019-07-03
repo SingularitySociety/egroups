@@ -6,6 +6,9 @@ import MUILink from '@material-ui/core/Link';
 import { Link } from 'react-router-dom';
 
 const styles = theme => ({
+  root: {
+    marginBottom: theme.spacing(1),
+  },
   paper: {
     marginBottom: theme.spacing(1),
     padding: theme.spacing(1),
@@ -20,7 +23,7 @@ function GroupList(props) {
   const { db, classes, filter, groupIds } = props;
   useEffect(()=>{
     async function query() {
-      const ref = db.collection("groups").where("groupName", ">", "");
+      const ref = db.collection("groups").where("groupName", ">", "").where("open", "==", true);
       const query = filter ? filter(ref) : ref;
       const snapshot = await query.get();
       //console.log(snapshot);
@@ -39,9 +42,7 @@ function GroupList(props) {
         group.groupId = groupId;
         return group;
       });
-      console.log(promises);
       const groups = await Promise.all(promises);
-      console.log(groups);
       setGroups(groups);
     } 
     if (groupIds) {
@@ -51,18 +52,18 @@ function GroupList(props) {
     }
   }, [db, filter, groupIds]);
 
-  return <Grid container justify="center">
+  return <Grid container justify="center" className={classes.root}>
     { 
       groups.map((group)=> {
-          return (
-            <Grid item key={group.groupId}  xs={12}>
+        return (
+          <Grid item key={group.groupId} xs={12}>
             <MUILink component={Link} className={classes.link}
               to={"/" + (group.groupName || group.groupId)}>
                 <Paper className={classes.paper}> 
               {group.title}
               </Paper>
             </MUILink>
-            </Grid>);
+          </Grid>);
       })
     }
   </Grid>
