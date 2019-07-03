@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Header from './Header';
 import { Typography } from '@material-ui/core';
 import GroupList from './GroupList';
-
+import NewGroupButton from './NewGroupButton';
 
 const styles = theme => ({
   root: {
@@ -31,6 +31,7 @@ function Home(props) {
           <Typography style={{marginBottom:"5%"}}>
             このサービスは、現在、開発中です。
           </Typography>
+          <NewGroupButton user={user} db={db} />
           <GroupList user={user} db={db} />
         </Grid>
       </Grid>
