@@ -17,11 +17,12 @@ const styles = theme => ({
 
 function GroupList(props) {
   const [groups, setGroups] = useState([]);
-  const { db, classes } = props;
+  const { db, classes, filter } = props;
   useEffect(()=>{
     async function fetchList() {
       const ref = db.collection("groups").where("groupName", ">", "");
-      const snapshot = await ref.get();
+      const query = filter ? filter(ref) : ref;
+      const snapshot = await query.get();
       //console.log(snapshot);
       const groups = [];
       snapshot.forEach((doc)=>{
@@ -32,7 +33,7 @@ function GroupList(props) {
       setGroups(groups);
     } 
     fetchList();   
-  }, [db]);
+  }, [db, filter]);
 
   return <Grid container justify="center">
     { 

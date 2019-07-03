@@ -33,6 +33,8 @@ function Home(props) {
           </Typography>
           <NewGroupButton user={user} db={db} />
           <GroupList user={user} db={db} />
+          <br/>
+          <GroupList user={user} db={db} filter={(q)=>{return q.where("open", "==", true)}} />
         </Grid>
       </Grid>
     </React.Fragment>
