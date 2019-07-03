@@ -89,6 +89,8 @@ export const groupDidDelete = functions.firestore.document('groups/{groupId}')
     await deleteSubcollection(snapshot, "events");
     await deleteSubcollection(snapshot, "members");
     await deleteSubcollection(snapshot, "owners");
+    await deleteSubcollection(snapshot, "private");
+    await deleteSubcollection(snapshot, "secret");
 
     // We need to remove all the images associated with this user
     const bucket = admin.storage().bucket();
