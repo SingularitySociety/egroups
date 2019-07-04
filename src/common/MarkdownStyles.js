@@ -15,6 +15,22 @@ const MarkdownStyles = theme => ({
       fontSize: '1.8rem',
     },
   },
+  headerTwo: {
+    fontWeight: "600",
+    marginBottom: theme.spacing(2),
+    fontSize: "1.3rem",
+    '@media (min-width:480px)': {
+      fontSize: '1.6rem',
+    },
+  },
+  headerThree: {
+    fontWeight: "600",
+    marginBottom: theme.spacing(2),
+    fontSize: "1.2rem",
+    '@media (min-width:480px)': {
+      fontSize: '1.4rem',
+    },
+  },
   blockquote: {
     fontFamily: "'Roboto', sans-serif",
     padding: theme.spacing(1),

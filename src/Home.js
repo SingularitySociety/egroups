@@ -34,9 +34,9 @@ function Home(props) {
           </Typography>
           <NewGroupButton user={user} db={db} />
           <GroupList user={user} db={db} groupIds={privileges ? Object.keys(privileges) : []}/>
-          <Typography component="h2" variant="h5"><FormattedMessage id="groups.subs" /></Typography>
+          <Typography component="h2" variant="h3"><FormattedMessage id="groups.subs" /></Typography>
           <GroupList user={user} db={db} filter={(q)=>{return q.where("subscription", "==", true)}} />
-          <Typography component="h2" variant="h5"><FormattedMessage id="groups.free" /></Typography>
+          <Typography component="h2" variant="h3"><FormattedMessage id="groups.free" /></Typography>
           <GroupList user={user} db={db} filter={(q)=>{return q.where("subscription", "==", false)}} />
         </Grid>
       </Grid>

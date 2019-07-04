@@ -182,7 +182,7 @@ class MyAppBar extends React.Component {
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
-            <Typography variant="h6" color="inherit" className={classes.grow} >
+            <Typography variant="h4" color="inherit" className={classes.grow} >
               <MUILink color="inherit" component={Link} to={`/${group.groupName}`}>
                 {group.title}
               </MUILink>

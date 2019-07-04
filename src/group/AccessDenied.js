@@ -15,7 +15,7 @@ const useStyles = makeStyles(styles);
 function AccessDenied() {
   const classes = useStyles();
   return (
-    <Typography component="h2" variant="h5" gutterBottom　className={ classes.errorMessage} >
+    <Typography component="h1" variant="h1" gutterBottom　className={ classes.errorMessage} >
       <FormattedMessage id="warning.access.denied" />
     </Typography>
   )

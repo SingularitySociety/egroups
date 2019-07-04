@@ -32,6 +32,7 @@ import Join from './join/Join';
 import SettingsBilling from './join/SettingsBilling';
 import Subscribe from './join/Subscribe';
 import Privileges from '../const/Privileges';
+import {themeOptions} from '../theme.js';
 
 const colorMap = { red, pink, purple, deepPurple, indigo, 
   blue, lightBlue, cyan, teal, green,
@@ -173,15 +174,13 @@ class GroupRouter extends React.Component {
     if (!group) {
       return <Processing />;
     }
-    const theme = createMuiTheme({
-      typography: {
-          useNextVariants: true,
-      },
-      palette: {
-        primary: colorMap[(group.theme && group.theme.primary) || "blue"],
-        secondary: colorMap[(group.theme && group.theme.primary) || "blue"],
-      }
-    });
+    const options = Object.assign({}, themeOptions);
+    options.palette = {
+      primary: colorMap[(group.theme && group.theme.primary) || "blue"],
+      secondary: colorMap[(group.theme && group.theme.primary) || "blue"],
+    };
+    const theme = createMuiTheme(options);
+
     const callbacks = {
       setTabbar:this.setTabbar, 
       memberDidUpdate:this.memberDidUpdate, 

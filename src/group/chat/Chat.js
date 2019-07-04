@@ -63,7 +63,7 @@ function Chat(props) {
   return (<div>
       <Grid container>
         <Grid item xs={canEdit ? 11 : 12}>
-          <Typography component="h2" variant="h5" gutterBottom>
+          <Typography component="h1" variant="h1" gutterBottom>
             { channel.title }
           </Typography>
         </Grid>

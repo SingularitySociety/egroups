@@ -24,7 +24,7 @@ function ComplexGrid(props) {
       <Header user={user} />
       <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
         <Grid item style={{width:"calc(80vmin)"}}>
-          <Typography className={classes.errorMessage} component="h2" variant="h5" >
+          <Typography className={classes.errorMessage} component="h1" variant="h1" >
             <FormattedMessage id={ error.key } />
           </Typography>
         </Grid>
