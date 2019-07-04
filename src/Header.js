@@ -59,7 +59,7 @@ render() {
             <IconButton className={classes.menuButton} onClick={this.handleMenu} color="inherit" aria-label="Menu">
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" color="inherit" className={classes.grow}>
+            <Typography variant="h4" color="inherit" className={classes.grow}>
               Yet Another Collaboration Tool
             </Typography>
             {

@@ -11,12 +11,11 @@ Editor: H1, H2, h3
 Theme: Match H1, H2, H3
 Blog: Do not use onSnapshot for read-only mode.
 Group: Invitation
-Blog: Homepage can not be deleted
-Firebase: Introduce rosters
-Join: Wait until JWT is retrieved
-GroupList: Deal with null group case.
 
 ----- Done -----
+GroupList: Deal with null group case.
+Join: Wait until JWT is retrieved
+Blog: Homepage can not be deleted
 Account: Owner can not leave
 Account: Put "leave" button in dangerous switch
 Chat: Activate the entry

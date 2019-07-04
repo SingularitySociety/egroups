@@ -24,9 +24,24 @@ const About = props => {
       <Header user={user} login="/Login/target/about" />
       <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
           <Grid className={classes.caption}>
-          <Typography component="h2" variant="h5" gutterBottom>
+          <Typography component="h1" variant="h1" gutterBottom>
             Stay Hungry, Stay Foolish. 
           </Typography>
+          <Typography component="h4" variant="h2" gutterBottom>
+            Stay Hungry, Stay Foolish. 
+          </Typography>
+          <Typography component="h3" variant="h3" gutterBottom>
+            Stay Hungry, Stay Foolish. 
+          </Typography>
+          <Typography component="h4" variant="h4" gutterBottom>
+            Stay Hungry, Stay Foolish. 
+          </Typography>
+          <Typography gutterBottom>
+            Stay Hungry, Stay Foolish. 
+          </Typography>
+          <span>
+          Stay Hungry, Stay Foolish. 
+          </span>
           </Grid>
       </Grid>
     </React.Fragment>
