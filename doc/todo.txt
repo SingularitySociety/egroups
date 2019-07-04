@@ -7,10 +7,14 @@ Chat: Infinit scroll
 Image Uploader: Verify the privacy
 Image Uploader: Image Orientation
 Pages: Menu access to pages *
-Editor: H1, H2, h3
-Theme: Match H1, H2, H3
 Blog: Do not use onSnapshot for read-only mode.
 Group: Invitation
+Blog: Edit mode
+
+Editor: H1, H2, h3
+Theme: Match H1, H2, H3
+https://material-ui.com/components/click-away-listener/#simple-menu-dropdown
+
 
 ----- Done -----
 GroupList: Deal with null group case.
