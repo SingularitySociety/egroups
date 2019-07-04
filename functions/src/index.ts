@@ -145,7 +145,8 @@ export const memberDidDelete = functions.firestore.document('groups/{groupId}/me
       }
       return true;
     });
-
+    // todo delete stripe subscription 
+    
     // We need to remove all the images associated with this user
     const bucket = admin.storage().bucket();
     const path = `groups/${groupId}/members/${userId}/`;

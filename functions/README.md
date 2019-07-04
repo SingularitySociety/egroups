@@ -15,12 +15,17 @@ add this line you shell config ( .bash_rc or .zshrc)
 
 ```
 export STRIPE_SECRET="xxxx"
+export STRIPE_ENDPOINT_SECRET="xxxx"
+
 ```
 
 ### set stripe secret key on firebase
 
 ```
-firebase functions:config:set  stripe.secret_key="xxxx"
+firebase functions:config:set  stripe.secret_key=${STRIPE_SECRET}
+
+firebase functions:config:set  stripe.endpoint_secret=${STRIPE_ENDPOINT_SECRET}
+
 ```
 
 
