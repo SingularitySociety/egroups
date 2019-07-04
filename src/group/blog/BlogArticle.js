@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, Grid, IconButton } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
+import EditIcon from '@material-ui/icons/Edit';
 import AccessDenied from './../AccessDenied';
 import BlogSection from './BlogSection';
 import { Link } from 'react-router-dom';
@@ -26,7 +27,7 @@ const styles = theme => ({
 });
 
 class BlogArticle extends React.Component {
-  state = {article:null, sections:[], resouces:null};
+  state = {article:null, sections:[], resouces:null, readOnly:true};
   async componentDidMount() {
     const { article, refArticle } = this.props;
     //console.log("BlogArticle, articleId", article.articleId);
@@ -93,9 +94,12 @@ class BlogArticle extends React.Component {
       hasImage: true, imageUrl
     }, {merge:true})
   }
+  toggleReadOnly = () => {
+    this.setState({readOnly:!this.state.readOnly});
+  }
 
   render() {
-    const { article, resources } = this.state;
+    const { article, resources, readOnly } = this.state;
     const { user, classes, refArticle, arp, group, privilege } = this.props;
     const context = { refArticle };
     if (!article) {
@@ -115,29 +119,32 @@ class BlogArticle extends React.Component {
     return (
       <div className={frameClass}>
         <Grid container>
-          <Grid item xs={canEdit ? 11 : 12}>
+          <Grid item xs={canEdit ? 10 : 12}>
              <Typography component="h1" variant="h1" gutterBottom className={classes.title}>
               {article.title}
             </Typography>
           </Grid>
           {
             canEdit && 
-            <Grid item xs={1}>
+            <Grid item xs={2}>
+              <IconButton size="small" onClick={this.toggleReadOnly}>
+                <EditIcon />
+              </IconButton>
               <IconButton size="small" component={Link} to={`/${group.groupName}/${arp.leaf}/${article.articleId}/settings`}>
                 <SettingsIcon />
               </IconButton>
             </Grid>
           }
         </Grid>
-      { canEdit && <BlogSection index={ 0 } resource={{}} saveSection={this.insertSection} insertPhoto={this.insertPhoto} {...context} /> }
+      { canEdit && !readOnly && <BlogSection index={ 0 } resource={{}} saveSection={this.insertSection} insertPhoto={this.insertPhoto} {...context} /> }
         {
           article.sections.map((sectionId, index)=>{
             return <div key={sectionId}>
               <BlogSection index={ index }sectionId={sectionId} resource={ resources[sectionId] } 
                   saveSection={this.updateSection} deleteSection={this.deleteSection} 
                   insertPhoto={this.insertPhoto} onImageUpload={this.onImageUpload} 
-                  readOnly={!canEdit} {...context} />
-              { canEdit && <BlogSection index={ index+1 } resource={{}}
+                  readOnly={!canEdit || readOnly} {...context} />
+              { canEdit && !readOnly && <BlogSection index={ index+1 } resource={{}}
                   insertPhoto={this.insertPhoto} saveSection={this.insertSection} {...context} /> }
             </div>
           })

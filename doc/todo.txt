@@ -9,14 +9,12 @@ Image Uploader: Image Orientation
 Pages: Menu access to pages *
 Blog: Do not use onSnapshot for read-only mode.
 Group: Invitation
-Blog: Edit mode
-
-Editor: H1, H2, h3
-Theme: Match H1, H2, H3
-https://material-ui.com/components/click-away-listener/#simple-menu-dropdown
-
+Home: Image for Group
 
 ----- Done -----
+Blog: Edit mode
+Editor: H1, H2, h3
+Theme: Match H1, H2, H3
 GroupList: Deal with null group case.
 Join: Wait until JWT is retrieved
 Blog: Homepage can not be deleted
