@@ -115,6 +115,7 @@ class BlogArticle extends React.Component {
     }
 
     const frameClass = canEdit ? classes.editorFrame : classes.readerFrame;
+    const editMode = canEdit && !readOnly;
 
     return (
       <div className={frameClass}>
@@ -136,15 +137,15 @@ class BlogArticle extends React.Component {
             </Grid>
           }
         </Grid>
-      { canEdit && !readOnly && <BlogSection index={ 0 } resource={{}} saveSection={this.insertSection} insertPhoto={this.insertPhoto} {...context} /> }
+      { editMode && <BlogSection index={ 0 } resource={{}} saveSection={this.insertSection} insertPhoto={this.insertPhoto} {...context} /> }
         {
           article.sections.map((sectionId, index)=>{
             return <div key={sectionId}>
               <BlogSection index={ index }sectionId={sectionId} resource={ resources[sectionId] } 
                   saveSection={this.updateSection} deleteSection={this.deleteSection} 
                   insertPhoto={this.insertPhoto} onImageUpload={this.onImageUpload} 
-                  readOnly={!canEdit || readOnly} {...context} />
-              { canEdit && !readOnly && <BlogSection index={ index+1 } resource={{}}
+                  readOnly={!editMode} {...context} />
+              { editMode && <BlogSection index={ index+1 } resource={{}}
                   insertPhoto={this.insertPhoto} saveSection={this.insertSection} {...context} /> }
             </div>
           })
