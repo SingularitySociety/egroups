@@ -49,7 +49,7 @@ class App extends React.Component {
             const getJWT = firebase.functions().httpsCallable('getJWT');
             const token = (await getJWT()).data; 
             //console.log("token", token);
-            console.log("privileges", token.privileges);
+            console.log({privileges:token.privileges});
             this.setState({privileges: token.privileges});
             try {
               await firebase.auth().signInWithCustomToken(token.token);
@@ -87,7 +87,7 @@ class App extends React.Component {
       exist_tokens = exist_tokens.filter((elem) => elem !== oldToken);
     }
     await this.updateToken(uid, exist_tokens);
-    console.log("exist_token:", exist_tokens)
+    console.log({exist_tokens:exist_tokens})
   }
   async updateToken(uid, tokens) {
     db.doc(`users/${uid}/private/tokens`).set({tokens: tokens});
