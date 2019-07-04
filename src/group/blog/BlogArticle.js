@@ -116,7 +116,7 @@ class BlogArticle extends React.Component {
       <div className={frameClass}>
         <Grid container>
           <Grid item xs={canEdit ? 11 : 12}>
-             <Typography component="h2" gutterBottom className={classes.title}>
+             <Typography component="h1" variant="h1" gutterBottom className={classes.title}>
               {article.title}
             </Typography>
           </Grid>
