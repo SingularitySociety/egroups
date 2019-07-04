@@ -55,25 +55,72 @@ groups/{groupId}
 TBD
 
 
-### Stripe model
+## Stripe model
 
 Stripeのデータとegroupのデータの関連は、()内がegroupとして、
 
 Product(Group) -> Plan(Plan)  -> Subscription <- Customer(User) <- Sources(Payment method)
 
 
-# グループ
+### グループ
 グループで課金を開始すると、ProductとPlanを作成する。
 課金プランを増やすとPlanを複数追加していく。
 グループとPlanは1:1
 
-# ユーザ
+### ユーザ
 ユーザとCustomerは1:1で紐づく
 StripeのSpecではカード情報は1:nで複数ひもづけ可能だが、egroupでは、1:1としてある。
 
-# 削除のタイミング
+### 削除のタイミング
 
 ユーザが課金をやめる時/グループを退会する時に、Subscriptionを削除。
 ユーザがegroupを退会する時は、Customerを削除。(Subscriptionも同時に削除される）
 管理人がグループを削除する時にProductを削除（すると、紐づくPlanも一緒に削除される）
 
+## Group
+
+# カード情報登録時
+    /users/${userId}/secret/stripe  (stripe.createCustomer)
+    /users/${userId}/private/stripe  (stripe.createCustomer)
+
+# 入会時に記録、追加するもの。
+    /groups/${groupId}/members/${userId} { profile } (group.createGroup(owner) or front or stripe.createSubscribe)
+
+    (オーナーのみ)
+    /groups/${groupId}/owners/${userId}   (group.createGroup)
+
+    (課金ユーザ)
+    /groups/${groupId}/privileges/${userId} {value: privilege}  (group.memberDidCreate)
+    /privileges/${userId}  {[groupId]: privilege}   (group.memberDidCreate)
+
+    /groups/${groupId}/members/${userId}/secret/stripe (stripe.createSubscribe) (決済生情報)
+    /groups/${groupId}/members/${userId}/private/stripe (stripe.createSubscribe)  (決済情報)
+    /users/${userId}/private/stripe  (決済情報)
+    
+    todo
+      /users/{userId}/billings  (課金情報のログをとる)
+
+# 更新時に記録するもの。（ログだけでもとっておく）
+     todo
+      /users/{userId}/billings  (課金情報のログをとる)
+     
+# 退会時に記録、削除するもの。
+    アクションがあった時
+       /groups/{groupId}/members/{userId}/private/stripe に “resigning=true
+    有効期限翌日
+       functionで、課金情報を消して、privilegeを変える。必要ならmemberも削除
+       
+    todo
+      /users/{userId}/billings  (課金情報のログをとる)
+      どのタイミングでStripe側のsubscriptionを削除するか？
+
+　　  考えられる退会パターン
+        On egroup
+          ユーザが明示的にサービス上で退会。
+          グループがなくなる
+          オーナーによって退会させられる
+          サービス運営により退会させられる
+        On stripe
+          ユーザがStripe上でSubscription削除（これはできる？）
+          他、ユーザがなにかのアクションをしてSubscriptionが削除（カード削除とか、Stripe退会とか？）
+          カードの有効期限切れや、カードの問題による決済失敗
