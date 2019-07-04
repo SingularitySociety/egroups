@@ -7,11 +7,11 @@ import * as stripeWebHookData from "./testData/stripeWebHookData";
 should()
 
 describe('Hello function', () => {
-  it('should return hello world', async () => {
+  it('should valid api callback', async () => {
     // console.log(stripeWebHookData.stripeData.customer_subscription_deleted);
     
     const request = supertest(express.app);
-    const response = await request.post("/1.0/stripe")
+    const response = await request.get("/1.0/hello")
       .send(stripeWebHookData.stripeData.customer_subscription_deleted)
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
