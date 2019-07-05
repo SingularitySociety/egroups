@@ -123,7 +123,7 @@ describe('Stripe test', () => {
     await stripe.createProduct("unit_test", "hello", groupId);
     const plan = await stripe.createPlan(groupId, 5000, "jpy");
 
-    const subscription = await stripe.createSubscription(userId, plan.id);
+    const subscription = await stripe.createSubscription(userId, groupId, plan.id);
     subscription.object.should.equal('subscription');
     subscription.customer.should.equal(customer.id)
 
@@ -163,7 +163,7 @@ describe('Stripe test', () => {
     
     subscription.items.data[0].quantity.should.equal(1);
 
-    const subscription2 = await stripe.createSubscription(userId, plan.id);
+    const subscription2 = await stripe.createSubscription(userId, groupId, plan.id);
     subscription2.id.should.equal(subscription2.id);
     
   });

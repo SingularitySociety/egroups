@@ -307,8 +307,6 @@ describe('Stripe data test', () => {
       "trial_start": null
     }
     const res1 = stripeUtils.convSubscriptionData(subscription);
-    console.log(res1);
-    console.log(JSON.stringify(res1, undefined, 1));
     res1.should.deep.equal({
       "object": "subscription",
       "billing": "charge_automatically",

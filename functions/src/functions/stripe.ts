@@ -81,7 +81,7 @@ export const createSubscribe = async (db, data, context) => {
 
   // everything ok
   const planId = stripeUtils.getPlanId(groupId, price, currency);
-  const subscription = await stripe.createSubscription(userId, planId);
+  const subscription = await stripe.createSubscription(userId, groupId, planId);
 
   if (!subscription) {
     return {result: false};
@@ -107,10 +107,12 @@ export const createSubscribe = async (db, data, context) => {
     }
   }, {merge:true});
 
+  await stripeUtils.billingLog(db, userId, groupId, subscription, stripeUtils.stripeActions.subscriptionCreated);
+  
   return {result: true};
 }
 
-
+// create production and plan
 export const groupDidUpdate = async (db, change, context) => {
   const { groupId } = context.params;
   const after = change.after.exists ? change.after.data() ||{} : {};
@@ -120,6 +122,7 @@ export const groupDidUpdate = async (db, change, context) => {
     if (!stripeData || !stripeData.production) {
       const production = await stripe.createProduct(after.groupName, after.groupName, groupId);
       await stripeRef.set({production: production}, {merge:true});
+      // todo create Product log
     }
     
     if (after.plans) {
@@ -133,6 +136,7 @@ export const groupDidUpdate = async (db, change, context) => {
         if (stripeData && (!stripeData.plans || !stripeData.plans[key])) {
           const stripePlan = await stripe.createPlan(groupId, price, currency);
           newPlans[key] = stripePlan;
+          // todo create Plan log
         }
       });
       if (Object.keys(newPlans).length > 0) {
@@ -148,3 +152,4 @@ export const groupDidUpdate = async (db, change, context) => {
     // const value = snapshot.data();
   }
 }
+

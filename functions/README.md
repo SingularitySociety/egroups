@@ -102,12 +102,14 @@ StripeのSpecではカード情報は1:nで複数ひもづけ可能だが、egro
     /groups/${groupId}/members/${userId}/private/stripe (stripe.createSubscribe)  (決済情報)
     /users/${userId}/private/stripe  (決済情報)
     
-    todo
-      /users/{userId}/billings  (課金情報のログをとる)
+    /users/{userId}/billings  (課金情報のログをとる)
+    /stripelog/{logId} ログ
 
 # 更新時に記録するもの。（ログだけでもとっておく）
+     invoice.payment_succeeded などinvoiceだと、planやsubscriptionがとれる。
      Stripe のWeb Hooksによってデータが送られてくる。
-     基本的にSubscription deleteされない限りは有効なので、更新処理はしないほうが良いかもしれない。
+     基本的にSubscription deleteされない限りは有効なので、更新処理はしない。
+     ログをとる
      
      todo
       表示用にでも、有効期限をとっておくと良いかも。
@@ -115,13 +117,25 @@ StripeのSpecではカード情報は1:nで複数ひもづけ可能だが、egro
       
 # 退会時に記録、削除するもの。
     アクションがあった時
-       /groups/{groupId}/members/{userId}/private/stripe に “resigning=true
-    有効期限翌日
-       functionで、課金情報を消して、privilegeを変える。必要ならmemberも削除
-       
+      (a) /groups/{groupId}/members/{userId}/private/stripe に “resigning=true
+    ~~ 有効期限翌日 ~~
+      ~~ functionで、課金情報を消して、privilegeを変える。必要ならmemberも削除 ~~
+    有効期限日
+      Stripeからeventが送られてくる。
+      課金情報を消して、privilegeを変える。必要ならmemberも削除。ログもとる。
+
+    退会
+      subscription.updateで、cancel_at_period_end をtrueにする
+      (a)をtrueにして、有効期限の最終日を記録する
+    退会の取消し
+      subscription.updateで、cancel_at_period_end をfalseにする
+      (a)をfalseにして、有効期限の最終日を削除
+
     todo
       /users/{userId}/billings  (課金情報のログをとる)
       どのタイミングでStripe側のsubscriptionを削除するか？
+
+      
 
 　　  考えられる退会パターン
         On egroup
@@ -129,9 +143,21 @@ StripeのSpecではカード情報は1:nで複数ひもづけ可能だが、egro
           グループがなくなる
           　更新無効機能を作って、課金している期間は存在させたほうがよいかも。じゃないと返金処理発生するかも。
           　有効期限など含めて、グループオーナー向け規約と、ユーザ向けの規約が必要
-          オーナーによって退会させられる
-          サービス運営により退会させられる
-        On stripe
+            * この場合は、全ユーザのcancel_at_period_endをtrueにして、一ヶ月後にグループ削除。
+            なので、オーナーの規約に課金グループを廃止する場合には、一ヶ月前に告知して、一ヶ月間は最終サポートする必要があることにする。
+          オーナーによって退会させられる(即時退会)
+            強制退会を規約に盛り込んでおく。返金はなし。
+          サービス運営により退会させられる (即時退会)
+            強制退会を規約に盛り込んでおく。返金はなし。
+          
+        On stripe (これは、すべてイベントが送られてくるので、正常系の退会と同じ扱いで良いかな？）
           ユーザがStripe上でSubscription削除（これはできる？）
           他、ユーザがなにかのアクションをしてSubscriptionが削除（カード削除とか、Stripe退会とか？）
           カードの有効期限切れや、カードの問題による決済失敗
+
+       強制退会は返金なし。
+
+       /stripelogにも、ユーザ全体のログを入れる。
+       /stripelogは課金だけでなく、product, plan　などのログも入れておく。
+       
+     

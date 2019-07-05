@@ -1,9 +1,21 @@
 import * as express from 'express';
 import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin';
 
 export const app = express();
 export const router = express.Router();
 import * as stripeApi from '../apis/stripe';
+import * as stripeUtils from '../utils/stripe';
+
+// for test, db is not immutable
+if (!admin.apps.length) {
+  admin.initializeApp();
+}
+
+let db = admin.firestore();
+export const updateDb = (_db) => {
+  db = _db;
+}
 
 export const logger = async (req, res, next) => {
   next();
@@ -12,16 +24,23 @@ export const hello_response = async (req, res) =>{
   res.json({message: "hello"});
 };
 
-const customer_subscription_deleted = (data) => {
-  if (data && data.items && data.items.data) {
-    data.items.data.forEach((item) => {
+export const customer_subscription_deleted = async (event) => {
+  const {data:{object}} = event;
+  if (object && object.items && object.items.data) {
+    object.items.data.forEach((item) => {
       console.log(item.subscription);
     });
   }
-  console.log(JSON.stringify(data, undefined, 1));
+  await stripeUtils.callbackLog(db, event);
 }
-const charge_succeeded = (data) => {
-  console.log(data);
+export const charge_succeeded = async (event) => {
+  // const {data:{object}} = event;
+  await stripeUtils.callbackLog(db, event);
+}
+
+export const invoice_payment_succeeded = async (event) => {
+  // const {data:{object}} = event;
+  await stripeUtils.callbackLog(db, event);
 }
 
 export const stripe_parser = async (req, res) => {
@@ -31,18 +50,18 @@ export const stripe_parser = async (req, res) => {
   const sig = req.headers['stripe-signature'];
   try {
     const event = stripe.webhooks.constructEvent(req.rawBody.toString(), sig, endpointSecret);
-    console.log(event);
-    console.log("OK");
 
-    const {data:{object}} = event
+    // const {data:{object}} = event
     if (!event) {
       return res.status(400).send(`Webhook Error: unknow error`);
     }
     
     if (event.type === "customer.subscription.deleted") {
-      customer_subscription_deleted(object)
+      await customer_subscription_deleted(event)
     } else if (event.type === "charge.succeeded") {
-      charge_succeeded(object);
+      await charge_succeeded(event);
+    } else if (event.type === "invoice.payment_succeeded") {
+      await invoice_payment_succeeded(event);
     }
     res.json({});
   } catch (err) {

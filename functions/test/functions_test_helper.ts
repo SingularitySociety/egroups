@@ -35,3 +35,4 @@ export const initFunctionsTest = () => {
   test.mockConfig({ stripe: { secret_key: process.env.STRIPE_SECRET }});
   return {index, admin_db, test};
 }
+
