@@ -10,6 +10,12 @@ Pages: Menu access to pages *
 Blog: Do not use onSnapshot for read-only mode.
 Group: Invitation
 Home: Image for Group
+Chat: display shift-return
+Chat: delete a message
+Chat: edit a message
+Chat: auto detect link in a message
+Chat: Rich Text?
+Profile: Debug [Object Object]
 
 ----- Done -----
 Blog: Edit mode
