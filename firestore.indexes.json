@@ -36,7 +36,7 @@
   "fieldOverrides": [
     {
       "collectionGroup": "members",
-      "fieldPath": "uid",
+      "fieldPath": "userId",
       "indexes": [
         {
           "order": "ASCENDING",
