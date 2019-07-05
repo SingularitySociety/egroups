@@ -26,8 +26,10 @@ class ChannelItem extends React.Component {
     const { classes, channel, group, history } = this.props;
     let className = classes.unread;
     if (!channel.updated || !history) {
+      console.log("case 1", channel.updated, history);
       className = classes.read;
     } else if (history.channels) {
+      console.log("case 2");
       const access = history.channels[channel.channelId];
       if (access && access.l > channel.updated) {
         className = classes.read;

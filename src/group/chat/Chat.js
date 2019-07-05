@@ -41,7 +41,7 @@ function Chat(props) {
     await refMessages.add({
       created: new Date(), // firebase.firestore.FieldValue.serverTimestamp(),
       message,
-      uid: user.uid,
+      userId: user.uid,
       userName: member.displayName
     });
   }

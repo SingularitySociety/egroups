@@ -29,12 +29,12 @@ const useStyles = makeStyles(styles);
 function Message(props) {
   const classes = useStyles();
   const { message, callbacks, profiles } = props;
-  const her = profiles[message.uid];
+  const her = profiles[message.userId];
   const hitProfile = callbacks.hitProfile;
   useEffect(()=> {
     if (!her) {
-      console.log('hitProfile', message.uid);
-      hitProfile(message.uid);
+      console.log('hitProfile', message.userId);
+      hitProfile(message.userId);
     }    
   }, [message, hitProfile, her]);
 
