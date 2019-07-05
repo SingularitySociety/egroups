@@ -65,11 +65,11 @@ service cloud.firestore {
       allow read: if isUserMember(groupId, request.auth.uid) 
           && groupInfo(groupId).privileges.member.read <= userPrivilege(groupId, request.auth.uid);
       allow create: if request.auth.uid == userId && isGroupOpenToPublic(groupId) 
-                      && userId == request.resource.data.uid && groupId == request.resource.data.groupId;
+                      && userId == request.resource.data.userId && groupId == request.resource.data.groupId;
       allow create: if request.auth.uid == userId && isUserOwner(groupId, request.auth.uid)
-                      && userId == request.resource.data.uid && groupId == request.resource.data.groupId;
+                      && userId == request.resource.data.userId && groupId == request.resource.data.groupId;
       allow delete, update: if request.auth.uid == userId
-                      && userId == request.resource.data.uid && groupId == request.resource.data.groupId;
+                      && userId == request.resource.data.userId && groupId == request.resource.data.groupId;
       allow delete: if request.auth.uid == userId;
     }
     match /groups/{groupId}/members/{userId}/private/{itemId} {

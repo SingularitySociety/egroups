@@ -49,26 +49,26 @@ export const initHook = () => {
   });
 };
 
-export const add_group_privilege_for_admin = async (admin_db, groupId, UID) => {
-  await admin_db.doc(`/groups/${groupId}/owners/${UID}`).set({
+export const add_group_privilege_for_admin = async (admin_db, groupId, UserId) => {
+  await admin_db.doc(`/groups/${groupId}/owners/${UserId}`).set({
     created: new Date()
   });
-  await admin_db.doc(`/groups/${groupId}/members/${UID}`).set({
+  await admin_db.doc(`/groups/${groupId}/members/${UserId}`).set({
     created: new Date(),
-    displayName: UID,
+    displayName: UserId,
   });
-  await admin_db.doc(`/groups/${groupId}/privileges/${UID}`).set({
+  await admin_db.doc(`/groups/${groupId}/privileges/${UserId}`).set({
     value: 0x2000000,
     created: new Date()
   });
 }
 
-export const add_group_privilege_for_member = async (admin_db, groupId, UID, name, privileges) => {
-  await admin_db.doc(`/groups/${groupId}/members/${UID}`).set({
+export const add_group_privilege_for_member = async (admin_db, groupId, UserId, name, privileges) => {
+  await admin_db.doc(`/groups/${groupId}/members/${UserId}`).set({
     created: new Date(),
     displayName: name,
   });
-  await admin_db.doc(`/groups/${groupId}/privileges/${UID}`).set({
+  await admin_db.doc(`/groups/${groupId}/privileges/${UserId}`).set({
     value: privileges,
     created: new Date()
   });

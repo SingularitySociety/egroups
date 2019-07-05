@@ -5,8 +5,8 @@ const groupId_to_topic = (groupId) => {
   return "g_" + groupId;
 }
 
-export const get_topics_from_all_group = async (db, uid) => {
-  const groupsSnapShot = await db.collectionGroup('members').where("uid", "==", uid).get()
+export const get_topics_from_all_group = async (db, userId) => {
+  const groupsSnapShot = await db.collectionGroup('members').where("userId", "==", userId).get()
   const topics = groupsSnapShot.docs.map((doc) => {
     return groupId_to_topic(doc.data().groupId);
   });

@@ -1,5 +1,5 @@
 // groups/${group.groupId}/articles/${article.articleId}/${sectionId}  article
-// groups/${group.groupId}/members/${item.uid}/images/profile          member
+// groups/${group.groupId}/members/${item.userId}/images/profile          member
 // groups/${group.groupId}/images/profile                              group
 
 export const thumbnailSizes = [600, 1200];

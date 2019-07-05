@@ -121,24 +121,24 @@ describe('Group function test', () => {
   it ('stripe create customer test', async function() {
     this.timeout(10000);
     const uuid = UUID();
-    const aliceUID = "test_customer_" + uuid;
+    const aliceUserId = "test_customer_" + uuid;
 
-    await admin_db.doc(`users/${aliceUID}`).set({
-      uid: aliceUID,
+    await admin_db.doc(`users/${aliceUserId}`).set({
+      uid: aliceUserId,
     })
 
     const visa_source = await functions_test_helper.createVisaCard();
     const visa_token = visa_source.id;
     
     const req = {token: visa_token};
-    const context = {auth: {uid: aliceUID}};
+    const context = {auth: {uid: aliceUserId}};
     const wrapped = test.wrap(index.createCustomer);
 
     await wrapped(req, context);
 
-    const stripeCustomerSecret = (await admin_db.doc(`users/${aliceUID}/secret/stripe`).get())
+    const stripeCustomerSecret = (await admin_db.doc(`users/${aliceUserId}/secret/stripe`).get())
     const stripeCustomerSecretData = stripeCustomerSecret.data();
-    const customerId = stripeUtils.getCustomerId(aliceUID);
+    const customerId = stripeUtils.getCustomerId(aliceUserId);
     stripeCustomerSecretData.customer.id.should.equal(customerId);
     stripeCustomerSecretData.customer.object.should.equal('customer');
     stripeCustomerSecretData.customer.default_source.should.equal(stripeCustomerSecretData.customer.sources.data[0].id);
@@ -152,7 +152,7 @@ describe('Group function test', () => {
     stripeCustomerSecretData.customer.sources.data[0].last4.should.equal('4242');
     stripeCustomerSecretData.customer.sources.data[0].object.should.equal('card');
 
-    const stripeCustomerPrivate = (await admin_db.doc(`users/${aliceUID}/private/stripe`).get())
+    const stripeCustomerPrivate = (await admin_db.doc(`users/${aliceUserId}/private/stripe`).get())
     const stripeCustomerPrivateData = stripeCustomerPrivate.data();
 
     stripeCustomerPrivateData.should.deep.equal({
@@ -165,19 +165,19 @@ describe('Group function test', () => {
           last4: '4242' } ]
     })
                                                
-    await stripe.deleteCustomer(aliceUID);
+    await stripe.deleteCustomer(aliceUserId);
   });
 
 
   it ('stripe create subscription test', async function() {
     this.timeout(10000);
     const uuid = UUID();
-    const aliceUID = "test_customer_" + uuid;
+    const aliceUserId = "test_customer_" + uuid;
     const groupId = "sub_test";
 
     // need group, product, plan, 
-    await admin_db.doc(`users/${aliceUID}`).set({
-      uid: aliceUID,
+    await admin_db.doc(`users/${aliceUserId}`).set({
+      uid: aliceUserId,
     })
 
     const alice_group = admin_db.doc(`groups/${groupId}`);
@@ -200,18 +200,18 @@ describe('Group function test', () => {
     const visa_source = await functions_test_helper.createVisaCard();
     const visa_token = visa_source.id;
 
-    await stripe.createCustomer(visa_token, aliceUID);
+    await stripe.createCustomer(visa_token, aliceUserId);
     
     // end of create
 
     // run test
     const req = {groupId, plan: {price, currency}};
-    const context = {auth: {uid: aliceUID}};
+    const context = {auth: {uid: aliceUserId}};
     const wrapped = test.wrap(index.createSubscribe);
 
     await wrapped(req, context);
 
-    const subscriptionRaw = (await admin_db.doc(`/groups/${groupId}/members/${aliceUID}/secret/stripe`).get()).data()
+    const subscriptionRaw = (await admin_db.doc(`/groups/${groupId}/members/${aliceUserId}/secret/stripe`).get()).data()
     subscriptionRaw.subscription.billing.should.equal('charge_automatically');
     subscriptionRaw.subscription.collection_method.should.equal('charge_automatically');
     subscriptionRaw.subscription.object.should.equal('subscription');
@@ -227,12 +227,12 @@ describe('Group function test', () => {
     subscriptionRaw.subscription.quantity.should.equal(1);
     subscriptionRaw.subscription.status.should.equal('active');
 
-    const member = (await admin_db.doc(`/groups/${groupId}/members/${aliceUID}`).get()).data();
+    const member = (await admin_db.doc(`/groups/${groupId}/members/${aliceUserId}`).get()).data();
     member.displayName.should.equal('---');
     member.groupId.should.equal('sub_test');
-    member.uid.should.equal(aliceUID);
+    member.userId.should.equal(aliceUserId);
       
-    const memberStripe = (await admin_db.doc(`/groups/${groupId}/members/${aliceUID}/private/stripe`).get()).data();
+    const memberStripe = (await admin_db.doc(`/groups/${groupId}/members/${aliceUserId}/private/stripe`).get()).data();
     memberStripe.subscription.billing.should.equal('charge_automatically');
     memberStripe.subscription.object.should.equal('subscription');
     memberStripe.subscription.plan.active.should.equal(true);
@@ -244,7 +244,7 @@ describe('Group function test', () => {
     memberStripe.subscription.status.should.equal('active');
     
 
-    const userPrivate = (await admin_db.doc(`users/${aliceUID}/private/stripe`).get()).data();
+    const userPrivate = (await admin_db.doc(`users/${aliceUserId}/private/stripe`).get()).data();
     
     userPrivate.subscription.sub_test.billing.should.equal('charge_automatically');
     userPrivate.subscription.sub_test.object.should.equal('subscription');
