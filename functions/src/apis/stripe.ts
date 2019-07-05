@@ -70,6 +70,9 @@ export const createPlan = async(groupId, amount, currency = "jpy") => {
       interval: "month",
       product: productId,
       currency: currency,
+      metadata: {
+        groupId: groupId,
+      },
     });
   }
   return plan;
@@ -88,7 +91,10 @@ export const createCustomer = async (token, userId) => {
     customer = await getStripe().customers.create({
       id: customerId,
       description: 'test',
-      source: token
+      source: token,
+      metadata: {
+        userId,
+      },
     });
     return customer
   }
@@ -112,13 +118,17 @@ export const deleteCustomer = async (userId) => {
   }
 }
 
-export const createSubscription = async (userId, plan) => {
+export const createSubscription = async (userId, groupId, plan) => {
   const customerId = stripeUtils.getCustomerId(userId);
   const idempotency_key = ["sub", customerId, plan].join("_")
   try {
     const subscription = await getStripe().subscriptions.create({
       customer: customerId,
-      items: [{ plan: plan }]
+      items: [{ plan: plan }],
+      metadata: {
+        userId,
+        groupId,
+      },
     }, {idempotency_key: idempotency_key})
     return subscription;
   } catch (e) {

@@ -55,3 +55,28 @@ export const convSubscriptionData = (stripeSubscriptionData) => {
   }
   
 }
+
+
+// stripe log
+export const stripeActions = {
+  customerCreated: 1,
+  productCreated: 100,
+  planCreated: 200,
+
+  subscriptionCreated: 301,
+  subscriptionUpdated: 302,
+  subscriptionCanceled: 303,
+  subscriptionCanceledCancel: 304,
+
+  subscriptionResign: 310,
+  subscriptionResignForce: 311,
+}
+
+export const billingLog = async (db, userId, groupId, subscription, action) => {
+  await db.collection(`/stripelog`).add({ userId, groupId, subscription, action, created: new Date() });
+  await db.collection(`/users/${userId}/billings`).add({subscription, action, created: new Date()});
+}
+
+export const callbackLog = async (db, log) => {
+  await db.collection(`/stripelog`).add({ log });
+}

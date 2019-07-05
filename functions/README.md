@@ -102,10 +102,11 @@ StripeのSpecではカード情報は1:nで複数ひもづけ可能だが、egro
     /groups/${groupId}/members/${userId}/private/stripe (stripe.createSubscribe)  (決済情報)
     /users/${userId}/private/stripe  (決済情報)
     
-    todo
-      /users/{userId}/billings  (課金情報のログをとる)
+    /users/{userId}/billings  (課金情報のログをとる)
+    /stripelog/{logId} ログ
 
 # 更新時に記録するもの。（ログだけでもとっておく）
+     invoice.payment_succeeded などinvoiceだと、planやsubscriptionがとれる。
      Stripe のWeb Hooksによってデータが送られてくる。
      基本的にSubscription deleteされない限りは有効なので、更新処理はしない。
      ログをとる
@@ -156,5 +157,7 @@ StripeのSpecではカード情報は1:nで複数ひもづけ可能だが、egro
 
        強制退会は返金なし。
 
-       /billingsにも、ユーザ全体のログを入れる。
+       /stripelogにも、ユーザ全体のログを入れる。
+       /stripelogは課金だけでなく、product, plan　などのログも入れておく。
+       
      
