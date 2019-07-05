@@ -26,7 +26,7 @@ export const createGroup = async (db:FirebaseFirestore.Firestore, data, context)
   await db.doc(`/groups/${groupId}/members/${userId}`).set({
     created,
     displayName:ownerName,
-    uid: userId,
+    userId: userId,
     groupId: groupId,
   });
 

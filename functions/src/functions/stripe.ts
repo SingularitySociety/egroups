@@ -93,7 +93,7 @@ export const createSubscribe = async (db, data, context) => {
   await db.doc(`/groups/${groupId}/members/${userId}`).set({
     created: new Date(),
     displayName: displayName || "---",
-    uid: userId,
+    userId: userId,
     groupId: groupId,
   });
 

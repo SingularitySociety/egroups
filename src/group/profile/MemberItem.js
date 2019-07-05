@@ -23,11 +23,11 @@ const useStyles = makeStyles(styles);
 function MemberItem(props) {
   const classes = useStyles();
   const { group, item, user } = props;
-  const imagePath = `groups/${group.groupId}/members/${item.uid}/images/profile`; 
-  const isMe = item.uid === user.uid;
+  const imagePath = `groups/${group.groupId}/members/${item.userId}/images/profile`; 
+  const isMe = item.userId === user.uid;
   const thumbnails = item.profile && item.profile.thumbnails;
   return (
-    <MUILink component={Link} to={`/${group.groupName}/pr/${item.uid}`} className={classes.member}>
+    <MUILink component={Link} to={`/${group.groupName}/pr/${item.userId}`} className={classes.member}>
       <Grid container>
           <ImageUploader imagePath={imagePath} loadImage={item.hasImage} imageThumbnails={thumbnails}
               readOnly={true} displayMode={"thumbMiddle"} inline={true} />

@@ -145,14 +145,14 @@ class GroupRouter extends React.Component {
     console.log("setTabbar:", tabId); // NOTE: Keep this code to detect infinit useEffect bug
     this.setState({pageInfo:{tabId, path}});
   }
-  hitProfile = async (uid) => {
+  hitProfile = async (userId) => {
     const { db } = this.props;
     const { group, profiles } = this.state;
-    const her = profiles[uid];
+    const her = profiles[userId];
     if (!her) {
-      const member = (await db.doc(`groups/${group.groupId}/members/${uid}`).get()).data();
+      const member = (await db.doc(`groups/${group.groupId}/members/${userId}`).get()).data();
       const { profiles } = this.state; // Get the latest one
-      profiles[uid] = member;
+      profiles[userId] = member;
       this.setState({profiles});
     }
     // no need to return her (use props.messages instead)

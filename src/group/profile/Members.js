@@ -36,7 +36,7 @@ function Members(props) {
     {
       list.map((item)=>{
         const context = { group, user, item };
-        return <div key={item.uid} className={classes.member}>
+        return <div key={item.userId} className={classes.member}>
           <MemberItem {...context} />
         </div>
       })

@@ -24,7 +24,7 @@ class Join extends React.Component {
         await refMember.set({ 
             created: new Date(), // firebase.firestore.FieldValue.serverTimestamp(),
             displayName: user.displayName,
-            uid: user.uid,
+            userId: user.uid,
             email: user.email || "",
             groupId: group.groupId,
         }, {merge:true});

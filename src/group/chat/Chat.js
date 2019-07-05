@@ -52,10 +52,10 @@ function Chat(props) {
   if (!channel) {
     return "";
   }
-  const uid = (user && user.uid) || null;
+  const userId = (user && user.uid) || null;
   const canRead = privilege >= channel.read;
   const canWrite = privilege >= channel.write;
-  const canEdit = uid === channel.owner || privilege >= Privileges.admin;  
+  const canEdit = userId === channel.owner || privilege >= Privileges.admin;  
   if (!canRead) {
     return <AccessDenied />
   }
