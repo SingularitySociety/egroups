@@ -89,7 +89,7 @@
     "title.welcome":"ようこそ",
 
     "member.displayName":"メンバー名",
-    "member.profile":"自己紹介",
+    "member.description":"自己紹介",
     "member.email":"メールアドレス",
     "member.twitter":"Twitter ID",
     "member.github":"GitHub ID",

@@ -63,8 +63,8 @@ render() {
             value={member.displayName} onSave={this.onSave('displayName')}/>
       </FormGroup>
       <FormGroup row>
-        <EditableField label={<FormattedMessage id="member.profile"/>} multiline={true}
-            value={member.profile} onSave={this.onSave('profile')}/>
+        <EditableField label={<FormattedMessage id="member.description"/>} multiline={true}
+            value={member.description} onSave={this.onSave('description')}/>
       </FormGroup>
       <FormGroup row>
         <EditableField label={<FormattedMessage id="member.email"/>} 

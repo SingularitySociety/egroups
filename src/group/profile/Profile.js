@@ -39,8 +39,8 @@ class Profile extends React.Component {
                 value={member.displayName} onSave={this.onSave('displayName')} disabled={true}/>
           </FormGroup>
           <FormGroup row>
-            <EditableField label={<FormattedMessage id="member.profile"/>} multiline={true}
-                value={member.profile} onSave={this.onSave('profile')} disabled={true}/>
+            <EditableField label={<FormattedMessage id="member.description"/>} multiline={true}
+                value={member.description} onSave={this.onSave('description')} disabled={true}/>
           </FormGroup>
           <FormGroup row>
             <EditableField label={<FormattedMessage id="member.email"/>} 

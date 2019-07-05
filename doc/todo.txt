@@ -15,9 +15,9 @@ Chat: delete a message
 Chat: edit a message
 Chat: auto detect link in a message
 Chat: Rich Text?
-Profile: Debug [Object Object]
 
 ----- Done -----
+Profile: Debug [Object Object]
 Subscribe： <br/>, hide Subscribe button with no card
 Blog: Edit mode
 Editor: H1, H2, h3

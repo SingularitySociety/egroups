@@ -89,7 +89,7 @@
     "title.welcome":"Welcome",
 
     "member.displayName":"Member Name",
-    "member.profile":"Member Profile",
+    "member.description":"Member Profile",
     "member.email":"Email Address",
     "member.twitter":"Twitter ID",
     "member.github":"GitHub ID",
