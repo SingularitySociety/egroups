@@ -18,6 +18,7 @@ Chat: Rich Text?
 Profile: Debug [Object Object]
 
 ----- Done -----
+Subscribe： <br/>, hide Subscribe button with no card
 Blog: Edit mode
 Editor: H1, H2, h3
 Theme: Match H1, H2, H3

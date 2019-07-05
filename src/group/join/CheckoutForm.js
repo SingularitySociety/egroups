@@ -65,34 +65,38 @@ function CheckoutForm(props) {
     console.log(result);
   }
 
+  if (planLength === 0) {
+    return <Typography color="error"><FormattedMessage id="plan.empty" /></Typography>
+  }
   return <React.Fragment>
-    <CardRegistration customer={customer} didUpdate={customerDidUpdate} />
-    { planLength > 0 ?
-      <form>
-        <FormControl className={classes.formControl}>
-          <InputLabel><FormattedMessage id="plan.name" /></InputLabel>
-          <Select native value={planIndex}　onChange={onChangePlan}>
-            <PlanOptions plans={group.plans} />
-          </Select>
-        </FormControl>
-        <br/>
-        <FormControl className={classes.formControl}>
-          <FormattedMessage id={"monthly.fee."+group.plans[planIndex].currency}
-            values = {{
-              price: group.plans[planIndex].price,
-            }} />
-        </FormControl>
-        <Button variant="contained" color="primary" onClick={subscribe}>
-          <FormattedMessage id="do.subscribe" />
-        </Button>
-        {
-          processing && 
-          <CircularProgress size={24} />
-        }
-      </form>
-    :
-      <Typography color="error"><FormattedMessage id="plan.empty" /></Typography>
-    }
+      <CardRegistration customer={customer} didUpdate={customerDidUpdate} />
+      { customer &&
+        <form>
+          <FormControl className={classes.formControl}>
+            <InputLabel><FormattedMessage id="plan.name" /></InputLabel>
+            <Select native value={planIndex}　onChange={onChangePlan}>
+              <PlanOptions plans={group.plans} />
+            </Select>
+          </FormControl>
+          <br/>
+          <FormControl className={classes.formControl}>
+            <FormattedMessage id={"monthly.fee."+group.plans[planIndex].currency}
+              values = {{
+                price: group.plans[planIndex].price,
+              }} />
+          </FormControl>
+          <br/>
+          <FormControl>
+            <Button variant="contained" color="primary" onClick={subscribe}>
+              <FormattedMessage id="do.subscribe" />
+            </Button>
+            {
+              processing && 
+              <CircularProgress size={24} />
+            }
+          </FormControl>
+        </form>
+      }
   </React.Fragment>;
 }
 

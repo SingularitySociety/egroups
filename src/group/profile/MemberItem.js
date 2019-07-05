@@ -26,8 +26,9 @@ function MemberItem(props) {
   const imagePath = `groups/${group.groupId}/members/${item.userId}/images/profile`; 
   const isMe = item.userId === user.uid;
   const thumbnails = item.profile && item.profile.thumbnails;
+  const url = isMe ? `/${group.groupName}/account` : `/${group.groupName}/pr/${item.userId}`;
   return (
-    <MUILink component={Link} to={`/${group.groupName}/pr/${item.userId}`} className={classes.member}>
+    <MUILink component={Link} to={url} className={classes.member}>
       <Grid container>
           <ImageUploader imagePath={imagePath} loadImage={item.hasImage} imageThumbnails={thumbnails}
               readOnly={true} displayMode={"thumbMiddle"} inline={true} />
