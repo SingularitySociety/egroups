@@ -57,9 +57,9 @@ export const stripe_parser = async (req, res) => {
     }
     
     if (event.type === "customer.subscription.deleted") {
-      customer_subscription_deleted(event)
+      await customer_subscription_deleted(event)
     } else if (event.type === "charge.succeeded") {
-      charge_succeeded(event);
+      await charge_succeeded(event);
     } else if (event.type === "invoice.payment_succeeded") {
       await invoice_payment_succeeded(event);
     }
