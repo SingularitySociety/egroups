@@ -230,7 +230,7 @@ describe('Group function test', () => {
     const member = (await admin_db.doc(`/groups/${groupId}/members/${aliceUID}`).get()).data();
     member.displayName.should.equal('---');
     member.groupId.should.equal('sub_test');
-    member.uid.should.equal(aliceUID);
+    member.userId.should.equal(aliceUID);
       
     const memberStripe = (await admin_db.doc(`/groups/${groupId}/members/${aliceUID}/private/stripe`).get()).data();
     memberStripe.subscription.billing.should.equal('charge_automatically');
