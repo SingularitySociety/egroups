@@ -47,6 +47,13 @@ function BlogArticle(props) {
     return detatcher;
   }, [group.groupId, arp.collection, article.articleId, db]);
 
+  async function spliceSections(index, size, sectionId) {
+    const newArticle = Object.assign({}, article);
+    console.log(article, newArticle);
+    newArticle.sections.splice(index, size, sectionId);
+    setArticle(newArticle);
+    await refArticle.set(newArticle, {merge:true});
+  }
   const insertSection = async (resourceId, index, markdown, raw) => {
     const doc = await refArticle.collection("sections").add({
       type: "markdown",
@@ -55,9 +62,7 @@ function BlogArticle(props) {
       created: new Date(),
       author: user.uid,
     });
-    article.sections.splice(index, 0, doc.id);
-    setArticle(article);
-    await refArticle.set(article, {merge:true});
+    spliceSections(index, 0, doc.id);
   }
   const updateSection = async (resourceId, index, markdown, raw) => {
     await refArticle.collection("sections").doc(resourceId).set({
