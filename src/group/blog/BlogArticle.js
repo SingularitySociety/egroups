@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, Grid, IconButton } from '@material-ui/core';
@@ -26,27 +26,28 @@ const styles = theme => ({
   },
 });
 
-class BlogArticle extends React.Component {
-  state = {article:null, sections:[], resouces:null, readOnly:true};
-  async componentDidMount() {
-    const { article, refArticle } = this.props;
-    //console.log("BlogArticle, articleId", article.articleId);
-    this.setState({article}); // REVIEW: Why do we need to have it as a sate?
-    this.detatcher = refArticle.collection("sections").onSnapshot((snapshot)=>{
-      const resources = {};
+function BlogArticle(props) {
+  const { group, arp, user, refArticle, privilege, classes, db } = props;
+  //state = {article:null, sections:[], resouces:null, readOnly:true};
+  const [ article, setArticle ] = useState(props.article);
+  const [ resources, setResources ] = useState(null);
+  const [ readOnly, setReadOnly ] = useState(true);
+  useEffect(() => {
+    console.log("BlogArticle, articleId", article.articleId);
+    // Note: We can use props.refArticle. Otherwise, useEffect will called for each render.
+    const refArticle = db.doc(`groups/${group.groupId}/${arp.collection}/${article.articleId}`);
+    const detatcher = refArticle.collection("sections").onSnapshot((snapshot)=>{
+      const newResources = {};
       snapshot.forEach((doc)=>{
-        resources[doc.id] = doc.data();
+        newResources[doc.id] = doc.data();
       });
       //console.log("BlogArticle.cdm", article.sections && article.sections.length, Object.keys(resources).length)
-      this.setState({resources});
+      setResources(newResources);
     });
-  }
-  componentWillUnmount() {
-    this.detatcher();
-  }
-  insertSection = async (resourceId, index, markdown, raw) => {
-    const { user, refArticle } = this.props;
-    const { article } = this.state;
+    return detatcher;
+  }, [group.groupId, arp.collection, article.articleId, db]);
+
+  const insertSection = async (resourceId, index, markdown, raw) => {
     const doc = await refArticle.collection("sections").add({
       type: "markdown",
       markdown,
@@ -55,104 +56,95 @@ class BlogArticle extends React.Component {
       author: user.uid,
     });
     article.sections.splice(index, 0, doc.id);
-    this.setState(article);
+    setArticle(article);
     await refArticle.set(article, {merge:true});
   }
-  updateSection = async (resourceId, index, markdown, raw) => {
-    const { refArticle } = this.props;
+  const updateSection = async (resourceId, index, markdown, raw) => {
     await refArticle.collection("sections").doc(resourceId).set({
       markdown, 
       raw
     }, {merge:true})
   }
-  deleteSection = async (resourceId, index) => {
+  const deleteSection = async (resourceId, index) => {
     console.log("deleteSection", resourceId);
-    const { refArticle } = this.props;
-    const { article } = this.state;
     article.sections.splice(index, 1);
-    this.setState(article);
+    setArticle(article);
     await refArticle.set(article, {merge:true});
     await refArticle.collection("sections").doc(resourceId).delete();
   }
-  insertPhoto = async (index) => {
+  const insertPhoto = async (index) => {
     console.log("insertPhoto", index);
-    const { user, refArticle } = this.props;
-    const { article } = this.state;
     const doc = await refArticle.collection("sections").add({
       type: "image",
       created: new Date(),
       author: user.uid,
     });
     article.sections.splice(index, 0, doc.id);
-    this.setState(article);
+    setArticle(article);
     await refArticle.set(article, {merge:true});
   }
-  onImageUpload = async (resourceId, imageUrl) => {
+  const onImageUpload = async (resourceId, imageUrl) => {
     //console.log("onImageUpload", resourceId, imageUrl);
-    const { refArticle } = this.props;
     await refArticle.collection("sections").doc(resourceId).set({
       hasImage: true, imageUrl
     }, {merge:true})
   }
-  toggleReadOnly = () => {
-    this.setState({readOnly:!this.state.readOnly});
+  const toggleReadOnly = () => {
+    setReadOnly(!readOnly);
   }
 
-  render() {
-    const { article, resources, readOnly } = this.state;
-    const { user, classes, refArticle, arp, group, privilege } = this.props;
-    const context = { refArticle };
-    if (!article) {
-      return "";
-    }
-    const canEdit = (user && article.owner === user.uid);
-    const canRead = privilege >= article.read;
-    if (!canRead) {
-      return <AccessDenied />
-    }
-    if (!resources) {
-      return "";
-    }
+  const context = { refArticle };
+  if (!article) {
+    return "";
+  }
+  const canEdit = (user && article.owner === user.uid);
+  const canRead = privilege >= article.read;
+  if (!canRead) {
+    return <AccessDenied />
+  }
+  if (!resources) {
+    return "";
+  }
 
-    const frameClass = canEdit ? classes.editorFrame : classes.readerFrame;
-    const editMode = canEdit && !readOnly;
+  const frameClass = canEdit ? classes.editorFrame : classes.readerFrame;
+  const editMode = canEdit && !readOnly;
 
-    return (
-      <div className={frameClass}>
-        <Grid container>
-          <Grid item xs={canEdit ? 10 : 12}>
-             <Typography component="h1" variant="h1" gutterBottom className={classes.title}>
-              {article.title}
-            </Typography>
-          </Grid>
-          {
-            canEdit && 
-            <Grid item xs={2}>
-              <IconButton size="small" onClick={this.toggleReadOnly}>
-                <EditIcon />
-              </IconButton>
-              <IconButton size="small" component={Link} to={`/${group.groupName}/${arp.leaf}/${article.articleId}/settings`}>
-                <SettingsIcon />
-              </IconButton>
-            </Grid>
-          }
+  return (
+    <div className={frameClass}>
+      <Grid container>
+        <Grid item xs={canEdit ? 10 : 12}>
+            <Typography component="h1" variant="h1" gutterBottom className={classes.title}>
+            {article.title}
+          </Typography>
         </Grid>
-      { editMode && <BlogSection index={ 0 } resource={{}} saveSection={this.insertSection} insertPhoto={this.insertPhoto} {...context} /> }
         {
-          article.sections.map((sectionId, index)=>{
-            return <div key={sectionId}>
-              <BlogSection index={ index }sectionId={sectionId} resource={ resources[sectionId] } 
-                  saveSection={this.updateSection} deleteSection={this.deleteSection} 
-                  insertPhoto={this.insertPhoto} onImageUpload={this.onImageUpload} 
-                  readOnly={!editMode} {...context} />
-              { editMode && <BlogSection index={ index+1 } resource={{}}
-                  insertPhoto={this.insertPhoto} saveSection={this.insertSection} {...context} /> }
-            </div>
-          })
+          canEdit && 
+          <Grid item xs={2}>
+            <IconButton size="small" onClick={toggleReadOnly}>
+              <EditIcon />
+            </IconButton>
+            <IconButton size="small" component={Link} to={`/${group.groupName}/${arp.leaf}/${article.articleId}/settings`}>
+              <SettingsIcon />
+            </IconButton>
+          </Grid>
         }
-      </div>
-    )
-  }
+      </Grid>
+      { editMode && 
+        <BlogSection index={ 0 } resource={{}} saveSection={insertSection} insertPhoto={insertPhoto} {...context} /> }
+      {
+        article.sections.map((sectionId, index)=>{
+          return <div key={sectionId}>
+            <BlogSection index={ index } sectionId={sectionId} resource={ resources[sectionId] } 
+                saveSection={updateSection} deleteSection={deleteSection} 
+                insertPhoto={insertPhoto} onImageUpload={onImageUpload} 
+                readOnly={!editMode} {...context} />
+            { editMode && <BlogSection index={ index+1 } resource={{}}
+                insertPhoto={insertPhoto} saveSection={insertSection} {...context} /> }
+          </div>
+        })
+      }
+    </div>
+  )
 }
 
 BlogArticle.propTypes = {

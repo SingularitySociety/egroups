@@ -15,6 +15,9 @@ Chat: delete a message
 Chat: edit a message
 Chat: auto detect link in a message
 Chat: Rich Text?
+Subscribe: User Name (instead of Johnes)
+Subscribe: Hide ZIP
+public Blog, and public News
 
 ----- Done -----
 Profile: Debug [Object Object]
