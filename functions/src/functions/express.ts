@@ -27,8 +27,7 @@ export const hello_response = async (req, res) =>{
 export const customer_subscription_deleted = async (event) => {
   const {data:{object}} = event;
   const {userId, groupId } = object.metadata;
-  console.log(userId, groupId);
-
+  // console.log(userId, groupId);
  
   if (object && object.items && object.items.data) {
     object.items.data.forEach((item) => {

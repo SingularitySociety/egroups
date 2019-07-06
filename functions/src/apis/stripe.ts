@@ -132,7 +132,6 @@ export const createSubscription = async (userId, groupId, plan) => {
         groupId,
       },
     }, {idempotency_key: idempotency_key})
-    console.log(JSON.stringify(subscription, undefined, 1));
     return subscription;
   } catch (e) {
     console.log(e);
