@@ -16,6 +16,9 @@ describe('Group function test', () => {
 
     const groupId = "123"
 
+    const uuid = UUID();
+    const aliceUserId = "test_customer_" + uuid;
+
     const wrapped = test.wrap(index.groupDidUpdate);
     
     const beforeGroupDataSnap = test.firestore.makeDocumentSnapshot({
@@ -39,17 +42,18 @@ describe('Group function test', () => {
     }, `groups/${groupId}`);
     const change = test.makeChange(beforeGroupDataSnap, afterGroupDataSnap);
 
-    await wrapped(change, {
+    const context = {
       params: {
         groupId: groupId,
+      },
+      auth: {
+        uid: aliceUserId,
       }
-    });
+    };
+    await wrapped(change, context);
 
-    await wrapped(change, {
-      params: {
-        groupId: groupId,
-      }
-    });
+    await wrapped(change, context);
+
     const data = (await admin_db.doc(`/groups/${groupId}/secret/stripe`).get()).data()
     
     const planData = data.plans;

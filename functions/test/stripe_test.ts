@@ -15,6 +15,8 @@ describe('Stripe test', () => {
     stripeUtils.getProductId(groupId).should.equal("prod_unit_test_plan");
     stripeUtils.getPlanId(groupId, 5000, "jpy").should.equal("plan_unit_test_plan_5000_jpy");
     stripeUtils.getPlanId(groupId, 30, "usd").should.equal("plan_unit_test_plan_30_usd");
+
+    stripeUtils.getUSerIdFromCustomerId("cus_abc").should.equal("abc");
   });
 
   it('hello', async () => {

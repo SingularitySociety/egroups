@@ -1,3 +1,5 @@
+import * as merge from 'deepmerge';
+
 // ids
 export const getProductId = (groupId) => {
   return "prod_" + groupId;
@@ -7,10 +9,17 @@ export const getPlanId = (groupId, amount, currency) => {
   return ["plan", groupId, String(amount), currency].join("_");
 }
 
-export const getCustomerId = (customerId) => {
-  return "cus_" + customerId;
+export const getCustomerId = (userId) => {
+  return "cus_" + userId;
 }
-
+export const getUSerIdFromCustomerId = (customerId) => {
+  if (customerId.startsWith("cus_")) {
+    return customerId.slice(4);
+  } else {
+    return customerId;
+  }
+}
+ 
 export const convCustomerData = (stripeCustomerData) => {
   const {sources:{data}} = stripeCustomerData;
   return (data || []).map((source) => {
@@ -67,16 +76,32 @@ export const stripeActions = {
   subscriptionUpdated: 302,
   subscriptionCanceled: 303,
   subscriptionCanceledCancel: 304,
-
+  subscriptionInvoiceByApi: 305,
+  
   subscriptionResign: 310,
   subscriptionResignForce: 311,
+  subscriptionDeletedByApi: 312,
+
 }
 
+const storeLog = async (db, userId, payload) => {
+  payload.created = new Date();
+  await db.collection(`/stripelog`).add(payload);
+  await db.collection(`/users/${userId}/billings`).add(payload);
+}
+
+export const stripeLog = async (db, userId, data, action) => {
+  const payload = { data: merge(data, {userId}), action }
+  await storeLog(db, userId, payload);
+}
 export const billingLog = async (db, userId, groupId, subscription, action) => {
-  await db.collection(`/stripelog`).add({ userId, groupId, subscription, action, created: new Date() });
-  await db.collection(`/users/${userId}/billings`).add({subscription, action, created: new Date()});
+  const payload = { data: {userId, groupId, subscription} };
+  await storeLog(db, userId, payload);
 }
 
-export const callbackLog = async (db, log) => {
-  await db.collection(`/stripelog`).add({ log });
+export const callbackLog = async (db, userId, groupId, action, log) => {
+  const payload = { data: {log, userId, groupId}, action };
+  await storeLog(db, userId, payload);
+  // console.log(JSON.stringify(log, undefined, 1));
 }
+

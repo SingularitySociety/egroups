@@ -110,9 +110,17 @@ StripeのSpecではカード情報は1:nで複数ひもづけ可能だが、egro
      Stripe のWeb Hooksによってデータが送られてくる。
      基本的にSubscription deleteされない限りは有効なので、更新処理はしない。
      ログをとる
-     
-     todo
-      表示用にでも、有効期限をとっておくと良いかも。
+
+      表示用にでも、有効期限を更新
+      /groups/${groupId}/members/${userId}/private/stripe
+       { period: {start: 0, end: 1}} のように有効期限を入れている。有効期限のendを更新する
+      /users/${userId}/private/stripe/invoice/{invoiceId}
+         {
+            groupId,
+            invoiceUrl: object.invoice_pdf,
+            created: object.created,
+         }
+         invoiceIdはtimestamp_idなので、ソートすると新しいものからとれる。
       /users/{userId}/billings  (課金情報のログをとる)
       
 # 退会時に記録、削除するもの。
@@ -130,6 +138,10 @@ StripeのSpecではカード情報は1:nで複数ひもづけ可能だが、egro
     退会の取消し
       subscription.updateで、cancel_at_period_end をfalseにする
       (a)をfalseにして、有効期限の最終日を削除
+
+    /groups/${groupId}/members/${userId} を削除すると、subcollectionと privilegeも消える。
+    基本的に復活できないので要注意。
+
 
     todo
       /users/{userId}/billings  (課金情報のログをとる)
