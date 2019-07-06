@@ -30,6 +30,8 @@ export const createCustomer = async (db, data, context) => {
   (await db.doc(`users/${userId}/private/stripe`).set({
     customer: stripeUtils.convCustomerData(customer),
   }, {merge:true}));
+
+  await stripeUtils.stripeLog(db, userId, {customer}, stripeUtils.stripeActions.customerCreated);
   
   return {
     customer: customer,
@@ -115,6 +117,7 @@ export const createSubscribe = async (db, data, context) => {
 // create production and plan
 export const groupDidUpdate = async (db, change, context) => {
   const { groupId } = context.params;
+  const userId = context.auth.uid;
   const after = change.after.exists ? change.after.data() ||{} : {};
   if (after.subscription) {
     const stripeRef = db.doc(`/groups/${groupId}/secret/stripe`);
@@ -122,7 +125,7 @@ export const groupDidUpdate = async (db, change, context) => {
     if (!stripeData || !stripeData.production) {
       const production = await stripe.createProduct(after.groupName, after.groupName, groupId);
       await stripeRef.set({production: production}, {merge:true});
-      // todo create Product log
+      await stripeUtils.stripeLog(db, userId, {production}, stripeUtils.stripeActions.productCreated);
     }
     
     if (after.plans) {
@@ -136,7 +139,7 @@ export const groupDidUpdate = async (db, change, context) => {
         if (stripeData && (!stripeData.plans || !stripeData.plans[key])) {
           const stripePlan = await stripe.createPlan(groupId, price, currency);
           newPlans[key] = stripePlan;
-          // todo create Plan log
+          await stripeUtils.stripeLog(db, userId, {plan}, stripeUtils.stripeActions.planCreated);
         }
       });
       if (Object.keys(newPlans).length > 0) {

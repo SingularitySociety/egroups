@@ -125,6 +125,8 @@ export const createSubscription = async (userId, groupId, plan) => {
     const subscription = await getStripe().subscriptions.create({
       customer: customerId,
       items: [{ plan: plan }],
+      // todo tax_rate
+      default_tax_rates: ["txr_1EpqXRJRcJsJLSj692uXxIcK"],
       metadata: {
         userId,
         groupId,

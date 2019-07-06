@@ -25,18 +25,38 @@ describe('Hello function', () => {
   });
 
   it('should valid api callback', async () => {
-    express.customer_subscription_deleted(stripeWebHookData.stripeData.customer_subscription_deleted);
+    await express.customer_subscription_deleted(stripeWebHookData.stripeData.customer_subscription_deleted);
   });
 
   it('should valid api callback', async () => {
-    express.charge_succeeded(stripeWebHookData.stripeData.charge_succeeded);
+    await express.charge_succeeded(stripeWebHookData.stripeData.charge_succeeded);
   });
 
-  it('should valid api callback', async () => {
-    express.invoice_payment_succeeded(stripeWebHookData.stripeData.invoice_payment_succeeded);
-    const res = await admin_db.collection("/stripelog").limit(1).get();
+  it('should valid api callback', async () => { 
+    const userId = "test_customer_ac003e4f-f263-457a-8d4b-27586af24f3f";
+    const groupId = "unit_test_plan";
+    await admin_db.doc(`/groups/${groupId}/members/${userId}/private/stripe`).set({
+      subscription: {},
+      period: {
+        start: 0,
+        end: 1,
+      }
+    });
+    
+    await express.invoice_payment_succeeded(stripeWebHookData.stripeData.invoice_payment_succeeded);
+
+    // confirm data
+    const invoice = (await admin_db.doc(`/users/${userId}/private/stripe/invoice/1562364003_evt_1EszRoJRcJsJLSj6FNDluYcd`).get()).data();
+    invoice.created.should.equal(1562364002)
+    invoice.groupId.should.equal('unit_test_plan')
+    invoice.invoiceUrl.should.equal('https://pay.stripe.com/invoice/invst_bdxqbrKhnuEjJu7oIi0UouxE3x/pdf')
+    
+    const period = (await admin_db.doc(`/groups/${groupId}/members/${userId}/private/stripe`).get()).data();
+    period.period.end.should.equal(1562364002);
+    
+    const res = await admin_db.collection("/stripelog").orderBy("created", "desc").limit(2).get();
     res.forEach(async doc => {
-      console.log(await doc.data().log.data.object);
+      console.log(await doc.data());
     });
   });
 

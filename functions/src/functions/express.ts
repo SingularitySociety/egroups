@@ -26,21 +26,55 @@ export const hello_response = async (req, res) =>{
 
 export const customer_subscription_deleted = async (event) => {
   const {data:{object}} = event;
+  const {userId, groupId } = object.metadata;
+  console.log(userId, groupId);
+
+ 
   if (object && object.items && object.items.data) {
     object.items.data.forEach((item) => {
       console.log(item.subscription);
     });
   }
-  await stripeUtils.callbackLog(db, event);
+
+  // then all subcollection and privilege will remove by trigger
+  await db.doc(`/groups/${groupId}/members/${userId}`).delete();
+  
+  // log
+  await stripeUtils.callbackLog(db, userId, groupId, stripeUtils.stripeActions.subscriptionDeletedByApi, event);
 }
+
+// nothing infomation
 export const charge_succeeded = async (event) => {
-  // const {data:{object}} = event;
-  await stripeUtils.callbackLog(db, event);
+  const {data:{object}} = event;
+  const userId = stripeUtils.getUSerIdFromCustomerId(object.customer);
+  
+  // just record
+  await stripeUtils.callbackLog(db, userId, null, stripeUtils.stripeActions.subscriptionUpdated, event);
 }
 
 export const invoice_payment_succeeded = async (event) => {
-  // const {data:{object}} = event;
-  await stripeUtils.callbackLog(db, event);
+  const {data:{object}} = event;
+  const {userId, groupId } = object.lines.data[0].metadata;
+  // console.log(userId, groupId, object);
+
+  // store invoice in  user
+  const id = [String(event.created), event.id].join("_")
+  
+  await db.doc(`/users/${userId}/private/stripe/invoice/${id}`).set({
+    groupId,
+    invoiceUrl: object.invoice_pdf,
+    created: object.created,
+  });
+  
+  // update period in group
+  await db.doc(`/groups/${groupId}/members/${userId}/private/stripe`).set({
+    period: {
+      end: object.period_end,
+    }
+  }, {merge:true});
+  
+  
+  await stripeUtils.callbackLog(db, userId, groupId, stripeUtils.stripeActions.subscriptionInvoiceByApi, event);
 }
 
 export const stripe_parser = async (req, res) => {
