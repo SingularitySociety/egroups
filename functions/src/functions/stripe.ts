@@ -101,8 +101,11 @@ export const createSubscribe = async (db, data, context) => {
 
   await db.doc(`/groups/${groupId}/members/${userId}/private/stripe`).set({
     subscription: stripeUtils.convSubscriptionData(subscription),
+    period: {
+      start: subscription.current_period_end,
+      end: subscription.current_period_start,
+    }
   });
-
   await db.doc(`users/${userId}/private/stripe`).set({
     subscription: {
       [groupId]: stripeUtils.convSubscriptionData(subscription),
