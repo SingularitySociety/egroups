@@ -50,7 +50,12 @@ function BlogArticle(props) {
   async function spliceSections(index, size, sectionId) {
     const newArticle = Object.assign({}, article);
     console.log(article, newArticle);
-    newArticle.sections.splice(index, size, sectionId);
+    if (sectionId) {
+      newArticle.sections.splice(index, size, sectionId);
+    } else {
+      newArticle.sections.splice(index, size);
+    }
+    console.log(newArticle.sections.length);
     setArticle(newArticle);
     await refArticle.set(newArticle, {merge:true});
   }
@@ -72,9 +77,7 @@ function BlogArticle(props) {
   }
   const deleteSection = async (resourceId, index) => {
     console.log("deleteSection", resourceId);
-    article.sections.splice(index, 1);
-    setArticle(article);
-    await refArticle.set(article, {merge:true});
+    await spliceSections(index, 1);
     await refArticle.collection("sections").doc(resourceId).delete();
   }
   const insertPhoto = async (index) => {
@@ -84,9 +87,7 @@ function BlogArticle(props) {
       created: new Date(),
       author: user.uid,
     });
-    article.sections.splice(index, 0, doc.id);
-    setArticle(article);
-    await refArticle.set(article, {merge:true});
+    spliceSections(index, 0, doc.id);
   }
   const onImageUpload = async (resourceId, imageUrl) => {
     //console.log("onImageUpload", resourceId, imageUrl);
