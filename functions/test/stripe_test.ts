@@ -170,4 +170,28 @@ describe('Stripe test', () => {
     
   });
 
+
+  it('cancel subscription', async function() {
+    this.timeout(10000);
+    const uuid = UUID();
+    const userId =  "test_customer_" + uuid;
+
+    const visa_source = await functions_test_helper.createVisaCard();
+    const visa_token = visa_source.id;
+
+    await stripe.createCustomer(visa_token, userId);
+
+    await stripe.createProduct("unit_test_cancel", "hello", groupId);
+    const plan = await stripe.createPlan(groupId, 5000, "jpy");
+
+    const subscription = await stripe.createSubscription(userId, groupId, plan.id);
+    subscription.object.should.equal('subscription');
+
+    const cancelResponse = await stripe.cancelSubscription(subscription.id); 
+    cancelResponse.cancel_at_period_end.should.equal(true)
+
+    const cencelCancelResponse = await stripe.cancelSubscription(subscription.id, false); 
+    cencelCancelResponse.cancel_at_period_end.should.equal(false)
+    
+  });  
 })

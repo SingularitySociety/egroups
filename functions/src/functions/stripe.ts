@@ -159,21 +159,27 @@ export const groupDidUpdate = async (db, change, context) => {
   }
 }
 
-export const cancelSubscribe = async (db, data, context) => {
+export const cancelSubscription = async (db, data, context) => {
   // plan = {price, currency}
-  /*
+
   if (!context.auth || !context.auth.uid) {
     return {result: false};
   }
-  if (!data || !data.groupId || !data.plan || !data.plan.price || !data.plan.currency) {
+  if (!data || !data.groupId || !data.subscriptionId) {
     return {result: false};
   }
-  
   const userId = context.auth.uid;
-  const {groupId, plan, displayName} = data;
-  const {price, currency} = plan;
-  const plan_key = [String(price), currency].join("_")
-  */
+  const {groupId} = data;
+
+  const secret = (await db.doc(`/groups/${groupId}/members/${userId}/secret/stripe`).get()).data();
   
+  if (!secret) {
+    return {result: false};
+  }
+  const subscriptionId = data.subscriptionId;
+  const cancel = data.cancel === undefined ? true : data.cancel;
+  
+  await stripeApi.cancelSubscription(subscriptionId, cancel);
+  return {result: true};
   
 }

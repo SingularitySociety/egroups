@@ -6,7 +6,7 @@ let stripe;
 
 export const getStripe = () => {
   if (!stripe) {
-    const secret = functions.config() && functions.config().stripe &&  functions.config().stripe.secret_key;
+    const secret = functions.config() && functions.config().stripe &&  functions.config().stripe.secret_key || process.env.STRIPE_SECRET;
     stripe = new Stripe(secret)
   }
   return stripe;
@@ -139,11 +139,21 @@ export const createSubscription = async (userId, groupId, plan) => {
   }
 }
 
-export const cancelSubscription = async (id, cancel=true) => {
+export const cancelSubscription = async (subscriptionId, cancel=true) => {
   try {
-    const subscription = await getStripe().subscriptions.update(id, {
+    const subscription = await getStripe().subscriptions.update(subscriptionId, {
       cancel_at_period_end: cancel,
     })
+    return  subscription;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+     
+export const retrieveSubscription = async (subscriptionId) => {
+  try {
+    const subscription = await getStripe().subscriptions.retrieve(subscriptionId)
     return  subscription;
   } catch (e) {
     console.log(e);
