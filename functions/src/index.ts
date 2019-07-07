@@ -2,6 +2,7 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
 import * as messaging from './utils/messaging';
+import * as utils from './utils/utils';
 
 import * as stripeFunctions from './functions/stripe';
 import * as imageFunctions from './functions/image';
@@ -62,18 +63,6 @@ export const createGroupName = functions.https.onCall(async (data, context) => {
   return await groupFunctions.createGroupName(db, data, context);
 });
 
-const deleteSubcollection = async (snapshot:FirebaseFirestore.DocumentSnapshot, name:string) => {
-  const limit = 10;
-  let count:number;
-  do {
-    const sections = await snapshot.ref.collection(name).limit(limit).get();
-    count = sections.size;
-    sections.forEach(async doc=>{
-      await doc.ref.delete();
-    });
-  } while(count === limit);
-}  
-
 export const groupDidDelete = functions.firestore.document('groups/{groupId}')
   .onDelete(async (snapshot, context)=>{
     const { groupId } = context.params;
@@ -83,14 +72,14 @@ export const groupDidDelete = functions.firestore.document('groups/{groupId}')
     }
 
     // We need to delete all sub collections (except privileges)
-    await deleteSubcollection(snapshot, "channels");
-    await deleteSubcollection(snapshot, "pages");
-    await deleteSubcollection(snapshot, "articles");
-    await deleteSubcollection(snapshot, "events");
-    await deleteSubcollection(snapshot, "members");
-    await deleteSubcollection(snapshot, "owners");
-    await deleteSubcollection(snapshot, "private");
-    await deleteSubcollection(snapshot, "secret");
+    await utils.deleteSubcollection(snapshot, "channels");
+    await utils.deleteSubcollection(snapshot, "pages");
+    await utils.deleteSubcollection(snapshot, "articles");
+    await utils.deleteSubcollection(snapshot, "events");
+    await utils.deleteSubcollection(snapshot, "members");
+    await utils.deleteSubcollection(snapshot, "owners");
+    await utils.deleteSubcollection(snapshot, "private");
+    await utils.deleteSubcollection(snapshot, "secret");
 
     // We need to remove all the images associated with this user
     const bucket = admin.storage().bucket();
@@ -106,53 +95,25 @@ export const memberDidCreate = functions.firestore.document('groups/{groupId}/me
 
 export const articleDidDelete = functions.firestore.document('groups/{groupId}/articles/{articleId}')
   .onDelete((snapshot, context)=>{
-    return deleteSubcollection(snapshot, "sections");
+    return utils.deleteSubcollection(snapshot, "sections");
   });
 
 export const pageDidDelete = functions.firestore.document('groups/{groupId}/pages/{articleId}')
   .onDelete((snapshot, context)=>{
-    return deleteSubcollection(snapshot, "sections");
+    return utils.deleteSubcollection(snapshot, "sections");
   });
 
 export const channelDidDelete = functions.firestore.document('groups/{groupId}/channels/{channelId}')
   .onDelete((snapshot, context)=>{
-    return deleteSubcollection(snapshot, "messages");
+    return utils.deleteSubcollection(snapshot, "messages");
   });
 
 export const sectionDidDelete = functions.firestore.document('groups/{groupId}/{articles}/{articleId}/sections/{sectionId}').onDelete(async (snapshot, context) => {
   await imageFunctions.deleteImage(snapshot, context);
 });
 
-export const memberDidDelete = functions.firestore.document('groups/{groupId}/members/{userId}')
-  .onDelete(async (snapshot, context)=>{
-    const { groupId, userId } = context.params;
-    await db.doc("/groups/" + groupId + "/privileges/" + userId).delete();
-
-    await deleteSubcollection(snapshot, "private");
-
-    // This is for custom token to control the access to Firestore Storage.
-    const ref = db.doc(`/privileges/${userId}`);
-
-    await messaging.subscribe_new_group(userId, groupId, db, messaging.unsubscribe_topic);
-
-    // We need to use transaction because there is no way to remove a section of a document atomically.
-    await admin.firestore().runTransaction(async (tr) => {
-      const doc = await tr.get(ref);
-      const data = doc.data();
-      if (data) {
-        delete data[groupId];
-        return tr.set(ref, data); // no merge
-      }
-      return true;
-    });
-    // todo delete stripe subscription 
-    
-    // We need to remove all the images associated with this user
-    const bucket = admin.storage().bucket();
-    const path = `groups/${groupId}/members/${userId}/`;
-    bucket.deleteFiles({prefix:path}, (errors)=>{
-      console.log("deleteFiles: ", path, errors);
-    });
+export const memberDidDelete = functions.firestore.document('groups/{groupId}/members/{userId}').onDelete(async (snapshot, context) => {
+  await groupFunctions.memberDidDelete(db, admin, snapshot, context);
   });
 
 export const messageDidCreate = functions.firestore.document('groups/{groupId}/channels/{channelId}/messages/{messageId}')

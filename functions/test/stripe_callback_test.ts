@@ -25,8 +25,17 @@ describe('Hello function', () => {
   });
 
   it('should valid api callback', async () => {
-    await express.customer_subscription_deleted(stripeWebHookData.stripeData.customer_subscription_deleted);
-  });
+    const userId = "test_customer_4cbbdacb-8601-4562-9340-bd323d2018c7";
+    const groupId = "sub_test";
+    await admin_db.doc(`/users/${userId}/private/stripe`).set({
+      subscription: {[groupId]: "hello"},
+    });
+    const data = (await admin_db.doc(`/users/${userId}/private/stripe`).get()).data();
+    data.subscription[groupId].should.equal("hello");
+    await express.customer_subscription_deleted(stripeWebHookData.stripeData.customer_subscription_deleted); 
+    const data2 = (await admin_db.doc(`/users/${userId}/private/stripe`).get()).data();
+    should().not.exist(data2.subscription[groupId])
+ });
 
   it('should valid api callback', async () => {
     await express.charge_succeeded(stripeWebHookData.stripeData.charge_succeeded);

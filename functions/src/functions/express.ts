@@ -29,14 +29,18 @@ export const customer_subscription_deleted = async (event) => {
   const {userId, groupId } = object.metadata;
   // console.log(userId, groupId);
  
-  if (object && object.items && object.items.data) {
-    object.items.data.forEach((item) => {
-      console.log(item.subscription);
-    });
-  }
-
   // then all subcollection and privilege will remove by trigger
   await db.doc(`/groups/${groupId}/members/${userId}`).delete();
+
+  // delete subscription data from /users/${userId}/private/stripe
+  const privateRef = await db.doc(`/users/${userId}/private/stripe`).get();
+  if (privateRef) {
+    const privateData = privateRef.data();
+    if (privateData && privateData.subscription) {
+      delete privateData.subscription[groupId];
+      await db.doc(`/users/${userId}/private/stripe`).set(privateData);
+    }
+  }
   
   // log
   await stripeUtils.callbackLog(db, userId, groupId, stripeUtils.stripeActions.subscriptionDeletedByApi, event);
