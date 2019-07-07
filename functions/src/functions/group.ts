@@ -1,5 +1,6 @@
 import Privileges from '../../react-lib/src/const/Privileges.js';
 import * as messaging from '../utils/messaging';
+import * as utils from '../utils/utils';
 
 export const createGroup = async (db:FirebaseFirestore.Firestore, data, context) => {
   if (!context.auth || !context.auth.uid) {
@@ -58,6 +59,37 @@ export const memberDidCreate = async (db, snapshot, context) => {
   }, {merge:true});
 };
 
+export const memberDidDelete  = async (db, admin, snapshot, context) => {
+  const { groupId, userId } = context.params;
+  await db.doc("/groups/" + groupId + "/privileges/" + userId).delete();
+
+  await utils.deleteSubcollection(snapshot, "private");
+
+  // This is for custom token to control the access to Firestore Storage.
+  const ref = db.doc(`/privileges/${userId}`);
+
+  await messaging.subscribe_new_group(userId, groupId, db, messaging.unsubscribe_topic);
+
+  // We need to use transaction because there is no way to remove a section of a document atomically.
+  await admin.firestore().runTransaction(async (tr) => {
+    const doc = await tr.get(ref);
+    const data = doc.data();
+    if (data) {
+      delete data[groupId];
+      return tr.set(ref, data); // no merge
+    }
+    return true;
+  });
+  // todo delete stripe subscription 
+  
+  // We need to remove all the images associated with this user
+  const bucket = admin.storage().bucket();
+  const path = `groups/${groupId}/members/${userId}/`;
+  bucket.deleteFiles({prefix:path}, (errors)=>{
+    console.log("deleteFiles: ", path, errors);
+  });
+}
+
 export const createGroupName = async (db:FirebaseFirestore.Firestore, data, context) => {
   if (!context.auth || !context.auth.uid) {
     return {result: false, message:"missing.uid"};
@@ -109,4 +141,29 @@ export const createGroupName = async (db:FirebaseFirestore.Firestore, data, cont
     console.log(e.message);
     return { result: false, message: e.message };
   });
+}
+
+export const groupDidDelete = async (db, admin, snapshot, context) => {
+    const { groupId } = context.params;
+    const value = snapshot.data();
+    if (value && value.groupName) {
+      await admin.firestore().doc("/groupNames/" + value.groupName).delete();
+    }
+
+    // We need to delete all sub collections (except privileges)
+    await utils.deleteSubcollection(snapshot, "channels");
+    await utils.deleteSubcollection(snapshot, "pages");
+    await utils.deleteSubcollection(snapshot, "articles");
+    await utils.deleteSubcollection(snapshot, "events");
+    await utils.deleteSubcollection(snapshot, "members");
+    await utils.deleteSubcollection(snapshot, "owners");
+    await utils.deleteSubcollection(snapshot, "private");
+    await utils.deleteSubcollection(snapshot, "secret");
+
+    // We need to remove all the images associated with this user
+    const bucket = admin.storage().bucket();
+    const path = `groups/${groupId}/`;
+    bucket.deleteFiles({prefix:path}, (errors)=>{
+      console.log("deleteFiles: ", path, errors);
+    });
 }

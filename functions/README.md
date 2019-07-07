@@ -95,12 +95,12 @@ StripeのSpecではカード情報は1:nで複数ひもづけ可能だが、egro
     /groups/${groupId}/owners/${userId}   (group.createGroup)
 
     (課金ユーザ)
-    /groups/${groupId}/privileges/${userId} {value: privilege}  (group.memberDidCreate)
-    /privileges/${userId}  {[groupId]: privilege}   (group.memberDidCreate)
+    /groups/${groupId}/privileges/${userId} {value: privilege}  (group.memberDidCreate) (自動的に削除される)
+    /privileges/${userId}  {[groupId]: privilege}   (group.memberDidCreate)(自動的に削除される)
 
-    /groups/${groupId}/members/${userId}/secret/stripe (stripe.createSubscribe) (決済生情報)
-    /groups/${groupId}/members/${userId}/private/stripe (stripe.createSubscribe)  (決済情報)
-    /users/${userId}/private/stripe  (決済情報)
+    /groups/${groupId}/members/${userId}/secret/stripe (stripe.createSubscribe) (決済生情報) (自動的に削除される)
+    /groups/${groupId}/members/${userId}/private/stripe (stripe.createSubscribe)  (決済情報)(自動的に削除される)
+    /users/${userId}/private/stripe  (決済情報)  (web hooksで削除)
     
     /users/{userId}/billings  (課金情報のログをとる)
     /stripelog/{logId} ログ
@@ -143,9 +143,8 @@ StripeのSpecではカード情報は1:nで複数ひもづけ可能だが、egro
     基本的に復活できないので要注意。
 
 
-    todo
-      /users/{userId}/billings  (課金情報のログをとる)
-      どのタイミングでStripe側のsubscriptionを削除するか？
+    /users/{userId}/billings  (課金情報のログをとる)
+    ~~ どのタイミングでStripe側のsubscriptionを削除するか？ ~~
 
       
 
