@@ -63,31 +63,9 @@ export const createGroupName = functions.https.onCall(async (data, context) => {
   return await groupFunctions.createGroupName(db, data, context);
 });
 
-export const groupDidDelete = functions.firestore.document('groups/{groupId}')
-  .onDelete(async (snapshot, context)=>{
-    const { groupId } = context.params;
-    const value = snapshot.data();
-    if (value && value.groupName) {
-      await admin.firestore().doc("/groupNames/" + value.groupName).delete();
-    }
-
-    // We need to delete all sub collections (except privileges)
-    await utils.deleteSubcollection(snapshot, "channels");
-    await utils.deleteSubcollection(snapshot, "pages");
-    await utils.deleteSubcollection(snapshot, "articles");
-    await utils.deleteSubcollection(snapshot, "events");
-    await utils.deleteSubcollection(snapshot, "members");
-    await utils.deleteSubcollection(snapshot, "owners");
-    await utils.deleteSubcollection(snapshot, "private");
-    await utils.deleteSubcollection(snapshot, "secret");
-
-    // We need to remove all the images associated with this user
-    const bucket = admin.storage().bucket();
-    const path = `groups/${groupId}/`;
-    bucket.deleteFiles({prefix:path}, (errors)=>{
-      console.log("deleteFiles: ", path, errors);
-    });
-  });
+export const groupDidDelete = functions.firestore.document('groups/{groupId}').onDelete(async (snapshot, context)=>{
+  await groupFunctions.groupDidDelete(db, admin, snapshot, context);
+});
 
 export const memberDidCreate = functions.firestore.document('groups/{groupId}/members/{userId}').onCreate(async (snapshot, context)=>{
   await groupFunctions.memberDidCreate(db, snapshot, context);
