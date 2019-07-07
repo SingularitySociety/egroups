@@ -3,7 +3,7 @@ import * as merge from 'deepmerge';
 import * as stripeUtils from '../utils/stripe';
 import * as utils from '../utils/utils'
 
-import * as stripe from '../apis/stripe';
+import * as stripeApi from '../apis/stripe';
 
 import Privileges from "../../react-lib/src/const/Privileges.js";
 
@@ -21,7 +21,7 @@ export const createCustomer = async (db, data, context) => {
   if (!user.exists) {
     return {result: false};
   }
-  const customer = await stripe.createCustomer(token, userId);
+  const customer = await stripeApi.createCustomer(token, userId);
   
   (await db.doc(`users/${userId}/secret/stripe`).set({
     customer: customer,
@@ -83,7 +83,7 @@ export const createSubscribe = async (db, data, context) => {
 
   // everything ok
   const planId = stripeUtils.getPlanId(groupId, price, currency);
-  const subscription = await stripe.createSubscription(userId, groupId, planId);
+  const subscription = await stripeApi.createSubscription(userId, groupId, planId);
 
   if (!subscription) {
     return {result: false};
@@ -126,7 +126,7 @@ export const groupDidUpdate = async (db, change, context) => {
     const stripeRef = db.doc(`/groups/${groupId}/secret/stripe`);
     const stripeData = (await stripeRef.get()).data();
     if (!stripeData || !stripeData.production) {
-      const production = await stripe.createProduct(after.groupName, after.groupName, groupId);
+      const production = await stripeApi.createProduct(after.groupName, after.groupName, groupId);
       await stripeRef.set({production: production}, {merge:true});
       await stripeUtils.stripeLog(db, userId, {production}, stripeUtils.stripeActions.productCreated);
     }
@@ -140,7 +140,7 @@ export const groupDidUpdate = async (db, change, context) => {
         const currency = plan.currency || "jpy";
         const key = [String(price), currency].join("_")
         if (stripeData && (!stripeData.plans || !stripeData.plans[key])) {
-          const stripePlan = await stripe.createPlan(groupId, price, currency);
+          const stripePlan = await stripeApi.createPlan(groupId, price, currency);
           newPlans[key] = stripePlan;
           await stripeUtils.stripeLog(db, userId, {plan}, stripeUtils.stripeActions.planCreated);
         }
@@ -159,3 +159,21 @@ export const groupDidUpdate = async (db, change, context) => {
   }
 }
 
+export const cancelSubscribe = async (db, data, context) => {
+  // plan = {price, currency}
+  /*
+  if (!context.auth || !context.auth.uid) {
+    return {result: false};
+  }
+  if (!data || !data.groupId || !data.plan || !data.plan.price || !data.plan.currency) {
+    return {result: false};
+  }
+  
+  const userId = context.auth.uid;
+  const {groupId, plan, displayName} = data;
+  const {price, currency} = plan;
+  const plan_key = [String(price), currency].join("_")
+  */
+  
+  
+}

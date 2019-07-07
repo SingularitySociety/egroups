@@ -51,6 +51,10 @@ export const createSubscribe = functions.https.onCall(async (data, context) => {
   return await stripeFunctions.createSubscribe(db, data, context);
 })
 
+export const cancelSubscribe = functions.https.onCall(async (data, context) => {
+  return await stripeFunctions.cancelSubscribe(db, data, context);
+})
+
 export const groupDidUpdate = functions.firestore.document('groups/{groupId}').onUpdate(async (change, context) => {
   await stripeFunctions.groupDidUpdate(db, change, context);
 });

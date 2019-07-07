@@ -138,3 +138,16 @@ export const createSubscription = async (userId, groupId, plan) => {
     return false;
   }
 }
+
+export const cancelSubscription = async (id, cancel=true) => {
+  try {
+    const subscription = await getStripe().subscriptions.update(id, {
+      cancel_at_period_end: cancel,
+    })
+    return  subscription;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+     
