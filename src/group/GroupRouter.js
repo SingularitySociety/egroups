@@ -10,7 +10,7 @@ import { red, pink, purple, deepPurple, indigo,
          deepOrange, brown, grey, blueGrey  } from '@material-ui/core/colors';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { Route } from 'react-router-dom';
-import GroupHome from './GroupHome';
+import GroupHome from './blog/GroupHome';
 import Events from './Events';
 import MountDetector from '../common/MountDetector';
 import Account from './profile/Account';

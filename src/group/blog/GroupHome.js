@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import MountDetector from '../common/MountDetector';
-import Privileges from '../const/Privileges';
+import MountDetector from '../../common/MountDetector';
+import Privileges from '../../const/Privileges';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
-import BlogArticle from './blog/BlogArticle';
+import BlogArticle from './BlogArticle';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import ArticleList from './blog/ArticleList';
+import ArticleList from './ArticleList';
 import { Typography } from '@material-ui/core';
 
 const styles = theme => ({
