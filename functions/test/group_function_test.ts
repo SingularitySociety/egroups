@@ -215,7 +215,7 @@ describe('Group function test', () => {
     // run test
     const req = {groupId, plan: {price, currency}};
     const context = {auth: {uid: aliceUserId}};
-    const wrapped = test.wrap(index.createSubscribe);
+    const wrapped = test.wrap(index.createSubscription);
 
     await wrapped(req, context);
 
@@ -289,7 +289,7 @@ describe('Group function test', () => {
     
     const req = {groupId, subscriptionId: subscriptionId};
     const context = {auth: {uid: aliceUserId}};
-    const wrapped = test.wrap(index.cancelSubscribe);
+    const wrapped = test.wrap(index.cancelSubscription);
 
     await wrapped(req, context);
 
@@ -298,7 +298,7 @@ describe('Group function test', () => {
 
 
     const req2 = {groupId, subscriptionId: subscriptionId, cancel: false};
-    const wrapped2 = test.wrap(index.cancelSubscribe);
+    const wrapped2 = test.wrap(index.cancelSubscription);
 
     await wrapped2(req2, context);
 

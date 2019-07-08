@@ -39,7 +39,7 @@ export const createCustomer = async (db, data, context) => {
   };
 }
 
-export const createSubscribe = async (db, data, context) => {
+export const createSubscription = async (db, data, context) => {
   // plan = {price, currency}
   if (!context.auth || !context.auth.uid) {
     return {result: false};
