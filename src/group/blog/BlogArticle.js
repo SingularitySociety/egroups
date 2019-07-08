@@ -75,6 +75,7 @@ function BlogArticle(props) {
       newArticle.sections.splice(index, size);
     }
     console.log(newArticle.sections.length);
+    newArticle.updated = new Date();
     setArticle(newArticle);
     await refArticle.set(newArticle, {merge:true});
   }
@@ -93,6 +94,12 @@ function BlogArticle(props) {
       markdown, 
       raw
     }, {merge:true})
+
+    const newArticle = Object.assign({}, article);
+    newArticle.updated = new Date();
+    setArticle(newArticle);
+    await refArticle.set(newArticle, {merge:true});
+
   }
   const deleteSection = async (resourceId, index) => {
     console.log("deleteSection", resourceId);

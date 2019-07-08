@@ -1,6 +1,5 @@
 Profile: No grey color / Implement
 Chat: P 2 P
-Channels/Blog: Debug read/unread
 Chat: Scroll to the bottom
 Chat: Infinit scroll
 Image Uploader: Verify the privacy
@@ -19,6 +18,7 @@ Subscribe: Hide ZIP
 public Blog, and public News
 
 ----- Done -----
+Channels/Blog: Debug read/unread
 Blog: Display author & date (along with Members database)
 Blog: Do not use onSnapshot for read-only mode.
 Profile: Debug [Object Object]
