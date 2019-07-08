@@ -310,6 +310,9 @@ describe('Stripe data test', () => {
     res1.should.deep.equal({
       "object": "subscription",
       "billing": "charge_automatically",
+      "cancel_at": null,
+      "cancel_at_period_end": false,
+      "canceled_at": null,
       "created": 1561881653,
       "current_period_end": 1564473653,
       "current_period_start": 1561881653,
