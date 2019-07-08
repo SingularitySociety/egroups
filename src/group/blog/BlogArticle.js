@@ -125,7 +125,7 @@ function BlogArticle(props) {
     setReadOnly(!readOnly);
   }
 
-  const context = { refArticle };
+  const context = { pathArticle:refArticle.path };
   if (!article) {
     return "";
   }

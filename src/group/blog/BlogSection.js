@@ -10,7 +10,7 @@ import ImageUploader from '../../common/ImageUploader';
 
 function BlogSection(props) {
   const [editing, setEditing] = useState(false);
-  const { sectionId, index, resource, readOnly, refArticle } = props;
+  const { sectionId, index, resource, readOnly, pathArticle } = props;
 
   const onSave = (markdown, raw) => {
     props.saveSection(sectionId, index, markdown, raw);
@@ -41,7 +41,7 @@ function BlogSection(props) {
         if (readOnly && !resource.hasImage) {
           return "";
         }
-        const imagePath = `${refArticle.path}/${sectionId}`;
+        const imagePath = `${pathArticle}/${sectionId}`;
         const thumbnails = (resource[sectionId] && resource[sectionId].thumbnails) || resource.thumbnails
         return (
             <ImageUploader imagePath={imagePath} loadImage={resource.hasImage} imageUrl={resource.imageUrl}
@@ -84,7 +84,7 @@ function BlogSection(props) {
 BlogSection.propTypes = {
     saveSection: PropTypes.func.isRequired,
     resource: PropTypes.object.isRequired,
-    refArticle: PropTypes.object.isRequired,
+    pathArticle: PropTypes.string.isRequired,
 };
   
 export default BlogSection;
