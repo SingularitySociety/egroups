@@ -29,8 +29,10 @@ class ArticleItem extends React.Component {
     //console.log(article);
     let className = classes.unread;
     if (!article.updated || !history) {
+      console.log("case 1");
       className = classes.read;
     } else if (history.articles) {
+      console.log("case 2");
       const access = history.articles[article.articleId];
       if (access && access.l > article.updated) {
         className = classes.read;

@@ -16,7 +16,7 @@ class Blog extends React.Component {
   }
 
   async componentDidMount() {
-    const { match:{params:{articleId}}, callbacks, arp } = this.props;
+    const { match:{params:{articleId}}, callbacks, arp, user, db, group } = this.props;
     callbacks.setTabbar(arp.tabLeaf, `${arp.leaf}/${articleId}`);
 
     const error = {key:"error.invalid.articleId", value:articleId};
@@ -25,6 +25,15 @@ class Blog extends React.Component {
       if (article) {
         article.articleId = articleId;
         this.setState({article});
+
+        if (user) {
+          const articles = {};
+          articles[articleId] = { l:new Date() }; // NOT firebase.firestore.FieldValue.serverTimestamp()
+          db.doc(`groups/${group.groupId}/members/${user.uid}/private/history`).set({
+            articles
+          }, {merge:true})
+        }
+
         return;
       }
     } catch(e) {
@@ -37,8 +46,8 @@ class Blog extends React.Component {
 
   render() {
     const { article, error } = this.state;
-    const { user, arp, group, privilege, db } = this.props;
-    const context = { user, article, arp, group, privilege, db };
+    const { user, arp, group, privilege, db, profiles, callbacks } = this.props;
+    const context = { user, article, arp, group, privilege, db, profiles, callbacks };
     if (error) {
       return <ErrorMessage error={error} />
     }

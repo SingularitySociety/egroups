@@ -1,13 +1,11 @@
 Profile: No grey color / Implement
-Blog: Display author & date (along with Members database)
 Chat: P 2 P
-Channels/Blog: Debug read/unread
 Chat: Scroll to the bottom
 Chat: Infinit scroll
 Image Uploader: Verify the privacy
-Image Uploader: Image Orientation
+Image Uploader: Image Orientation EXIF
+https://qiita.com/RichardImaokaJP/items/385beb77eb39243e50a6
 Pages: Menu access to pages *
-Blog: Do not use onSnapshot for read-only mode.
 Group: Invitation
 Home: Image for Group
 Chat: display shift-return
@@ -20,6 +18,9 @@ Subscribe: Hide ZIP
 public Blog, and public News
 
 ----- Done -----
+Channels/Blog: Debug read/unread
+Blog: Display author & date (along with Members database)
+Blog: Do not use onSnapshot for read-only mode.
 Profile: Debug [Object Object]
 Subscribe： <br/>, hide Subscribe button with no card
 Blog: Edit mode

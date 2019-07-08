@@ -7,6 +7,9 @@ import EditIcon from '@material-ui/icons/Edit';
 import AccessDenied from './../AccessDenied';
 import BlogSection from './BlogSection';
 import { Link } from 'react-router-dom';
+import ImageUploader from '../../common/ImageUploader';
+import Privileges from '../../const/Privileges';
+import { FormattedDate } from 'react-intl';
 
 const styles = theme => ({
   readerFrame: {
@@ -24,16 +27,32 @@ const styles = theme => ({
       fontSize: '1.8rem',
     },
   },
+  userFrame: {
+    marginBottom: theme.spacing(1),
+  },
+  userName: {
+    //color: "#606060",
+    marginLeft: theme.spacing(1),
+  },
 });
 
 function BlogArticle(props) {
-  const { group, arp, user, refArticle, privilege, classes, db } = props;
+  const { group, arp, user, refArticle, privilege, classes, db, profiles, callbacks } = props;
   //state = {article:null, sections:[], resouces:null, readOnly:true};
   const [ article, setArticle ] = useState(props.article);
   const [ resources, setResources ] = useState(null);
   const [ readOnly, setReadOnly ] = useState(true);
+  const her = profiles[article.owner];
+  const hitProfile = callbacks.hitProfile;
+
   useEffect(() => {
-    console.log("BlogArticle, articleId", article.articleId);
+    if (!her && privilege >= Privileges.member) {
+      console.log('hitProfile', article.owner);
+      hitProfile(article.owner);
+    }    
+  }, [her, privilege, hitProfile, article.owner]);
+  useEffect(() => {
+    //console.log("BlogArticle, articleId", article.articleId);
     // Note: We can use props.refArticle. Otherwise, useEffect will called for each render.
     const refArticle = db.doc(`groups/${group.groupId}/${arp.collection}/${article.articleId}`);
     const detatcher = refArticle.collection("sections").onSnapshot((snapshot)=>{
@@ -56,6 +75,7 @@ function BlogArticle(props) {
       newArticle.sections.splice(index, size);
     }
     console.log(newArticle.sections.length);
+    newArticle.updated = new Date();
     setArticle(newArticle);
     await refArticle.set(newArticle, {merge:true});
   }
@@ -74,6 +94,12 @@ function BlogArticle(props) {
       markdown, 
       raw
     }, {merge:true})
+
+    const newArticle = Object.assign({}, article);
+    newArticle.updated = new Date();
+    setArticle(newArticle);
+    await refArticle.set(newArticle, {merge:true});
+
   }
   const deleteSection = async (resourceId, index) => {
     console.log("deleteSection", resourceId);
@@ -114,6 +140,8 @@ function BlogArticle(props) {
 
   const frameClass = canEdit ? classes.editorFrame : classes.readerFrame;
   const editMode = canEdit && !readOnly;
+  const userName = (her && her.displayName) || "...";
+  const thumbnails = her && her.profile && her.profile.thumbnails;
 
   return (
     <div className={frameClass}>
@@ -135,6 +163,20 @@ function BlogArticle(props) {
           </Grid>
         }
       </Grid>
+      {
+        privilege >= Privileges.member &&
+        <Grid container className={classes.userFrame}>
+          <Grid item>
+            <ImageUploader key={ thumbnails ? 1 : 2 } imagePath={""} imageThumbnails={thumbnails}
+                  readOnly={true} displayMode="thumbSmall" inline={true} />
+          </Grid>
+          <Grid item className={classes.userName}>
+            <Typography variant="caption" gutterBottom>
+              { userName }<br/><FormattedDate value={ article.created.toDate() } />
+            </Typography>
+          </Grid>
+        </Grid>
+      }
       { editMode && 
         <BlogSection index={ 0 } resource={{}} saveSection={insertSection} insertPhoto={insertPhoto} {...context} /> }
       {
@@ -158,6 +200,8 @@ BlogArticle.propTypes = {
     refArticle: PropTypes.object.isRequired,
     arp: PropTypes.object.isRequired,
     group: PropTypes.object.isRequired,
+    profiles: PropTypes.object.isRequired,
+    callbacks: PropTypes.object.isRequired,
   };
   
 export default withStyles(styles)(BlogArticle);
