@@ -12,73 +12,72 @@ function BlogSection(props) {
   const [editing, setEditing] = useState(false);
   const { sectionId, index, resource, readOnly, pathArticle } = props;
 
-  const onSave = (markdown, raw) => {
+  function onSave(markdown, raw) {
     props.saveSection(sectionId, index, markdown, raw);
     setEditing(false);
   }
-  const onCancel = () => {
+  function onCancel() {
     setEditing(false);
   }
-  const onDelete = () => {
+  function onDelete() {
     props.deleteSection(sectionId, index);
   }
-  const startEditing = () => {
+  function startEditing() {
     setEditing(true);
   }
-  const insertImage = () => {
+  function insertImage() {
     props.insertImage(index);
   }
-  const onImageUpload = (imageUrl) => {
+  function onImageUpload(imageUrl) {
     props.onImageUpload(sectionId, imageUrl);
   }
 
-  if (!editing) {
-    if (sectionId) {
-      //console.log("render1", markdown);
-      //const value = RichTextEditor.createValueFromString(resource.markdown || "", 'markdown');
-      //console.log("render1", value.toString("markdown"));
-      if (resource.type==="image") {
-        if (readOnly && !resource.hasImage) {
-          return "";
-        }
-        const imagePath = `${pathArticle}/${sectionId}`;
-        const thumbnails = (resource[sectionId] && resource[sectionId].thumbnails) || resource.thumbnails
-        return (
-            <ImageUploader imagePath={imagePath} loadImage={resource.hasImage} imageUrl={resource.imageUrl}
-              imageThumbnails={thumbnails} 
-              readOnly={readOnly} displayMode="wide" onImageUpload={onImageUpload} deleteImage={onDelete} />
-        );
+  if (editing) {
+    return (
+      <MarkdownEditor resource={resource} onSave={onSave} onCancel={onCancel} onDelete={props.deleteSection && onDelete} />
+    )
+  }
+
+  if (sectionId) {
+    if (resource.type==="image") {
+      if (readOnly && !resource.hasImage) {
+        return "";
       }
-      const textWidth = readOnly ? 12 : 11;
-      return <Grid container justify="center">
-        <Grid item xs={textWidth} style={{padding:"1px"}}>
-          <MarkdownViewer resource={resource} useHtml={false} />
-        </Grid>
-        { !readOnly &&
-          <Grid item xs={1}>
-            <IconButton size="small" variant="contained" onClick={startEditing}>
-              <EditIcon />
-            </IconButton>
-          </Grid> 
-        }
-      </Grid>
+      const imagePath = `${pathArticle}/${sectionId}`;
+      const thumbnails = (resource[sectionId] && resource[sectionId].thumbnails) || resource.thumbnails
+      return (
+          <ImageUploader imagePath={imagePath} loadImage={resource.hasImage} imageUrl={resource.imageUrl}
+            imageThumbnails={thumbnails} 
+            readOnly={readOnly} displayMode="wide" onImageUpload={onImageUpload} deleteImage={onDelete} />
+      );
     }
+    const textWidth = readOnly ? 12 : 11;
     return <Grid container justify="center">
-      <Grid item xs={1}>
-        <IconButton  size="small" variant="contained" onClick={startEditing}>
-          <AddIcon />
-        </IconButton>
-      </Grid> 
-      <Grid item xs={1}>
-        <IconButton  size="small" variant="contained" onClick={insertImage}>
-          <PhotoIcon />
-        </IconButton>
-      </Grid> 
+      <Grid item xs={textWidth} style={{padding:"1px"}}>
+        <MarkdownViewer resource={resource} useHtml={false} />
+      </Grid>
+      { !readOnly &&
+        <Grid item xs={1}>
+          <IconButton size="small" variant="contained" onClick={startEditing}>
+            <EditIcon />
+          </IconButton>
+        </Grid> 
+      }
     </Grid>
   }
-  return (
-    <MarkdownEditor resource={resource} onSave={onSave} onCancel={onCancel} onDelete={props.deleteSection && onDelete} />
-  )
+  
+  return <Grid container justify="center">
+    <Grid item xs={1}>
+      <IconButton  size="small" variant="contained" onClick={startEditing}>
+        <AddIcon />
+      </IconButton>
+    </Grid> 
+    <Grid item xs={1}>
+      <IconButton  size="small" variant="contained" onClick={insertImage}>
+        <PhotoIcon />
+      </IconButton>
+    </Grid> 
+  </Grid>
 }
 
 BlogSection.propTypes = {
