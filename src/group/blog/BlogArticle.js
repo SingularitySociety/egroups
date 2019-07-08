@@ -106,8 +106,8 @@ function BlogArticle(props) {
     await spliceSections(index, 1);
     await refArticle.collection("sections").doc(resourceId).delete();
   }
-  const insertPhoto = async (index) => {
-    console.log("insertPhoto", index);
+  const insertImage = async (index) => {
+    console.log("insertImage", index);
     const doc = await refArticle.collection("sections").add({
       type: "image",
       created: new Date(),
@@ -178,16 +178,16 @@ function BlogArticle(props) {
         </Grid>
       }
       { editMode && 
-        <BlogSection index={ 0 } resource={{}} saveSection={insertSection} insertPhoto={insertPhoto} {...context} /> }
+        <BlogSection index={ 0 } resource={{}} saveSection={insertSection} insertImage={insertImage} {...context} /> }
       {
         article.sections.map((sectionId, index)=>{
           return <div key={sectionId}>
             <BlogSection index={ index } sectionId={sectionId} resource={ resources[sectionId] } 
                 saveSection={updateSection} deleteSection={deleteSection} 
-                insertPhoto={insertPhoto} onImageUpload={onImageUpload} 
+                insertImage={insertImage} onImageUpload={onImageUpload} 
                 readOnly={!editMode} {...context} />
             { editMode && <BlogSection index={ index+1 } resource={{}}
-                insertPhoto={insertPhoto} saveSection={insertSection} {...context} /> }
+                insertImage={insertImage} saveSection={insertSection} {...context} /> }
           </div>
         })
       }

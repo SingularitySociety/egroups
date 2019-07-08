@@ -25,8 +25,8 @@ function BlogSection(props) {
   const startEditing = () => {
     setEditing(true);
   }
-  const insertPhoto = () => {
-    props.insertPhoto(index);
+  const insertImage = () => {
+    props.insertImage(index);
   }
   const onImageUpload = (imageUrl) => {
     props.onImageUpload(sectionId, imageUrl);
@@ -70,7 +70,7 @@ function BlogSection(props) {
         </IconButton>
       </Grid> 
       <Grid item xs={1}>
-        <IconButton  size="small" variant="contained" onClick={insertPhoto}>
+        <IconButton  size="small" variant="contained" onClick={insertImage}>
           <PhotoIcon />
         </IconButton>
       </Grid> 
@@ -82,9 +82,10 @@ function BlogSection(props) {
 }
 
 BlogSection.propTypes = {
-    saveSection: PropTypes.func.isRequired,
-    resource: PropTypes.object.isRequired,
-    pathArticle: PropTypes.string.isRequired,
+  insertImage: PropTypes.func.isRequired,
+  saveSection: PropTypes.func.isRequired,
+  resource: PropTypes.object.isRequired,
+  pathArticle: PropTypes.string.isRequired,
 };
   
 export default BlogSection;
