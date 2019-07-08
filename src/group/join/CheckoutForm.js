@@ -58,9 +58,9 @@ function CheckoutForm(props) {
     const context = { groupId, plan, displayName };
     console.log("subscribe", context);
     
-    const createSubscribe = firebase.functions().httpsCallable('createSubscribe');
+    const createSubscription = firebase.functions().httpsCallable('createSubscription');
     setProcessing(true);
-    const result = (await createSubscribe(context)).data;
+    const result = (await createSubscription(context)).data;
     setProcessing(false);
     console.log(result);
   }

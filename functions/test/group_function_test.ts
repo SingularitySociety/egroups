@@ -1,6 +1,6 @@
 import * as test_helper from "../../lib/test/rules/test_helper";
 import * as functions_test_helper from "./functions_test_helper";
-import * as stripe from '../src/apis/stripe';
+import * as stripeApi from '../src/apis/stripe';
 import * as stripeUtils from "../src/utils/stripe"
 
 import { should } from 'chai';
@@ -9,6 +9,42 @@ import * as UUID from "uuid-v4";
 const {index, admin_db, test} = functions_test_helper.initFunctionsTest();
 
 should()
+
+const checkCancel = async (db, groupId, userId, cancel) => {
+  const subscriptionRaw = (await db.doc(`/groups/${groupId}/members/${userId}/secret/stripe`).get()).data()
+  subscriptionRaw.subscription.cancel_at_period_end.should.equal(cancel);
+  const memberStripe = (await db.doc(`/groups/${groupId}/members/${userId}/private/stripe`).get()).data();
+  memberStripe.subscription.cancel_at_period_end.should.equal(cancel);
+  const userPrivate = (await db.doc(`users/${userId}/private/stripe`).get()).data();
+  userPrivate.subscription[groupId].cancel_at_period_end.should.equal(cancel);
+}
+
+const createDataForSubscription = async (userId, groupId, price, currency, ) => {
+  // need group, product, plan, 
+  await admin_db.doc(`users/${userId}`).set({
+    uid: userId,
+  })
+  
+  const alice_group = admin_db.doc(`groups/${groupId}`);
+  await test_helper.create_group(alice_group, "hello", "hello", true);
+      
+  const stripeGroupSecretRef = admin_db.doc(`/groups/${groupId}/secret/stripe`);
+  const production = await stripeApi.createProduct(groupId, "hello", groupId);
+  
+  const plan = await stripeApi.createPlan(groupId, price, currency);
+  const plan_key = [String(price), currency].join("_")
+  
+  await stripeGroupSecretRef.set({
+    production: production,
+    plans: {[plan_key]: plan},
+  }, {merge:true}); 
+  
+  // need customer
+  const visa_source = await functions_test_helper.createVisaCard();
+  const visa_token = visa_source.id;
+  
+  await stripeApi.createCustomer(visa_token, userId);
+}
 
 describe('Group function test', () => {
   it ('update test', async function() {
@@ -169,7 +205,7 @@ describe('Group function test', () => {
           last4: '4242' } ]
     })
                                                
-    await stripe.deleteCustomer(aliceUserId);
+    await stripeApi.deleteCustomer(aliceUserId);
   });
 
 
@@ -179,39 +215,16 @@ describe('Group function test', () => {
     const aliceUserId = "test_customer_" + uuid;
     const groupId = "sub_test";
 
-    // need group, product, plan, 
-    await admin_db.doc(`users/${aliceUserId}`).set({
-      uid: aliceUserId,
-    })
-
-    const alice_group = admin_db.doc(`groups/${groupId}`);
-    await test_helper.create_group(alice_group, "hello", "hello", true);
-    
-    const stripeGroupSecretRef = admin_db.doc(`/groups/${groupId}/secret/stripe`);
-    const production = await stripe.createProduct(groupId, "hello", groupId);
-
     const price = 5000;
     const currency = "jpy";
-    const plan = await stripe.createPlan(groupId, price, currency);
-    const plan_key = [String(price), currency].join("_")
 
-    await stripeGroupSecretRef.set({
-      production: production,
-      plans: {[plan_key]: plan},
-    }, {merge:true}); 
-
-    // need customer
-    const visa_source = await functions_test_helper.createVisaCard();
-    const visa_token = visa_source.id;
-
-    await stripe.createCustomer(visa_token, aliceUserId);
-    
+    await createDataForSubscription(aliceUserId, groupId, price, currency);
     // end of create
 
     // run test
     const req = {groupId, plan: {price, currency}};
     const context = {auth: {uid: aliceUserId}};
-    const wrapped = test.wrap(index.createSubscribe);
+    const wrapped = test.wrap(index.createSubscription);
 
     await wrapped(req, context);
 
@@ -259,5 +272,49 @@ describe('Group function test', () => {
     userPrivate.subscription.sub_test.plan.interval_count.should.equal(1);
     userPrivate.subscription.sub_test.quantity.should.equal(1);
     userPrivate.subscription.sub_test.status.should.equal('active');
+  });
+
+  it ('stripe cancel subscription test', async function() {
+    this.timeout(10000);
+    const uuid = UUID();
+
+    const aliceUserId = "test_customer_" + uuid;
+    const groupId = "sub_test";
+    const price = 5000;
+    const currency = "jpy";
+
+    await createDataForSubscription(aliceUserId, groupId, price, currency);
+
+    const planId = stripeUtils.getPlanId(groupId, price, currency);
+    const subscription = await stripeApi.createSubscription(aliceUserId, groupId, planId);
+
+    await admin_db.doc(`/groups/${groupId}/members/${aliceUserId}/secret/stripe`).set({
+      subscription: subscription
+    });
+    // end of create
+    
+    // run test
+    const subscriptionId = subscription.id;
+    
+    const req = {groupId, subscriptionId: subscriptionId};
+    const context = {auth: {uid: aliceUserId}};
+    const wrapped = test.wrap(index.cancelSubscription);
+
+    await wrapped(req, context);
+
+    const subscription2 = await stripeApi.retrieveSubscription(subscriptionId);
+    subscription2.cancel_at_period_end.should.equal(true);
+
+    await checkCancel(admin_db, groupId, aliceUserId, true);
+    
+    const req2 = {groupId, subscriptionId: subscriptionId, cancel: false};
+    const wrapped2 = test.wrap(index.cancelSubscription);
+
+    await wrapped2(req2, context);
+
+    const subscription3 = await stripeApi.retrieveSubscription(subscriptionId);
+    subscription3.cancel_at_period_end.should.equal(false);
+    await checkCancel(admin_db, groupId, aliceUserId, false);
+    
   });
 });
