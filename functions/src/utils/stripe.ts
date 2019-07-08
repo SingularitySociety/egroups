@@ -52,6 +52,7 @@ export const convSubscriptionData = (stripeSubscriptionData) => {
   const {
     object, billing, created,
     current_period_end, current_period_start,
+    cancel_at, cancel_at_period_end, canceled_at,
     plan, quantity, start, start_date, status,
     tax_percent, trial_end, trial_start
   } = stripeSubscriptionData;
@@ -59,6 +60,7 @@ export const convSubscriptionData = (stripeSubscriptionData) => {
   return {
     object, billing, created,
     current_period_end, current_period_start,
+    cancel_at, cancel_at_period_end, canceled_at,
     plan: convPlanData(plan), quantity, start, start_date, status,
     tax_percent, trial_end, trial_start
   }

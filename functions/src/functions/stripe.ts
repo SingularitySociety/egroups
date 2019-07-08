@@ -7,6 +7,20 @@ import * as stripeApi from '../apis/stripe';
 
 import Privileges from "../../react-lib/src/const/Privileges.js";
 
+const updateSubscriptionData = async (db, groupId, userId, subscription, period) => {
+  // raw data
+  await db.doc(`/groups/${groupId}/members/${userId}/secret/stripe`).set({subscription: subscription});
+  await db.doc(`/groups/${groupId}/members/${userId}/private/stripe`).set({
+    subscription: stripeUtils.convSubscriptionData(subscription),
+    period: period,
+  });
+  await db.doc(`users/${userId}/private/stripe`).set({
+    subscription: {
+      [groupId]: stripeUtils.convSubscriptionData(subscription),
+    }
+  }, {merge:true});
+}
+
 export const createCustomer = async (db, data, context) => {
   if (!context.auth || !context.auth.uid) {
     return {result: false};
@@ -89,29 +103,19 @@ export const createSubscription = async (db, data, context) => {
     return {result: false};
   }
 
-  // raw data
-  await db.doc(`/groups/${groupId}/members/${userId}/secret/stripe`).set({subscription: subscription})
-
+  const period = {
+    start: subscription.current_period_end,
+    end: subscription.current_period_start,
+  };
+  
+  await updateSubscriptionData(db, groupId, userId, subscription, period);
   await db.doc(`/groups/${groupId}/members/${userId}`).set({
     created: new Date(),
     displayName: displayName || "---",
     userId: userId,
     groupId: groupId,
   });
-
-  await db.doc(`/groups/${groupId}/members/${userId}/private/stripe`).set({
-    subscription: stripeUtils.convSubscriptionData(subscription),
-    period: {
-      start: subscription.current_period_end,
-      end: subscription.current_period_start,
-    }
-  });
-  await db.doc(`users/${userId}/private/stripe`).set({
-    subscription: {
-      [groupId]: stripeUtils.convSubscriptionData(subscription),
-    }
-  }, {merge:true});
-
+  
   await stripeUtils.billingLog(db, userId, groupId, subscription, stripeUtils.stripeActions.subscriptionCreated);
   
   return {result: true};
@@ -179,7 +183,13 @@ export const cancelSubscription = async (db, data, context) => {
   const subscriptionId = data.subscriptionId;
   const cancel = data.cancel === undefined ? true : data.cancel;
   
-  await stripeApi.cancelSubscription(subscriptionId, cancel);
+  const subscription = await stripeApi.cancelSubscription(subscriptionId, cancel);
+
+  const period = {
+    end: subscription.current_period_start,
+  };
+  await updateSubscriptionData(db, groupId, userId, subscription, period);
+
   return {result: true};
   
 }

@@ -10,6 +10,15 @@ const {index, admin_db, test} = functions_test_helper.initFunctionsTest();
 
 should()
 
+const checkCancel = async (db, groupId, userId, cancel) => {
+  const subscriptionRaw = (await db.doc(`/groups/${groupId}/members/${userId}/secret/stripe`).get()).data()
+  subscriptionRaw.subscription.cancel_at_period_end.should.equal(cancel);
+  const memberStripe = (await db.doc(`/groups/${groupId}/members/${userId}/private/stripe`).get()).data();
+  memberStripe.subscription.cancel_at_period_end.should.equal(cancel);
+  const userPrivate = (await db.doc(`users/${userId}/private/stripe`).get()).data();
+  userPrivate.subscription[groupId].cancel_at_period_end.should.equal(cancel);
+}
+
 const createDataForSubscription = async (userId, groupId, price, currency, ) => {
   // need group, product, plan, 
   await admin_db.doc(`users/${userId}`).set({
@@ -296,7 +305,8 @@ describe('Group function test', () => {
     const subscription2 = await stripeApi.retrieveSubscription(subscriptionId);
     subscription2.cancel_at_period_end.should.equal(true);
 
-
+    await checkCancel(admin_db, groupId, aliceUserId, true);
+    
     const req2 = {groupId, subscriptionId: subscriptionId, cancel: false};
     const wrapped2 = test.wrap(index.cancelSubscription);
 
@@ -304,6 +314,7 @@ describe('Group function test', () => {
 
     const subscription3 = await stripeApi.retrieveSubscription(subscriptionId);
     subscription3.cancel_at_period_end.should.equal(false);
+    await checkCancel(admin_db, groupId, aliceUserId, false);
     
   });
 });
