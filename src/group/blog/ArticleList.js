@@ -13,7 +13,7 @@ class ArticleList extends React.Component {
     const { db, group, limit, arp } = this.props;
     let query = db.collection(`groups/${group.groupId}/${arp.collection}`).orderBy("created", "desc");
     if (limit) {
-      query = query.limit(1);
+      query = query.limit(limit);
     }
     this.detacher = query.onSnapshot((snapshot) => {
       const list = [];

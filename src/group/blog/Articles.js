@@ -48,7 +48,7 @@ class Articles extends React.Component {
                 action={<FormattedMessage id="create" />} label={<FormattedMessage id={arp.tabLeaf} />}/> }
           </Grid>
           <Grid item xs={12}>
-            <ArticleList {...context}/>
+            <ArticleList {...context} />
           </Grid>
         </Grid>
         )
