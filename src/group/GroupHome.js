@@ -6,8 +6,9 @@ import Privileges from '../const/Privileges';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 import BlogArticle from './blog/BlogArticle';
-import { injectIntl } from 'react-intl';
-
+import { injectIntl, FormattedMessage } from 'react-intl';
+import ArticleList from './blog/ArticleList';
+import { Typography } from '@material-ui/core';
 
 const styles = theme => ({
   welcome: {
@@ -62,14 +63,18 @@ class GroupHome extends React.Component {
   privilegeWillUnmount = () => {
   }
   render() {
-    const { group, user, db, arp, callbacks, privilege, profiles } = this.props;
+    const { group, user, db, arp, callbacks, privilege, profiles, history } = this.props;
     const { article } = this.state;
-    const context = { group, user, db, article, arp, callbacks, privilege, profiles }
+    const context = { group, user, db, article, arp, callbacks, privilege, profiles, history }
     //const context = { user, group, db, member, history };
     return (
       <div>
         { privilege > 0 && <MountDetector didMount={this.privilegeDidMount} willUnmount={this.privilegeWillUnmount} value={privilege} />}
         { article && <BlogArticle {...context} refArticle={this.refArticle} />}
+        <Typography component="h3" variant="h3">
+          <FormattedMessage id="pages" />
+        </Typography>
+        <ArticleList {...context}/>
       </div>
     )
   }
