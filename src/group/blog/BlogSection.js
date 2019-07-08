@@ -65,14 +65,14 @@ function BlogSection(props) {
       }
     </Grid>
   }
-  
+
   return <Grid container justify="center">
-    <Grid item xs={1}>
+    <Grid item>
       <IconButton  size="small" variant="contained" onClick={startEditing}>
         <AddIcon />
       </IconButton>
     </Grid> 
-    <Grid item xs={1}>
+    <Grid item>
       <IconButton  size="small" variant="contained" onClick={insertImage}>
         <PhotoIcon />
       </IconButton>
