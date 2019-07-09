@@ -1,35 +1,24 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Button, FormGroup } from '@material-ui/core';
+import { FormGroup } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import EditableField from '../../common/EditableField';
 import ImageUploader from '../../common/ImageUploader';
-import LockedArea from '../../common/LockedArea';
-import Privileges from '../../const/Privileges';
+import LeaveAccount from './LaveAccount';
 
 const styles = theme => ({
-  button: {
-      margin: theme.spacing(1)
-  }
 });
 
 function Account(props) {
   const { db, user, group, callbacks } = props;
-  const { classes, member, privilege } = props;
+  const { member, privilege } = props;
   const setTabbar = callbacks.setTabbar;
-  
+
   useEffect(()=>{
     setTabbar("account");
   }, [setTabbar])
-
-  const handleLeave = async () => {
-    const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
-    await refMember.delete();
-    callbacks.memberDidUpdate();
-    window.location.pathname = "/" + group.groupName;
-  }
 
   const onSave = name => async value => {
     //console.log(name, value);
@@ -51,6 +40,7 @@ function Account(props) {
   if (!member) {
     return "";
   }
+  const context = { db, user, group, callbacks, privilege } ;
   //console.log(user, member);
   const imageThumbnails = member.profile && member.profile.thumbnails;
   return <div>
@@ -79,14 +69,7 @@ function Account(props) {
       <EditableField label={<FormattedMessage id="member.github"/>} 
           value={member.github || ""} onSave={onSave('github')}/>
     </FormGroup>
-    {
-      privilege < Privileges.owner &&    
-      <LockedArea label={<FormattedMessage id="warning.dangerous" />}>
-        <Button variant="contained" className={classes.button} onClick={handleLeave}>
-          <FormattedMessage id="leave" />
-        </Button>
-      </LockedArea>
-    }
+    <LeaveAccount {...context} />
   </div>
 }
 
