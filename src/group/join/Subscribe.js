@@ -18,7 +18,7 @@ const useStyles = makeStyles(styles);
 
 function Subscribe(props) {
   //const classes = useStyles();
-  const { callbacks, user, group, db } = props;
+  const { callbacks, user, group, db, privilege } = props;
   const setTabbar = callbacks.setTabbar;
 
   useEffect(()=>{
@@ -31,7 +31,7 @@ function Subscribe(props) {
 
   // Test card numbers
   // 4242 4242 4242 4242
-  const context = { group, db, user };
+  const context = { group, db, user, privilege };
   return (
     <StripeProvider apiKey="pk_test_iVo1YToPedpru7AJDpAj43cF00ftQJpoj8">
       <Elements>
