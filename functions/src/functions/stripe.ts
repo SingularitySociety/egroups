@@ -56,10 +56,10 @@ export const createCustomer = async (db, data, context) => {
 export const createSubscription = async (db, data, context) => {
   // plan = {price, currency}
   if (!context.auth || !context.auth.uid) {
-    return {result: false, message:"no.uid"};
+    return {result: false, message:"createSubscription.no.uid"};
   }
   if (!data || !data.groupId || !data.plan || !data.plan.price || !data.plan.currency) {
-    return {result: false, message:"no.plan"};
+    return {result: false, message:"createSubscription.no.plan"};
   }
   
   const userId = context.auth.uid;
@@ -69,30 +69,30 @@ export const createSubscription = async (db, data, context) => {
   
   const user = (await db.doc(`users/${userId}`).get());
   if (!user.exists) {
-    return {result: false, message:"no.user"};
+    return {result: false, message:"createSubscription.no.user"};
   }
 
   // check group
   const group = await db.doc(`groups/${groupId}`).get();
   if (!group.exists) {
-    return {result: false, message:"no.group"};
+    return {result: false, message:"createSubscription.no.group"};
   }
   
   // check plan
   const stripeGroup = await db.doc(`/groups/${groupId}/secret/stripe`).get(); 
 
   if (!stripeGroup.exists) {
-    return {result: false, message:"no.stripe.group"};
+    return {result: false, message:"createSubscription.no.stripe.group"};
   }
   const stripeGroupSecretData = stripeGroup.data();
   if (!stripeGroupSecretData || !stripeGroupSecretData.plans || !stripeGroupSecretData.plans[plan_key]) {
-    return {result: false, message:"no.stripe.secret"};
+    return {result: false, message:"createSubscription.no.stripe.secret"};
   }
 
   // check not subscription member yet.
-  const privileges = await db.doc(`groups/{groupId}/privileges/${userId}`).get();
+  const privileges = await db.doc(`groups/${groupId}/privileges/${userId}`).get();
   if (privileges.exists && privileges.data().value && privileges.data().value >= Privileges.subscriber) {
-    return {result: false, message:"already.member"};
+    return {result: false, message:"createSubscription.already.member"};
   }
 
   // everything ok
@@ -100,7 +100,7 @@ export const createSubscription = async (db, data, context) => {
   const subscription = await stripeApi.createSubscription(userId, groupId, planId);
 
   if (!subscription) {
-    return {result: false, message:"failed.subscription"};
+    return {result: false, message:"createSubscription.failed.subscription"};
   }
 
   const period = {
