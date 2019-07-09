@@ -59,10 +59,12 @@ describe('Group function test', () => {
     
     const beforeGroupDataSnap = test.firestore.makeDocumentSnapshot({
       groupName: "hello",
+      owner: aliceUserId, 
     }, `groups/${groupId}`);
     const afterGroupDataSnap = test.firestore.makeDocumentSnapshot({
       groupName: "hello",
       subscription: true,
+      owner: aliceUserId, 
       plans: [{ price: 2000,
                 title: "学生会員",
                 currency: "jpy",
