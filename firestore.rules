@@ -13,6 +13,9 @@ service cloud.firestore {
     function articleInfo(groupId, articleId) {
       return get(/databases/$(database)/documents/groups/$(groupId)/articles/$(articleId)).data;
     }
+    function pageInfo(groupId, pageId) {
+      return get(/databases/$(database)/documents/groups/$(groupId)/pages/$(pageId)).data;
+    }
     function userPrivilege(groupId, userId) {
       // Note: This uses the custom token.
       return request.auth.token.privileges[groupId];
@@ -103,13 +106,19 @@ service cloud.firestore {
       allow write: if request.auth.uid != null 
           && articleInfo(groupId, articleId).owner == request.auth.uid;
       allow read: if isOpenToPublic(articleInfo(groupId, articleId).read);
-    }
-		match /groups/{groupId}/pages/{articleId} {
-    	allow read;
       allow write: if isUserAdmin(groupId, request.auth.uid);
     }
-		match /groups/{groupId}/pages/{articleId}/sections/{sectionId} {
+		match /groups/{groupId}/pages/{pageId} {
     	allow read;
+      allow create: if request.auth.uid != null 
+          && groupInfo(groupId).privileges.page.create <= userPrivilege(groupId, request.auth.uid);
+      allow update, delete: if resource.data.owner == request.auth.uid;
+      allow update, delete: if isUserAdmin(groupId, request.auth.uid);
+    }
+		match /groups/{groupId}/pages/{pageId}/sections/{sectionId} {
+    	allow read;
+      allow write: if request.auth.uid != null 
+          && pageInfo(groupId, pageId).owner == request.auth.uid;
       allow write: if isUserAdmin(groupId, request.auth.uid);
     }
 		match /groups/{groupId}/events/{eventId} {
