@@ -101,6 +101,13 @@
     "settings.event.create":"イベントを新規作成する権限",
     "settings.member.read":"名簿を見る権利",
 
+    "account.guest":"あなたはこのグループには属していません",
+    "account.owner":"あなたはこのグループの管理責任者です",
+    "account.admin":"あなたはこのグループの管理者です",
+    "account.mentor":"あなたはこのグループのアドバイザです",
+    "account.subscriber":"あなたはこのグループに加入者しています",
+    "account.member":"あなたはこのグループのメンバーです",
+
     "error.invalid.groupname":"グループ名が存在しません",
     "error.invalid.articleId":"この記事は存在しません",
     "warning.access.denied":"アクセスが拒否されました",

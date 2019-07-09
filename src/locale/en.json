@@ -101,6 +101,12 @@
     "settings.event.create":"Can create a new event",
     "settings.member.read":"Can see the roster",
 
+    "account.owner":"You are the owner of this group.",
+    "account.admin":"You are an admin of this group.",
+    "account.mentor":"You are a mentor of this group.",
+    "account.subscriber":"You are a subscriber of this group.",
+    "account.member":"You are a member of this group.",
+
     "error.invalid.groupname":"Invalid Group Name",
     "error.invalid.articleId":"This article does not exist.",
     "warning.access.denied":"Access Denied",
