@@ -101,6 +101,7 @@
     "settings.event.create":"Can create a new event",
     "settings.member.read":"Can see the roster",
 
+    "account.guest":"You do not belong to this group.",
     "account.owner":"You are the owner of this group.",
     "account.admin":"You are an admin of this group.",
     "account.mentor":"You are a mentor of this group.",
