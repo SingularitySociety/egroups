@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { FormControl, Select, InputLabel, Typography, Button } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
+import { Redirect } from 'react-router-dom';
 import PlanOptions from './PlanOptions';
 import CardRegistration from './CardRegistration';
 import * as firebase from "firebase/app";
@@ -17,16 +18,20 @@ const styles = theme => ({
     width:theme.spacing(38),
     marginBottom: theme.spacing(2),
   },
+  button: {
+    marginRight: theme.spacing(1),
+  },
 });
 const useStyles = makeStyles(styles);
 
 function CheckoutForm(props) {
   const classes = useStyles();
-  const { db, group, user } = props;
+  const { db, group, user, privilege } = props;
   const planLength = (group.plans && group.plans.length) || 0;
   const [ planIndex, setPlanIndex ] = useState(planLength - 1);
   const [ customer, setCustomer ] = useState(null);
   const [ processing, setProcessing ] = useState(false);
+  const [ justSubscribed, setJustSubscribed ] = useState(false);
 
   useEffect(()=>{
     async function foo() {
@@ -62,13 +67,19 @@ function CheckoutForm(props) {
     setProcessing(true);
     const result = (await createSubscription(context)).data;
     setProcessing(false);
+    setJustSubscribed(result.result);
     console.log(result);
   }
 
   if (planLength === 0) {
     return <Typography color="error"><FormattedMessage id="plan.empty" /></Typography>
   }
-  return <React.Fragment>
+  if (privilege > 0) {
+    if (justSubscribed) {
+      return <Redirect to={`/${group.groupName}/member`} />
+    }
+  }
+  return <div>
       <CardRegistration customer={customer} didUpdate={customerDidUpdate} />
       { customer &&
         <form>
@@ -86,18 +97,18 @@ function CheckoutForm(props) {
               }} />
           </FormControl>
           <br/>
-          <FormControl>
-            <Button variant="contained" color="primary" onClick={subscribe}>
+          <div>
+            <Button variant="contained" color="primary" onClick={subscribe} className={classes.button}>
               <FormattedMessage id="do.subscribe" />
             </Button>
             {
               processing && 
               <CircularProgress size={24} />
             }
-          </FormControl>
+          </div>
         </form>
       }
-  </React.Fragment>;
+  </div>;
 }
 
 CheckoutForm.propTypes = {
