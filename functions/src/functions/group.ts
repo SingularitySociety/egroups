@@ -64,6 +64,7 @@ export const memberDidDelete  = async (db, admin, snapshot, context) => {
   await db.doc("/groups/" + groupId + "/privileges/" + userId).delete();
 
   await utils.deleteSubcollection(snapshot, "private");
+  await utils.deleteSubcollection(snapshot, "secret");
 
   // This is for custom token to control the access to Firestore Storage.
   const ref = db.doc(`/privileges/${userId}`);
