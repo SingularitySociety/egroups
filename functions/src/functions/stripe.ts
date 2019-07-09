@@ -147,11 +147,11 @@ export const groupDidUpdate = async (db, change, context) => {
       const existPlans = (stripeData && stripeData.plans) || {};
       const newPlans = {};
       await utils.asyncForEach(after.plans, async(plan) => {
-        // todp validate plan
+        // todo validate plan
         const price = plan.price;
         const currency = plan.currency || "jpy";
         const key = [String(price), currency].join("_")
-        if (stripeData && (!stripeData.plans || !stripeData.plans[key])) {
+        if (!stripeData || !stripeData.plans || !stripeData.plans[key]) {
           const stripePlan = await stripeApi.createPlan(groupId, price, currency);
           newPlans[key] = stripePlan;
           await stripeUtils.stripeLog(db, userId, {plan}, stripeUtils.stripeActions.planCreated);
