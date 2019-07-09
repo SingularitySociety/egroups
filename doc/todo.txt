@@ -16,6 +16,7 @@ Chat: Rich Text?
 Subscribe: User Name (instead of Johnes)
 Subscribe: Hide ZIP
 public Blog, and public News
+Page: Show different tabs for non-members
 
 ----- Done -----
 Channels/Blog: Debug read/unread
