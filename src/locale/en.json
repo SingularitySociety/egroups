@@ -97,6 +97,7 @@
     "settings.open":"Open (Anybody can Join)",
     "settings.channel.create":"Can create a new chat channel",
     "settings.article.create":"Can create a new blog entry",
+    "settings.page.create":"Can create a new page",
     "settings.event.create":"Can create a new event",
     "settings.member.read":"Can see the roster",
 

@@ -49,6 +49,9 @@ class Settings extends React.Component {
     case "articleCreate":
       await this.refGroup.set({privileges:{article:{create:parseInt(event.target.value)}}}, {merge:true});
       break;
+    case "pageCreate":
+        await this.refGroup.set({privileges:{page:{create:parseInt(event.target.value)}}}, {merge:true});
+        break;
     case "eventCreate":
       await this.refGroup.set({privileges:{event:{create:parseInt(event.target.value)}}}, {merge:true});
       break;
@@ -88,6 +91,7 @@ class Settings extends React.Component {
     const subscription = group.subscription || false;
     const channelCreate = group.privileges.channel.create || Privileges.member;
     const articleCreate = group.privileges.article.create || Privileges.member;
+    const pageCreate = group.privileges.page.create || Privileges.admin;
     const eventCreate = group.privileges.event.create || Privileges.member;
     const memberRead = (group.privileges.member && group.privileges.member.read) || Privileges.member;
     const imageThumbnails = group.profile && group.profile.thumbnails;
@@ -140,6 +144,13 @@ class Settings extends React.Component {
         <FormControl className={classes.formControl}>
           <InputLabel><FormattedMessage id="settings.article.create" /></InputLabel>
           <Select　native　value={articleCreate}　onChange={this.handleChange('articleCreate')}>
+            <PrivilegeOptions />
+          </Select>
+        </FormControl>
+        <br/>
+        <FormControl className={classes.formControl}>
+          <InputLabel><FormattedMessage id="settings.page.create" /></InputLabel>
+          <Select　native　value={pageCreate}　onChange={this.handleChange('pageCreate')}>
             <PrivilegeOptions />
           </Select>
         </FormControl>

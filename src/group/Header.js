@@ -197,18 +197,15 @@ class MyAppBar extends React.Component {
         </AppBar>
         <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={this.closeMe}>
           {
-            privilege && 
-            <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/account`}><FormattedMessage id="account" /></MenuItem>
-          }
-          {
-            privilege && 
-            <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/listing`}><FormattedMessage id="listing" /></MenuItem>
-          }
-          {
-            (privilege >= Privileges.admin) && [
-            <MenuItem key="settogs" onClick={this.closeMe} component={Link} to={`/${group.groupName}/settings`}><FormattedMessage id="settings" /></MenuItem>,
-            <MenuItem key="pages" onClick={this.closeMe} component={Link} to={`/${group.groupName}/pages`}><FormattedMessage id="pages" /></MenuItem>,
+            privilege && [
+            <MenuItem key="listing" onClick={this.closeMe} component={Link} to={`/${group.groupName}/listing`}><FormattedMessage id="listing" /></MenuItem>,
+            <MenuItem key="account" onClick={this.closeMe} component={Link} to={`/${group.groupName}/account`}><FormattedMessage id="account" /></MenuItem>,
+            <MenuItem key="pages" onClick={this.closeMe} component={Link} to={`/${group.groupName}/pages`}><FormattedMessage id="pages" /></MenuItem>
             ]
+          }
+          {
+            (privilege >= Privileges.admin) && 
+            <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/settings`}><FormattedMessage id="settings" /></MenuItem>
           }
           <Divider />
             <MenuItem onClick={this.logout}><FormattedMessage id="logout" /></MenuItem>
