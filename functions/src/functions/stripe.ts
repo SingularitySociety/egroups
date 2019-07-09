@@ -56,10 +56,12 @@ export const createCustomer = async (db, data, context) => {
 export const createSubscription = async (db, data, context) => {
   // plan = {price, currency}
   if (!context.auth || !context.auth.uid) {
-    return {result: false, message:"createSubscription.no.uid"};
+    console.log("createSubscription error: no authentication info")
+    return {result: false, message:"invalid request"};
   }
   if (!data || !data.groupId || !data.plan || !data.plan.price || !data.plan.currency) {
-    return {result: false, message:"createSubscription.no.plan"};
+    console.log("createSubscription error: request parameter missing")
+    return {result: false, message:"invalid request"};
   }
   
   const userId = context.auth.uid;
@@ -69,30 +71,35 @@ export const createSubscription = async (db, data, context) => {
   
   const user = (await db.doc(`users/${userId}`).get());
   if (!user.exists) {
-    return {result: false, message:"createSubscription.no.user"};
+    console.log("createSubscription error: user not exists")
+    return {result: false, message:"invalid request"};
   }
 
   // check group
   const group = await db.doc(`groups/${groupId}`).get();
   if (!group.exists) {
-    return {result: false, message:"createSubscription.no.group"};
+    console.log("createSubscription error: group not exists")
+    return {result: false, message:"invalid request"};
   }
   
   // check plan
   const stripeGroup = await db.doc(`/groups/${groupId}/secret/stripe`).get(); 
 
   if (!stripeGroup.exists) {
-    return {result: false, message:"createSubscription.no.stripe.group"};
+    console.log("createSubscription error: stripe secret not exists")
+    return {result: false, message:"invalid request"};
   }
   const stripeGroupSecretData = stripeGroup.data();
   if (!stripeGroupSecretData || !stripeGroupSecretData.plans || !stripeGroupSecretData.plans[plan_key]) {
-    return {result: false, message:"createSubscription.no.stripe.secret"};
+    console.log("createSubscription error: stripe secret data not exists")
+    return {result: false, message:"invalid request"};
   }
 
   // check not subscription member yet.
   const privileges = await db.doc(`groups/${groupId}/privileges/${userId}`).get();
   if (privileges.exists && privileges.data().value && privileges.data().value >= Privileges.subscriber) {
-    return {result: false, message:"createSubscription.already.member"};
+    console.log("createSubscription error: already member")
+    return {result: false, message:"invalid request"};
   }
 
   // everything ok
@@ -100,7 +107,8 @@ export const createSubscription = async (db, data, context) => {
   const subscription = await stripeApi.createSubscription(userId, groupId, planId);
 
   if (!subscription) {
-    return {result: false, message:"createSubscription.failed.subscription"};
+    console.log("createSubscription error: subscription creation failed")
+    return {result: false, message:"invalid request"};
   }
 
   const period = {
