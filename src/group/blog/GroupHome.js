@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import MountDetector from '../../common/MountDetector';
@@ -16,28 +16,30 @@ const styles = theme => ({
   }
 });
 
-class GroupHome extends React.Component {
-  state = {};
-  componentDidMount() {
-    const { callbacks } = this.props;
-    callbacks.setTabbar("home");
-    this.loadArticle();
-  }
-  loadArticle = async () => {
-    const { group, db } = this.props;
+function GroupHome(props) {
+  const { group, db, user, callbacks, intl:{messages} } = props;
+  const { arp, privilege, profiles, history } = props;
+  const setTabbar = callbacks.setTabbar;
+  const [ article, setArticle ] = useState(null);
+  const [ canEdit, setCanEdit ] = useState(false);
+  const refArticle = db.doc(`groups/${group.groupId}/pages/${group.homepageId}`);
+
+  useEffect(()=>{
+    setTabbar("home");
+  }, [setTabbar]);
+
+  const loadArticle = async () => {
     if (group.homepageId) {
-      this.refArticle = db.doc(`groups/${group.groupId}/pages/${group.homepageId}`);
-      const article = (await this.refArticle.get()).data();
-      //console.log(article);
+      const article = (await refArticle.get()).data();
       article.articleId = group.homepageId;
-      this.setState({article});
+      setArticle(article);
     }
   }
-  privilegeDidMount = async (privilege) => {
-    const { group, db, user, callbacks, intl:{messages} } = this.props;
+
+  const privilegeDidMount = async (privilege) => {
     console.log({privilegeDidMount:privilege});
     if (privilege >= Privileges.admin) {
-      this.setState({canEdit:true});
+      setCanEdit(true);
       console.log("isAdmin", group.homepageId);
 
       // This code is not atomic but it is fine because there is only one owner
@@ -57,27 +59,25 @@ class GroupHome extends React.Component {
         group.homepageId = doc.id;
         callbacks.groupDidUpdate();
       }
-      this.loadArticle();
+      loadArticle();
     }
   }
-  privilegeWillUnmount = () => {
+
+  const privilegeWillUnmount = () => {
   }
-  render() {
-    const { group, user, db, arp, callbacks, privilege, profiles, history } = this.props;
-    const { article } = this.state;
-    const context = { group, user, db, article, arp, callbacks, privilege, profiles, history }
-    //const context = { user, group, db, member, history };
-    return (
-      <div>
-        { privilege > 0 && <MountDetector didMount={this.privilegeDidMount} willUnmount={this.privilegeWillUnmount} value={privilege} />}
-        { article && <BlogArticle {...context} refArticle={this.refArticle} />}
-        <Typography component="h3" variant="h3">
-          <FormattedMessage id="pages" />
-        </Typography>
-        <ArticleList {...context}/>
-      </div>
-    )
-  }
+
+  const context = { group, user, db, article, arp, callbacks, privilege, profiles, history }
+  //const context = { user, group, db, member, history };
+  return (
+    <div>
+      { privilege > 0 && <MountDetector didMount={privilegeDidMount} willUnmount={privilegeWillUnmount} value={privilege} />}
+      { article && <BlogArticle {...context} refArticle={refArticle} />}
+      <Typography component="h3" variant="h3">
+        <FormattedMessage id="pages" />
+      </Typography>
+      <ArticleList {...context}/>
+    </div>
+  )
 }
 
 GroupHome.propTypes = {
