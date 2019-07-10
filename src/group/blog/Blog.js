@@ -10,8 +10,8 @@ const styles = theme => ({
 class Blog extends React.Component {
   constructor(props) {
     super(props);
-    const { db, group, arp, match:{params:{articleId}} } = this.props;
-    this.refArticle = db.doc(`groups/${group.groupId}/${arp.collection}/${articleId}`);
+    const { group, arp, match:{params:{articleId}} } = this.props;
+    this.pathArticle = `groups/${group.groupId}/${arp.collection}/${articleId}`;
     this.state = {article:null, sections:[], resouces:null};
   }
 
@@ -21,7 +21,8 @@ class Blog extends React.Component {
 
     const error = {key:"error.invalid.articleId", value:articleId};
     try {
-      const article = (await this.refArticle.get()).data();
+      const refArticle = db.doc(this.pathArticle);
+      const article = (await refArticle.get()).data();
       if (article) {
         article.articleId = articleId;
         this.setState({article});
@@ -54,7 +55,7 @@ class Blog extends React.Component {
     if (!article) {
       return "";
     }
-    return <BlogArticle {...context} refArticle={this.refArticle}/>;
+    return <BlogArticle {...context} pathArticle={this.pathArticle}/>;
   }
 }
 

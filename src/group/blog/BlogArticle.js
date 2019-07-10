@@ -37,13 +37,14 @@ const styles = theme => ({
 });
 
 function BlogArticle(props) {
-  const { group, arp, user, refArticle, privilege, classes, db, profiles, callbacks } = props;
+  const { group, arp, user, pathArticle, privilege, classes, db, profiles, callbacks } = props;
   //state = {article:null, sections:[], resouces:null, readOnly:true};
   const [ article, setArticle ] = useState(props.article);
   const [ resources, setResources ] = useState(null);
   const [ readOnly, setReadOnly ] = useState(true);
   const her = profiles[article.owner];
   const hitProfile = callbacks.hitProfile;
+  const refArticle = db.doc(pathArticle);
 
   useEffect(() => {
     if (!her && privilege >= Privileges.member) {
@@ -52,9 +53,8 @@ function BlogArticle(props) {
     }    
   }, [her, privilege, hitProfile, article.owner]);
   useEffect(() => {
-    //console.log("BlogArticle, articleId", article.articleId);
-    // Note: We can use props.refArticle. Otherwise, useEffect will called for each render.
-    const refArticle = db.doc(`groups/${group.groupId}/${arp.collection}/${article.articleId}`);
+    // Note: We can refArticle. Otherwise, useEffect will called for each render.
+    const refArticle = db.doc(pathArticle);
     const detatcher = refArticle.collection("sections").onSnapshot((snapshot)=>{
       const newResources = {};
       snapshot.forEach((doc)=>{
@@ -64,7 +64,7 @@ function BlogArticle(props) {
       setResources(newResources);
     });
     return detatcher;
-  }, [group.groupId, arp.collection, article.articleId, db]);
+  }, [db, pathArticle]);
 
   async function spliceSections(index, size, sectionId) {
     const newArticle = Object.assign({}, article);
@@ -197,7 +197,7 @@ function BlogArticle(props) {
 
 BlogArticle.propTypes = {
     classes: PropTypes.object.isRequired,
-    refArticle: PropTypes.object.isRequired,
+    pathArticle: PropTypes.string.isRequired,
     arp: PropTypes.object.isRequired,
     group: PropTypes.object.isRequired,
     profiles: PropTypes.object.isRequired,

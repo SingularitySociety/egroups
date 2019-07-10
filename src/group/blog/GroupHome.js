@@ -21,8 +21,7 @@ function GroupHome(props) {
   const { arp, privilege, profiles, history } = props;
   const setTabbar = callbacks.setTabbar;
   const [ article, setArticle ] = useState(null);
-  const path = group.homepageId && `groups/${group.groupId}/pages/${group.homepageId}`;
-  const refArticle = path && db.doc(path);
+  const pathArticle = group.homepageId && `groups/${group.groupId}/pages/${group.homepageId}`;
 
   useEffect(()=>{
     setTabbar("home");
@@ -71,7 +70,7 @@ function GroupHome(props) {
   return (
     <div>
       { privilege > 0 && <MountDetector didMount={privilegeDidMount} willUnmount={privilegeWillUnmount} value={privilege} />}
-      { article && <BlogArticle {...context} refArticle={refArticle} />}
+      { article && <BlogArticle {...context} pathArticle={pathArticle} />}
       <Typography component="h3" variant="h3">
         <FormattedMessage id="pages" />
       </Typography>
