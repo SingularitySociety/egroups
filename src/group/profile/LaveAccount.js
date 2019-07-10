@@ -29,7 +29,7 @@ function LeaveAccount(props) {
   const { db, user, group, callbacks, privilege } = props;
   const { classes } = props;
   const path = user ? `/groups/${group.groupId}/members/${user.uid}/private/stripe` : null;
-  const stripe = useDocument(db, path);
+  const [stripe] = useDocument(db, path);
   
   const handleLeave = async () => {
     const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
