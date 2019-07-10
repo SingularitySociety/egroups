@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Typography, IconButton, Grid } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
@@ -36,6 +36,7 @@ function Chat(props) {
   if (!channel) {
     return "";
   }
+  channel.channelId = channelId;
   const userId = (user && user.uid) || null;
   const canRead = privilege >= channel.read;
   const canWrite = privilege >= channel.write;
