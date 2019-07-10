@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -7,60 +7,48 @@ import { FormattedMessage } from 'react-intl';
 import { Redirect } from 'react-router-dom';
 import EditableField from '../../common/EditableField';
 import LockedArea from '../../common/LockedArea';
+import useOnDocument from '../../common/useOnDocument';
 
 const styles = theme => ({
 });
 
-class ChannelSettings extends React.Component {
-  constructor(props) {
-    super(props);
-    const { db, group, match:{params:{channelId}} } = props;
-    this.refEntity = db.doc(`groups/${group.groupId}/channels/${channelId}`);
-    this.state = {entity:null};
+function ChannelSettings(props) {
+  const { db, group, match:{params:{channelId}}, callbacks } = props;
+  const path = `groups/${group.groupId}/channels/${channelId}`;
+  const [entity] = useOnDocument(db, path);
+  const setTabbar = callbacks.setTabbar;
+
+  useEffect(()=>{
+    setTabbar("channel.settings", `ch/${channelId}`);
+  }, [setTabbar, channelId]);
+
+  const onSave = name => async value => {
+    await db.doc(path).set({[name]:value}, {merge:true});
   }
-  async componentDidMount() {
-    const { match:{params:{channelId}}, callbacks, group } = this.props;
-    callbacks.setTabbar("channel.settings", `ch/${channelId}`);
-    this.detacher = this.refEntity.onSnapshot((doc)=>{
-      const entity = doc.data();
-      if (entity) {
-        this.setState({entity});
-      } else {
-        this.setState({redirect:`/${group.groupName}/channels`});
-      }
-    });
+  const onDelete = async () => {
+    await db.doc(path).delete();
   }
-  componentWillUnmount() {
-    this.detacher();
-  }
-  onSave = name => async value => {
-    await this.refEntity.set({[name]:value}, {merge:true});
-  }
-  onDelete = async () => {
-    await this.refEntity.delete();
-  }
-  render() {
-    const { entity, redirect } = this.state;
-    if (redirect) {
-      return <Redirect to={redirect} />
+
+  if (!entity) {
+    if (entity === null) {
+      return <Redirect to={`/${group.groupName}/channels`} />
     }
-    if (!entity) {
-      return "";
-    }
-    return (
-      <div>
-        <FormGroup row>
-          <EditableField label={<FormattedMessage id="channel.title"/>} value={entity.title} onSave={this.onSave('title')}/>
-        </FormGroup>
-        <LockedArea label={<FormattedMessage id="warning.dangerous" />}>
-          <Button variant="contained" onClick={this.onDelete}>
-            <DeleteIcon color="error" />
-            <Typography color="error"><FormattedMessage id="destroy.channel" /></Typography>
-          </Button>
-        </LockedArea>
-      </div>
-    )
+    return "";
   }
+
+  return (
+    <div>
+      <FormGroup row>
+        <EditableField label={<FormattedMessage id="channel.title"/>} value={entity.title} onSave={onSave('title')}/>
+      </FormGroup>
+      <LockedArea label={<FormattedMessage id="warning.dangerous" />}>
+        <Button variant="contained" onClick={onDelete}>
+          <DeleteIcon color="error" />
+          <Typography color="error"><FormattedMessage id="destroy.channel" /></Typography>
+        </Button>
+      </LockedArea>
+    </div>
+  )
 }
 
 ChannelSettings.propTypes = {
