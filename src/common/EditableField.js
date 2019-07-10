@@ -26,7 +26,7 @@ function EditableField(props) {
 
   const onChange = (e) => {
     setValue(e.target.value);
-    setEditing(value !== props.value);
+    setEditing(e.target.value !== props.value);
     setIgnoreBlur(false);
   }
   const onSubmit = async (e) => {
