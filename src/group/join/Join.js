@@ -57,7 +57,9 @@ function Join(props) {
   if (!(group && group.open)) {
       return <div>
           {title}
-          <Typography>This community is invitation only.</Typography>
+          <Typography>
+            <FormattedMessage id="join.closed" />
+          </Typography>
           <Button variant="contained" onClick={handleJoin} className={classes.button}>Try to Join</Button>
           {
               error && <p style={{color:"red"}}>{error}</p>
@@ -67,7 +69,9 @@ function Join(props) {
   }
   return <div>
           {title}
-          <Typography>This community is open to public. Feel free to join anytime.</Typography>
+          <Typography>
+            <FormattedMessage id="join.open" />
+          </Typography>
           <Button variant="contained" color="primary" onClick={handleJoin} className={classes.button}><FormattedMessage id="join" /></Button>
           {
               error && <p style={{color:"red"}}>{error}</p>

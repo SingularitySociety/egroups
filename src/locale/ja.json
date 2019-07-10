@@ -101,6 +101,9 @@
     "settings.event.create":"イベントを新規作成する権限",
     "settings.member.read":"名簿を見る権利",
 
+    "join.open":"このグループはオープン・コミュニティで、誰でも参加が可能です。",
+    "join.closed":"このグループは招待状をもらった人しか参加できません。",
+
     "account.guest":"あなたはこのグループには属していません",
     "account.owner":"あなたはこのグループの管理責任者です",
     "account.admin":"あなたはこのグループの管理者です",

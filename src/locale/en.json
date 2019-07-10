@@ -101,6 +101,9 @@
     "settings.event.create":"Can create a new event",
     "settings.member.read":"Can see the roster",
 
+    "join.open":"This group is open to public. You may join anytime by clicking the Join button below.",
+    "join.closed":"This group is invitation only.",
+
     "account.guest":"You do not belong to this group.",
     "account.owner":"You are the owner of this group.",
     "account.admin":"You are an admin of this group.",
