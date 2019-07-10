@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import MountDetector from '../../common/MountDetector';
@@ -9,6 +9,7 @@ import BlogArticle from './BlogArticle';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import ArticleList from './ArticleList';
 import { Typography } from '@material-ui/core';
+import useDocument from '../../common/useDocument';
 
 const styles = theme => ({
   welcome: {
@@ -20,20 +21,15 @@ function GroupHome(props) {
   const { group, db, user, callbacks, intl:{messages} } = props;
   const { arp, privilege, profiles, history } = props;
   const setTabbar = callbacks.setTabbar;
-  const [ article, setArticle ] = useState(null);
   const pathArticle = group.homepageId && `groups/${group.groupId}/pages/${group.homepageId}`;
+  const [ article ] = useDocument(db, pathArticle);
 
   useEffect(()=>{
     setTabbar("home");
   }, [setTabbar]);
 
-  const loadArticle = async () => {
-    if (group.homepageId) {
-      const refArticle = db.doc(`groups/${group.groupId}/pages/${group.homepageId}`);
-      const article = (await refArticle.get()).data();
-      article.articleId = group.homepageId;
-      setArticle(article);
-    }
+  if (article) {
+    article.articleId = group.homepageId;
   }
 
   const privilegeDidMount = async (privilege) => {
@@ -58,7 +54,6 @@ function GroupHome(props) {
         group.homepageId = doc.id;
         callbacks.groupDidUpdate();
       }
-      loadArticle();
     }
   }
 
