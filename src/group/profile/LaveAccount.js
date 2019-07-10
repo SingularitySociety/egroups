@@ -5,7 +5,7 @@ import { Button, Typography } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import LockedArea from '../../common/LockedArea';
 import Privileges from '../../const/Privileges';
-import useStripe from '../hooks/useStripe';
+import useDocument from '../../common/useDocument';
 
 const styles = theme => ({
   button: {
@@ -28,7 +28,8 @@ function role(privilege) {
 function LeaveAccount(props) {
   const { db, user, group, callbacks, privilege } = props;
   const { classes } = props;
-  const stripe = useStripe(db, group.groupId, user && user.uid);
+  const path = user ? `/groups/${group.groupId}/members/${user.uid}/private/stripe` : null;
+  const stripe = useDocument(db, path);
   
   const handleLeave = async () => {
     const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
@@ -47,7 +48,6 @@ function LeaveAccount(props) {
   }
 
   if (privilege === Privileges.subscriber) {
-    console.log(stripe);
     if (stripe && stripe.period && stripe.subscription) {
       const { period:{start, end}, subscription:{plan} } = stripe;
       console.log(start, end, plan);
