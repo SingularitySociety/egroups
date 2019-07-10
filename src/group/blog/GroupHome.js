@@ -21,8 +21,8 @@ function GroupHome(props) {
   const { arp, privilege, profiles, history } = props;
   const setTabbar = callbacks.setTabbar;
   const [ article, setArticle ] = useState(null);
-  const [ canEdit, setCanEdit ] = useState(false);
-  const refArticle = db.doc(`groups/${group.groupId}/pages/${group.homepageId}`);
+  const path = group.homepageId && `groups/${group.groupId}/pages/${group.homepageId}`;
+  const refArticle = path && db.doc(path);
 
   useEffect(()=>{
     setTabbar("home");
@@ -30,6 +30,7 @@ function GroupHome(props) {
 
   const loadArticle = async () => {
     if (group.homepageId) {
+      const refArticle = db.doc(`groups/${group.groupId}/pages/${group.homepageId}`);
       const article = (await refArticle.get()).data();
       article.articleId = group.homepageId;
       setArticle(article);
@@ -39,7 +40,6 @@ function GroupHome(props) {
   const privilegeDidMount = async (privilege) => {
     console.log({privilegeDidMount:privilege});
     if (privilege >= Privileges.admin) {
-      setCanEdit(true);
       console.log("isAdmin", group.homepageId);
 
       // This code is not atomic but it is fine because there is only one owner
