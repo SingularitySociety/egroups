@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ChannelList from './ChannelList';
@@ -15,14 +15,16 @@ const styles = theme => ({
   }
 });
 
-class Channels extends React.Component {
-  componentDidMount() {
-    const { callbacks } = this.props;
-    callbacks.setTabbar("channels");
-  }
-  createChannel = async (title) => {
-    console.log("createChannel:", title)
-    const { db, group, user } = this.props;
+function Channels(props) {
+  const { user, db, member, group, history, privilege, callbacks } = props;
+  const setTabbar = callbacks.setTabbar;
+
+  useEffect(()=>{
+    setTabbar("channels");
+  }, [setTabbar]);
+
+  const createChannel = async (title) => {
+    console.log("createChannel", title)
     db.collection(`groups/${group.groupId}/channels`).add({
       title,
       created: firebase.firestore.FieldValue.serverTimestamp(),
@@ -31,23 +33,24 @@ class Channels extends React.Component {
       write: group.privileges.channel.write || Privileges.member, 
     });
   }
-  render() {
-      const { user, db, member, group, history, privilege } = this.props;
-      const context = { user, group, db, member, history };
-      const canCreateNew = privilege 
-              >= ((group.privileges && group.privileges.channel && group.privileges.channel.create) || Privileges.member);
-      return (
-        <Grid container justify="center" spacing={1}>
-          <Grid item xs={12} style={{textAlign:"center"}}>
-                  { canCreateNew && <CreateNew createNew={ this.createChannel } 
-                    action={<FormattedMessage id="create" />} label={<FormattedMessage id="channel" />}/> }
-          </Grid>
-          <Grid item xs={12}>
-            <ChannelList {...context}/>
-          </Grid>
-        </Grid>
-      )
-  }
+
+  const context = { user, group, db, member, history };
+  const canCreateNew = privilege 
+          >= ((group.privileges && group.privileges.channel && group.privileges.channel.create) || Privileges.member);
+  return (
+    <Grid container justify="center" spacing={1}>
+      <Grid item xs={12} style={{textAlign:"center"}}>
+        { canCreateNew && 
+          <CreateNew createNew={ createChannel } 
+            action={<FormattedMessage id="create" />} 
+            label={<FormattedMessage id="channel" />} /> 
+        }
+      </Grid>
+      <Grid item xs={12}>
+        <ChannelList {...context}/>
+      </Grid>
+    </Grid>
+  )
 }
 
 Channels.propTypes = {
