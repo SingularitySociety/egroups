@@ -21,31 +21,29 @@ const styles = theme => ({
   }
 });
 
-class ChannelItem extends React.Component {
-  render() {
-    const { classes, channel, group, history } = this.props;
-    let className = classes.unread;
-    if (!channel.updated || !history) {
-      //console.log("case 1", channel.updated, history);
+function ChannelItem(props) {
+  const { classes, channel, group, history } = props;
+  let className = classes.unread;
+  if (!channel.updated || !history) {
+    //console.log("case 1", channel.updated, history);
+    className = classes.read;
+  } else if (history.channels) {
+    //console.log("case 2");
+    const access = history.channels[channel.channelId];
+    if (access && access.l > channel.updated) {
       className = classes.read;
-    } else if (history.channels) {
-      //console.log("case 2");
-      const access = history.channels[channel.channelId];
-      if (access && access.l > channel.updated) {
-        className = classes.read;
-      }
     }
-    return (
-      <Paper className={classes.root}>
-        <MUILink component={Link} to={`/${group.groupName}/ch/${channel.channelId}`} >
-          <Grid container spacing={1}>
-            <Grid item><ChatIcon /></Grid>
-            <Grid item className={className}>{ channel.title }</Grid>
-          </Grid>
-        </MUILink>
-      </Paper>
-    )
   }
+  return (
+    <Paper className={classes.root}>
+      <MUILink component={Link} to={`/${group.groupName}/ch/${channel.channelId}`} >
+        <Grid container spacing={1}>
+          <Grid item><ChatIcon /></Grid>
+          <Grid item className={className}>{ channel.title }</Grid>
+        </Grid>
+      </MUILink>
+    </Paper>
+  )
 }
 
 ChannelItem.propTypes = {
