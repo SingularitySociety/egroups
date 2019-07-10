@@ -12,6 +12,7 @@ function Blog(props) {
   const { match:{params:{articleId}}, callbacks, arp, user, db, group } = props;
   const { privilege, profiles } = props;
   const pathArticle = `groups/${group.groupId}/${arp.collection}/${articleId}`;
+  const pathHistory = `groups/${group.groupId}/members/${user.uid}/private/history`;
   const [ article, err ] = useDocument(db, pathArticle);
   const setTabbar = callbacks.setTabbar;
 
@@ -23,11 +24,11 @@ function Blog(props) {
     if (user) {
       const articles = {};
       articles[articleId] = { l:new Date() }; // NOT firebase.firestore.FieldValue.serverTimestamp()
-      db.doc(`groups/${group.groupId}/members/${user.uid}/private/history`).set({
+      db.doc(pathHistory).set({
         articles
       }, {merge:true})
     }
-  },[db, user, articleId, group.groupId, user.id]);
+  },[db, articleId, pathHistory]);
 
   if (err) {
     return <ErrorMessage error={{key:"error.invalid.articleId", value:articleId}} />
