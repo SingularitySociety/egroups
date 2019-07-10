@@ -1,61 +1,59 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { FormGroup } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import EditableField from '../../common/EditableField';
+import useDocument from '../../common/useDocument';
 
 const styles = theme => ({
-    button: {
-        margin: theme.spacing(1)
-    }
+  button: {
+      margin: theme.spacing(1)
+  }
 });
 
-class Profile extends React.Component {
-    state = { member:null };
-    async componentDidMount() {
-        const { db, group, callbacks, match:{params:{userId}} } = this.props;
-        callbacks.setTabbar("profile", `pr/${userId}`);
-        const member = (await db.doc(`groups/${group.groupId}/members/${userId}`).get()).data();
-        this.setState({member});
-    }
-    onSave = name => async value => {
-        // no-op
-    }    
+function Profile(props) {
+  const { db, group, user, callbacks, match:{params:{userId}}  } = props;
+  const setTabbar = callbacks.setTabbar;
+  const [member] = useDocument(db, `groups/${group.groupId}/members/${userId}`);
+
+  useEffect(()=>{
+    setTabbar("profile", `pr/${userId}`);
+  }, [setTabbar, userId]);
+
+  const onSave = name => async value => {
+      // no-op
+  }    
     
-    render() {
-        const { group, user } = this.props;
-        const { member } = this.state;
-        if (!user) {
-            return <Redirect to={`/${group.groupName}`} />
-        }
-        if (!member) {
-            return "";
-        }
-        return <div>
-          <FormGroup row>
-            <EditableField label={<FormattedMessage id="member.displayName"/>} 
-                value={member.displayName} onSave={this.onSave('displayName')} disabled={true}/>
-          </FormGroup>
-          <FormGroup row>
-            <EditableField label={<FormattedMessage id="member.description"/>} multiline={true}
-                value={member.description} onSave={this.onSave('description')} disabled={true}/>
-          </FormGroup>
-          <FormGroup row>
-            <EditableField label={<FormattedMessage id="member.email"/>} 
-                value={member.email || ""} onSave={this.onSave('email')} disabled={true}/>
-          </FormGroup>
-          <FormGroup row>
-            <EditableField label={<FormattedMessage id="member.twitter"/>} 
-                value={member.twitter || ""} onSave={this.onSave('twitter')} disabled={true}/>
-          </FormGroup>
-          <FormGroup row>
-            <EditableField label={<FormattedMessage id="member.github"/>} 
-                value={member.github || ""} onSave={this.onSave('github')} disabled={true}/>
-          </FormGroup>
-        </div>
-    }
+  if (!user) {
+      return <Redirect to={`/${group.groupName}`} />
+  }
+  if (!member) {
+      return "";
+  }
+  return <div>
+    <FormGroup row>
+      <EditableField label={<FormattedMessage id="member.displayName"/>} 
+          value={member.displayName} onSave={onSave('displayName')} disabled={true}/>
+    </FormGroup>
+    <FormGroup row>
+      <EditableField label={<FormattedMessage id="member.description"/>} multiline={true}
+          value={member.description} onSave={onSave('description')} disabled={true}/>
+    </FormGroup>
+    <FormGroup row>
+      <EditableField label={<FormattedMessage id="member.email"/>} 
+          value={member.email || ""} onSave={onSave('email')} disabled={true}/>
+    </FormGroup>
+    <FormGroup row>
+      <EditableField label={<FormattedMessage id="member.twitter"/>} 
+          value={member.twitter || ""} onSave={onSave('twitter')} disabled={true}/>
+    </FormGroup>
+    <FormGroup row>
+      <EditableField label={<FormattedMessage id="member.github"/>} 
+          value={member.github || ""} onSave={onSave('github')} disabled={true}/>
+    </FormGroup>
+  </div>
 }
 
 Profile.propTypes = {
