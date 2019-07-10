@@ -23,40 +23,39 @@ const styles = theme => ({
   },
 });
 
-class ArticleItem extends React.Component {
-  render() {
-    const { classes, article, group, history, arp } = this.props;
-    //console.log(article);
-    let className = classes.unread;
-    if (!article.updated || !history) {
-      //console.log("case 1");
+function ArticleItem(props) {
+  const { classes, article, group, history, arp } = props;
+
+  //console.log(article);
+  let className = classes.unread;
+  if (!article.updated || !history) {
+    //console.log("case 1");
+    className = classes.read;
+  } else if (history.articles) {
+    //console.log("case 2");
+    const access = history.articles[article.articleId];
+    if (access && access.l > article.updated) {
       className = classes.read;
-    } else if (history.articles) {
-      //console.log("case 2");
-      const access = history.articles[article.articleId];
-      if (access && access.l > article.updated) {
-        className = classes.read;
-      }
     }
-    return (
-      <Paper className={classes.item}>
-        <MUILink component={Link} 
-          to={`/${group.groupName}/${arp.leaf}/${article.articleId}`}>
-          <Grid container >
-            <Grid item><SubjectIcon /></Grid>
-            <Grid item xs={7} className={className}>
-              { article.title }
-            </Grid>
-            <Grid item xs={1}>
-              { article.read !== Privileges.guest  && <LockIcon fontSize="small" color="disabled"/> }
-            </Grid>
-            <Grid item xs={4}>
-            </Grid>
-          </Grid>
-        </MUILink>
-      </Paper>
-    )
   }
+  return (
+    <Paper className={classes.item}>
+      <MUILink component={Link} 
+        to={`/${group.groupName}/${arp.leaf}/${article.articleId}`}>
+        <Grid container >
+          <Grid item><SubjectIcon /></Grid>
+          <Grid item xs={7} className={className}>
+            { article.title }
+          </Grid>
+          <Grid item xs={1}>
+            { article.read !== Privileges.guest  && <LockIcon fontSize="small" color="disabled"/> }
+          </Grid>
+          <Grid item xs={4}>
+          </Grid>
+        </Grid>
+      </MUILink>
+    </Paper>
+  )
 }
 
 ArticleItem.propTypes = {
