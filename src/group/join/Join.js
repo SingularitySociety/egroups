@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, Button } from '@material-ui/core';
@@ -15,10 +15,15 @@ const styles = theme => ({
     }
 });
 
-class Join extends React.Component {
-  state = { error:null };
-  handleJoin = async () => {
-    const { db, user, group, callbacks } = this.props;
+function Join(props) {
+  const { db, user, group, callbacks, classes, member } = props;
+  const setTabbar = callbacks.setTabbar;
+  const [error, setError] = useState(null);
+  useEffect(()=>{
+    setTabbar("join");
+  }, [setTabbar]);
+
+  const handleJoin = async () => {
     const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
     try {
         await refMember.set({ 
@@ -35,46 +40,39 @@ class Join extends React.Component {
         //window.location.pathname = "/" + group.groupName;
     } catch(e) {
         console.log(e);
-        this.setState({error:"Unable to Join"})
+        setError("Unable to Join"); // BUGBUG
     }
   }
-  componentDidMount() {
-    const { callbacks } = this.props;
-    callbacks.setTabbar("join");
-  }
-  render() {
-    const { user, classes, group, member } = this.props;
-    const { error } = this.state;
-    const title = <Typography component="h2" variant="h6" gutterBottom>
-                    <FormattedMessage id="application" />
-                  </Typography>;
-    if (!user) {
-        return <PleaseLogin />;
-    }
-    if (member) {
-        console.log("Become a member or already a member. Redireting to the group home.");
-        return <Redirect to={"/" + group.groupName} />
-    }
-    if (!(group && group.open)) {
-        return <div>
-            {title}
-            <Typography>This community is invitation only.</Typography>
-            <Button variant="contained" onClick={this.handleJoin} className={classes.button}>Try to Join</Button>
-            {
-                error && <p style={{color:"red"}}>{error}</p>
-            }
-        </div>
 
-    }
-    return <div>
-            {title}
-            <Typography>This community is open to public. Feel free to join anytime.</Typography>
-            <Button variant="contained" color="primary" onClick={this.handleJoin} className={classes.button}><FormattedMessage id="join" /></Button>
-            {
-                error && <p style={{color:"red"}}>{error}</p>
-            }
-        </div>
+  const title = <Typography component="h2" variant="h6" gutterBottom>
+                  <FormattedMessage id="application" />
+                </Typography>;
+  if (!user) {
+      return <PleaseLogin />;
   }
+  if (member) {
+      console.log("Become a member or already a member. Redireting to the group home.");
+      return <Redirect to={"/" + group.groupName} />
+  }
+  if (!(group && group.open)) {
+      return <div>
+          {title}
+          <Typography>This community is invitation only.</Typography>
+          <Button variant="contained" onClick={handleJoin} className={classes.button}>Try to Join</Button>
+          {
+              error && <p style={{color:"red"}}>{error}</p>
+          }
+      </div>
+
+  }
+  return <div>
+          {title}
+          <Typography>This community is open to public. Feel free to join anytime.</Typography>
+          <Button variant="contained" color="primary" onClick={handleJoin} className={classes.button}><FormattedMessage id="join" /></Button>
+          {
+              error && <p style={{color:"red"}}>{error}</p>
+          }
+      </div>
 }
 
 Join.propTypes = {
