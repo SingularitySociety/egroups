@@ -28,7 +28,7 @@ function Blog(props) {
         articles
       }, {merge:true})
     }
-  },[db, articleId, pathHistory]);
+  },[db, articleId, pathHistory, user]);
 
   if (err) {
     return <ErrorMessage error={{key:"error.invalid.articleId", value:articleId}} />
