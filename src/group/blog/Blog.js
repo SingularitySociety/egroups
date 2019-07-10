@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ErrorMessage from '../ErrorMessage';
@@ -12,7 +12,7 @@ function Blog(props) {
   const { match:{params:{articleId}}, callbacks, arp, user, db, group } = props;
   const { privilege, profiles } = props;
   const pathArticle = `groups/${group.groupId}/${arp.collection}/${articleId}`;
-  const [ article, err ] = useDocument(pathArticle);
+  const [ article, err ] = useDocument(db, pathArticle);
   const setTabbar = callbacks.setTabbar;
 
   useEffect(()=>{
@@ -38,7 +38,7 @@ function Blog(props) {
   }
   article.articleId = articleId;
   const context = { user, article, arp, group, privilege, db, profiles, callbacks };
-  return <BlogArticle {...context} pathArticle={this.pathArticle}/>;
+  return <BlogArticle {...context} pathArticle={pathArticle}/>;
 }
 
 Blog.propTypes = {
