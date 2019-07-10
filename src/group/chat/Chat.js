@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Typography, IconButton, Grid } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
@@ -9,33 +9,17 @@ import { Link } from 'react-router-dom';
 import Privileges from '../../const/Privileges';
 import ErrorMessage from '../ErrorMessage';
 import Messages from './Messages';
+import useDocument from '../../common/useDocument';
 
 function Chat(props) {
-  const [channel, setChannel] = useState(null);
-  const [error, setError] = useState(null);
   const { db, group, user, member, match:{params:{channelId}}, callbacks, profiles, privilege } = props;
   const refMessages = db.collection(`groups/${group.groupId}/channels/${channelId}/messages`);
   const setTabbar = callbacks.setTabbar;
+  const [channel, err] = useDocument(db, `groups/${group.groupId}/channels/${channelId}`);
 
   useEffect(()=> {
     setTabbar("channel", `ch/${channelId}`);
   }, [setTabbar, channelId]);
-  useEffect(()=> {
-    console.log("useEffect getChannel", channelId);
-    async function getChannel() {
-      try {
-        const ref = db.doc(`groups/${group.groupId}/channels/${channelId}`);
-        const channel = (await ref.get()).data();
-        channel.channelId = channelId;
-        setChannel(channel);
-      } catch(e) {
-        console.log(e);
-        const error = { key: "warning.access.denied", channelId:channelId };
-        setError(error);
-      }
-    }
-    getChannel();
-  }, [channelId, db, group.groupId]);
 
   const postMessgae = async (message) => {
     await refMessages.add({
@@ -46,12 +30,13 @@ function Chat(props) {
     });
   }
 
-  if (error) {
-    return <ErrorMessage error={error} />
+  if (err) {
+    return <ErrorMessage error={{ key: "warning.access.denied", channelId:channelId }} />
   }
   if (!channel) {
     return "";
   }
+  channel.channelId = channelId;
   const userId = (user && user.uid) || null;
   const canRead = privilege >= channel.read;
   const canWrite = privilege >= channel.write;

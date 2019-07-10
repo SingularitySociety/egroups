@@ -4,13 +4,19 @@ import { useState, useEffect } from 'react';
 // It returns null if the path is null or the document does not exist. 
 function useDocument(db, path) {
   const [document, setDocument] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(()=>{
     if (path) {
       const ref = db.doc(path);
       async function fetchDocument() {
-        const snapshot = await ref.get();
-        setDocument(snapshot.data());
+        try {
+          const snapshot = await ref.get();
+          setDocument(snapshot.data());
+        } catch(e) {
+          console.log(e);
+          setError(e);
+        }
       }
       fetchDocument();
     } else {
@@ -18,7 +24,7 @@ function useDocument(db, path) {
     }
   }, [db, path]);
 
-  return document;
+  return [document, error];
 }
 
 export default useDocument;
