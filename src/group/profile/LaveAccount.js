@@ -42,22 +42,21 @@ function LeaveAccount(props) {
     window.location.pathname = "/"; // + group.groupName;
   }
 
-  async function handleUnsubscribe(subscriptionId, cancel) {
-    console.log("unsubscribe");
+  // cancel:true means we are unsubscribing
+  // cancel:false means we are re-subscribing
+  async function handleUnsubscribe(cancel) {
     const cancelSubscription = firebase.functions().httpsCallable('cancelSubscription');
-    const context = { groupId:group.groupId, subscriptionId, cancel }
-    console.log(context, cancelSubscription, cancel);
+    const context = { groupId:group.groupId, cancel }
     setProcessing(true);
-    console.log("step1");
     try {
       const result = (await cancelSubscription(context)).data;
-      console.log("step2");
-      console.log(result);
+      if (result.result === false) {
+        console.log(result);
+      }
     } catch(e) {
       console.log(e);
     }
     setProcessing(false);
-    console.log("step3");
   }
 
   const role = roleMap(privilege);
@@ -75,15 +74,12 @@ function LeaveAccount(props) {
     let planName = null;
     let price = null;
     let billing = null;
-    let subscriptionId = null;
     let cancelled = false;
     if (stripe && stripe.period && stripe.subscription) {
-      const { period:{start, end}, subscription:{plan} } = stripe;
-      console.log(stripe, start);
-      subscriptionId = plan.id;
+      const { period:{end}, subscription:{plan} } = stripe;
       cancelled = stripe.subscription.cancel_at_period_end;
+      //console.log(stripe, cancelled);
 
-      console.log(cancelled);
       group.plans.forEach((item)=>{
         if (item.price === plan.amount && item.currency === plan.currency) {
           planName = item.name;
@@ -109,17 +105,26 @@ function LeaveAccount(props) {
       </div>
       <div>
       {
-        cancelled ?
-        <Button variant="contained" className={classes.button} 
-          onClick={()=>{handleUnsubscribe(subscriptionId, false)}}>
-          <FormattedMessage id={ cancelled ? "resubscribe" : "unsubscribe" } />
-        </Button>
+        cancelled ? <div>
+          <Button variant="contained" className={classes.button} 
+            onClick={()=>{handleUnsubscribe(false)}}>
+            <FormattedMessage id={ cancelled ? "resubscribe" : "unsubscribe" } />
+          </Button>
+          {
+            processing && 
+            <CircularProgress size={24} />
+          }
+        </div>
         :
         <LockedArea label={<FormattedMessage id="warning.dangerous" />}>
-        <Button variant="contained" className={classes.button} 
-          onClick={()=>{handleUnsubscribe(subscriptionId, true)}}>
-          <FormattedMessage id={ cancelled ? "resubscribe" : "unsubscribe" } />
-        </Button>
+          <Button variant="contained" className={classes.button} 
+            onClick={()=>{handleUnsubscribe(true)}}>
+            <FormattedMessage id={ cancelled ? "resubscribe" : "unsubscribe" } />
+          </Button>
+          {
+          processing && 
+          <CircularProgress size={24} />
+          }
         </LockedArea>
       }
     </div>
@@ -140,10 +145,6 @@ function LeaveAccount(props) {
         <Button variant="contained" className={classes.button} onClick={handleLeave}>
           <FormattedMessage id="leave" />
         </Button>
-        {
-          processing && 
-          <CircularProgress size={24} />
-        }
       </LockedArea>
     </div>
   </React.Fragment>
