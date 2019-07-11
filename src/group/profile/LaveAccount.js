@@ -45,12 +45,19 @@ function LeaveAccount(props) {
   async function handleUnsubscribe(subscriptionId) {
     console.log("unsubscribe");
     const cancelSubscription = firebase.functions().httpsCallable('cancelSubscription');
-    const context = { grouId:group.groupId, subscriptionId }
-    console.log(context);
+    const context = { groupId:group.groupId, subscriptionId }
+    console.log(context, cancelSubscription);
     setProcessing(true);
-    //const result = (await cancelSubscription(context)).data;
+    console.log("step1");
+    try {
+      const result = (await cancelSubscription(context)).data;
+      console.log("step2");
+      console.log(result);
+    } catch(e) {
+      console.log(e);
+    }
     setProcessing(false);
-    //console.log(result);
+    console.log("step3");
   }
 
   const role = roleMap(privilege);
