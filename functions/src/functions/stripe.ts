@@ -109,8 +109,8 @@ export const createSubscription = async (db, data, context) => {
   }
 
   const period = {
-    start: subscription.current_period_end,
-    end: subscription.current_period_start,
+    start: subscription.current_period_start,
+    end: subscription.current_period_end,
   };
   
   await updateSubscriptionData(db, groupId, userId, subscription, period);
@@ -192,7 +192,7 @@ export const cancelSubscription = async (db, data, context) => {
   const subscription = await stripeApi.cancelSubscription(subscriptionId, cancel);
 
   const period = {
-    end: subscription.current_period_start,
+    end: subscription.current_period_end,
   };
   await updateSubscriptionData(db, groupId, userId, subscription, period);
 
