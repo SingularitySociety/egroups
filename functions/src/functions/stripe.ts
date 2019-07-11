@@ -164,6 +164,7 @@ export const groupDidUpdate = async (db, change, context) => {
           newPlans[key] = stripePlan;
           await stripeUtils.stripeLog(db, userId, {plan}, stripeUtils.stripeActions.planCreated);
         }
+        return true
       });
       if (Object.keys(newPlans).length > 0) {
         const updatedPlan = merge(existPlans, newPlans);
@@ -177,6 +178,7 @@ export const groupDidUpdate = async (db, change, context) => {
     }
     // const value = snapshot.data();
   }
+  return true;
 }
 
 export const cancelSubscription = async (db, data, context) => {
