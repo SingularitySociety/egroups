@@ -1,4 +1,5 @@
 {
+    "guest":"Guest",
     "member":"Member",
     "subscriber":"Subscriber",
     "mentor":"Mentor",
@@ -13,6 +14,7 @@
     "login":"Login",
     "join":"Join",
     "leave":"Leave",
+    "unsubscribe":"Unsubscribe",
     "post":"Post",
     "create":"Create",
     "cancel":"Cancel",
