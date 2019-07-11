@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
 import * as messaging from './utils/messaging';
-import * as utils from './utils/utils';
+import * as firebase_utils from './utils/firebase_utils';
 
 import * as stripeFunctions from './functions/stripe';
 import * as imageFunctions from './functions/image';
@@ -77,17 +77,17 @@ export const memberDidCreate = functions.firestore.document('groups/{groupId}/me
 
 export const articleDidDelete = functions.firestore.document('groups/{groupId}/articles/{articleId}')
   .onDelete((snapshot, context)=>{
-    return utils.deleteSubcollection(snapshot, "sections");
+    return firebase_utils.deleteSubcollection(snapshot, "sections");
   });
 
 export const pageDidDelete = functions.firestore.document('groups/{groupId}/pages/{articleId}')
   .onDelete((snapshot, context)=>{
-    return utils.deleteSubcollection(snapshot, "sections");
+    return firebase_utils.deleteSubcollection(snapshot, "sections");
   });
 
 export const channelDidDelete = functions.firestore.document('groups/{groupId}/channels/{channelId}')
   .onDelete((snapshot, context)=>{
-    return utils.deleteSubcollection(snapshot, "messages");
+    return firebase_utils.deleteSubcollection(snapshot, "messages");
   });
 
 export const sectionDidDelete = functions.firestore.document('groups/{groupId}/{articles}/{articleId}/sections/{sectionId}').onDelete(async (snapshot, context) => {
