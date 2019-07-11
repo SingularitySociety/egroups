@@ -26,10 +26,10 @@ export const createCustomer = async (db, data, context) => {
   const error_handler = logger.error_response_handler({func: "createCustomer", message: "invalid request"});
 
   if (!context.auth || !context.auth.uid) {
-    return error_handler({error_type: logger.ErrorTypes.NoUidError});
+    return error_handler({error_type: logger.ErrorTypes.NoUid});
   }
   if (!data || !data.token) {
-    return error_handler({error_type: ParameterMissingError});
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
   const userId = context.auth.uid;
   const token = data.token;
@@ -61,10 +61,10 @@ export const createSubscription = async (db, data, context) => {
   const error_handler = logger.error_response_handler({func: "createSubscription", message: "invalid request"});
   
   if (!context.auth || !context.auth.uid) {
-    return error_handler({error_type: logger.ErrorTypes.NoUidError});
+    return error_handler({error_type: logger.ErrorTypes.NoUid});
   }
   if (!data || !data.groupId || !data.plan || !data.plan.price || !data.plan.currency) {
-    return error_handler({error_type: ParameterMissingError});
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
   
   const userId = context.auth.uid;
@@ -173,10 +173,10 @@ export const cancelSubscription = async (db, data, context) => {
   const error_handler = logger.error_response_handler({func: "cancelSubscription", message: "invalid request"});
 
   if (!context.auth || !context.auth.uid) {
-    return error_handler({error_type: logger.ErrorTypes.NoUidError});
+    return error_handler({error_type: logger.ErrorTypes.NoUid});
   }
   if (!data || !data.groupId || !data.subscriptionId) {
-    return error_handler({error_type: ParameterMissingError});
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
   const userId = context.auth.uid;
   const {groupId} = data;

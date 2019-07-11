@@ -20,7 +20,7 @@ export enum ErrorTypes {
 }
 
 export const error_messages = {
-  [ErrorTypes.Hello]:  "hello error",
+  [ErrorTypes.HelloError]:  "hello error",
   [ErrorTypes.NoUid]:  "no authentication info",
   [ErrorTypes.ParameterMissing]:  "request parameter missing",
   [ErrorTypes.NoUser]: "user not exists",
@@ -28,7 +28,7 @@ export const error_messages = {
   [ErrorTypes.NoStripeSecret]: "stripe secret not exists",
   [ErrorTypes.NoStripeSecretData]: "stripe secret data not exists",
   [ErrorTypes.AlreadyMember]: "already member",
-  [ErrorTypes.StripeSubscriptionCreation]: "subscription creation failed"
+  [ErrorTypes.StripeSubscriptionCreation]: "subscription creation failed",
   [ErrorTypes.StripeApi]: "Stripe API error",
 }
 

@@ -1,16 +1,17 @@
 import Privileges from '../../react-lib/src/const/Privileges.js';
 import * as messaging from '../utils/messaging';
 import * as firebase_utils from '../utils/firebase_utils';
+import * as logger from '../utils/logger';
 
 export const createGroup = async (db:FirebaseFirestore.Firestore, data, context) => {
   const error_handler = logger.error_response_handler({func: "createGroup", message: "invalid request"});
 
   if (!context.auth || !context.auth.uid) {
-    return error_handler({error_type: logger.ErrorTypes.NoUidError});
+    return error_handler({error_type: logger.ErrorTypes.NoUid});
   }
   const userId = context.auth.uid;
   if (!data || !data.title || !data.ownerName) {
-    return error_handler({error_type: ParameterMissingError});
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
   const { title, ownerName } = data;
   const created = new Date();
@@ -97,11 +98,11 @@ export const createGroupName = async (db:FirebaseFirestore.Firestore, data, cont
   const error_handler = logger.error_response_handler({func: "createGroupName", message: "invalid request"});
 
   if (!context.auth || !context.auth.uid) {
-    return error_handler({error_type: logger.ErrorTypes.NoUidError});
+    return error_handler({error_type: logger.ErrorTypes.NoUid});
   }
   const { groupId, path, title, types } = data;
   if (!groupId || !path || !title || !types) {
-    return error_handler({error_type: ParameterMissingError});
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
 
   const refName = db.doc(`groupNames/${path}`);
