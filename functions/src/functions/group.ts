@@ -2,6 +2,8 @@ import Privileges from '../../react-lib/src/const/Privileges.js';
 import * as messaging from '../utils/messaging';
 import * as firebase_utils from '../utils/firebase_utils';
 import * as logger from '../utils/logger';
+import * as stripeApi from '../apis/stripe';
+
 
 export const createGroup = async (db:FirebaseFirestore.Firestore, data, context) => {
   const error_handler = logger.error_response_handler({func: "createGroup", message: "invalid request"});
@@ -107,6 +109,9 @@ export const createGroupName = async (db:FirebaseFirestore.Firestore, data, cont
 
   const refName = db.doc(`groupNames/${path}`);
   const refGroup = db.doc(`groups/${groupId}`);
+  const refAccont = db.doc(`groups/${groupId}/secret/account`);
+  const refAccontPrivate = db.doc(`groups/${groupId}/private/account`);
+
   return db.runTransaction(async (tr)=>{
     const docName = await tr.get(refName);
     const dataName = docName.data();
@@ -124,7 +129,11 @@ export const createGroupName = async (db:FirebaseFirestore.Firestore, data, cont
     if (dataGroup.owner !== context.auth.uid) {
       throw new Error("group.different.owner");
     }
-
+    if (types.subscription) {
+      const account = await stripeApi.createCustomAccount(groupId);
+      tr.set(refAccont, {account: account})
+      tr.set(refAccontPrivate, {account: account}) // todo convert data
+    }
     tr.set(refName, { groupId:groupId });
     tr.set(refGroup, { 
       groupName:path, 

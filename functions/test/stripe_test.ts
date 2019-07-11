@@ -1,6 +1,6 @@
 //import * as supertest from 'supertest';
 import * as functions_test_helper from "./functions_test_helper";
-import * as stripe from '../src/apis/stripe';
+import * as stripeApi from '../src/apis/stripe';
 import * as stripeUtils from "../src/utils/stripe"
 import { should } from 'chai';
 import * as UUID from "uuid-v4";
@@ -20,7 +20,7 @@ describe('Stripe test', () => {
   });
 
   it('hello', async () => {
-    const product = await stripe.createProduct("unit_test", "hello", groupId);
+    const product = await stripeApi.createProduct("unit_test", "hello", groupId);
     product.id.should.equal(stripeUtils.getProductId(groupId));
     
     product.object.should.equal('product');
@@ -30,7 +30,7 @@ describe('Stripe test', () => {
     product.statement_descriptor.should.equal('hello');
     product.type.should.equal('service');
     
-    const plan = await stripe.createPlan(groupId, 5000, "jpy");
+    const plan = await stripeApi.createPlan(groupId, 5000, "jpy");
 
     plan.id.should.equal('plan_unit_test_plan_5000_jpy');
     plan.object.should.equal('plan');
@@ -44,7 +44,7 @@ describe('Stripe test', () => {
     (plan.product as string).should.equal('prod_unit_test_plan');
     plan.usage_type.should.equal('licensed');
 
-    const plan_usd = await stripe.createPlan(groupId, 30, "usd");
+    const plan_usd = await stripeApi.createPlan(groupId, 30, "usd");
 
     plan_usd.id.should.equal('plan_unit_test_plan_30_usd');
     plan_usd.object.should.equal('plan');
@@ -71,7 +71,7 @@ describe('Stripe test', () => {
     const master_source = await functions_test_helper.createMasterCard();
     const master_token = master_source.id;
 
-    const customer = await stripe.createCustomer(visa_token, userId);
+    const customer = await stripeApi.createCustomer(visa_token, userId);
 
     const customerId = stripeUtils.getCustomerId(userId);
 
@@ -91,7 +91,7 @@ describe('Stripe test', () => {
     customer.sources.data[0].last4.should.equal('4242');
     customer.sources.data[0].object.should.equal('card');
     
-    const customer2 = await stripe.createCustomer(master_token, userId);
+    const customer2 = await stripeApi.createCustomer(master_token, userId);
 
     customer2.sources.data.length.should.equal(1);
 
@@ -109,7 +109,7 @@ describe('Stripe test', () => {
     customer2.sources.data[0].last4.should.equal('4444');
     customer2.sources.data[0].object.should.equal('card');
     
-    await stripe.deleteCustomer(userId);
+    await stripeApi.deleteCustomer(userId);
   });
 
   it('subscription', async function() {
@@ -120,12 +120,12 @@ describe('Stripe test', () => {
     const visa_source = await functions_test_helper.createVisaCard();
     const visa_token = visa_source.id;
 
-    const customer = await stripe.createCustomer(visa_token, userId);
+    const customer = await stripeApi.createCustomer(visa_token, userId);
 
-    await stripe.createProduct("unit_test", "hello", groupId);
-    const plan = await stripe.createPlan(groupId, 5000, "jpy");
+    await stripeApi.createProduct("unit_test", "hello", groupId);
+    const plan = await stripeApi.createPlan(groupId, 5000, "jpy");
 
-    const subscription = await stripe.createSubscription(userId, groupId, plan.id);
+    const subscription = await stripeApi.createSubscription(userId, groupId, plan.id);
     subscription.object.should.equal('subscription');
     subscription.customer.should.equal(customer.id)
 
@@ -165,7 +165,7 @@ describe('Stripe test', () => {
     
     subscription.items.data[0].quantity.should.equal(1);
 
-    const subscription2 = await stripe.createSubscription(userId, groupId, plan.id);
+    const subscription2 = await stripeApi.createSubscription(userId, groupId, plan.id);
     subscription2.id.should.equal(subscription2.id);
     
   });
@@ -179,19 +179,29 @@ describe('Stripe test', () => {
     const visa_source = await functions_test_helper.createVisaCard();
     const visa_token = visa_source.id;
 
-    await stripe.createCustomer(visa_token, userId);
+    await stripeApi.createCustomer(visa_token, userId);
 
-    await stripe.createProduct("unit_test_cancel", "hello", groupId);
-    const plan = await stripe.createPlan(groupId, 5000, "jpy");
+    await stripeApi.createProduct("unit_test_cancel", "hello", groupId);
+    const plan = await stripeApi.createPlan(groupId, 5000, "jpy");
 
-    const subscription = await stripe.createSubscription(userId, groupId, plan.id);
+    const subscription = await stripeApi.createSubscription(userId, groupId, plan.id);
     subscription.object.should.equal('subscription');
 
-    const cancelResponse = await stripe.cancelSubscription(subscription.id); 
+    const cancelResponse = await stripeApi.cancelSubscription(subscription.id); 
     cancelResponse.cancel_at_period_end.should.equal(true)
 
-    const cencelCancelResponse = await stripe.cancelSubscription(subscription.id, false); 
+    const cencelCancelResponse = await stripeApi.cancelSubscription(subscription.id, false); 
     cencelCancelResponse.cancel_at_period_end.should.equal(false)
     
   });  
+
+  it('custom account', async function() {
+    this.timeout(10000);
+    const groupId = UUID();
+    const customAccountResponse = await stripeApi.createCustomAccount(groupId); 
+    console.log(JSON.stringify(customAccountResponse, undefined, 1));
+    // todo validate data
+    // console.log(customAccountResponse);
+  });  
+
 })

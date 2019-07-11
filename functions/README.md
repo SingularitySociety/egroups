@@ -171,4 +171,12 @@ StripeのSpecではカード情報は1:nで複数ひもづけ可能だが、egro
        /stripelogにも、ユーザ全体のログを入れる。
        /stripelogは課金だけでなく、product, plan　などのログも入れておく。
        
-     
+
+
+# 送金
+  Destination Charge	
+    課金グループ作成時に、custom account作成（最低限、国情報が必要）
+    custom accountをsubscriptionに紐付ける
+
+  1 グループ作成時に、custom accountを作成する。
+    /groups/${groupId}/secret/account

@@ -161,3 +161,19 @@ export const retrieveSubscription = async (subscriptionId) => {
   }
 }
      
+export const createCustomAccount = async (groupId, country="JP") => {
+  try {
+    const account =  await getStripe().accounts.create({
+      type: "custom",
+      country,
+      metadata: {
+        groupId,
+      },
+    });
+    return account;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
