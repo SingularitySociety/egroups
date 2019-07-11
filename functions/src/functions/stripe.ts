@@ -39,6 +39,9 @@ export const createCustomer = async (db, data, context) => {
     return error_handler({error_type: logger.ErrorTypes.NoUser});
   }
   const customer = await stripeApi.createCustomer(token, userId);
+  if (!customer) {
+    return error_handler({error_type: logger.ErrorTypes.StripeApi});
+  }
   
   (await db.doc(`users/${userId}/secret/stripe`).set({
     customer: customer,
@@ -130,12 +133,17 @@ export const createSubscription = async (db, data, context) => {
 export const groupDidUpdate = async (db, change, context) => {
   const { groupId } = context.params;
   const after = change.after.exists ? change.after.data() ||{} : {};
+  const error_handler = logger.error_response_handler({func: "groupDidUpdate", message: "invalid request"});
+
   if (after.subscription) {
     const userId = after.owner;
     const stripeRef = db.doc(`/groups/${groupId}/secret/stripe`);
     const stripeData = (await stripeRef.get()).data();
     if (!stripeData || !stripeData.production) {
       const production = await stripeApi.createProduct(after.groupName, after.groupName, groupId);
+      if (!production) {
+        return error_handler({error_type: logger.ErrorTypes.StripeApi});
+      }
       await stripeRef.set({production: production}, {merge:true});
       await stripeUtils.stripeLog(db, userId, {production}, stripeUtils.stripeActions.productCreated);
     }
@@ -150,6 +158,9 @@ export const groupDidUpdate = async (db, change, context) => {
         const key = [String(price), currency].join("_")
         if (!stripeData || !stripeData.plans || !stripeData.plans[key]) {
           const stripePlan = await stripeApi.createPlan(groupId, price, currency);
+          if (!stripePlan) {
+            return error_handler({error_type: logger.ErrorTypes.StripeApi});
+          }
           newPlans[key] = stripePlan;
           await stripeUtils.stripeLog(db, userId, {plan}, stripeUtils.stripeActions.planCreated);
         }
@@ -175,7 +186,7 @@ export const cancelSubscription = async (db, data, context) => {
   if (!context.auth || !context.auth.uid) {
     return error_handler({error_type: logger.ErrorTypes.NoUid});
   }
-  if (!data || !data.groupId || !data.subscriptionId) {
+  if (!data || !data.groupId) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
   const userId = context.auth.uid;
@@ -183,14 +194,18 @@ export const cancelSubscription = async (db, data, context) => {
 
   const secret = (await db.doc(`/groups/${groupId}/members/${userId}/secret/stripe`).get()).data();
   
-  if (!secret) {
+  if (!secret || !secret.subscription) {
     return error_handler({error_type: logger.ErrorTypes.NoStripeSecret});
   }
-  const subscriptionId = data.subscriptionId;
+  const subscriptionId = secret.subscription.id;
   const cancel = data.cancel === undefined ? true : data.cancel;
   
   const subscription = await stripeApi.cancelSubscription(subscriptionId, cancel);
 
+  if (!subscription) {
+    return error_handler({error_type: logger.ErrorTypes.StripeApi});
+  }
+  
   const period = {
     end: subscription.current_period_start,
   };
