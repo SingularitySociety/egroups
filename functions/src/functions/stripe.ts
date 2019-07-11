@@ -4,6 +4,7 @@ import * as stripeUtils from '../utils/stripe';
 import * as utils from '../utils/utils'
 
 import * as stripeApi from '../apis/stripe';
+import * as logger from '../utils/logger';
 
 import Privileges from "../../react-lib/src/const/Privileges.js";
 
@@ -22,18 +23,20 @@ const updateSubscriptionData = async (db, groupId, userId, subscription, period)
 }
 
 export const createCustomer = async (db, data, context) => {
+  const error_handler = logger.error_response_handler({func: "createCustomer", message: "invalid request"});
+
   if (!context.auth || !context.auth.uid) {
-    return {result: false};
+    return error_handler({error_type: logger.ErrorTypes.NoUidError});
   }
   if (!data || !data.token) {
-    return {result: false};
+    return error_handler({error_type: ParameterMissingError});
   }
   const userId = context.auth.uid;
   const token = data.token;
 
   const user = (await db.doc(`users/${userId}`).get());
   if (!user.exists) {
-    return {result: false};
+    return error_handler({error_type: logger.ErrorTypes.NoUser});
   }
   const customer = await stripeApi.createCustomer(token, userId);
   
@@ -55,13 +58,13 @@ export const createCustomer = async (db, data, context) => {
 
 export const createSubscription = async (db, data, context) => {
   // plan = {price, currency}
+  const error_handler = logger.error_response_handler({func: "createSubscription", message: "invalid request"});
+  
   if (!context.auth || !context.auth.uid) {
-    console.log("createSubscription error: no authentication info")
-    return {result: false, message:"invalid request"};
+    return error_handler({error_type: logger.ErrorTypes.NoUidError});
   }
   if (!data || !data.groupId || !data.plan || !data.plan.price || !data.plan.currency) {
-    console.log("createSubscription error: request parameter missing")
-    return {result: false, message:"invalid request"};
+    return error_handler({error_type: ParameterMissingError});
   }
   
   const userId = context.auth.uid;
@@ -71,35 +74,30 @@ export const createSubscription = async (db, data, context) => {
   
   const user = (await db.doc(`users/${userId}`).get());
   if (!user.exists) {
-    console.log("createSubscription error: user not exists")
-    return {result: false, message:"invalid request"};
+    return error_handler({error_type: logger.ErrorTypes.NoUser});
   }
 
   // check group
   const group = await db.doc(`groups/${groupId}`).get();
   if (!group.exists) {
-    console.log("createSubscription error: group not exists")
-    return {result: false, message:"invalid request"};
+    return error_handler({error_type: logger.ErrorTypes.NoGroup});
   }
   
   // check plan
   const stripeGroup = await db.doc(`/groups/${groupId}/secret/stripe`).get(); 
 
   if (!stripeGroup.exists) {
-    console.log("createSubscription error: stripe secret not exists")
-    return {result: false, message:"invalid request"};
+    return error_handler({error_type: logger.ErrorTypes.NoStripeSecret});
   }
   const stripeGroupSecretData = stripeGroup.data();
   if (!stripeGroupSecretData || !stripeGroupSecretData.plans || !stripeGroupSecretData.plans[plan_key]) {
-    console.log("createSubscription error: stripe secret data not exists")
-    return {result: false, message:"invalid request"};
+    return error_handler({error_type: logger.ErrorTypes.NoStripeSecretData});
   }
 
   // check not subscription member yet.
   const privileges = await db.doc(`groups/${groupId}/privileges/${userId}`).get();
   if (privileges.exists && privileges.data().value && privileges.data().value >= Privileges.subscriber) {
-    console.log("createSubscription error: already member")
-    return {result: false, message:"invalid request"};
+    return error_handler({error_type: logger.ErrorTypes.AlreadyMember});
   }
 
   // everything ok
@@ -107,8 +105,7 @@ export const createSubscription = async (db, data, context) => {
   const subscription = await stripeApi.createSubscription(userId, groupId, planId);
 
   if (!subscription) {
-    console.log("createSubscription error: subscription creation failed")
-    return {result: false, message:"invalid request"};
+    return error_handler({error_type: logger.ErrorTypes.StripeSubscriptionCreation});
   }
 
   const period = {
@@ -173,12 +170,13 @@ export const groupDidUpdate = async (db, change, context) => {
 
 export const cancelSubscription = async (db, data, context) => {
   // plan = {price, currency}
+  const error_handler = logger.error_response_handler({func: "cancelSubscription", message: "invalid request"});
 
   if (!context.auth || !context.auth.uid) {
-    return {result: false};
+    return error_handler({error_type: logger.ErrorTypes.NoUidError});
   }
   if (!data || !data.groupId || !data.subscriptionId) {
-    return {result: false};
+    return error_handler({error_type: ParameterMissingError});
   }
   const userId = context.auth.uid;
   const {groupId} = data;
@@ -186,7 +184,7 @@ export const cancelSubscription = async (db, data, context) => {
   const secret = (await db.doc(`/groups/${groupId}/members/${userId}/secret/stripe`).get()).data();
   
   if (!secret) {
-    return {result: false};
+    return error_handler({error_type: logger.ErrorTypes.NoStripeSecret});
   }
   const subscriptionId = data.subscriptionId;
   const cancel = data.cancel === undefined ? true : data.cancel;

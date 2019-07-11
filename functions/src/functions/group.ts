@@ -1,14 +1,16 @@
 import Privileges from '../../react-lib/src/const/Privileges.js';
 import * as messaging from '../utils/messaging';
-import * as utils from '../utils/utils';
+import * as firebase_utils from '../utils/firebase_utils';
 
 export const createGroup = async (db:FirebaseFirestore.Firestore, data, context) => {
+  const error_handler = logger.error_response_handler({func: "createGroup", message: "invalid request"});
+
   if (!context.auth || !context.auth.uid) {
-    return {result: false};
+    return error_handler({error_type: logger.ErrorTypes.NoUidError});
   }
   const userId = context.auth.uid;
   if (!data || !data.title || !data.ownerName) {
-    return {result: false};
+    return error_handler({error_type: ParameterMissingError});
   }
   const { title, ownerName } = data;
   const created = new Date();
@@ -63,8 +65,8 @@ export const memberDidDelete  = async (db, admin, snapshot, context) => {
   const { groupId, userId } = context.params;
   await db.doc("/groups/" + groupId + "/privileges/" + userId).delete();
 
-  await utils.deleteSubcollection(snapshot, "private");
-  await utils.deleteSubcollection(snapshot, "secret");
+  await firebase_utils.deleteSubcollection(snapshot, "private");
+  await firebase_utils.deleteSubcollection(snapshot, "secret");
 
   // This is for custom token to control the access to Firestore Storage.
   const ref = db.doc(`/privileges/${userId}`);
@@ -92,12 +94,14 @@ export const memberDidDelete  = async (db, admin, snapshot, context) => {
 }
 
 export const createGroupName = async (db:FirebaseFirestore.Firestore, data, context) => {
+  const error_handler = logger.error_response_handler({func: "createGroupName", message: "invalid request"});
+
   if (!context.auth || !context.auth.uid) {
-    return {result: false, message:"missing.uid"};
+    return error_handler({error_type: logger.ErrorTypes.NoUidError});
   }
   const { groupId, path, title, types } = data;
   if (!groupId || !path || !title || !types) {
-    return {result: false, message:"missing.params"};
+    return error_handler({error_type: ParameterMissingError});
   }
 
   const refName = db.doc(`groupNames/${path}`);
@@ -152,14 +156,14 @@ export const groupDidDelete = async (db, admin, snapshot, context) => {
     }
 
     // We need to delete all sub collections (except privileges)
-    await utils.deleteSubcollection(snapshot, "channels");
-    await utils.deleteSubcollection(snapshot, "pages");
-    await utils.deleteSubcollection(snapshot, "articles");
-    await utils.deleteSubcollection(snapshot, "events");
-    await utils.deleteSubcollection(snapshot, "members");
-    await utils.deleteSubcollection(snapshot, "owners");
-    await utils.deleteSubcollection(snapshot, "private");
-    await utils.deleteSubcollection(snapshot, "secret");
+    await firebase_utils.deleteSubcollection(snapshot, "channels");
+    await firebase_utils.deleteSubcollection(snapshot, "pages");
+    await firebase_utils.deleteSubcollection(snapshot, "articles");
+    await firebase_utils.deleteSubcollection(snapshot, "events");
+    await firebase_utils.deleteSubcollection(snapshot, "members");
+    await firebase_utils.deleteSubcollection(snapshot, "owners");
+    await firebase_utils.deleteSubcollection(snapshot, "private");
+    await firebase_utils.deleteSubcollection(snapshot, "secret");
 
     // We need to remove all the images associated with this user
     const bucket = admin.storage().bucket();
