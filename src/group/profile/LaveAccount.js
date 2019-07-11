@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Button, Typography } from '@material-ui/core';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, FormattedDate } from 'react-intl';
 import LockedArea from '../../common/LockedArea';
 import Privileges from '../../const/Privileges';
 import useDocument from '../../common/useDocument';
@@ -13,7 +13,7 @@ const styles = theme => ({
   }
 });
 
-function role(privilege) {    
+function roleMap(privilege) {    
   switch(privilege) {
     case Privileges.guest: return "guest";
     case Privileges.owner: return "owner";
@@ -26,7 +26,7 @@ function role(privilege) {
 }
 
 function LeaveAccount(props) {
-  const { db, user, group, callbacks, privilege } = props;
+  const { db, user, group, callbacks, privilege, member } = props;
   const { classes } = props;
   const path = user ? `/groups/${group.groupId}/members/${user.uid}/private/stripe` : null;
   const [stripe] = useDocument(db, path);
@@ -38,31 +38,55 @@ function LeaveAccount(props) {
     window.location.pathname = "/"; // + group.groupName;
   }
 
-  const roleId = `account.${role(privilege)}`;
+  const role = roleMap(privilege);
+  const roleId = `account.${role}`;
+  const joinedDate = <FormattedDate value={member.created.toDate()} />
   if (privilege === Privileges.owner) {
     return <div>
       <Typography>
-        <FormattedMessage id={roleId} />
+        <FormattedMessage id={roleId} values={{ joinedDate }} />
       </Typography>
     </div>;
   }
 
   if (privilege === Privileges.subscriber) {
+    let planName = null;
+    let price = null;
+    let billing = null;
     if (stripe && stripe.period && stripe.subscription) {
       const { period:{start, end}, subscription:{plan} } = stripe;
-      console.log(start, end, plan);
+      console.log(start, end, plan, group.plans);
+      group.plans.forEach((item)=>{
+        if (item.price === plan.amount && item.currency === plan.currency) {
+          planName = item.name;
+        }
+      })
+      price = <FormattedMessage id={`monthly.fee.${plan.currency}`} 
+            values={{price:plan.amount}} />
+      const date = <FormattedDate value={new Date(end * 1000)} />
+      billing =  <FormattedMessage id="next.billing" values={{ date }}/>
     }
     return <div>
+      { planName &&
+      <Typography component="h4" variant="h4">
+        { planName }
+      </Typography>
+      }
       <Typography>
-        <FormattedMessage id={roleId} />
+        <FormattedMessage id={roleId} values={{ joinedDate }}/> <br/>
+        { price } <br/>
+        { billing }
       </Typography>
     </div>;
   }
 
   return <React.Fragment>
     <div>
+      <Typography component="h4" variant="h4">
+        <FormattedMessage id={role} />
+      </Typography>
       <Typography>
-        <FormattedMessage id={roleId} />
+        <FormattedMessage id={roleId} values={{ joinedDate }} />
       </Typography>
     </div>
     <div>

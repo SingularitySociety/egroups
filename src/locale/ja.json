@@ -64,6 +64,7 @@
     "card.info":"カード情報：{brand} 有効期限：{exp_month}/{exp_year} 下四桁：{last4}",
     "plan.empty":"課金設定が未設定です。",
     "do.subscribe":"加入する",
+    "next.billing":"次回の課金日: {date}",
 
     "red":"red",
     "pink":"pink",
@@ -108,8 +109,8 @@
     "account.owner":"あなたはこのグループの管理責任者です",
     "account.admin":"あなたはこのグループの管理者です",
     "account.mentor":"あなたはこのグループのアドバイザです",
-    "account.subscriber":"あなたはこのグループに加入者しています",
-    "account.member":"あなたはこのグループのメンバーです",
+    "account.subscriber":"加入日： {joinedDate}",
+    "account.member":"あなたはこのグループのメンバーです（加入日：{joinedDate}）",
 
     "error.invalid.groupname":"グループ名が存在しません",
     "error.invalid.articleId":"この記事は存在しません",
