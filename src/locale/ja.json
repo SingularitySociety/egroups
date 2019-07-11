@@ -14,6 +14,8 @@
     "login":"ログイン",
     "join":"参加する",
     "leave":"退会する",
+    "unsubscribe":"退会する",
+    "resubscribe":"再退会する",
     "post":"投稿する",
     "create":"新規作成",
     "cancel":"取り消し",
@@ -66,6 +68,7 @@
     "plan.empty":"課金設定が未設定です。",
     "do.subscribe":"加入する",
     "next.billing":"次回の課金日: {date}",
+    "expire.billing":"会員終了日時: {date}",
 
     "red":"red",
     "pink":"pink",

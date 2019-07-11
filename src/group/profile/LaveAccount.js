@@ -42,11 +42,11 @@ function LeaveAccount(props) {
     window.location.pathname = "/"; // + group.groupName;
   }
 
-  async function handleUnsubscribe(subscriptionId) {
+  async function handleUnsubscribe(subscriptionId, cancel) {
     console.log("unsubscribe");
     const cancelSubscription = firebase.functions().httpsCallable('cancelSubscription');
-    const context = { groupId:group.groupId, subscriptionId }
-    console.log(context, cancelSubscription);
+    const context = { groupId:group.groupId, subscriptionId, cancel }
+    console.log(context, cancelSubscription, cancel);
     setProcessing(true);
     console.log("step1");
     try {
@@ -76,10 +76,14 @@ function LeaveAccount(props) {
     let price = null;
     let billing = null;
     let subscriptionId = null;
+    let cancelled = false;
     if (stripe && stripe.period && stripe.subscription) {
       const { period:{start, end}, subscription:{plan} } = stripe;
       console.log(stripe, start);
       subscriptionId = plan.id;
+      cancelled = stripe.subscription.cancel_at_period_end;
+
+      console.log(cancelled);
       group.plans.forEach((item)=>{
         if (item.price === plan.amount && item.currency === plan.currency) {
           planName = item.name;
@@ -88,7 +92,7 @@ function LeaveAccount(props) {
       price = <FormattedMessage id={`monthly.fee.${plan.currency}`} 
             values={{price:plan.amount}} />
       const date = <FormattedDate value={new Date(end * 1000)} />
-      billing =  <FormattedMessage id="next.billing" values={{ date }}/>
+      billing =  <FormattedMessage id={cancelled ? "expire.billing" : "next.billing"} values={{ date }}/>
     }
     return <React.Fragment>
       <div>
@@ -104,11 +108,20 @@ function LeaveAccount(props) {
         </Typography>
       </div>
       <div>
-      <LockedArea label={<FormattedMessage id="warning.dangerous" />}>
-        <Button variant="contained" className={classes.button} onClick={()=>{handleUnsubscribe(subscriptionId)}}>
-          <FormattedMessage id="unsubscribe" />
+      {
+        cancelled ?
+        <Button variant="contained" className={classes.button} 
+          onClick={()=>{handleUnsubscribe(subscriptionId, false)}}>
+          <FormattedMessage id={ cancelled ? "resubscribe" : "unsubscribe" } />
         </Button>
-      </LockedArea>
+        :
+        <LockedArea label={<FormattedMessage id="warning.dangerous" />}>
+        <Button variant="contained" className={classes.button} 
+          onClick={()=>{handleUnsubscribe(subscriptionId, true)}}>
+          <FormattedMessage id={ cancelled ? "resubscribe" : "unsubscribe" } />
+        </Button>
+        </LockedArea>
+      }
     </div>
     </React.Fragment>
   }
