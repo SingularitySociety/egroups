@@ -5,6 +5,7 @@ import { Typography, Button } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import PleaseLogin from './PleaseLogin';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
     login: {
@@ -16,15 +17,17 @@ const styles = theme => ({
 });
 
 function Join(props) {
-  const { db, user, group, callbacks, classes, member } = props;
+  const { db, user, group, callbacks, classes, privilege } = props;
   const setTabbar = callbacks.setTabbar;
   const [error, setError] = useState(null);
+  const [ processing, setProcessing ] = useState(false);
   useEffect(()=>{
     setTabbar("join");
   }, [setTabbar]);
 
   const handleJoin = async () => {
     const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
+    setProcessing(true);
     try {
         await refMember.set({ 
             created: new Date(), // firebase.firestore.FieldValue.serverTimestamp(),
@@ -42,6 +45,7 @@ function Join(props) {
         console.log(e);
         setError("Unable to Join"); // BUGBUG
     }
+    setProcessing(false);
   }
 
   const title = <Typography component="h2" variant="h6" gutterBottom>
@@ -50,7 +54,7 @@ function Join(props) {
   if (!user) {
       return <PleaseLogin />;
   }
-  if (member) {
+  if (privilege) {
       console.log("Become a member or already a member. Redireting to the group home.");
       return <Redirect to={"/" + group.groupName} />
   }
@@ -75,6 +79,10 @@ function Join(props) {
           <Button variant="contained" color="primary" onClick={handleJoin} className={classes.button}><FormattedMessage id="join" /></Button>
           {
               error && <p style={{color:"red"}}>{error}</p>
+          }
+          {
+          processing && 
+          <CircularProgress size={24} />
           }
       </div>
 }
