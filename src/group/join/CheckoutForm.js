@@ -26,7 +26,7 @@ const useStyles = makeStyles(styles);
 
 function CheckoutForm(props) {
   const classes = useStyles();
-  const { db, group, user, privilege } = props;
+  const { db, group, user, privilege, callbacks } = props;
   const planLength = (group.plans && group.plans.length) || 0;
   const [ planIndex, setPlanIndex ] = useState(planLength - 1);
   const [ customer, setCustomer ] = useState(null);
@@ -67,6 +67,7 @@ function CheckoutForm(props) {
     setProcessing(true);
     const result = (await createSubscription(context)).data;
     setProcessing(false);
+    callbacks.memberDidUpdate();
     setJustSubscribed(result.result);
     console.log(result);
   }
@@ -115,6 +116,7 @@ CheckoutForm.propTypes = {
   db: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   group: PropTypes.object.isRequired,
+  callbacks: PropTypes.object.isRequired,
 };
   
 export default CheckoutForm;

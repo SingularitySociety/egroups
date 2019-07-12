@@ -17,9 +17,9 @@ Subscribe: User Name (instead of Johnes)
 Subscribe: Hide ZIP
 public Blog, and public News
 Page: Show different tabs for non-members
-Subscribe: Debug & Test the first access
 
 ----- Done -----
+Subscribe: Debug & Test the first access
 Join: Debug & Test the first access
 Subscribe: Hide plan before the credit card (verified)
 Channels/Blog: Debug read/unread
