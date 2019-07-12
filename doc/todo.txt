@@ -1,24 +1,29 @@
-Profile: No grey color / Implement
 Chat: P 2 P
 Chat: Scroll to the bottom
 Chat: Infinit scroll
-Image Uploader: Verify the privacy
-Image Uploader: Image Orientation EXIF
-https://qiita.com/RichardImaokaJP/items/385beb77eb39243e50a6
-Pages: Menu access to pages *
-Group: Invitation
-Home: Image for Group
 Chat: display shift-return
 Chat: delete a message
 Chat: edit a message
 Chat: auto detect link in a message
 Chat: Rich Text?
+
+Image Uploader: Verify the privacy
+Image Uploader: Image Orientation EXIF
+https://qiita.com/RichardImaokaJP/items/385beb77eb39243e50a6
+Pages: Menu access to pages *
+
+Home: Image for Group
+Group: Invitation
+Page: Show different tabs for non-members
+Profile: No grey color / Implement
 Subscribe: User Name (instead of Johnes)
 Subscribe: Hide ZIP
-public Blog, and public News
-Page: Show different tabs for non-members
 
 ----- Done -----
+public Blog, and public News
+Subscribe: Debug & Test the first access
+Join: Debug & Test the first access
+Subscribe: Hide plan before the credit card (verified)
 Channels/Blog: Debug read/unread
 Blog: Display author & date (along with Members database)
 Blog: Do not use onSnapshot for read-only mode.

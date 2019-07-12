@@ -1,4 +1,5 @@
 {
+    "guest":"訪問者",
     "member":"会員",
     "subscriber":"有料会員",
     "mentor":"アドバイザ",
@@ -13,6 +14,8 @@
     "login":"ログイン",
     "join":"参加する",
     "leave":"退会する",
+    "unsubscribe":"退会する",
+    "resubscribe":"再入会する",
     "post":"投稿する",
     "create":"新規作成",
     "cancel":"取り消し",
@@ -64,6 +67,9 @@
     "card.info":"カード情報：{brand} 有効期限：{exp_month}/{exp_year} 下四桁：{last4}",
     "plan.empty":"課金設定が未設定です。",
     "do.subscribe":"加入する",
+    "next.billing":"次回の課金日: {date}",
+    "expire.billing":"会員終了日時: {date}",
+    "name.on.card":"カードの所有者名",
 
     "red":"red",
     "pink":"pink",
@@ -108,8 +114,8 @@
     "account.owner":"あなたはこのグループの管理責任者です",
     "account.admin":"あなたはこのグループの管理者です",
     "account.mentor":"あなたはこのグループのアドバイザです",
-    "account.subscriber":"あなたはこのグループに加入者しています",
-    "account.member":"あなたはこのグループのメンバーです",
+    "account.subscriber":"加入日： {joinedDate}",
+    "account.member":"あなたはこのグループのメンバーです（加入日：{joinedDate}）",
 
     "error.invalid.groupname":"グループ名が存在しません",
     "error.invalid.articleId":"この記事は存在しません",

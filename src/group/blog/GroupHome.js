@@ -56,7 +56,7 @@ function GroupHome(props) {
         createHomePage();
       }
     }
-  }, [db, group, privilege, user.uid, messages, groupDidUpdate]);
+  }, [db, group, privilege, user, messages, groupDidUpdate]);
 
   const context = { group, user, db, article, arp, callbacks, privilege, profiles, history }
   //const context = { user, group, db, member, history };

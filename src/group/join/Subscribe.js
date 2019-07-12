@@ -31,7 +31,7 @@ function Subscribe(props) {
 
   // Test card numbers
   // 4242 4242 4242 4242
-  const context = { group, db, user, privilege };
+  const context = { group, db, user, privilege, callbacks };
   return (
     <StripeProvider apiKey="pk_test_iVo1YToPedpru7AJDpAj43cF00ftQJpoj8">
       <Elements>

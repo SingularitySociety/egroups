@@ -40,7 +40,7 @@ function Account(props) {
   if (!member) {
     return "";
   }
-  const context = { db, user, group, callbacks, privilege } ;
+  const context = { db, user, group, callbacks, privilege, member } ;
   //console.log(user, member);
   const imageThumbnails = member.profile && member.profile.thumbnails;
   return <div>

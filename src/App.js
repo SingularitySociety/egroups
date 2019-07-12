@@ -49,13 +49,13 @@ class App extends React.Component {
             const getJWT = firebase.functions().httpsCallable('getJWT');
             const token = (await getJWT()).data; 
             //console.log("token", token);
-            console.log({privileges:token.privileges});
-            this.setState({privileges: token.privileges});
             try {
               await firebase.auth().signInWithCustomToken(token.token);
             } catch(e) {
               console.log(e);
             }
+            console.log({privileges:token.privileges});
+            this.setState({privileges: token.privileges});
           });
 
           const refUser = db.collection("users").doc(user.uid);

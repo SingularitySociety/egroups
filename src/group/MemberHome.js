@@ -1,39 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import ArticleList from './blog/ArticleList';
 import ChannelList from './chat/ChannelList';
 import { Grid } from '@material-ui/core';
 
-const styles = theme => ({
-});
+function MemberHome(props) {
+  const { user, db, member, group, history, arps, callbacks } = props;
+  const setTabbar = callbacks.setTabbar;
 
-class MemberHome extends React.Component {
-    componentDidMount() {
-      const { callbacks } = this.props;
-      callbacks.setTabbar("member");
-    }
-    render() {
-      const { user, db, member, group, history, arps } = this.props;
-      const context = { user, group, db, member, history };
-      return (
-        <Grid container justify="center" spacing={1}>
-          <Grid item xs={12}>
-            <ChannelList {...context} limit={3} />
-          </Grid>
-          <Grid item xs={12}>
-            <ArticleList {...context} arp={arps.blog} limit={3} />
-          </Grid>
-          <Grid item xs={12}>
-            <ArticleList {...context} arp={arps.pages} limit={3} />
-          </Grid>
-        </Grid>
-        )
-    }
+  useEffect(()=> {
+    setTabbar("member");
+  }, [setTabbar]);
+
+  const context = { user, group, db, member, history };
+  return (
+    <Grid container justify="center" spacing={1}>
+      <Grid item xs={12}>
+        <ChannelList {...context} limit={3} />
+      </Grid>
+      <Grid item xs={12}>
+        <ArticleList {...context} arp={arps.blog} limit={3} />
+      </Grid>
+      <Grid item xs={12}>
+        <ArticleList {...context} arp={arps.pages} limit={3} />
+      </Grid>
+    </Grid>
+  )
 }
 
 MemberHome.propTypes = {
-    classes: PropTypes.object.isRequired,
-  };
+  callbacks: PropTypes.object.isRequired,
+};
   
-export default withStyles(styles)(MemberHome);
+export default MemberHome;

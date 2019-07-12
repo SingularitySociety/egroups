@@ -304,7 +304,7 @@ describe('Group function test', () => {
     // run test
     const subscriptionId = subscription.id;
     
-    const req = {groupId, subscriptionId: subscriptionId};
+    const req = {groupId};
     const context = {auth: {uid: aliceUserId}};
     const wrapped = test.wrap(index.cancelSubscription);
 

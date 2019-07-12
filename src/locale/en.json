@@ -1,4 +1,5 @@
 {
+    "guest":"Guest",
     "member":"Member",
     "subscriber":"Subscriber",
     "mentor":"Mentor",
@@ -13,6 +14,8 @@
     "login":"Login",
     "join":"Join",
     "leave":"Leave",
+    "unsubscribe":"Unsubscribe",
+    "resubscribe":"Resubscribe",
     "post":"Post",
     "create":"Create",
     "cancel":"Cancel",
@@ -64,7 +67,9 @@
     "card.info":"Card Info:{brand} Exp:{exp_month}/{exp_year} Last4:{last4}",
     "plan.empty":"There is no subscription plan created by the administrator yet.",
     "do.subscribe":"Subscribe",
-
+    "next.billing":"Next Billing: {date}",
+    "expire.billing":"Subscriptin Expires at: {date}",
+    "name.on.card":"Name on card",
 
     "red":"red",
     "pink":"pink",
@@ -108,8 +113,8 @@
     "account.owner":"You are the owner of this group.",
     "account.admin":"You are an admin of this group.",
     "account.mentor":"You are a mentor of this group.",
-    "account.subscriber":"You are a subscriber of this group.",
-    "account.member":"You are a member of this group.",
+    "account.subscriber":"You are a subscriber of this group since {joinedDate}.",
+    "account.member":"You are a member of this group since {joinedDate}.",
 
     "error.invalid.groupname":"Invalid Group Name",
     "error.invalid.articleId":"This article does not exist.",
