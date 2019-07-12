@@ -69,6 +69,7 @@
     "do.subscribe":"加入する",
     "next.billing":"次回の課金日: {date}",
     "expire.billing":"会員終了日時: {date}",
+    "name.on.card":"カードの所有者名",
 
     "red":"red",
     "pink":"pink",

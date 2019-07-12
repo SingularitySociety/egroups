@@ -69,6 +69,7 @@
     "do.subscribe":"Subscribe",
     "next.billing":"Next Billing: {date}",
     "expire.billing":"Subscriptin Expires at: {date}",
+    "name.on.card":"Name on card",
 
     "red":"red",
     "pink":"pink",

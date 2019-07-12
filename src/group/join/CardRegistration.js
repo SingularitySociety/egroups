@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Button } from '@material-ui/core';
+import { Typography, Button, TextField } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import { injectStripe, CardElement } from 'react-stripe-elements';
 import * as firebase from "firebase/app";
@@ -39,6 +39,7 @@ const useStyles = makeStyles(styles);
 function CardRegistration(props) {
   const classes = useStyles();
   const { stripe, customer, didUpdate } = props;
+  const [ name, setName ] = useState("");
   const [ error, setError ] = useState(null);
   const [ processing, setProcessing ] = useState(false);
   const [ updating, setUpdating ] = useState(false);
@@ -49,7 +50,7 @@ function CardRegistration(props) {
     e.preventDefault();
     setError(null);
     setProcessing(true);
-    const {error, token} = await stripe.createToken({type: 'card', name: 'Jenny Rosen'});
+    const {error, token} = await stripe.createToken({type: 'card', name: name});
     if (token) {
       console.log(token);
       const createCustomer = firebase.functions().httpsCallable('createCustomer');
@@ -65,6 +66,10 @@ function CardRegistration(props) {
     }
     setProcessing(false);
     setUpdating(false);
+  }
+
+  function handleNameChange(e) {
+    setName(e.currentTarget.value);
   }
 
   const styleCard = {
@@ -95,6 +100,7 @@ function CardRegistration(props) {
     //console.log(cardInfo);
     // 4242424242424242
     // 5555555555554444
+    console.log(cardInfo);
     return (
       <form className={classes.form}>
         <div className={classes.cardInfo}>
@@ -115,6 +121,14 @@ function CardRegistration(props) {
           <FormattedMessage key={cardInfo.id} id="card.info" values={cardInfo} />
         </div>
       }
+      <TextField
+        id="standard-name"
+        label=<FormattedMessage id="name.on.card" />
+        className={classes.textField}
+        value={name}
+        onChange={handleNameChange}
+        margin="normal"
+      />
       <div className={classes.cardElement} >
         <CardElement style={styleCard} />
       </div>
