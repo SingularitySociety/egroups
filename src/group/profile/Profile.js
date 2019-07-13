@@ -1,20 +1,23 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { FormGroup } from '@material-ui/core';
+import { FormGroup, TextField } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import EditableField from '../../common/EditableField';
 import useDocument from '../../common/useDocument';
 
 const styles = theme => ({
-  button: {
-      margin: theme.spacing(1)
+  textField: {
+    width: "90%",
+    marginBottom: theme.spacing(1),
+  },
+  textColor: {
+    color: "#333333",
   }
 });
 
 function Profile(props) {
-  const { db, group, user, callbacks, match:{params:{userId}}  } = props;
+  const { db, group, user, callbacks, match:{params:{userId}}, classes  } = props;
   const setTabbar = callbacks.setTabbar;
   const [member] = useDocument(db, `groups/${group.groupId}/members/${userId}`);
 
@@ -22,10 +25,6 @@ function Profile(props) {
     setTabbar("profile", `pr/${userId}`);
   }, [setTabbar, userId]);
 
-  const onSave = name => async value => {
-      // no-op
-  }    
-    
   if (!user) {
       return <Redirect to={`/${group.groupName}`} />
   }
@@ -34,24 +33,30 @@ function Profile(props) {
   }
   return <div>
     <FormGroup row>
-      <EditableField label={<FormattedMessage id="member.displayName"/>} 
-          value={member.displayName} onSave={onSave('displayName')} disabled={true}/>
+      <TextField label={<FormattedMessage id="member.displayName"/>} variant="outlined"
+          value={member.displayName} disabled={true} className={classes.textField}
+          InputProps={{classes:{input:classes.textColor}}}/>
     </FormGroup>
     <FormGroup row>
-      <EditableField label={<FormattedMessage id="member.description"/>} multiline={true}
-          value={member.description} onSave={onSave('description')} disabled={true}/>
+      <TextField label={<FormattedMessage id="member.description"/>} variant="outlined"
+          value={member.description} disabled={true} className={classes.textField}
+          multiline={true} rows={2} rowsMax={6} 
+          InputProps={{classes:{input:classes.textColor}}}/>
     </FormGroup>
     <FormGroup row>
-      <EditableField label={<FormattedMessage id="member.email"/>} 
-          value={member.email || ""} onSave={onSave('email')} disabled={true}/>
+      <TextField label={<FormattedMessage id="member.email"/>} variant="outlined"
+          value={member.email || ""} disabled={true} className={classes.textField}
+          InputProps={{classes:{input:classes.textColor}}}/>
     </FormGroup>
     <FormGroup row>
-      <EditableField label={<FormattedMessage id="member.twitter"/>} 
-          value={member.twitter || ""} onSave={onSave('twitter')} disabled={true}/>
+      <TextField label={<FormattedMessage id="member.twitter"/>} variant="outlined"
+          value={member.twitter || ""} disabled={true} className={classes.textField}
+          InputProps={{classes:{input:classes.textColor}}}/>
     </FormGroup>
     <FormGroup row>
-      <EditableField label={<FormattedMessage id="member.github"/>} 
-          value={member.github || ""} onSave={onSave('github')} disabled={true}/>
+      <TextField label={<FormattedMessage id="member.github"/>} variant="outlined"
+          value={member.github || ""} disabled={true} className={classes.textField}
+          InputProps={{classes:{input:classes.textColor}}}/>
     </FormGroup>
   </div>
 }

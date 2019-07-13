@@ -14,12 +14,12 @@ Pages: Menu access to pages *
 
 Home: Image for Group
 Group: Invitation
-Page: Show different tabs for non-members
 Profile: No grey color / Implement
-Subscribe: User Name (instead of Johnes)
-Subscribe: Hide ZIP
+Subscribe: Hide ZIP https://github.com/stripe/react-stripe-elements/issues/20
 
 ----- Done -----
+Page: Show different tabs for non-members
+Subscribe: User Name (instead of Johnes)
 public Blog, and public News
 Subscribe: Debug & Test the first access
 Join: Debug & Test the first access
