@@ -11,7 +11,7 @@
     "logs": "firebase functions:log",
     "mocha": "cp ../firestore.rules  ./ && mocha  -r ts-node/register --recursive test/*_test.ts",
     "mocha2": "mocha  -r ts-node/register --recursive test/logger_test.ts",
-    "mocha3": "mocha  -r ts-node/register --recursive test/stripe_test.ts",
+    "mocha3": "mocha  -r ts-node/register --recursive test/onetime_test.ts",
     "mocha4": "mocha  -r ts-node/register --recursive test/stripe_function_test.ts",
     "watch:mocha": "mocha -w -watch-extensions ts -r ts-node/register --recursive test/*_test.ts"
   },
@@ -21,12 +21,14 @@
   "main": "lib/index.js",
   "dependencies": {
     "@types/stripe": "^6.30.3",
+    "aws-sdk": "^2.493.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "deepmerge": "^3.3.0",
     "express": "^4.17.1",
     "firebase-admin": "~8.1.0",
     "firebase-functions": "^3.0.1",
+    "libphonenumber-js": "^1.7.20",
     "sharp": "^0.22.1",
     "stripe": "^7.3.0",
     "uuid-v4": "^0.1.0"
