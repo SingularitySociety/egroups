@@ -92,7 +92,6 @@ export const confirmOnetimeSMS = async (db, data, context) => {
   // get data
   const onetime  = (await db.doc(`/users/${userId}/secret/onetime`).get()).data();
   if (!onetime || !onetime.smscode) {
-    console.log(onetime)
     return error_handler({error_type: logger.ErrorTypes.NoSMSCodeData});
   }
 
