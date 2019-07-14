@@ -7,6 +7,7 @@ import * as firebase_utils from './utils/firebase_utils';
 import * as stripeFunctions from './functions/stripe';
 import * as imageFunctions from './functions/image';
 import * as groupFunctions from './functions/group';
+import * as onetimesmsFunctions from './functions/onetimesms';
 
 import * as express from './functions/express';
 
@@ -41,6 +42,10 @@ export const getJWT = functions.https.onCall(async (data, context) => {
     return { token, privileges }
   }
   return { token: null };
+});
+
+export const requestOnetimeSMS = functions.https.onCall(async (data, context) => {
+  return await onetimesmsFunctions.requestOnetimeSMS(db, data, context);
 });
 
 export const createCustomer = functions.https.onCall(async (data, context) => {
