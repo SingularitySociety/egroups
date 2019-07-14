@@ -121,6 +121,11 @@ export const confirmOnetimeSMS = async (db, data, context) => {
   }
   await db.doc(`/users/${userId}/secret/onetime`).set({supermario});
   
-  return true;
+  return {
+    result: true,
+    token: supermario.token,
+    ttl: supermario.ttl,
+  };
+
   
 }
