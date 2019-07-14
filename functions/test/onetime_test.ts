@@ -29,6 +29,7 @@ describe('Onetime SMS function', () => {
     response.phone.should.equal(resdata.smscode.phone)
     response.ttl.should.equal(resdata.smscode.ttl)
 
+    
   })
 
 });

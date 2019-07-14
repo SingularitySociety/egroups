@@ -79,30 +79,3 @@ export const requestOnetimeSMS = async (db, data, context) => {
   
 };
 
-export const confirmOnetimeSMS = () => {
-  const error_handler = logger.error_response_handler({func: "confirmOnetimeSMS", message: "invalid request"});
-
-  if (!context.auth || !context.auth.uid) {
-    return error_handler({error_type: logger.ErrorTypes.NoUid});
-  }
-  const userId = context.auth.uid;
-
-  // get data
-
-  // check code
-
-  // check ttl
-
-  // if ok
-
-  const ttl = Math.round(Date.now()  / 1000) + 3600;
-
-  const supermario = {
-    ttl:
-    token
-  }
- 
-  
-  return true;
-  
-}
