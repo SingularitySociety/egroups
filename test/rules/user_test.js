@@ -1,15 +1,21 @@
 import * as test_helper from "./test_helper";
 
 import * as firebase from "@firebase/testing";
+import { should } from 'chai';
+
+should()
 
 const aliceUserId = "alice";
 const bobUserId = "bob";
+const charlieUserId = "charlie";
 
 const anon_db = test_helper.authedDB(null);
 const alice_db = test_helper.authedDB({ uid: aliceUserId });
 const bob_db = test_helper.authedDB({ uid: bobUserId });
+const charlie_db = test_helper.authedDB({ uid: charlieUserId });
 
 test_helper.initHook();
+const admin_db = test_helper.adminDB();
 
 describe("My app", () => {
   it("require users to log in before creating and reading a profile", async () => {
@@ -111,4 +117,89 @@ describe("My app", () => {
     );
   });
   
+  it("should only read user's phone data", async () => {
+    // await firebase.assertSucceeds(
+    // alice_db.doc(`users/${charlieUserId}`).get()
+    // );
+
+    // can't set phone when create;
+    await firebase.assertFails(
+      charlie_db.doc(`users/${charlieUserId}`).set({
+        phone: "1234",
+      })
+    );
+
+    // can create without phone
+    await firebase.assertSucceeds(
+      charlie_db.doc(`users/${charlieUserId}`).set({
+        uid: charlieUserId,
+      })
+    );
+
+    await firebase.assertSucceeds(
+      charlie_db.doc(`users/${charlieUserId}`).get()
+    );
+
+    // can't update phone by user;
+    await firebase.assertFails(
+      charlie_db.doc(`users/${charlieUserId}`).set({
+        phone: "1234",
+      }, {merge: true})
+    );
+
+    await firebase.assertSucceeds(
+      charlie_db.doc(`users/${charlieUserId}`).set({
+        test: "1234",
+      }, {merge: true})
+    );
+
+    // set phone by admin 
+    await firebase.assertSucceeds (
+      admin_db.doc(`users/${charlieUserId}`).set({
+        phone: "1234",
+      }, {merge: true})
+    );
+
+    // merge is ok because phone is not update
+    await firebase.assertSucceeds(
+      charlie_db.doc(`users/${charlieUserId}`).set({
+        test: "1234",
+      }, {merge: true})
+    );
+
+    // merge with phone failed because phone is not update
+    await firebase.assertFails(
+      charlie_db.doc(`users/${charlieUserId}`).set({
+        phone: "aaabbb",
+        test: "1234",
+      }, {merge: true})
+    );
+    
+    // same phone is ok
+    await firebase.assertSucceeds(
+      charlie_db.doc(`users/${charlieUserId}`).set({
+        phone: "1234",
+        test: "aaa"
+      })
+    );
+
+    // different phone is not ok
+    await firebase.assertFails(
+      charlie_db.doc(`users/${charlieUserId}`).set({
+        phone: "3333"
+      })
+    );
+    
+    // same phone is ok
+    await firebase.assertSucceeds(
+      charlie_db.doc(`users/${charlieUserId}`).set({
+        phone: "1234",
+        test: "aaa"
+      })
+    );
+
+    const data = await charlie_db.doc(`users/${charlieUserId}`).get()
+    data.data().should.deep.equal({ phone: '1234', test: 'aaa' });
+    
+  })
 });

@@ -1,6 +1,9 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isOpenToPublic(privilege) {
+      return privilege == 0; // guest
+    }
     function groupInfo(groupId) {
       return get(/databases/$(database)/documents/groups/$(groupId)).data;
     }
@@ -10,11 +13,16 @@ service cloud.firestore {
     function articleInfo(groupId, articleId) {
       return get(/databases/$(database)/documents/groups/$(groupId)/articles/$(articleId)).data;
     }
-    function userPrivilege(groupId, userId) {
-      return get(/databases/$(database)/documents/groups/$(groupId)/privileges/$(userId)).data.value;
+    function pageInfo(groupId, pageId) {
+      return get(/databases/$(database)/documents/groups/$(groupId)/pages/$(pageId)).data;
     }
-    function isGroupOpen(groupId) {
-      return groupInfo(groupId).privileges.membership.open == true;
+    function userPrivilege(groupId, userId) {
+      // Note: This uses the custom token.
+      return request.auth.token.privileges[groupId];
+      //return get(/databases/$(database)/documents/groups/$(groupId)/privileges/$(userId)).data.value;
+    }
+    function isGroupOpenToPublic(groupId) {
+      return groupInfo(groupId).open == true && groupInfo(groupId).subscription == false;
     }
     function isUserAdmin(groupId, userId) {
       return userPrivilege(groupId, userId) >= 16777216; // 0x1000000
@@ -23,11 +31,20 @@ service cloud.firestore {
       return exists(/databases/$(database)/documents/groups/$(groupId)/owners/$(userId));
     }
     function isUserMember(groupId, userId) {
-      return exists(/databases/$(database)/documents/groups/$(groupId)/members/$(userId));
+      //return exists(/databases/$(database)/documents/groups/$(groupId)/members/$(userId));
+      return userPrivilege(groupId, userId) >= 1; // 0x1
     }
-
+    function validUserUpdate() {
+      return (!request.resource.data.keys().hasAll(['phone']) && !resource.data.keys().hasAll(['phone'])) ||
+        (request.resource.data.phone == resource.data.phone);
+    }
+    function validUserCreate() {
+      return !request.resource.data.keys().hasAll(['phone']);
+    }
     match /users/{userId} {
-      allow read, create, update, delete: if request.auth.uid == userId;
+      allow read, delete: if request.auth.uid == userId;
+      allow create: if request.auth.uid == userId && validUserCreate();
+      allow update: if request.auth.uid == userId && validUserUpdate(); 
       match /private/{anything=**} {
         allow read, write: if request.auth.uid == userId;
       }
@@ -36,10 +53,13 @@ service cloud.firestore {
         allow write: if request.auth.uid == userId;
       }
     }
+    match /privileges/{userId} {
+      // NEVER allow the client to modify or delete. This is for the custom token.
+      allow read: if request.auth.uid == userId;
+    }
 		match /groupNames/{groupName} {
-      // NEVER allow the client to modify or delete. 
+      // NEVER allow the client to write. 
     	allow read;
-      allow create: if request.auth.uid != null;
     }
 		match /groups/{groupId} {
     	allow read;
@@ -48,16 +68,19 @@ service cloud.firestore {
           && request.resource.data.title != null && request.resource.data.privileges != null; // to avoid fogotten merge
       allow delete: if request.auth.uid != null && isUserOwner(groupId, request.auth.uid);
     }
+    match /groups/{groupId}/private/{anything=**} {
+      allow read, write: if request.auth.uid != null && isUserAdmin(groupId, request.auth.uid)
+    }
 		match /groups/{groupId}/members/{userId} {
     	allow read: if request.auth.uid == userId || isUserAdmin(groupId, request.auth.uid);
       allow read: if isUserMember(groupId, request.auth.uid) 
           && groupInfo(groupId).privileges.member.read <= userPrivilege(groupId, request.auth.uid);
-      allow create: if request.auth.uid == userId && isGroupOpen(groupId) 
-                      && userId == request.resource.data.uid && groupId == request.resource.data.groupId;
+      allow create: if request.auth.uid == userId && isGroupOpenToPublic(groupId) 
+                      && userId == request.resource.data.userId && groupId == request.resource.data.groupId;
       allow create: if request.auth.uid == userId && isUserOwner(groupId, request.auth.uid)
-                      && userId == request.resource.data.uid && groupId == request.resource.data.groupId;
+                      && userId == request.resource.data.userId && groupId == request.resource.data.groupId;
       allow delete, update: if request.auth.uid == userId
-                      && userId == request.resource.data.uid && groupId == request.resource.data.groupId;
+                      && userId == request.resource.data.userId && groupId == request.resource.data.groupId;
       allow delete: if request.auth.uid == userId;
     }
     match /groups/{groupId}/members/{userId}/private/{itemId} {
@@ -72,21 +95,39 @@ service cloud.firestore {
       allow read, write: if false;
     }
 		match /groups/{groupId}/channels/{channelId} {
-    	allow read;
+      allow read: if groupInfo(groupId).privileges.channel.read <= userPrivilege(groupId, request.auth.uid);
       allow create: if request.auth.uid != null 
           && groupInfo(groupId).privileges.channel.create <= userPrivilege(groupId, request.auth.uid);
+      allow update, delete: if resource.data.owner == request.auth.uid;
+      allow update, delete: if isUserAdmin(groupId, request.auth.uid);
     }
 		match /groups/{groupId}/articles/{articleId} {
-    	allow read;
+      allow read: if groupInfo(groupId).privileges.article.read <= userPrivilege(groupId, request.auth.uid);
       allow create: if request.auth.uid != null 
           && groupInfo(groupId).privileges.article.create <= userPrivilege(groupId, request.auth.uid);
       allow update, delete: if resource.data.owner == request.auth.uid;
+      allow update, delete: if isUserAdmin(groupId, request.auth.uid);
     }
 		match /groups/{groupId}/articles/{articleId}/sections/{sectionId} {
       allow read: if request.auth.uid != null 
           && articleInfo(groupId, articleId).read <= userPrivilege(groupId, request.auth.uid);
       allow write: if request.auth.uid != null 
           && articleInfo(groupId, articleId).owner == request.auth.uid;
+      allow read: if isOpenToPublic(articleInfo(groupId, articleId).read);
+      allow write: if isUserAdmin(groupId, request.auth.uid);
+    }
+		match /groups/{groupId}/pages/{pageId} {
+    	allow read;
+      allow create: if request.auth.uid != null 
+          && groupInfo(groupId).privileges.page.create <= userPrivilege(groupId, request.auth.uid);
+      allow update, delete: if resource.data.owner == request.auth.uid;
+      allow update, delete: if isUserAdmin(groupId, request.auth.uid);
+    }
+		match /groups/{groupId}/pages/{pageId}/sections/{sectionId} {
+    	allow read;
+      allow write: if request.auth.uid != null 
+          && pageInfo(groupId, pageId).owner == request.auth.uid;
+      allow write: if isUserAdmin(groupId, request.auth.uid);
     }
 		match /groups/{groupId}/events/{eventId} {
     	allow read;
