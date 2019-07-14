@@ -20,7 +20,6 @@ describe('Onetime SMS function', () => {
     const wrapped = test.wrap(index.requestOnetimeSMS);
 
     const response = await wrapped(req, context);
-    console.log(response)
     
     const res = await admin_db.doc(`/users/${aliceUserId}/secret/onetime`).get();
     const resdata = res.data();
@@ -29,7 +28,25 @@ describe('Onetime SMS function', () => {
     response.phone.should.equal(resdata.smscode.phone)
     response.ttl.should.equal(resdata.smscode.ttl)
 
+    // run test
+    const req2 = {};
+    const wrapped2 = test.wrap(index.confirmOnetimeSMS);
+
+    const response2 = await wrapped2(req2, context);
+    console.log(response2);
     
+    const res2 = await admin_db.doc(`/users/${aliceUserId}/secret/onetime`).get();
+    const resdata2 = res2.data();
+    console.log(resdata2);
+    // run test
+    const req3 = {token: resdata.smscode.token};
+    const wrapped3 = test.wrap(index.confirmOnetimeSMS);
+
+    const response3 = await wrapped3(req3, context);
+    console.log(response3);
+    const res3 = await admin_db.doc(`/users/${aliceUserId}/secret/onetime`).get();
+    const resdata3 = res3.data();
+    console.log(resdata3);
   })
 
 });

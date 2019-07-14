@@ -3,6 +3,8 @@ import { parsePhoneNumberFromString } from 'libphonenumber-js'
 import * as AWS from 'aws-sdk';
 import * as logger from '../utils/logger';
 
+import * as UUID from "uuid-v4";
+
 const aws_key =  functions.config() && functions.config().aws &&  functions.config().aws.id || process.env.AWS_ID;
 const aws_secret =  functions.config() && functions.config().aws &&  functions.config().aws.secret || process.env.AWS_SECRET;
 
@@ -43,7 +45,7 @@ export const requestOnetimeSMS = async (db, data, context) => {
     phone: formatedNumber,
     ttl,
     token,
-    coount: 0
+    count: 0
   };
   // send sms
   const params = {
@@ -79,3 +81,46 @@ export const requestOnetimeSMS = async (db, data, context) => {
   
 };
 
+export const confirmOnetimeSMS = async (db, data, context) => {
+  const error_handler = logger.error_response_handler({func: "confirmOnetimeSMS", message: "invalid request"});
+
+  if (!context.auth || !context.auth.uid) {
+    return error_handler({error_type: logger.ErrorTypes.NoUid});
+  }
+  const userId = context.auth.uid;
+  const {token} = data
+  // get data
+  const onetime  = (await db.doc(`/users/${userId}/secret/onetime`).get()).data();
+  if (!onetime || !onetime.smscode) {
+    console.log(onetime)
+    return error_handler({error_type: logger.ErrorTypes.NoSMSCodeData});
+  }
+
+  // check ttl
+  if (onetime.smscode.ttl < Math.round(Date.now() / 1000)) {
+    return error_handler({error_type: logger.ErrorTypes.SMSCodeExpired});
+  }
+
+  // check code
+  if (token !== onetime.smscode.token) {
+    onetime.smscode.count ++;
+    if (onetime.smscode.count > 4) {  
+      await db.doc(`/users/${userId}/secret/onetime`).delete();
+    } else {
+      await db.doc(`/users/${userId}/secret/onetime`).set(onetime);
+    }
+    return error_handler({error_type: logger.ErrorTypes.SMSCodeNotMatch, message: "SNSCode not match"});
+  }
+
+  // if ok
+  const uuid = UUID();
+
+  const supermario = {
+    ttl: Math.round(Date.now()  / 1000) + 3600,
+    token: uuid.replace("-",""),
+  }
+  await db.doc(`/users/${userId}/secret/onetime`).set({supermario});
+  
+  return true;
+  
+}
