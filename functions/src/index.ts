@@ -48,6 +48,10 @@ export const requestOnetimeSMS = functions.https.onCall(async (data, context) =>
   return await onetimesmsFunctions.requestOnetimeSMS(db, data, context);
 });
 
+export const confirmOnetimeSMS = functions.https.onCall(async (data, context) => {
+  return await onetimesmsFunctions.confirmOnetimeSMS(db, data, context);
+});
+
 export const createCustomer = functions.https.onCall(async (data, context) => {
   return await stripeFunctions.createCustomer(db, data, context);
 });
