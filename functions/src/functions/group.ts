@@ -1,6 +1,7 @@
 import Privileges from '../../react-lib/src/const/Privileges.js';
 import * as messaging from '../utils/messaging';
 import * as firebase_utils from '../utils/firebase_utils';
+import * as stripeUtils from '../utils/stripe';
 import * as logger from '../utils/logger';
 import * as stripeApi from '../apis/stripe';
 
@@ -132,7 +133,9 @@ export const createGroupName = async (db:FirebaseFirestore.Firestore, data, cont
     if (types.subscription) {
       const account = await stripeApi.createCustomAccount(groupId);
       tr.set(refAccont, {account: account})
-      tr.set(refAccontPrivate, {account: account}) // todo convert data
+      tr.set(refAccontPrivate, {
+        account: stripeUtils.convCustomAccountData(account)
+      })
     }
     tr.set(refName, { groupId:groupId });
     tr.set(refGroup, { 
