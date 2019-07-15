@@ -17,6 +17,12 @@ export enum ErrorTypes {
   AlreadyMember,
   StripeSubscriptionCreation,
   StripeApi,
+  NoPhoneNumber,
+  InvalidPhoneNumber,
+  AWSSMSPublish,
+  NoSMSCodeData,
+  SMSCodeNotMatch,
+  SMSCodeExpired,
 }
 
 export const error_messages = {
@@ -30,6 +36,12 @@ export const error_messages = {
   [ErrorTypes.AlreadyMember]: "already member",
   [ErrorTypes.StripeSubscriptionCreation]: "subscription creation failed",
   [ErrorTypes.StripeApi]: "Stripe API error",
+  [ErrorTypes.NoPhoneNumber]: "No phone number",
+  [ErrorTypes.InvalidPhoneNumber]: "Invalid phone number",
+  [ErrorTypes.AWSSMSPublish]: "AWS SMS Publish Error",
+  [ErrorTypes.NoSMSCodeData]: "No sms code data",
+  [ErrorTypes.SMSCodeNotMatch]: "SMSCode not match",
+  [ErrorTypes.SMSCodeExpired]: "SMSCode expired",
 }
 
 const get_error_string = (error) => {

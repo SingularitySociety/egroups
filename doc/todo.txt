@@ -7,19 +7,21 @@ Chat: edit a message
 Chat: auto detect link in a message
 Chat: Rich Text?
 
+Blog: Top Image?
+
 Image Uploader: Verify the privacy
 Image Uploader: Image Orientation EXIF
 https://qiita.com/RichardImaokaJP/items/385beb77eb39243e50a6
-Pages: Menu access to pages *
 
-Home: Image for Group
 Group: Invitation
-Page: Show different tabs for non-members
-Profile: No grey color / Implement
-Subscribe: User Name (instead of Johnes)
-Subscribe: Hide ZIP
+Subscribe: Hide ZIP https://github.com/stripe/react-stripe-elements/issues/20
 
 ----- Done -----
+Home: Image for Group
+Pages: Menu access to pages *
+Profile: No grey color / Implement
+Page: Show different tabs for non-members
+Subscribe: User Name (instead of Johnes)
 public Blog, and public News
 Subscribe: Debug & Test the first access
 Join: Debug & Test the first access

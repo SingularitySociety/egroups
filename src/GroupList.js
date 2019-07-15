@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Paper, Grid } from '@material-ui/core';
 import MUILink from '@material-ui/core/Link';
 import { Link } from 'react-router-dom';
+import ImageUploader from './common/ImageUploader';
 
 const styles = theme => ({
   root: {
@@ -57,12 +58,21 @@ function GroupList(props) {
   return <Grid container justify="center" className={classes.root}>
     { 
       groups.map((group)=> {
+        const imageThumbnails = group.profile && group.profile.thumbnails;
         return (
           <Grid item key={group.groupId} xs={12}>
             <MUILink component={Link} className={classes.link}
               to={"/" + (group.groupName || group.groupId)}>
-                <Paper className={classes.paper}> 
-              {group.title}
+              <Paper className={classes.paper}>
+                <Grid container spacing={1}>
+                  <ImageUploader imagePath={`/groups/${group.groupId}/images/profile`}
+                    imageThumbnails={imageThumbnails}
+                    loadImage={group.hasImage}
+                    readOnly={true} displayMode={"thumbSmall"} inline={true} />
+                  <Grid item>
+                    {group.title}
+                  </Grid>
+                </Grid> 
               </Paper>
             </MUILink>
           </Grid>);

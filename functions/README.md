@@ -28,6 +28,27 @@ firebase functions:config:set  stripe.endpoint_secret=${STRIPE_ENDPOINT_SECRET}
 
 ```
 
+## AWS
+
+### set aws id/secret on your local env
+
+add this line you shell config ( .bash_rc or .zshrc)
+
+```
+export AWS_ID="xxxx"
+export AWS_SECRET="xxxx"
+
+```
+
+### set stripe secret key on firebase
+
+```
+firebase functions:config:set  aws.id=${AWS_ID}
+
+firebase functions:config:set  aws.secret=${AWS_SECRET}
+
+```
+
 
 
 ## Stripeの使い方についてです。
