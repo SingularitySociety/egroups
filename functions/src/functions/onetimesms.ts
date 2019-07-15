@@ -2,19 +2,22 @@ import * as functions from 'firebase-functions';
 import { parsePhoneNumberFromString } from 'libphonenumber-js'
 import * as AWS from 'aws-sdk';
 import * as logger from '../utils/logger';
+import * as utils from '../utils/utils';
 
 import * as UUID from "uuid-v4";
 
 const aws_key =  functions.config() && functions.config().aws &&  functions.config().aws.id || process.env.AWS_ID;
 const aws_secret =  functions.config() && functions.config().aws &&  functions.config().aws.secret || process.env.AWS_SECRET;
 
-AWS.config.update({
-  region: 'ap-northeast-1',
-  credentials: new AWS.Credentials(
-    aws_key,
-    aws_secret,
-  ),
-});
+if (aws_key) {
+  AWS.config.update({
+    region: 'ap-northeast-1',
+    credentials: new AWS.Credentials(
+      aws_key,
+      aws_secret,
+    ),
+  });
+}
 
 
 export const requestOnetimeSMS = async (db, data, context) => {
@@ -63,12 +66,15 @@ export const requestOnetimeSMS = async (db, data, context) => {
     Message: 'eGroup code: ' + token,
     PhoneNumber: formatedNumber,
   };
-  const aws = new AWS.SNS({apiVersion: '2010-03-31'})
-  // @ts-ignore
-  const publishTextPromise = await aws.publish(params).promise();
-
-  if (!publishTextPromise) {
-    return error_handler({error_type: logger.ErrorTypes.AWSSMSPublish});
+  if (aws_key) {
+    const aws = new AWS.SNS({apiVersion: '2010-03-31'})
+    // @ts-ignore
+    const publishTextPromise = await aws.publish(params).promise();
+    if (!publishTextPromise) {
+      return error_handler({error_type: logger.ErrorTypes.AWSSMSPublish});
+    }
+  } else {
+    console.log("SMS not push")
   }
   // save data
   await db.doc(`/users/${userId}/secret/onetime`).set({ smscode });
@@ -97,26 +103,29 @@ export const confirmOnetimeSMS = async (db, data, context) => {
 
   // check ttl
   if (onetime.smscode.ttl < Math.round(Date.now() / 1000)) {
+    await db.doc(`/users/${userId}/secret/onetime`).delete();
     return error_handler({error_type: logger.ErrorTypes.SMSCodeExpired});
   }
 
   // check code
   if (token !== onetime.smscode.token) {
     onetime.smscode.count ++;
-    if (onetime.smscode.count > 4) {  
-      await db.doc(`/users/${userId}/secret/onetime`).delete();
-    } else {
+    if (onetime.smscode.count < 6) {  
       await db.doc(`/users/${userId}/secret/onetime`).set(onetime);
     }
     return error_handler({error_type: logger.ErrorTypes.SMSCodeNotMatch, message: "SNSCode not match"});
   }
 
   // if ok
+  const userData = (await db.doc(`/users/${userId}`).get()).data();
+  if (utils.isNull(userData.phone)) {
+    await db.doc(`/users/${userId}`).set({phone: onetime.smscode.phone}, {merge:true})
+  }
   const uuid = UUID();
 
   const supermario = {
     ttl: Math.round(Date.now()  / 1000) + 3600,
-    token: uuid.replace("-",""),
+    token: uuid.replace(/\-/g,""),
   }
   await db.doc(`/users/${userId}/secret/onetime`).set({supermario});
   
