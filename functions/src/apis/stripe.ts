@@ -163,13 +163,17 @@ export const retrieveSubscription = async (subscriptionId) => {
      
 export const createCustomAccount = async (groupId, country="JP") => {
   try {
-    const account =  await getStripe().accounts.create({
+    let options: any = {
       type: "custom",
       country,
       metadata: {
         groupId,
       },
-    });
+    };
+    if (country === "US") {
+      options.requested_capabilities = ["platform_payments"];
+    }
+    const account =  await getStripe().accounts.create(options);
     return account;
   } catch (e) {
     console.log(e);

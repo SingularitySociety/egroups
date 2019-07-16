@@ -94,6 +94,10 @@ service cloud.firestore {
       // NEVER allow the client write anything here.   
       allow read, write: if false;
     }
+    match /groups/{groupId}/invites/{inviteId} {
+      // Only Admin can access it (we use HTTP call to process it for new users).
+      allow read, write: if request.auth.uid != null && isUserAdmin(groupId, request.auth.uid)
+    }
 		match /groups/{groupId}/channels/{channelId} {
       allow read: if groupInfo(groupId).privileges.channel.read <= userPrivilege(groupId, request.auth.uid);
       allow create: if request.auth.uid != null 
