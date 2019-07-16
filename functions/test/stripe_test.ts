@@ -199,9 +199,17 @@ describe('Stripe test', () => {
     this.timeout(10000);
     const groupId = UUID();
     const customAccountResponse = await stripeApi.createCustomAccount(groupId); 
-    console.log(JSON.stringify(customAccountResponse, undefined, 1));
-    // todo validate data
-    // console.log(customAccountResponse);
+
+    customAccountResponse.charges_enabled.should.equal(false);
+    customAccountResponse.country.should.equal('JP');
+    customAccountResponse.created.should.to.be.a("number");
+    customAccountResponse.default_currency.should.equal('jpy');
+    customAccountResponse.id.should.to.be.a("string");
+    customAccountResponse.metadata.groupId.should.equal(groupId);
+    customAccountResponse.object.should.equal('account');
+    customAccountResponse.payouts_enabled.should.equal(false);
+    customAccountResponse.requirements.should.is.a("object");
+    customAccountResponse.type.should.equal('custom');
   });  
 
 })

@@ -462,7 +462,14 @@ describe('Stripe data test', () => {
       },
       "type": "custom"
     }
-    const res1 = stripeUtils.convSubscriptionData(subscription);
+    const res1 = stripeUtils.convCustomAccountData(account);
+    res1.country.should.equal('JP');
+    res1.created.should.to.be.a("number");
+    res1.default_currency.should.equal('jpy');
+    res1.id.should.to.be.a("string");
+    res1.object.should.equal('account');
+    res1.requirements.should.is.a("object");
+    res1.type.should.equal('custom');
 
   });
 });

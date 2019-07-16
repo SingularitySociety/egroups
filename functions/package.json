@@ -12,7 +12,7 @@
     "mocha": "cp ../firestore.rules  ./ && mocha  -r ts-node/register --recursive test/*_test.ts",
     "mocha2": "mocha  -r ts-node/register --recursive test/logger_test.ts",
     "mocha3": "mocha  -r ts-node/register --recursive test/group_function_test.ts",
-    "mocha4": "mocha  -r ts-node/register --recursive test/stripe_function_test.ts",
+    "mocha4": "mocha  -r ts-node/register --recursive test/stripe_data_test.ts",
     "watch:mocha": "mocha -w -watch-extensions ts -r ts-node/register --recursive test/*_test.ts"
   },
   "engines": {
