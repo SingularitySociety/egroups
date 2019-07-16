@@ -7,6 +7,8 @@ import { FormattedMessage } from 'react-intl';
 import EditableField from '../../common/EditableField';
 import ImageUploader from '../../common/ImageUploader';
 import LeaveAccount from './LaveAccount';
+import * as firebase from "firebase/app";
+import "firebase/firestore";
 
 const styles = theme => ({
 });
@@ -30,7 +32,7 @@ function Account(props) {
   const onImageUpload = async (imageUrl) => {
     console.log("onImageUpload", imageUrl);
     const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
-    await refMember.set({hasImage:true}, {merge:true});
+    await refMember.set({hasImage:true, profile:{thumbnails:firebase.firestore.FieldValue.delete()}}, {merge:true});
     callbacks.memberDidUpdate();
   }
     

@@ -12,6 +12,8 @@ import ImageUploader from '../common/ImageUploader';
 import ColorOptions from './ColorOptions';
 import LockedArea from '../common/LockedArea';
 import { Redirect, Link } from 'react-router-dom';
+import * as firebase from "firebase/app";
+import "firebase/firestore";
 
 const styles = theme => ({
   formControl: {
@@ -74,7 +76,7 @@ class Settings extends React.Component {
   }
   onImageUpload = async (imageUrl) => {
     console.log("onImageUpload", imageUrl);
-    await this.refGroup.set({hasImage:true}, {merge:true});
+    await this.refGroup.set({hasImage:true, profile:{thumbnails:firebase.firestore.FieldValue.delete()}}, {merge:true});
     this.props.callbacks.groupDidUpdate();
   }
   onDelete = async () => {
