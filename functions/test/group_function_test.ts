@@ -330,13 +330,14 @@ describe('Group function test', () => {
     this.timeout(10000);
     const aliceUserId = "test_user_" + UUID();
     const groupId = "group_" + UUID();
-
+    const country = "JP";
+    
     await admin_db.doc(`groups/${groupId}`).set({
       owner: aliceUserId,
       subscription: true,
     })
     
-    const req = {groupId};
+    const req = {groupId, country};
     const context = {auth: {uid: aliceUserId}};
     const wrapped = test.wrap(index.createCustomAccount);
 
@@ -455,20 +456,15 @@ describe('Group function test', () => {
     const aliceUserId = "test_user_" + UUID();
     const groupId = "group_" + UUID();
     const country = "US";
-    const path = UUID();
-    const title = UUID();
-    const types = {
-      open: true,
-      subscription: true,
-    };
     
     await admin_db.doc(`groups/${groupId}`).set({
       owner: aliceUserId,
+      subscription: true,
     })
     
-    const req = {groupId, path, title, types, country};
+    const req = {groupId, country};
     const context = {auth: {uid: aliceUserId}};
-    const wrapped = test.wrap(index.createGroupName);
+    const wrapped = test.wrap(index.createCustomAccount);
 
     await wrapped(req, context);
 

@@ -245,10 +245,10 @@ export const createCustomAccount = async (db, data, context) => {
   if (error_response) {
     return error_response;
   }
-  if (!groupData.subscription) {
+  if (!groupData.subscription || !data.country) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
-  const groupId = data.groupId;
+  const {groupId, country} = data;
 
   const refAccont = db.doc(`groups/${groupId}/secret/account`);
   const refAccontPrivate = db.doc(`groups/${groupId}/private/account`);
@@ -259,7 +259,7 @@ export const createCustomAccount = async (db, data, context) => {
   }
   
   const account = await db.runTransaction(async (tr)=>{
-    const account = await stripeApi.createCustomAccount(groupId);
+    const account = await stripeApi.createCustomAccount(groupId, country);
     tr.set(refAccont, {account: account})
     tr.set(refAccontPrivate, {
       account: stripeUtils.convCustomAccountData(account)
