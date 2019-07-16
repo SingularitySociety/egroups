@@ -9,12 +9,14 @@ Chat: Rich Text?
 
 Blog: Top Image?
 
-Image Uploader: Verify the privacy
 Group: Invitation
+https://github.com/firebase/functions-samples/tree/master/quickstarts/email-users
 Billing: Yen vs. USD
 Subscribe: Hide ZIP https://github.com/stripe/react-stripe-elements/issues/20
 
 ----- Done -----
+Image Uploader: Verify the privacy ANSWER: downloadURL is NOT secure
+https://stackoverflow.com/questions/47653021/cant-get-firebase-storage-security-rules-to-refuse-access-to-a-file
 Account: Fix image upload bug
 Image Uploader: Image Orientation EXIF
 https://qiita.com/RichardImaokaJP/items/385beb77eb39243e50a6

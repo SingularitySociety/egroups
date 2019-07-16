@@ -67,14 +67,15 @@ function ImageViewer(props) {
       return;
     }
     if (imageUrl) {
+      console.log(imageUrl);
       setUrl(imageUrl);
       return;
     }
     if (loadImage) {
-      console.log(imagePath);
       async function getDownloadUrl() {
         const downloadUrl = await imageRef.getDownloadURL();
         setUrl(downloadUrl);
+        console.log(imagePath, downloadUrl);
       }
       getDownloadUrl();
     }

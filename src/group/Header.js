@@ -201,8 +201,11 @@ class MyAppBar extends React.Component {
         </AppBar>
         <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={this.closeMe}>
           {
+            (privilege >= group.privileges.member.read) && 
+            <MenuItem key="listing" onClick={this.closeMe} component={Link} to={`/${group.groupName}/listing`}><FormattedMessage id="listing" /></MenuItem>
+          }
+          {
             privilege && [
-            <MenuItem key="listing" onClick={this.closeMe} component={Link} to={`/${group.groupName}/listing`}><FormattedMessage id="listing" /></MenuItem>,
             <MenuItem key="account" onClick={this.closeMe} component={Link} to={`/${group.groupName}/account`}><FormattedMessage id="account" /></MenuItem>,
             <MenuItem key="pages" onClick={this.closeMe} component={Link} to={`/${group.groupName}/pages`}><FormattedMessage id="pages" /></MenuItem>
             ]
