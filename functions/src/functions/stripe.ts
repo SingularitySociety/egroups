@@ -216,3 +216,51 @@ export const cancelSubscription = async (db, data, context) => {
   return {result: true};
   
 }
+
+
+export const updateCustomAccount = async (db, data, context) => {
+  const error_handler = logger.error_response_handler({func: "updateCustomAccount", message: "invalid request"});
+
+  if (!context.auth || !context.auth.uid) {
+    return error_handler({error_type: logger.ErrorTypes.NoUid});
+  }
+  if (!data || !data.groupId || !data.type || !data.accountData || !data.ip) {
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+  }
+  const userId = context.auth.uid;
+  const {groupId, type, accountData, ip} = data;
+    
+  const refGroup = db.doc(`groups/${groupId}`);
+  const groupData = (await refGroup.get()).data();
+  if (!groupData) {
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+  }
+  if (groupData.owner !== userId) {
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+  }
+  const refAccont = db.doc(`groups/${groupId}/secret/account`);
+  const existAccountData = (await refAccont.get()).data();
+  if (!existAccountData) {
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+  }
+  // console.log(groupData);
+  const accoundId = existAccountData.account.id;
+  
+  // https://stripe.com/docs/api/accounts/update
+  const date = Math.round(Date.now()  / 1000);
+  let postData = {};
+  if (type === "individual") {
+    postData = {
+      business_type: type,
+      individual: accountData,
+      tos_acceptance: {
+        date,
+        ip,
+      },
+    }
+  }
+  const res = await stripeApi.updateCustomAccount(accoundId, postData);
+  console.log(res);
+  
+  return {result: true};
+};

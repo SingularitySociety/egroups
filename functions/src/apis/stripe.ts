@@ -181,3 +181,13 @@ export const createCustomAccount = async (groupId, country="JP") => {
   }
 }
 
+export const updateCustomAccount = async(accountId, data) => {
+  try {
+    const account =  await getStripe().accounts.update(accountId, data);
+    return account;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+
+}
