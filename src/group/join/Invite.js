@@ -4,6 +4,9 @@ import { withStyles } from '@material-ui/core/styles';
 import { FormControl, InputLabel, Select, Button } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import PrivilegeOptions from '../PrivilegeOptions';
+import * as firebase from "firebase/app";
+import "firebase/firestore";
+import Privileges from '../../const/Privileges';
 
 const styles = theme => ({
   formControl: {
@@ -12,10 +15,17 @@ const styles = theme => ({
   },
 });
 
+function uuidv4() {
+  return 'xxxxxxxx_xxxx_4xxx_yxxx_xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c === 'x' ? r : ((r & 0x3) | 0x8);
+    return v.toString(16);
+  });
+}
+
 function Invite(props) {
-  const { callbacks, classes } = props;
+  const { callbacks, classes, db, group } = props;
   const setTabbar = callbacks.setTabbar;
-  const [level, setLevel] = useState(0);
+  const [level, setLevel] = useState(Privileges.member);
 
   useEffect(()=>{
     setTabbar("invite");
@@ -25,8 +35,15 @@ function Invite(props) {
     setLevel(e.target.value);
   }
 
-  function handleInvite(e) {
-    console.log("invite");
+  async function handleInvite(e) {
+    const key = uuidv4();
+    console.log("invite", key);
+    const doc = await db.collection(`groups/${group.groupId}/invites`).add({
+      [key]:1,
+      created: firebase.firestore.FieldValue.serverTimestamp(),
+      privilege: level,
+    });
+    console.log(doc.id);
   }
 
   return <React.Fragment>
