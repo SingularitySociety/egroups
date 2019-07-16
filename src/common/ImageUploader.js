@@ -6,6 +6,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import UploadButton from '@material-ui/icons/CloudUpload';
 import * as firebase from "firebase/app";
 import "firebase/storage";
+import * as blueimpLoadImage from 'blueimp-load-image';
 
 const styles = theme => ({
   root: {
@@ -78,21 +79,29 @@ function ImageViewer(props) {
   }, [imagePath, displayMode, imageThumbnails, imageUrl, loadImage]);
 
   const onFileInput = (e) => {
-    const storagRef = firebase.storage().ref();
-    const imageRef = storagRef.child(imagePath);
-    const task = imageRef.put(e.target.files[0]);
-    task.on('state_changed', (snapshot)=>{
-      console.log("progress", snapshot);
-    }, (error) => {
-      console.log("failed", error);
-    }, async () => {
-      // Accordign to the document, this download URL is valid until you explicitly reveke it,
-      // and it is accessible by anybody (no security). The security is at this getDownloadURL() level. 
-      // It is fine to cache this URL in the database because we put a security around the database.
-      const downloadUrl = await task.snapshot.ref.getDownloadURL();
-      onImageUpload(downloadUrl);
-      setUrl(downloadUrl);
-    });
+    const file = e.target.files[0];
+    blueimpLoadImage(file, (canvas) => {
+      console.log(canvas);
+      canvas.toBlob((blob)=>{
+        console.log(blob);
+        const storagRef = firebase.storage().ref();
+        const imageRef = storagRef.child(imagePath);
+        const task = imageRef.put(blob);
+        task.on('state_changed', (snapshot)=>{
+          console.log("progress", snapshot);
+        }, (error) => {
+          console.log("failed", error);
+        }, async () => {
+          // Accordign to the document, this download URL is valid until you explicitly reveke it,
+          // and it is accessible by anybody (no security). The security is at this getDownloadURL() level. 
+          // It is fine to cache this URL in the database because we put a security around the database.
+          const downloadUrl = await task.snapshot.ref.getDownloadURL();
+          onImageUpload(downloadUrl);
+          setUrl(downloadUrl);
+        });
+    
+      }, file.type);
+    }, { canvas:true, maxWidth:1024, maxHeight:1024, orientation:true });
   }    
 
   const imageStyle = url ? { backgroundImage:`url("${url}")` } : {};
