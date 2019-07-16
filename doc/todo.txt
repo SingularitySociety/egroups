@@ -14,9 +14,11 @@ Image Uploader: Image Orientation EXIF
 https://qiita.com/RichardImaokaJP/items/385beb77eb39243e50a6
 
 Group: Invitation
+Billing: Yen vs. USD
 Subscribe: Hide ZIP https://github.com/stripe/react-stripe-elements/issues/20
 
 ----- Done -----
+Build: BrowserslistError: Unknown browser query `android all`
 Home: Image for Group
 Pages: Menu access to pages *
 Profile: No grey color / Implement
