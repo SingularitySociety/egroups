@@ -62,6 +62,7 @@ class MyAppBar extends React.Component {
     this.cramListing = this.breadCram("listing");
     this.cramJoin = this.breadCram("join", null, "application");
     this.cramSubscribe = this.breadCram("subscribe");
+    this.cramInvite = this.breadCram("invite");
     this.cramHomePage = <MUILink key="page.home" color="inherit" component={Link} to={`/${group.groupName}`}>
             <FormattedMessage id="page.home" />
           </MUILink>;
@@ -159,6 +160,9 @@ class MyAppBar extends React.Component {
       case "subscribe":
           crams = [this.cramHomePage, this.cramSubscribe];
           break;
+      case "invite":
+        crams = [this.cramHomePage, this.cramInvite];
+        break;
       case "listing":
         crams = [this.cramHome, this.cramListing];
         break;
@@ -211,8 +215,10 @@ class MyAppBar extends React.Component {
             ]
           }
           {
-            (privilege >= Privileges.admin) && 
-            <MenuItem onClick={this.closeMe} component={Link} to={`/${group.groupName}/settings`}><FormattedMessage id="settings" /></MenuItem>
+            (privilege >= Privileges.admin) && [
+            <MenuItem key="invite" onClick={this.closeMe} component={Link} to={`/${group.groupName}/invite`}><FormattedMessage id="invite" /></MenuItem>,
+            <MenuItem key="settings" onClick={this.closeMe} component={Link} to={`/${group.groupName}/settings`}><FormattedMessage id="settings" /></MenuItem>
+            ]
           }
           <Divider />
             <MenuItem onClick={this.logout}><FormattedMessage id="logout" /></MenuItem>

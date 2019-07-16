@@ -143,5 +143,8 @@
     "groups.subs":"有料サロン",
     "groups.free":"無料サロン",
 
+    "invite":"招待",
+    "invitation.privilege":"招待者の権限",
+
     "dummy":"dummy"
 }

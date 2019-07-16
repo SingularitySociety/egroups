@@ -142,5 +142,8 @@
     "groups.subs":"Subscription Services",
     "groups.free":"Free Groups",
 
+    "invite":"Invite",
+    "invitation.privilege":"Invitation Privildge",
+
     "dummy":"dummy"
 }
