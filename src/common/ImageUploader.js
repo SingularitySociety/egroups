@@ -79,7 +79,8 @@ function ImageViewer(props) {
   }, [imagePath, displayMode, imageThumbnails, imageUrl, loadImage]);
 
   const onFileInput = (e) => {
-    blueimpLoadImage(e.target.files[0], (canvas) => {
+    const file = e.target.files[0];
+    blueimpLoadImage(file, (canvas) => {
       console.log(canvas);
       canvas.toBlob((blob)=>{
         console.log(blob);
@@ -99,8 +100,8 @@ function ImageViewer(props) {
           setUrl(downloadUrl);
         });
     
-      }, "image/png");
-    }, { canvas:true, maxWidth:1024, maxHeight:1024 });
+      }, file.type);
+    }, { canvas:true, maxWidth:1024, maxHeight:1024, orientation:true });
   }    
 
   const imageStyle = url ? { backgroundImage:`url("${url}")` } : {};
