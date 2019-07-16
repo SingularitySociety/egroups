@@ -326,7 +326,7 @@ describe('Group function test', () => {
     
   });
 
-  it ('stripe create customer test', async function() {
+  it ('stripe create and update customer test', async function() {
     this.timeout(10000);
     const aliceUserId = "test_user_" + UUID();
     const groupId = "group_" + UUID();
@@ -354,6 +354,100 @@ describe('Group function test', () => {
     secret.account.object.should.equal('account')
     secret.account.type.should.equal('custom' )
 
+    const postData = {
+      "individual": {
+        "address_kana":{
+          "postal_code": "1690051",
+          "state": "トウキョウト",
+          "city": "シンジュクク",
+          "town": "ニシワセダ３チョウメ",
+          "line1": "4-1",
+          "line2": "ホゲホゲ"
+        },
+        "address_kanji":{
+          "postal_code": "1690051",
+          "state": "東京都",
+          "city": "新宿区",
+          "town": "西早稲田3",
+          "line1": "4-1",
+          "line2": "ほげほげ"
+        },
+        "dob": {
+          "day": 1,
+          "month": 8,
+          "year": 1980,
+        },
+        "phone": "+819012345678",
+        "first_name_kana": "名前（カナ）",
+        "first_name_kanji": "名前（漢字）",
+        "last_name_kana": "姓（カナ）",
+        "last_name_kanji": "姓（漢字）",
+        "gender":"female",
+      },
+      "company": {
+        "legal_entity": {
+          "business_name": "会社名",
+          "business_name_kana": "会社名（カナ）",
+          "business_name_kanji": "会社名（漢字）",
+          "business_tax_id": "会社法人等番号"
+        },
+        "address_kana":{
+          "postal_code": "郵便番号（会社、カナ）",
+          "state": "都道府県（会社、カナ）",
+          "city": "区市町村（会社、カナ）",
+          "town": "町名(丁目まで、会社、カナ）",
+          "line1": "番地、号（会社、カナ）",
+          "line2": "建物・部屋番号・その他 (任意、会社、カナ）"
+        },
+        "address_kanji":{
+          "postal_code": "郵便番号（会社、漢字）",
+          "state": "都道府県（会社、漢字）",
+          "city": "区市町村（会社、漢字）",
+          "town": "町名(丁目まで)（会社、漢字）",
+          "line1": "番地、号（会社、漢字）",
+          "line2": "建物・部屋番号・その他 (任意、会社、漢字)"
+        },
+        "personal_address_kana":{
+          "postal_code": "郵便番号（担当者、カナ）",
+          "state": "都道府県（担当者、カナ）",
+          "city": "区市町村（担当者、カナ）",
+          "town": "町名(丁目まで、担当者、カナ）",
+          "line1": "番地、号（担当者、カナ）",
+          "line2": "建物・部屋番号・その他 (任意、担当者社、カナ）"
+        },
+        "personal_address_kanji":{
+          "postal_code": "郵便番号（担当者、漢字）",
+          "state": "都道府県（担当者、漢字）",
+          "city": "区市町村（担当者、漢字）",
+          "town": "町名(丁目まで、担当者、漢字）",
+          "line1": "番地、号（担当者、漢字）",
+          "line2": "建物・部屋番号・その他 (任意、担当者、漢字)"
+        },
+        "dob": {
+          "day": "生年月日（日）",
+          "month": "生年月日（月）",
+          "year": "生年月日（年）"
+        },
+        "phone_number": "担当者電話番号",
+        "type": "company（会社）",
+        "tos_acceptance": {
+          "date": "アカウント契約同意 timestamp",
+          "ip": "アカウント契約同意時の IP アドレス"
+        },
+        "first_name_kana": "担当者の名前（kana）",
+        "first_name_kanji": "担当者の名前（漢字）",
+        "last_name_kana": "担当者の姓（カナ）",
+        "last_name_kanji": "担当者の姓（漢字）",
+        "gender":"性別"
+      }
+    };
+    const req2 = {groupId,
+                  ip: "211.132.97.58",
+                  type: "individual",
+                  accountData: postData["individual"]};
+    const wrapped2 = test.wrap(index.updateCustomAccount);
+    await wrapped2(req2, context);
+    
 
   });
 });
