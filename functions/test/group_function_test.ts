@@ -330,6 +330,7 @@ describe('Group function test', () => {
     this.timeout(10000);
     const aliceUserId = "test_user_" + UUID();
     const groupId = "group_" + UUID();
+    const country = "JP";
     const path = UUID();
     const title = UUID();
     const types = {
@@ -341,7 +342,7 @@ describe('Group function test', () => {
       owner: aliceUserId,
     })
     
-    const req = {groupId, path, title, types};
+    const req = {groupId, path, title, types, country};
     const context = {auth: {uid: aliceUserId}};
     const wrapped = test.wrap(index.createGroupName);
 
@@ -356,4 +357,37 @@ describe('Group function test', () => {
 
 
   });
+
+  it ('stripe create customer test', async function() {
+    this.timeout(10000);
+    const aliceUserId = "test_user_" + UUID();
+    const groupId = "group_" + UUID();
+    const country = "US";
+    const path = UUID();
+    const title = UUID();
+    const types = {
+      open: true,
+      subscription: true,
+    };
+    
+    await admin_db.doc(`groups/${groupId}`).set({
+      owner: aliceUserId,
+    })
+    
+    const req = {groupId, path, title, types, country};
+    const context = {auth: {uid: aliceUserId}};
+    const wrapped = test.wrap(index.createGroupName);
+
+    await wrapped(req, context);
+
+    const secret = (await admin_db.doc(`groups/${groupId}/secret/account`).get()).data();
+    secret.account.country.should.equal('US')
+    secret.account.default_currency.should.equal('usd')
+    secret.account.metadata.groupId.should.equal(groupId)
+    secret.account.object.should.equal('account')
+    secret.account.type.should.equal('custom' )
+
+
+  });
+
 });

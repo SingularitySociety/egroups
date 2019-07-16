@@ -103,8 +103,8 @@ export const createGroupName = async (db:FirebaseFirestore.Firestore, data, cont
   if (!context.auth || !context.auth.uid) {
     return error_handler({error_type: logger.ErrorTypes.NoUid});
   }
-  const { groupId, path, title, types } = data;
-  if (!groupId || !path || !title || !types) {
+  const { groupId, path, title, types, country } = data;
+  if (!groupId || !path || !title || !types || !country) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
 
@@ -131,7 +131,7 @@ export const createGroupName = async (db:FirebaseFirestore.Firestore, data, cont
       throw new Error("group.different.owner");
     }
     if (types.subscription) {
-      const account = await stripeApi.createCustomAccount(groupId);
+      const account = await stripeApi.createCustomAccount(groupId, country);
       tr.set(refAccont, {account: account})
       tr.set(refAccontPrivate, {
         account: stripeUtils.convCustomAccountData(account)
