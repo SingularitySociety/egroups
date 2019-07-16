@@ -333,4 +333,143 @@ describe('Stripe data test', () => {
       "trial_start": null
     });
   });
+
+  it ('custom account test', async function() {
+    const account = {
+      "id": "acct_1Euw7TGfb9VBdIpo",
+      "object": "account",
+      "business_profile": {
+        "mcc": null,
+        "name": null,
+        "product_description": null,
+        "support_address": null,
+        "support_email": null,
+        "support_phone": null,
+        "support_url": null,
+        "url": null
+      },
+      "business_type": null,
+      "capabilities": {
+        "legacy_payments": "active"
+      },
+      "charges_enabled": false,
+      "country": "JP",
+      "created": 1562827867,
+      "default_currency": "jpy",
+      "details_submitted": false,
+      "email": null,
+      "external_accounts": {
+        "object": "list",
+        "data": [],
+        "has_more": false,
+        "total_count": 0,
+        "url": "/v1/accounts/acct_1Euw7TGfb9VBdIpo/external_accounts"
+      },
+      "metadata": {
+        "groupId": "e73b445b-a4de-4044-a53c-7d653c17b4f7"
+      },
+      "payouts_enabled": false,
+      "requirements": {
+        "current_deadline": null,
+        "currently_due": [
+          "business_type",
+          "company.address_kana.city",
+          "company.address_kana.line1",
+          "company.address_kana.postal_code",
+          "company.address_kana.state",
+          "company.address_kana.town",
+          "company.address_kanji.city",
+          "company.address_kanji.line1",
+          "company.address_kanji.postal_code",
+          "company.address_kanji.state",
+          "company.address_kanji.town",
+          "company.phone",
+          "external_account",
+          "relationship.account_opener",
+          "tos_acceptance.date",
+          "tos_acceptance.ip"
+        ],
+        "disabled_reason": "requirements.past_due",
+        "eventually_due": [
+          "business_type",
+          "company.address_kana.city",
+          "company.address_kana.line1",
+          "company.address_kana.postal_code",
+          "company.address_kana.state",
+          "company.address_kana.town",
+          "company.address_kanji.city",
+          "company.address_kanji.line1",
+          "company.address_kanji.postal_code",
+          "company.address_kanji.state",
+          "company.address_kanji.town",
+          "company.phone",
+          "external_account",
+          "relationship.account_opener",
+          "tos_acceptance.date",
+          "tos_acceptance.ip"
+        ],
+        "past_due": [
+          "business_type",
+          "company.address_kana.city",
+          "company.address_kana.line1",
+          "company.address_kana.postal_code",
+          "company.address_kana.state",
+          "company.address_kana.town",
+          "company.address_kanji.city",
+          "company.address_kanji.line1",
+          "company.address_kanji.postal_code",
+          "company.address_kanji.state",
+          "company.address_kanji.town",
+          "company.phone",
+          "relationship.account_opener"
+        ]
+      },
+      "settings": {
+        "branding": {
+          "icon": null,
+          "logo": null,
+          "primary_color": null
+        },
+        "card_payments": {
+          "decline_on": {
+            "avs_failure": false,
+            "cvc_failure": false
+          }
+        },
+        "dashboard": {
+          "display_name": null,
+          "timezone": "Etc/UTC"
+        },
+        "payments": {
+          "statement_descriptor": "",
+          "statement_descriptor_kana": null,
+          "statement_descriptor_kanji": null
+        },
+        "payouts": {
+          "debit_negative_balances": false,
+          "schedule": {
+            "delay_days": 4,
+            "interval": "weekly",
+            "weekly_anchor": "friday"
+          },
+          "statement_descriptor": null
+        }
+      },
+      "tos_acceptance": {
+        "date": null,
+        "ip": null,
+        "user_agent": null
+      },
+      "type": "custom"
+    }
+    const res1 = stripeUtils.convCustomAccountData(account);
+    res1.country.should.equal('JP');
+    res1.created.should.to.be.a("number");
+    res1.default_currency.should.equal('jpy');
+    res1.id.should.to.be.a("string");
+    res1.object.should.equal('account');
+    res1.requirements.should.is.a("object");
+    res1.type.should.equal('custom');
+
+  });
 });

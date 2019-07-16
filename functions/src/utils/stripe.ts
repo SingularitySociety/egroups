@@ -64,9 +64,12 @@ export const convSubscriptionData = (stripeSubscriptionData) => {
     plan: convPlanData(plan), quantity, start, start_date, status,
     tax_percent, trial_end, trial_start
   }
-  
 }
 
+export const convCustomAccountData = (customAccountData) => {
+  const {id, object, country, created, default_currency, metadata, requirements, type} = customAccountData;
+  return {id, object, country, created, default_currency, metadata, requirements, type};
+}
 
 // stripe log
 export const stripeActions = {
