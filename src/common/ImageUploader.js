@@ -7,6 +7,7 @@ import UploadButton from '@material-ui/icons/CloudUpload';
 import * as firebase from "firebase/app";
 import "firebase/storage";
 import * as blueimpLoadImage from 'blueimp-load-image';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
   root: {
@@ -52,6 +53,7 @@ function ImageViewer(props) {
   const { imagePath, loadImage, imageUrl, imageThumbnails, displayMode, onImageUpload } = props;
   const { classes, readOnly, inline, deleteImage } = props;
   const [ url, setUrl ] = useState(null);
+  const [ processing, setProcessing ] = useState(false);
 
   useEffect(() => {
     //console.log(imageUrl, imagePath, imageThumbnails);
@@ -87,10 +89,12 @@ function ImageViewer(props) {
         const storagRef = firebase.storage().ref();
         const imageRef = storagRef.child(imagePath);
         const task = imageRef.put(blob);
+        setProcessing(true);
         task.on('state_changed', (snapshot)=>{
           console.log("progress", snapshot);
         }, (error) => {
           console.log("failed", error);
+          setProcessing(false);
         }, async () => {
           // Accordign to the document, this download URL is valid until you explicitly reveke it,
           // and it is accessible by anybody (no security). The security is at this getDownloadURL() level. 
@@ -98,6 +102,7 @@ function ImageViewer(props) {
           const downloadUrl = await task.snapshot.ref.getDownloadURL();
           onImageUpload(downloadUrl);
           setUrl(downloadUrl);
+          setProcessing(false);
         });
     
       }, file.type);
@@ -107,13 +112,14 @@ function ImageViewer(props) {
   const imageStyle = url ? { backgroundImage:`url("${url}")` } : {};
   const imageElement = (displayMode === "wide") ? (
       <Grid item xs={readOnly ? 12 : 11} className={ classes.wideFrame }>
-        <img src={url} className={classes[displayMode]} alt="blog article" />
+        <img src={url} className={classes[displayMode]} alt="place holder" />
       </Grid>
     ) : <Grid item className={classes[displayMode || "thumbLarge"]} style={imageStyle} />;
   if (inline) {
     return imageElement;
   }
   return (<Grid container className={classes.root} spacing={1} justify="center">
+      { processing && <CircularProgress style={{position:"absolute", zIndex:1 }}/> }
       { imageElement }
       {
         !readOnly && onImageUpload &&
