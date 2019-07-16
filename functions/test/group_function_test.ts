@@ -330,23 +330,19 @@ describe('Group function test', () => {
     this.timeout(10000);
     const aliceUserId = "test_user_" + UUID();
     const groupId = "group_" + UUID();
-    const path = UUID();
-    const title = UUID();
-    const types = {
-      open: true,
-      subscription: true,
-    };
-    
+
     await admin_db.doc(`groups/${groupId}`).set({
       owner: aliceUserId,
+      subscription: true,
     })
     
-    const req = {groupId, path, title, types};
+    const req = {groupId};
     const context = {auth: {uid: aliceUserId}};
-    const wrapped = test.wrap(index.createGroupName);
+    const wrapped = test.wrap(index.createCustomAccount);
 
-    await wrapped(req, context);
-
+    const res1 = await wrapped(req, context);
+    res1.result.should.equal(true)
+    
     const secret = (await admin_db.doc(`groups/${groupId}/secret/account`).get()).data();
     secret.account.country.should.equal('JP')
     secret.account.default_currency.should.equal('jpy')
@@ -354,6 +350,9 @@ describe('Group function test', () => {
     secret.account.object.should.equal('account')
     secret.account.type.should.equal('custom' )
 
+    const res2 = await wrapped(req, context);
+    res2.result.should.equal(false)
+    
     const postData = {
       "individual": {
         "address_kana":{

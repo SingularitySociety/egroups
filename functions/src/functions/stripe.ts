@@ -217,27 +217,74 @@ export const cancelSubscription = async (db, data, context) => {
   
 }
 
+const validateCustomAccountFunc = async (error_handler, db, data, context) => {
+  if (!context.auth || !context.auth.uid) {
+    return [error_handler({error_type: logger.ErrorTypes.NoUid})];
+  }
+  if (!data || !data.groupId) {
+    return [error_handler({error_type: logger.ErrorTypes.ParameterMissing})];
+  }
+  const groupId = data.groupId;
+  const userId = context.auth.uid;
+  
+  const refGroup = db.doc(`groups/${groupId}`);
+  const groupData = (await refGroup.get()).data();
+  if (!groupData) {
+    return [error_handler({error_type: logger.ErrorTypes.ParameterMissing})];
+  }
+  if (groupData.owner !== userId) {
+    return [error_handler({error_type: logger.ErrorTypes.ParameterMissing})];
+  }
+  return [null, groupData];
+}
+
+export const createCustomAccount = async (db, data, context) => {
+  const error_handler = logger.error_response_handler({func: "createCustomAccount", message: "invalid request"});
+
+  const [error_response, groupData] = await validateCustomAccountFunc(error_handler, db, data, context);
+  if (error_response) {
+    return error_response;
+  }
+  if (!groupData.subscription) {
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+  }
+  const groupId = data.groupId;
+
+  const refAccont = db.doc(`groups/${groupId}/secret/account`);
+  const refAccontPrivate = db.doc(`groups/${groupId}/private/account`);
+
+  const existAccount = await refAccont.get();
+  if (existAccount.exists) {
+    return error_handler({error_type: logger.ErrorTypes.AlreadyDataExists});
+  }
+  
+  const account = await db.runTransaction(async (tr)=>{
+    const account = await stripeApi.createCustomAccount(groupId);
+    tr.set(refAccont, {account: account})
+    tr.set(refAccontPrivate, {
+      account: stripeUtils.convCustomAccountData(account)
+    })
+    return account;
+  });
+  return {
+    result: true,
+    account: stripeUtils.convCustomAccountData(account),
+  }
+}
 
 export const updateCustomAccount = async (db, data, context) => {
   const error_handler = logger.error_response_handler({func: "updateCustomAccount", message: "invalid request"});
 
-  if (!context.auth || !context.auth.uid) {
-    return error_handler({error_type: logger.ErrorTypes.NoUid});
+  const [error_response] = await validateCustomAccountFunc(error_handler, db, data, context);
+  if (error_response) {
+    return error_response;
   }
-  if (!data || !data.groupId || !data.type || !data.accountData || !data.ip) {
+  if (!data.type || !data.accountData || !data.ip) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
-  const userId = context.auth.uid;
+
   const {groupId, type, accountData, ip} = data;
-    
-  const refGroup = db.doc(`groups/${groupId}`);
-  const groupData = (await refGroup.get()).data();
-  if (!groupData) {
-    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
-  }
-  if (groupData.owner !== userId) {
-    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
-  }
+
   const refAccont = db.doc(`groups/${groupId}/secret/account`);
   const existAccountData = (await refAccont.get()).data();
   if (!existAccountData) {
@@ -260,7 +307,9 @@ export const updateCustomAccount = async (db, data, context) => {
     }
   }
   const res = await stripeApi.updateCustomAccount(accoundId, postData);
-  console.log(res);
   
-  return {result: true};
+  return {
+    result: true,
+    account: res,
+  };
 };

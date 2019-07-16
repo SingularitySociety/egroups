@@ -23,6 +23,7 @@ export enum ErrorTypes {
   NoSMSCodeData,
   SMSCodeNotMatch,
   SMSCodeExpired,
+  AlreadyDataExists,
 }
 
 export const error_messages = {
@@ -42,6 +43,7 @@ export const error_messages = {
   [ErrorTypes.NoSMSCodeData]: "No sms code data",
   [ErrorTypes.SMSCodeNotMatch]: "SMSCode not match",
   [ErrorTypes.SMSCodeExpired]: "SMSCode expired",
+  [ErrorTypes.AlreadyDataExists]: "Already data exists",
 }
 
 const get_error_string = (error) => {
