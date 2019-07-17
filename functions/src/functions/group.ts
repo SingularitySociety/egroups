@@ -103,8 +103,8 @@ export const createGroupName = async (db:FirebaseFirestore.Firestore, data, cont
   if (!context.auth || !context.auth.uid) {
     return error_handler({error_type: logger.ErrorTypes.NoUid});
   }
-  const { groupId, path, title, types, country } = data;
-  if (!groupId || !path || !title || !types || !country) {
+  const { groupId, path, title, types } = data;
+  if (!groupId || !path || !title || !types) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
 

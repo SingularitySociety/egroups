@@ -6,6 +6,7 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { FormattedMessage } from 'react-intl';
 import CountrySetting from './CountrySetting';
+import useOnDocument from '../../common/useOnDocument';
 
 const styles = theme => ({
   subsciption: {
@@ -34,13 +35,14 @@ const useStyles = makeStyles(styles);
 function SettingsBilling(props) {
   const classes = useStyles();
   const { group, db, callbacks } = props;
-  console.log(group);
+  const groupId = group.groupId;
   const subscription = group.subscription;
   const [plans, setPlans] = useState(group.plans || []);
   const [modified, setModified] = useState(false);
-  const refGroup = db.doc(`groups/${group.groupId}`);
+  const [account] = useOnDocument(db, `groups/${groupId}/private/account`);
   const setTabbar = callbacks.setTabbar;
-  console.log("subscriptionsubscription", subscription)
+
+  console.log(account);
 
   useEffect(()=>{
     setTabbar("settings.billing");
@@ -73,6 +75,7 @@ function SettingsBilling(props) {
   }
   async function onUpdate() {
     plans.sort((a, b) => { return a.price - b.price });
+    const refGroup = db.doc(`groups/${groupId}`);
     await refGroup.set({plans:plans}, {merge:true});
     props.callbacks.groupDidUpdate();
     setModified(false);
