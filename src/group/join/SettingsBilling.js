@@ -46,7 +46,6 @@ function SettingsBilling(props) {
 
   useEffect(()=>{
     setTabbar("settings.billing");
-    console.log("useEffect");
   }, [setTabbar]);
 
   function addPlan() {
@@ -84,9 +83,12 @@ function SettingsBilling(props) {
   if (!subscription) {
     return "";
   }
+  if (!account) {
+    return <CountrySetting group={group} account={account}/>
+  }
   return (
     <div>
-      <CountrySetting group={group} />
+      <CountrySetting group={group} account={account}/>
       {
         plans.map((plan, index)=>{
           const isNameValid = plan.name.length > 0;

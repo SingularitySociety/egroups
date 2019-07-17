@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CountryOptions from '../../options/CountryOptions';
-import { FormControl, InputLabel, Select, Button } from '@material-ui/core';
-import { FormattedMessage } from 'react-intl';
+import { FormControl, InputLabel, Select, Button, FormGroup, TextField } from '@material-ui/core';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import * as firebase from "firebase/app";
 import "firebase/functions";
 
@@ -14,12 +14,21 @@ const styles = theme => ({
   },
   button: {
     marginBottom: theme.spacing(2),
+  },
+  textField: {
+    width:theme.spacing(38),
+    marginBottom: theme.spacing(2),
+  },
+  textColor: {
+    color: "#333333",
   }
 });
 
 function CountrySetting(props) {
-  const { classes, group } = props;
+  const { classes, group, account } = props;
+  const { messages } = props.intl;
   const groupId = group.groupId;
+
   const [country, setCountry] = useState("JP");
 
   function handleChange(e) {
@@ -31,6 +40,21 @@ function CountrySetting(props) {
     const result = (await createCustomAccount(context)).data;
     console.log(result);
   }
+  if (account) {
+    try {
+      const { account:{country} } = account;
+      return (
+        <FormGroup row>
+          <TextField label={<FormattedMessage id="billing.country"/>} 
+            value={messages[country]} disabled={true} className={classes.textField}
+            InputProps={{classes:{input:classes.textColor}}}/>
+        </FormGroup>
+      )
+    } catch(e) {
+      return "error"; // BUGBUG
+    }
+  }
+
   return <div>
     <FormControl className={classes.formControl}>
       <InputLabel><FormattedMessage id="billing.country" /></InputLabel>
@@ -50,5 +74,5 @@ CountrySetting.propTypes = {
   group: PropTypes.object.isRequired,
 };
   
-export default withStyles(styles)(CountrySetting);
+export default withStyles(styles)(injectIntl(CountrySetting));
   
