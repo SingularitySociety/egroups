@@ -189,8 +189,18 @@ export const groupDidDelete = async (db, admin, snapshot, context) => {
 export const processInvite = async (db:FirebaseFirestore.Firestore, data, context) => {
   const error_handler = logger.error_response_handler({func: "createGroup", message: "invalid request"});
   const { groupId, inviteId, inviteKey, validating } = data;
+  if (!context.auth || !context.auth.uid) {
+    return error_handler({error_type: logger.ErrorTypes.NoUid});
+  }
+  const userId = context.auth.uid;
   if (!groupId || !inviteId || !inviteKey) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
+
+  const docMember = await db.doc(`/groups/${groupId}/members/${userId}`).get();
+  if (docMember.exists) {
+    return error_handler({error_type: logger.ErrorTypes.AlreadyMember});
+  }
+  
   return { result: true, validating:validating };
 }
