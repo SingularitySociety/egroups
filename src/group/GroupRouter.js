@@ -114,7 +114,7 @@ class GroupRouter extends React.Component {
 
   memberDidUpdate = async () => {
     const { user, db } = this.props;
-    console.log("member", user && user.uid);
+    // console.log("member", user && user.uid);
     const { group, profiles } = this.state;
     const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
     const member = (await refMember.get()).data();

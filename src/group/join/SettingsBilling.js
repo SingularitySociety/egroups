@@ -42,8 +42,6 @@ function SettingsBilling(props) {
   const [account] = useOnDocument(db, `groups/${groupId}/private/account`);
   const setTabbar = callbacks.setTabbar;
 
-  console.log(account);
-
   useEffect(()=>{
     setTabbar("settings.billing");
   }, [setTabbar]);
