@@ -15,6 +15,7 @@ const styles = theme => ({
   },
   button: {
     marginBottom: theme.spacing(2),
+    marginRight: theme.spacing(1),
   },
   textField: {
     width:theme.spacing(38),
@@ -74,7 +75,7 @@ function CountrySetting(props) {
       <FormattedMessage id="submit" />
     </Button>
     {
-      processing && <CircularProgress />
+      processing && <CircularProgress size={24}/>
     }
   </div>;
 }
