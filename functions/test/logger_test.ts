@@ -9,7 +9,7 @@ describe("logger test", () => {
     res.should.deep.equal({ result: false, message: 'b', error_message: 'a' })
 
     const res2 = logger.error_response({log: {"a": "1"}, message: "b"});
-    res2.should.deep.equal({ result: false, message: 'b', error_message: "{\n \"a\": \"1\"\n}" })
+    res2.should.deep.equal({ result: false, message: 'b', error_message: { "a": "1"} })
 
     const res3 = logger.error_response({func: "hello", error_type: logger.ErrorTypes.HelloError, message: "b"});
     res3.should.deep.equal({ result: false,

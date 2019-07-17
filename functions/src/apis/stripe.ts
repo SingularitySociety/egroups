@@ -163,7 +163,7 @@ export const retrieveSubscription = async (subscriptionId) => {
      
 export const createCustomAccount = async (groupId, country="JP") => {
   try {
-    let options: any = {
+    const options: any = {
       type: "custom",
       country,
       metadata: {
