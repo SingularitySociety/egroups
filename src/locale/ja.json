@@ -149,5 +149,7 @@
     "JP":"日本",
     "US":"アメリカ合衆国",
     
+    "billing.country":"拠点とする国",
+
     "dummy":"dummy"
 }

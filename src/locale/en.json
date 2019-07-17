@@ -145,5 +145,11 @@
     "invite":"Invite",
     "invitation.privilege":"Invitation Privildge",
 
+    "JP":"Japan",
+    "US":"United States",
+
+    "billing.country":"Residence Country",
+    "submit":"Submit",
+    
     "dummy":"dummy"
 }

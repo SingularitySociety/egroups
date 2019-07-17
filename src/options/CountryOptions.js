@@ -7,7 +7,7 @@ function CountryOptions(props) {
   return <React.Fragment>
     {
       Countries.map((country)=> {
-        return <option key={country} value={Privileges.member}>{messages[country]}</option>
+        return <option key={country} value={country}>{messages[country]}</option>
       })
     }
   </React.Fragment>;

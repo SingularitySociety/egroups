@@ -83,7 +83,7 @@ function SettingsBilling(props) {
   }
   return (
     <div>
-      <CountrySetting />
+      <CountrySetting group={group} />
       {
         plans.map((plan, index)=>{
           const isNameValid = plan.name.length > 0;
