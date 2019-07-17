@@ -163,6 +163,9 @@ class MyAppBar extends React.Component {
       case "invite":
         crams = [this.cramHomePage, this.cramInvite];
         break;
+      case "invited":
+        crams = [];
+        break;
       case "listing":
         crams = [this.cramHome, this.cramListing];
         break;

@@ -144,6 +144,8 @@
 
     "invite":"Invite",
     "invitation.privilege":"Invitation Privildge",
+    "you.are.invited":"You are invited to this private group. Please click Join to join",
+    "error.invite.invalid":"This invitation is invalid or expired.",
 
     "JP":"Japan",
     "US":"United States",

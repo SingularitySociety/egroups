@@ -3,12 +3,16 @@ import { injectIntl } from 'react-intl';
 import Privileges from '../const/Privileges';
 
 const PrivilegeOptions = (props)=>{
+  const { noSubscriber } = props; 
   const { messages } = props.intl;
+  const list = noSubscriber ? 
+          ["member", "mentor", "admin"] : ["member", "subscriber", "mentor", "admin"]
   return (<React.Fragment>
-    <option key="member" value={Privileges.member}>{messages["member"]}</option>,
-    <option key="subscriber" value={Privileges.subscriber}>{messages["subscriber"]}</option>,
-    <option key="mentor" value={Privileges.mentor}>{messages["mentor"]}</option>,
-    <option key="admin" value={Privileges.admin}>{messages["admin"]}</option>
+    { 
+      list.map((item) => {
+        return <option key={item} value={Privileges[item]}>{messages[item]}</option>
+      })
+    }
   </React.Fragment>);
 } 
 

@@ -33,6 +33,7 @@ import SettingsBilling from './join/SettingsBilling';
 import Subscribe from './join/Subscribe';
 import Privileges from '../const/Privileges';
 import Invite from './join/Invite';
+import Invited from './join/Invited';
 import {themeOptions} from '../theme.js';
 
 const colorMap = { red, pink, purple, deepPurple, indigo, 
@@ -207,6 +208,7 @@ class GroupRouter extends React.Component {
               <Route exact path={`/${group.groupName}/join`} render={(props) => <Join {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/subscribe`} render={(props) => <Subscribe {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/invite`} render={(props) => <Invite {...props} {...context} />} />
+              <Route exact path={`/${group.groupName}/invite/:inviteId/:inviteKey`} render={(props) => <Invited {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/account`} 
                 render={(props) => <Account {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/settings`} 
