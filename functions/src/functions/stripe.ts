@@ -306,14 +306,22 @@ export const updateCustomAccount = async (db, data, context) => {
       business_type: type,
       individual: accountData,
     }
-    if (ip) {
-      const date = Math.round(Date.now()  / 1000);
-      postData.tos_acceptance = {
-        date,
-        ip,
-      };
+  } else if (type === "company") {
+    postData = {
+      business_type: type,
+      company: accountData,
     }
+  } else {
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
+  if (ip) {
+    const date = Math.round(Date.now()  / 1000);
+    postData.tos_acceptance = {
+      date,
+      ip,
+    };
+  }
+
   try {
     const account = await db.runTransaction(async (tr)=>{
       const apiResponse = await stripeApi.updateCustomAccount(accoundId, postData);
