@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, Button } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
-
+import Processing from '../../common/Processing';
 
 const styles = theme => ({
   message: {
@@ -14,9 +14,13 @@ const styles = theme => ({
 function Invited(props) {
   const { classes, callbacks } = props;
   const setTabbar = callbacks.setTabbar;
+  const [processing, setProcessing] = useState(false);
 
   function handleJoin() {
-
+    setProcessing(true);
+    setTimeout(()=>{
+      setProcessing(false);
+    }, 500);
   }
 
   useEffect(()=>{
@@ -30,6 +34,7 @@ function Invited(props) {
     <Button variant="contained" color="primary" onClick={handleJoin} className={classes.button}>
       <FormattedMessage id="join" />
     </Button>
+    <Processing active={processing} />
     </div>;
 }
 
