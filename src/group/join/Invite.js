@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { FormControl, InputLabel, Select, Button } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
-import PrivilegeOptions from '../PrivilegeOptions';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 import Privileges from '../../const/Privileges';
+import PrivilegeOptions from '../../options/PrivilegeOptions';
 
 const styles = theme => ({
   formControl: {
