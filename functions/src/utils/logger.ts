@@ -23,6 +23,8 @@ export enum ErrorTypes {
   NoSMSCodeData,
   SMSCodeNotMatch,
   SMSCodeExpired,
+  AlreadyDataExists,
+  StripeValidation,
 }
 
 export const error_messages = {
@@ -42,9 +44,11 @@ export const error_messages = {
   [ErrorTypes.NoSMSCodeData]: "No sms code data",
   [ErrorTypes.SMSCodeNotMatch]: "SMSCode not match",
   [ErrorTypes.SMSCodeExpired]: "SMSCode expired",
+  [ErrorTypes.AlreadyDataExists]: "Already data exists",
+  [ErrorTypes.StripeValidation]: "Stripe validation error",
 }
 
-const get_error_string = (error) => {
+const get_error_string = (error, convString=true) => {
   const error_log = error.log || "";
   if (error.func && !utils.isNull(error.error_type)) {
     return error.func + " error: " + error_messages[error.error_type]
@@ -52,16 +56,19 @@ const get_error_string = (error) => {
   if(typeof error_log === 'string') {
     return error_log;
   } 
-  return JSON.stringify(error_log, undefined, 1)
+  if (convString) {
+    return JSON.stringify(error_log, undefined, 1)
+  } else {
+    return error_log;
+  }
 }
 export const error_response = (error) => {
-  const error_log_string = get_error_string(error)
-  console.error(error_log_string); // this is log
+  console.error(get_error_string(error)); // this is log
 
   const message = error.message || "unknow error";
   
   if (isDebug()) {
-    return {result: false, message, error_message: error_log_string };
+    return {result: false, message, error_message: get_error_string(error, false) };
   } else {
     return {result: false, message};
   }

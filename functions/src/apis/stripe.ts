@@ -163,7 +163,7 @@ export const retrieveSubscription = async (subscriptionId) => {
      
 export const createCustomAccount = async (groupId, country="JP") => {
   try {
-    let options: any = {
+    const options: any = {
       type: "custom",
       country,
       metadata: {
@@ -182,12 +182,6 @@ export const createCustomAccount = async (groupId, country="JP") => {
 }
 
 export const updateCustomAccount = async(accountId, data) => {
-  try {
-    const account =  await getStripe().accounts.update(accountId, data);
-    return account;
-  } catch (e) {
-    console.log(e);
-    return false;
-  }
-
+  const account =  await getStripe().accounts.update(accountId, data);
+  return account;
 }

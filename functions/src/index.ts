@@ -52,6 +52,10 @@ export const confirmOnetimeSMS = functions.https.onCall(async (data, context) =>
   return await onetimesmsFunctions.confirmOnetimeSMS(db, data, context);
 });
 
+export const createCustomAccount = functions.https.onCall(async (data, context) => {
+  return await stripeFunctions.createCustomAccount(db, data, context);
+});
+
 export const updateCustomAccount = functions.https.onCall(async (data, context) => {
   return await stripeFunctions.updateCustomAccount(db, data, context);
 });

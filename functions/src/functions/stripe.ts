@@ -217,50 +217,129 @@ export const cancelSubscription = async (db, data, context) => {
   
 }
 
+const validateCustomAccountFunc = async (error_handler, db, data, context) => {
+  if (!context.auth || !context.auth.uid) {
+    return [error_handler({error_type: logger.ErrorTypes.NoUid})];
+  }
+  if (!data || !data.groupId) {
+    return [error_handler({error_type: logger.ErrorTypes.ParameterMissing})];
+  }
+  const groupId = data.groupId;
+  const userId = context.auth.uid;
+  
+  const refGroup = db.doc(`groups/${groupId}`);
+  const groupData = (await refGroup.get()).data();
+  if (!groupData) {
+    return [error_handler({error_type: logger.ErrorTypes.ParameterMissing})];
+  }
+  if (groupData.owner !== userId) {
+    return [error_handler({error_type: logger.ErrorTypes.ParameterMissing})];
+  }
+  return [null, groupData];
+}
+
+export const createCustomAccount = async (db, data, context) => {
+  const error_handler = logger.error_response_handler({func: "createCustomAccount", message: "invalid request"});
+
+  const [error_response, groupData] = await validateCustomAccountFunc(error_handler, db, data, context);
+  if (error_response) {
+    return error_response;
+  }
+  if (!groupData.subscription || !data.country) {
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+  }
+  const {groupId, country} = data;
+
+  const refAccont = db.doc(`groups/${groupId}/secret/account`);
+  const refAccontPrivate = db.doc(`groups/${groupId}/private/account`);
+
+  const existAccount = await refAccont.get();
+  if (existAccount.exists) {
+    return error_handler({error_type: logger.ErrorTypes.AlreadyDataExists});
+  }
+  
+  const account = await db.runTransaction(async (tr)=>{
+    const accountData = await stripeApi.createCustomAccount(groupId, country);
+    tr.set(refAccont, {account: accountData})
+    tr.set(refAccontPrivate, {
+      account: stripeUtils.convCustomAccountData(accountData)
+    })
+    return accountData;
+  });
+  return {
+    result: true,
+    account: stripeUtils.convCustomAccountData(account),
+  }
+}
 
 export const updateCustomAccount = async (db, data, context) => {
   const error_handler = logger.error_response_handler({func: "updateCustomAccount", message: "invalid request"});
 
-  if (!context.auth || !context.auth.uid) {
-    return error_handler({error_type: logger.ErrorTypes.NoUid});
+  const [error_response] = await validateCustomAccountFunc(error_handler, db, data, context);
+  if (error_response) {
+    return error_response;
   }
-  if (!data || !data.groupId || !data.type || !data.accountData || !data.ip) {
+  if (!data.type || !data.accountData) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
-  const userId = context.auth.uid;
+
   const {groupId, type, accountData, ip} = data;
-    
-  const refGroup = db.doc(`groups/${groupId}`);
-  const groupData = (await refGroup.get()).data();
-  if (!groupData) {
-    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
-  }
-  if (groupData.owner !== userId) {
-    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
-  }
+
   const refAccont = db.doc(`groups/${groupId}/secret/account`);
+  const refAccontPrivate = db.doc(`groups/${groupId}/private/account`);
+
   const existAccountData = (await refAccont.get()).data();
   if (!existAccountData) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
-  // console.log(groupData);
   const accoundId = existAccountData.account.id;
+  const exist_business_type = existAccountData.account.business_type;
+
+  if (exist_business_type && (exist_business_type !== type)) {
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+  }
   
   // https://stripe.com/docs/api/accounts/update
-  const date = Math.round(Date.now()  / 1000);
-  let postData = {};
+  let postData:any = {};
   if (type === "individual") {
     postData = {
       business_type: type,
       individual: accountData,
-      tos_acceptance: {
+    }
+    if (ip) {
+      const date = Math.round(Date.now()  / 1000);
+      postData.tos_acceptance = {
         date,
         ip,
-      },
+      };
     }
   }
-  const res = await stripeApi.updateCustomAccount(accoundId, postData);
-  console.log(res);
-  
-  return {result: true};
+  try {
+    const account = await db.runTransaction(async (tr)=>{
+      const apiResponse = await stripeApi.updateCustomAccount(accoundId, postData);
+      tr.set(refAccont, {account: apiResponse})
+      tr.set(refAccontPrivate, {
+        account: stripeUtils.convCustomAccountData(apiResponse)
+      })
+      return apiResponse;
+    });
+    
+    return {
+      result: true,
+      account: account,
+    };
+  } catch (e) {
+    if (e.type && e.type.startsWith("Stripe")) {
+      return error_handler({
+        // error_type: logger.ErrorTypes.StripeValidation,
+        log: {
+          message: "stripeValidationError",
+          type: e.type,
+          stripe_message: e.message,
+        }
+      });
+    } else {
+      return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+    }
+  }
 };
