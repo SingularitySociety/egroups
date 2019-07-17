@@ -4,6 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import { Typography, Button } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import Processing from '../../common/Processing';
+import * as firebase from "firebase/app";
+import "firebase/functions";
 
 const styles = theme => ({
   message: {
@@ -12,15 +14,20 @@ const styles = theme => ({
 });
 
 function Invited(props) {
-  const { classes, callbacks } = props;
+  const { classes, callbacks, group, match:{params:{inviteId, inviteKey}} } = props;
+  const groupId = group.groupId;
   const setTabbar = callbacks.setTabbar;
   const [processing, setProcessing] = useState(false);
 
-  function handleJoin() {
+  console.log(groupId, inviteId, inviteKey);
+
+  async function handleJoin() {
     setProcessing(true);
-    setTimeout(()=>{
-      setProcessing(false);
-    }, 500);
+    const context = { groupId, inviteId, inviteKey };
+    const processInvite = firebase.functions().httpsCallable('processInvite');
+    const result = (await processInvite(context)).data;
+    setProcessing(false);
+    console.log(result);
   }
 
   useEffect(()=>{

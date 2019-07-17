@@ -185,3 +185,12 @@ export const groupDidDelete = async (db, admin, snapshot, context) => {
       console.log("deleteFiles: ", path, errors);
     });
 }
+
+export const processInvite = async (db:FirebaseFirestore.Firestore, data, context) => {
+  const error_handler = logger.error_response_handler({func: "createGroup", message: "invalid request"});
+  const { groupId, inviteId, inviteKey, validating } = data;
+  if (!groupId || !inviteId || !inviteKey) {
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+  }
+  return { result: true, validating:validating };
+}
