@@ -5,6 +5,7 @@ import { Fab, TextField, Grid, Button, IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { FormattedMessage } from 'react-intl';
+import CountrySetting from './CountrySetting';
 
 const styles = theme => ({
   subsciption: {
@@ -77,50 +78,50 @@ function SettingsBilling(props) {
     setModified(false);
   }
   let isValid = true;
+  if (!subscription) {
+    return "";
+  }
   return (
-    <React.Fragment>
+    <div>
+      <CountrySetting />
       {
-        subscription && <form>
-          {
-            plans.map((plan, index)=>{
-              const isNameValid = plan.name.length > 0;
-              const isPriceValid = plan.price > 0;
-              isValid = isValid && isNameValid && isPriceValid;
-              return (
-              <Grid container direction="row" key={index} className={classes.plan} spacing={1}>
-                <Grid item xs={6}>
-                  <TextField error={!isNameValid} label={<FormattedMessage id="plan.name" />} 
-                    value={plan.name} variant="outlined" className={classes.textField}
-                    onChange={(e)=>onChange(e.target.value, "name", index)} />
-                </Grid>
-                <Grid item xs={4}>
-                  <TextField error={!isPriceValid} label={<FormattedMessage id="plan.price" />} 
-                    value={plan.price} variant="outlined" className={classes.textField}
-                    onChange={(e)=>onChange(parseInt(e.target.value) || "", "price", index)} />
-                </Grid>
-                <Grid item xs={1}>
-                  <IconButton onClick={()=>{deletePlan(index)}}>
-                    <DeleteIcon />
-                  </IconButton>
-                </Grid>
-              </Grid>
-              );
-            })
-          }
-          <Fab variant="extended" onClick={addPlan} size="small" className={classes.add}>
-              <AddIcon /><FormattedMessage id="plan.add"/>
-          </Fab>
-          <div className={classes.buttons}>
-            <Button variant="contained" color="primary" onClick={onUpdate} className={classes.button} disabled={!modified || !isValid}>
-              <FormattedMessage id="update" />
-            </Button>
-            <Button variant="contained" onClick={onCancel} className={classes.button} disabled={!modified}>
-            <FormattedMessage id="cancel" />
-            </Button>
-          </div>
-        </form>
+        plans.map((plan, index)=>{
+          const isNameValid = plan.name.length > 0;
+          const isPriceValid = plan.price > 0;
+          isValid = isValid && isNameValid && isPriceValid;
+          return (
+          <Grid container direction="row" key={index} className={classes.plan} spacing={1}>
+            <Grid item xs={6}>
+              <TextField error={!isNameValid} label={<FormattedMessage id="plan.name" />} 
+                value={plan.name} variant="outlined" className={classes.textField}
+                onChange={(e)=>onChange(e.target.value, "name", index)} />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField error={!isPriceValid} label={<FormattedMessage id="plan.price" />} 
+                value={plan.price} variant="outlined" className={classes.textField}
+                onChange={(e)=>onChange(parseInt(e.target.value) || "", "price", index)} />
+            </Grid>
+            <Grid item xs={1}>
+              <IconButton onClick={()=>{deletePlan(index)}}>
+                <DeleteIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
+          );
+        })
       }
-    </React.Fragment>
+      <Fab variant="extended" onClick={addPlan} size="small" className={classes.add}>
+          <AddIcon /><FormattedMessage id="plan.add"/>
+      </Fab>
+      <div className={classes.buttons}>
+        <Button variant="contained" color="primary" onClick={onUpdate} className={classes.button} disabled={!modified || !isValid}>
+          <FormattedMessage id="update" />
+        </Button>
+        <Button variant="contained" onClick={onCancel} className={classes.button} disabled={!modified}>
+        <FormattedMessage id="cancel" />
+        </Button>
+      </div>
+    </div>
   );
 }
 
