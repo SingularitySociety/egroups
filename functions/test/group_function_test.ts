@@ -327,7 +327,7 @@ describe('Group function test', () => {
   });
 
   it ('stripe create and update customer test', async function() {
-    this.timeout(10000);
+    this.timeout(30000);
     const aliceUserId = "test_user_" + UUID();
     const groupId = "group_" + UUID();
     const country = "JP";
@@ -341,8 +341,8 @@ describe('Group function test', () => {
     const context = {auth: {uid: aliceUserId}};
     const wrapped = test.wrap(index.createCustomAccount);
 
-    const res1 = await wrapped(req, context);
-    res1.result.should.equal(true)
+    const res = await wrapped(req, context);
+    res.result.should.equal(true)
     
     const secret = (await admin_db.doc(`groups/${groupId}/secret/account`).get()).data();
     secret.account.country.should.equal('JP')
@@ -351,8 +351,8 @@ describe('Group function test', () => {
     secret.account.object.should.equal('account')
     secret.account.type.should.equal('custom' )
 
-    const res2 = await wrapped(req, context);
-    res2.result.should.equal(false)
+    const res1 = await wrapped(req, context);
+    res1.result.should.equal(false)
     
     const postData = {
       "individual": {
@@ -369,6 +369,35 @@ describe('Group function test', () => {
           "state": "東京都",
           "city": "新宿区",
           "town": "西早稲田3",
+          "line1": "4-1",
+          "line2": "ほげほげ"
+        },
+        "dob": {
+          "day": 1,
+          "month": 8,
+          "year": 1980,
+        },
+        "phone": "+819012345678",
+        "first_name_kana": "名前（カナ）",
+        "first_name_kanji": "名前（漢字）",
+        "last_name_kana": "姓（カナ）",
+        "last_name_kanji": "姓（漢字）",
+        "gender":"female",
+      },
+      "invalid_individual": {
+        "address_kana":{
+          "postal_code": "1690051",
+          "state": "トウキョウト",
+          "city": "シンジュクク",
+          "town": "ニシワセダ４チョウメ",
+          "line1": "4-1",
+          "line2": "ホゲホゲ"
+        },
+        "address_kanji":{
+          "postal_code": "1690051",
+          "state": "東京都",
+          "city": "新宿区",
+          "town": "西早稲田4",
           "line1": "4-1",
           "line2": "ほげほげ"
         },
@@ -446,9 +475,29 @@ describe('Group function test', () => {
                   type: "individual",
                   accountData: postData["individual"]};
     const wrapped2 = test.wrap(index.updateCustomAccount);
-    await wrapped2(req2, context);
+    const res2 = await wrapped2(req2, context);
+    res2.result.should.equal(true)
     
 
+    const req3 = {groupId,
+                  type: "individual",
+                  accountData: postData["individual"]};
+    const res3 = await wrapped2(req3, context);
+    res3.result.should.equal(true)
+
+    // error
+    const req4 = {groupId,
+                  type: "individual",
+                  accountData: postData["invalid_individual"]};
+    const error_res = await wrapped2(req4, context);
+    error_res.result.should.equal(false);
+
+    const req5 = {groupId,
+                  type: "company",
+                  accountData: postData["individual"]};
+    const res5 = await wrapped2(req5, context);
+    res5.result.should.equal(false)
+    
   });
 
   it ('stripe create customer test', async function() {

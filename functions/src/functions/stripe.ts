@@ -259,12 +259,12 @@ export const createCustomAccount = async (db, data, context) => {
   }
   
   const account = await db.runTransaction(async (tr)=>{
-    const account = await stripeApi.createCustomAccount(groupId, country);
-    tr.set(refAccont, {account: account})
+    const accountData = await stripeApi.createCustomAccount(groupId, country);
+    tr.set(refAccont, {account: accountData})
     tr.set(refAccontPrivate, {
-      account: stripeUtils.convCustomAccountData(account)
+      account: stripeUtils.convCustomAccountData(accountData)
     })
-    return account;
+    return accountData;
   });
   return {
     result: true,
@@ -279,37 +279,67 @@ export const updateCustomAccount = async (db, data, context) => {
   if (error_response) {
     return error_response;
   }
-  if (!data.type || !data.accountData || !data.ip) {
+  if (!data.type || !data.accountData) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
 
   const {groupId, type, accountData, ip} = data;
 
   const refAccont = db.doc(`groups/${groupId}/secret/account`);
+  const refAccontPrivate = db.doc(`groups/${groupId}/private/account`);
+
   const existAccountData = (await refAccont.get()).data();
   if (!existAccountData) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
-  // console.log(groupData);
   const accoundId = existAccountData.account.id;
+  const exist_business_type = existAccountData.account.business_type;
+
+  if (exist_business_type && (exist_business_type !== type)) {
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+  }
   
   // https://stripe.com/docs/api/accounts/update
-  const date = Math.round(Date.now()  / 1000);
-  let postData = {};
+  let postData:any = {};
   if (type === "individual") {
     postData = {
       business_type: type,
       individual: accountData,
-      tos_acceptance: {
+    }
+    if (ip) {
+      const date = Math.round(Date.now()  / 1000);
+      postData.tos_acceptance = {
         date,
         ip,
-      },
+      };
     }
   }
-  const res = await stripeApi.updateCustomAccount(accoundId, postData);
-  
-  return {
-    result: true,
-    account: res,
-  };
+  try {
+    const account = await db.runTransaction(async (tr)=>{
+      const accountData = await stripeApi.updateCustomAccount(accoundId, postData);
+      tr.set(refAccont, {account: accountData})
+      tr.set(refAccontPrivate, {
+        account: stripeUtils.convCustomAccountData(accountData)
+      })
+      return accountData;
+    });
+    
+    return {
+      result: true,
+      account: account,
+    };
+  } catch (e) {
+    if (e.type && e.type.startsWith("Stripe")) {
+      return error_handler({
+        // error_type: logger.ErrorTypes.StripeValidation,
+        log: {
+          message: "stripeValidationError",
+          type: e.type,
+          stripe_message: e.message,
+        }
+      });
+    } else {
+      return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+    }
+  }
 };
