@@ -37,20 +37,20 @@ function Invite(props) {
 
   async function handleInvite(e) {
     const key = uuidv4();
-    console.log("invite", key);
     const doc = await db.collection(`groups/${group.groupId}/invites`).add({
       [key]:1,
       created: firebase.firestore.FieldValue.serverTimestamp(),
       privilege: level,
     });
-    console.log(doc.id);
+    const path = `${window.location.href}/${doc.id}/${key}`;
+    console.log(path);
   }
 
   return <React.Fragment>
     <FormControl className={classes.formControl}>
       <InputLabel><FormattedMessage id="invitation.privilege" /></InputLabel>
       <Select　native　value={level}　onChange={handleLevel}>
-        <PrivilegeOptions />
+        <PrivilegeOptions noSubscriber={true} />
       </Select>
     </FormControl>
     <br/>
