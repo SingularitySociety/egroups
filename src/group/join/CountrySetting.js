@@ -6,6 +6,7 @@ import { FormControl, InputLabel, Select, Button, FormGroup, TextField } from '@
 import { FormattedMessage, injectIntl } from 'react-intl';
 import * as firebase from "firebase/app";
 import "firebase/functions";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
   formControl: {
@@ -30,6 +31,7 @@ function CountrySetting(props) {
   const groupId = group.groupId;
 
   const [country, setCountry] = useState("JP");
+  const [processing, setProcessing] = useState(false);
 
   function handleChange(e) {
     setCountry(e.currentTarget.value);
@@ -37,7 +39,12 @@ function CountrySetting(props) {
   async function onSubmit(e) {
     const context = { country, groupId };
     const createCustomAccount = firebase.functions().httpsCallable('createCustomAccount');
+    setProcessing(true);
     const result = (await createCustomAccount(context)).data;
+    // If it's succeeded, this component will be unmounted immediately.
+    if (!result.result) {
+      setProcessing(false);
+    }
     console.log(result);
   }
   if (account) {
@@ -66,6 +73,9 @@ function CountrySetting(props) {
     <Button variant="contained" onClick={onSubmit} className={ classes.button }>
       <FormattedMessage id="submit" />
     </Button>
+    {
+      processing && <CircularProgress />
+    }
   </div>;
 }
 
