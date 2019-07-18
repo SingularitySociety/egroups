@@ -23,7 +23,7 @@ function uuidv4() {
 }
 
 function Invite(props) {
-  const { callbacks, classes, db, group } = props;
+  const { callbacks, classes, db, group, user } = props;
   const setTabbar = callbacks.setTabbar;
   const [level, setLevel] = useState(Privileges.member);
 
@@ -32,15 +32,19 @@ function Invite(props) {
   }, [setTabbar]);
 
   function handleLevel(e) {
-    setLevel(e.target.value);
+    setLevel(parseInt(e.target.value));
   }
 
   async function handleInvite(e) {
     const key = uuidv4();
     const doc = await db.collection(`groups/${group.groupId}/invites`).add({
-      [key]:1,
+      key,
+      count:1,
       created: firebase.firestore.FieldValue.serverTimestamp(),
+      duration: 60*60*1000, // one hour
       privilege: level,
+      invitedBy: user.uid,
+      accepted:{},
     });
     const path = `${window.location.href}/${doc.id}/${key}`;
     console.log(path);

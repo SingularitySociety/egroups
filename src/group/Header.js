@@ -9,7 +9,6 @@ import { Link } from 'react-router-dom';
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import { FormattedMessage } from 'react-intl';
-import Privileges from '../const/Privileges';
 import theme from '../theme';
 import JoinButton from './join/JoinButton';
 
@@ -218,7 +217,7 @@ class MyAppBar extends React.Component {
             ]
           }
           {
-            (privilege >= Privileges.admin) && [
+            (privilege >= group.privileges.invitation.create) && [
             <MenuItem key="invite" onClick={this.closeMe} component={Link} to={`/${group.groupName}/invite`}><FormattedMessage id="invite" /></MenuItem>,
             <MenuItem key="settings" onClick={this.closeMe} component={Link} to={`/${group.groupName}/settings`}><FormattedMessage id="settings" /></MenuItem>
             ]

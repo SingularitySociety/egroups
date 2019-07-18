@@ -92,6 +92,10 @@ export const memberDidCreate = functions.firestore.document('groups/{groupId}/me
   await groupFunctions.memberDidCreate(db, snapshot, context);
 });
 
+export const processInvite = functions.https.onCall(async (data, context) => {
+  return await groupFunctions.processInvite(db, admin, data, context);
+});
+
 export const articleDidDelete = functions.firestore.document('groups/{groupId}/articles/{articleId}')
   .onDelete((snapshot, context)=>{
     return firebase_utils.deleteSubcollection(snapshot, "sections");

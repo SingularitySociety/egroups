@@ -27,9 +27,10 @@ export const createGroup = async (db:FirebaseFirestore.Firestore, data, context)
   });
   const groupId = doc.id;
 
-  await db.doc(`/groups/${groupId}/owners/${userId}`).set({
-    created
-  });
+  await db.doc(`/groups/${groupId}/members/${userId}/secret/membership`).set({
+    created,
+    privilege: Privileges.owner
+  });  
   await db.doc(`/groups/${groupId}/members/${userId}`).set({
     created,
     displayName:ownerName,
@@ -45,13 +46,14 @@ export const createGroup = async (db:FirebaseFirestore.Firestore, data, context)
 
 export const memberDidCreate = async (db, snapshot, context) => {
   const { groupId, userId } = context.params;
-  const owner = (await db.doc(`/groups/${groupId}/owners/${userId}`).get()).data();
+  const membership = (await db.doc(`/groups/${groupId}/members/${userId}/secret/membership`).get()).data();
   // We set the privilege of the owner here so that the owner can leave and join. 
   const stripeData = (await db.doc(`/groups/${groupId}/members/${userId}/secret/stripe`).get()).data();
   // todo check valid subscription and set expire
   
-  // owner or member
-  const privilege = owner ? 0x2000000 : (stripeData && stripeData.subscription ? Privileges.subscriber : 1);
+  // LATER: Let the subscription logic to set membership as well
+  const privilege = (membership && membership.privilege) || 
+    (stripeData && stripeData.subscription ? Privileges.subscriber : 1);
 
   await db.doc("/groups/" + groupId + "/privileges/" + userId).set({
     value: privilege,
@@ -174,9 +176,9 @@ export const groupDidDelete = async (db, admin, snapshot, context) => {
     await firebase_utils.deleteSubcollection(snapshot, "articles");
     await firebase_utils.deleteSubcollection(snapshot, "events");
     await firebase_utils.deleteSubcollection(snapshot, "members");
-    await firebase_utils.deleteSubcollection(snapshot, "owners");
     await firebase_utils.deleteSubcollection(snapshot, "private");
     await firebase_utils.deleteSubcollection(snapshot, "secret");
+    await firebase_utils.deleteSubcollection(snapshot, "owners"); // obsolete (but keep it for now)
 
     // We need to remove all the images associated with this user
     const bucket = admin.storage().bucket();
@@ -184,4 +186,87 @@ export const groupDidDelete = async (db, admin, snapshot, context) => {
     bucket.deleteFiles({prefix:path}, (errors)=>{
       console.log("deleteFiles: ", path, errors);
     });
+}
+
+export const processInvite = async (db:FirebaseFirestore.Firestore, admin, data, context) => {
+  const error_handler = logger.error_response_handler({func: "createGroup", message: "error.invalid.invite"});
+
+  const { groupId, inviteId, inviteKey, validating } = data;
+  const refInvite = db.doc(`/groups/${groupId}/invites/${inviteId}`);
+  const invite = (await refInvite.get()).data();
+
+  if (!invite) {
+    return error_handler({error_type: logger.ErrorTypes.InviteNoInvite});
+  }
+  const { key, count, accepted, privilege } = invite;
+  if (key !== inviteKey || typeof count !== "number" || !privilege) {
+    return error_handler({error_type: logger.ErrorTypes.InviteNoKey});
+  }
+  if  ( count <= Object.keys(accepted).length ) { 
+    return error_handler({error_type: logger.ErrorTypes.InviteSoldOut});
+  }
+
+  const created = invite.created;
+  const duration = invite.duration;
+  if (!created || !duration) {
+    return error_handler({error_type: logger.ErrorTypes.InviteNoDate});
+  }
+
+  if (Date.now() > created.toDate().getTime() + duration) {
+    return error_handler({error_type: logger.ErrorTypes.InviteExipred});
+  }
+ 
+  if (validating) {
+    return { result:true, validating };
+  }  
+
+  const { email, displayName } = data;
+
+  if (!context.auth || !context.auth.uid) {
+    return error_handler({error_type: logger.ErrorTypes.NoUid});
+  }
+
+  const userId = context.auth.uid;
+  if (!groupId || !inviteId || !inviteKey) {
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+  }
+
+  const refMember = db.doc(`groups/${groupId}/members/${userId}`);
+  const docMember = await refMember.get();
+  if (docMember.exists) {
+    return error_handler({error_type: logger.ErrorTypes.AlreadyMember});
+  }
+
+  await admin.firestore().runTransaction(async (tr) => {
+    const inviteSnap = (await tr.get(refInvite)).data();
+    if (inviteSnap && inviteSnap.count > Object.keys(inviteSnap.accepted).length) {
+      inviteSnap.accepted[userId] = true;
+      await tr.set(refInvite, inviteSnap);
+    }
+  });
+  const inviteNew = (await refInvite.get()).data();
+  if (!inviteNew || !inviteNew.accepted || !inviteNew.accepted[userId]) {
+    return error_handler({error_type: logger.ErrorTypes.InviteSoldOut});
+  }
+
+  const now = new Date();
+  await refMember.collection("secret").doc("membership").set({
+    created:now,
+    privilege: invite.privilege,
+    invitedBy: invite.invitedBy,
+  });
+  await refMember.set({ 
+      created:now, // LATER: Make it sure that we use the same date format everywhere
+      userId: userId,
+      displayName: displayName || "",
+      email: email || "",
+      groupId: groupId,
+      invitedBy: invite.invitedBy,
+    });
+  // LATER: Move this logic to didMemberCreate to avoid duplicate
+  await refMember.collection("private").doc("history").set({
+      // empty object
+  }, {merge:true});
+
+  return { result:true, validating };
 }

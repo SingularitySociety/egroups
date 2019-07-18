@@ -4,6 +4,11 @@ import { withStyles } from '@material-ui/core/styles';
 import { Typography, Button } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import Processing from '../../common/Processing';
+import * as firebase from "firebase/app";
+import "firebase/functions";
+import PleaseLogin from './PleaseLogin';
+import ErrorMessage from '../../common/ErrorMessage';
+import { Redirect } from 'react-router-dom';
 
 const styles = theme => ({
   message: {
@@ -12,20 +17,65 @@ const styles = theme => ({
 });
 
 function Invited(props) {
-  const { classes, callbacks } = props;
+  const { classes, callbacks, group, user, privilege, match:{params:{inviteId, inviteKey}} } = props;
+  const groupId = group.groupId;
   const setTabbar = callbacks.setTabbar;
+  const [validated, setValidated] = useState(null);
   const [processing, setProcessing] = useState(false);
 
-  function handleJoin() {
-    setProcessing(true);
-    setTimeout(()=>{
-      setProcessing(false);
-    }, 500);
-  }
+  console.log(groupId, inviteId, inviteKey);
 
   useEffect(()=>{
     setTabbar("invited");
   }, [setTabbar]);
+
+  useEffect(()=>{
+    let mounted = true;
+    async function validate() {
+      const payload = { groupId, inviteId, inviteKey, validating:true };
+      const processInvite = firebase.functions().httpsCallable('processInvite');
+      const result = (await processInvite(payload)).data;
+      console.log(result);
+      if (mounted) {
+        setValidated(result);
+      }
+    }
+    validate();
+    return () => {
+      mounted = false;
+    }
+  }, [groupId, inviteId, inviteKey])
+
+  async function handleJoin() {
+    setProcessing(true);
+    const payload = { groupId, inviteId, inviteKey, 
+      displayName:user.displayName, email:user.email };
+    const processInvite = firebase.functions().httpsCallable('processInvite');
+    const result = (await processInvite(payload)).data;
+    if (result.result) {
+      callbacks.memberDidUpdate();
+    } else {
+      setProcessing(false);
+    }
+    console.log(result);
+  }
+
+  if (validated === null) {
+    return <Processing active={true} />
+  }
+
+  if (validated.result === false) {
+    return <ErrorMessage error={{key:validated.message}} />
+  }
+
+  if (!user) {
+    return <PleaseLogin />;
+  }
+
+  if (privilege) {
+    console.log("Become a member or already a member. Redireting to the group home.");
+    return <Redirect to={"/" + group.groupName} />
+  }
 
   return <div>
     <Typography className={classes.message}>

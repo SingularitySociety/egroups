@@ -89,7 +89,7 @@ class Settings extends React.Component {
     if (redirect) {
       return <Redirect to={redirect} />
     }
-    const { classes, group } = this.props;
+    const { classes, group, privilege } = this.props;
     const subscription = group.subscription || false;
     const channelCreate = group.privileges.channel.create || Privileges.member;
     const articleCreate = group.privileges.article.create || Privileges.member;
@@ -164,7 +164,7 @@ class Settings extends React.Component {
           </Select>
         </FormControl>
         {
-          true && 
+          privilege >= Privileges.owner && 
           <LockedArea label={<FormattedMessage id="warning.dangerous" />}>
           <Button variant="contained" onClick={this.onDelete}>
             <DeleteIcon color="error" />
