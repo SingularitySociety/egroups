@@ -279,11 +279,14 @@ export const updateCustomAccount = async (db, data, context) => {
   if (error_response) {
     return error_response;
   }
-  if (!data.type || !data.accountData) {
+  if (!data.type) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
-
-  const {groupId, type, accountData, ip} = data;
+  if (!data.accountData && !data.external_account) {
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+  }
+  
+  const {groupId, type, accountData, ip, external_account} = data;
 
   const refAccont = db.doc(`groups/${groupId}/secret/account`);
   const refAccontPrivate = db.doc(`groups/${groupId}/private/account`);
@@ -321,7 +324,10 @@ export const updateCustomAccount = async (db, data, context) => {
       ip,
     };
   }
-
+  if (external_account) {
+    postData.external_account = external_account;
+  }
+  
   try {
     const account = await db.runTransaction(async (tr)=>{
       const apiResponse = await stripeApi.updateCustomAccount(accoundId, postData);

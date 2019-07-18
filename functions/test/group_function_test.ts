@@ -451,17 +451,17 @@ describe('Group function test', () => {
           "line1": "4-1",
           "line2": "ほげほげ"
         },
-        /*
-        "dob": {
-          "day": 1,
-          "month": 8,
-          "year": 1980,
-        },
-        */
         "phone": "+819012345678",
-        // "gender":"female",
-        // "type": "company（会社）",
       }
+    };
+    const bank_jp = {
+      object: "bank_account",
+      country: "jp",
+      currency: "jpy",
+      account_holder_name: "ヤマダハナコ",
+      account_holder_type: "individual",
+      routing_number: "1100000", // bank code and branch code
+      account_number: "00012345",
     };
     const req2 = {groupId,
                   ip: "211.132.97.58",
@@ -478,23 +478,30 @@ describe('Group function test', () => {
     const res3 = await wrapped2(req3, context);
     res3.result.should.equal(true)
 
-    // error
     const req4 = {groupId,
                   type: "individual",
+                  external_account: bank_jp};
+    const res4 = await wrapped2(req4, context);
+    res4.result.should.equal(true)
+    res4.account.external_accounts.total_count.should.equal(1)
+    console.log(res4)
+    // error
+    const req10 = {groupId,
+                  type: "individual",
                   accountData: postData["invalid_individual"]};
-    const error_res = await wrapped2(req4, context);
+    const error_res = await wrapped2(req10, context);
     error_res.result.should.equal(false);
 
-    const req5 = {groupId,
+    const req11 = {groupId,
                   type: "company",
                   accountData: postData["individual"]};
-    const res5 = await wrapped2(req5, context);
-    res5.result.should.equal(false)
+    const res11 = await wrapped2(req11, context);
+    res11.result.should.equal(false)
 
-    const req6 = {groupId,
+    const req12 = {groupId,
                   accountData: postData["individual"]};
-    const res6 = await wrapped2(req6, context);
-    res6.result.should.equal(false)
+    const res12 = await wrapped2(req12, context);
+    res12.result.should.equal(false)
 
     // wip company
     await admin_db.doc(`groups/${groupId2}`).set({
@@ -502,18 +509,17 @@ describe('Group function test', () => {
       subscription: true,
     })
 
-    const req10 = {groupId: groupId2, country};
-    const res10 = await wrapped(req10, context);
-    res10.result.should.equal(true)
+    const req20 = {groupId: groupId2, country};
+    const res20 = await wrapped(req20, context);
+    res20.result.should.equal(true)
 
-    const req11 = {groupId: groupId2,
+    const req21 = {groupId: groupId2,
                   ip: "211.132.97.58",
                   type: "company",
                   accountData: postData["company"]};
-    const wrapped11 = test.wrap(index.updateCustomAccount);
-    const res11 = await wrapped11(req11, context);
-    console.log(res11)
-    res11.result.should.equal(true)
+    const wrapped21 = test.wrap(index.updateCustomAccount);
+    const res21 = await wrapped21(req21, context);
+    res21.result.should.equal(true)
     
   });
 
@@ -540,6 +546,13 @@ describe('Group function test', () => {
     secret.account.metadata.groupId.should.equal(groupId)
     secret.account.object.should.equal('account')
     secret.account.type.should.equal('custom' )
+
+    const req2 = {groupId,
+                  type: "individual",
+                  accountData: {}};
+    const wrapped2 = test.wrap(index.updateCustomAccount);
+    const res2 = await wrapped2(req2, context);
+    res2.result.should.equal(true)
 
 
   });
