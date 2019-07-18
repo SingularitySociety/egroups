@@ -65,6 +65,7 @@ export const memberDidCreate = async (db, snapshot, context) => {
 export const memberDidDelete  = async (db, admin, snapshot, context) => {
   const { groupId, userId } = context.params;
 
+  // We need to delete all sub collections
   await firebase_utils.deleteSubcollection(snapshot, "private");
   await firebase_utils.deleteSubcollection(snapshot, "secret");
   await firebase_utils.deleteSubcollection(snapshot, "readonly");
@@ -165,7 +166,7 @@ export const groupDidDelete = async (db, admin, snapshot, context) => {
       await admin.firestore().doc("/groupNames/" + value.groupName).delete();
     }
 
-    // We need to delete all sub collections (except privileges)
+    // We need to delete all sub collections
     await firebase_utils.deleteSubcollection(snapshot, "channels");
     await firebase_utils.deleteSubcollection(snapshot, "pages");
     await firebase_utils.deleteSubcollection(snapshot, "articles");
@@ -173,6 +174,7 @@ export const groupDidDelete = async (db, admin, snapshot, context) => {
     await firebase_utils.deleteSubcollection(snapshot, "members");
     await firebase_utils.deleteSubcollection(snapshot, "private");
     await firebase_utils.deleteSubcollection(snapshot, "secret");
+    await firebase_utils.deleteSubcollection(snapshot, "invites");
     await firebase_utils.deleteSubcollection(snapshot, "owners"); // obsolete (but keep it for now)
 
     // We need to remove all the images associated with this user
