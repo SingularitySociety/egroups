@@ -188,10 +188,33 @@ export const groupDidDelete = async (db, admin, snapshot, context) => {
 
 export const processInvite = async (db:FirebaseFirestore.Firestore, data, context) => {
   const error_handler = logger.error_response_handler({func: "createGroup", message: "invalid request"});
+
   const { groupId, inviteId, inviteKey, validating } = data;
+  const docInvite = await db.doc(`/groups/${groupId}/invites/${inviteId}`).get();
+
+  const invite = docInvite.data();
+  if (!invite) {
+    return { result:false, message:"error.invalid.invite" };
+  }
+  if (invite[inviteKey] !== 1) {
+    return { result:false, message:"error.invalid.invite" };
+  }
+  const created = invite.created && invite.created.toDate();
+  if (!created) {
+    return { result:false, message:"error.invalid.invite" };
+  }
+  const elapsed = Date.now() - created;
+  if (elapsed < 0 || elapsed > 24 * 60 * 60 * 1000) {
+    return { result:false, message:"error.invalid.invite" };
+  }
+  if (validating) {
+    return {result:true};
+  }  
+
   if (!context.auth || !context.auth.uid) {
     return error_handler({error_type: logger.ErrorTypes.NoUid});
   }
+
   const userId = context.auth.uid;
   if (!groupId || !inviteId || !inviteKey) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
@@ -201,6 +224,6 @@ export const processInvite = async (db:FirebaseFirestore.Firestore, data, contex
   if (docMember.exists) {
     return error_handler({error_type: logger.ErrorTypes.AlreadyMember});
   }
-  
-  return { result: true, validating:validating };
+
+  return { result: true, validating:validating, invite, elapsed };
 }
