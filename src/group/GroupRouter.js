@@ -121,10 +121,6 @@ class GroupRouter extends React.Component {
     const member = (await refMember.get()).data();
     if (member) {
       profiles[user.uid] = member;
-      /*
-      const privilege = (await db.doc(`groups/${group.groupId}/privileges/${user.uid}`).get()).data();
-      member.privilege = (privilege && privilege.value) || 1;
-      */
       await refMember.set({lastAccessed:firebase.firestore.FieldValue.serverTimestamp()}, {merge:true})
       if (!this.detatcher) {
         this.detacher = db.doc(`groups/${group.groupId}/members/${user.uid}/private/history`).onSnapshot((doc)=>{
