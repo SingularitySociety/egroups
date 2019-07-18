@@ -97,8 +97,9 @@ service cloud.firestore {
       allow read, write: if false;
     }
     match /groups/{groupId}/invites/{inviteId} {
-      // Only Admin can access it (we use HTTP call to process it for new users).
+      // Only Admin can access it directly and needs to sign it as the inviter.
       allow read, write: if request.auth.uid != null && isUserAdmin(groupId, request.auth.uid)
+            && request.resource.data.inviter == request.auth.uid;
     }
 		match /groups/{groupId}/channels/{channelId} {
       allow read: if groupInfo(groupId).privileges.channel.read <= userPrivilege(groupId, request.auth.uid);

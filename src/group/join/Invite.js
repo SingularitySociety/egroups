@@ -23,7 +23,7 @@ function uuidv4() {
 }
 
 function Invite(props) {
-  const { callbacks, classes, db, group } = props;
+  const { callbacks, classes, db, group, user } = props;
   const setTabbar = callbacks.setTabbar;
   const [level, setLevel] = useState(Privileges.member);
 
@@ -42,6 +42,7 @@ function Invite(props) {
       created: firebase.firestore.FieldValue.serverTimestamp(),
       duration: 60*60*1000, // one hour
       privilege: level,
+      inviter: user.uid,
     });
     const path = `${window.location.href}/${doc.id}/${key}`;
     console.log(path);

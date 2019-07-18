@@ -237,6 +237,7 @@ export const processInvite = async (db:FirebaseFirestore.Firestore, data, contex
   await refMember.collection("secret").doc("membership").set({
     created:now,
     privilege: invite.privilege,
+    invitedBy: invite.inviter,
   });
   await refMember.set({ 
       created:now, // LATER: Make it sure that we use the same date format everywhere
