@@ -32,7 +32,7 @@ function Invite(props) {
   }, [setTabbar]);
 
   function handleLevel(e) {
-    setLevel(e.target.value);
+    setLevel(parseInt(e.target.value));
   }
 
   async function handleInvite(e) {
