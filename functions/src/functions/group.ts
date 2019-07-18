@@ -51,7 +51,7 @@ export const memberDidCreate = async (db, snapshot, context) => {
   const stripeData = (await db.doc(`/groups/${groupId}/members/${userId}/secret/stripe`).get()).data();
   // todo check valid subscription and set expire
   
-  // owner or member
+  // LATER: Let the subscription logic to set membership as well
   const privilege = (membership && membership.privilege) || 
     (stripeData && stripeData.subscription ? Privileges.subscriber : 1);
 
@@ -204,8 +204,12 @@ export const processInvite = async (db:FirebaseFirestore.Firestore, data, contex
   }
   const created = invite.created;
   const duration = invite.duration;
-  if (!created || !duration || Date.now() < created + duration) {
+  if (!created || !duration) {
     return error_handler({error_type: logger.ErrorTypes.InviteNoDate});
+  }
+
+  if (Date.now() > created.toDate().getTime() + duration) {
+    return error_handler({error_type: logger.ErrorTypes.InviteExipred});
   }
  
   if (validating) {
