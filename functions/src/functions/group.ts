@@ -188,20 +188,24 @@ export const groupDidDelete = async (db, admin, snapshot, context) => {
     });
 }
 
-export const processInvite = async (db:FirebaseFirestore.Firestore, data, context) => {
+export const processInvite = async (db:FirebaseFirestore.Firestore, admin, data, context) => {
   const error_handler = logger.error_response_handler({func: "createGroup", message: "error.invalid.invite"});
 
   const { groupId, inviteId, inviteKey, validating } = data;
-  const docInvite = await db.doc(`/groups/${groupId}/invites/${inviteId}`).get();
+  const refInvite = db.doc(`/groups/${groupId}/invites/${inviteId}`);
+  const invite = (await refInvite.get()).data();
 
-  const invite = docInvite.data();
   if (!invite) {
     return error_handler({error_type: logger.ErrorTypes.InviteNoInvite});
   }
-  const count = invite[inviteKey];
-  if (typeof count !== "number" || count < 1 || !invite.privilege) { 
+  const { key, count, accepted, privilege } = invite;
+  if (key !== inviteKey || typeof count !== "number" || !privilege) {
     return error_handler({error_type: logger.ErrorTypes.InviteNoKey});
   }
+  if  ( count <= Object.keys(accepted).length ) { 
+    return error_handler({error_type: logger.ErrorTypes.InviteSoldOut});
+  }
+
   const created = invite.created;
   const duration = invite.duration;
   if (!created || !duration) {
@@ -233,11 +237,23 @@ export const processInvite = async (db:FirebaseFirestore.Firestore, data, contex
     return error_handler({error_type: logger.ErrorTypes.AlreadyMember});
   }
 
+  await admin.firestore().runTransaction(async (tr) => {
+    const inviteSnap = (await tr.get(refInvite)).data();
+    if (inviteSnap && inviteSnap.count > Object.keys(inviteSnap.accepted).length) {
+      inviteSnap.accepted[userId] = true;
+      await tr.set(refInvite, inviteSnap);
+    }
+  });
+  const inviteNew = (await refInvite.get()).data();
+  if (!inviteNew || !inviteNew.accepted || !inviteNew.accepted[userId]) {
+    return error_handler({error_type: logger.ErrorTypes.InviteSoldOut});
+  }
+
   const now = new Date();
   await refMember.collection("secret").doc("membership").set({
     created:now,
     privilege: invite.privilege,
-    invitedBy: invite.inviter,
+    invitedBy: invite.invitedBy,
   });
   await refMember.set({ 
       created:now, // LATER: Make it sure that we use the same date format everywhere
@@ -245,7 +261,7 @@ export const processInvite = async (db:FirebaseFirestore.Firestore, data, contex
       displayName: displayName || "",
       email: email || "",
       groupId: groupId,
-      invitedBy: invite.inviter,
+      invitedBy: invite.invitedBy,
     });
   // LATER: Move this logic to didMemberCreate to avoid duplicate
   await refMember.collection("private").doc("history").set({

@@ -100,7 +100,7 @@ service cloud.firestore {
       allow create: if request.auth.uid != null 
             && groupInfo(groupId).privileges.invitation.create <= userPrivilege(groupId, request.auth.uid)
             && request.resource.data.privilege <= userPrivilege(groupId, request.auth.uid)
-            && request.resource.data.inviter == request.auth.uid;
+            && request.resource.data.invitedBy == request.auth.uid;
       allow read, update, delete: if isUserAdmin(groupId, request.auth.uid);
     }
 		match /groups/{groupId}/channels/{channelId} {

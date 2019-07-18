@@ -93,7 +93,7 @@ export const memberDidCreate = functions.firestore.document('groups/{groupId}/me
 });
 
 export const processInvite = functions.https.onCall(async (data, context) => {
-  return await groupFunctions.processInvite(db, data, context);
+  return await groupFunctions.processInvite(db, admin, data, context);
 });
 
 export const articleDidDelete = functions.firestore.document('groups/{groupId}/articles/{articleId}')

@@ -27,6 +27,7 @@ export enum ErrorTypes {
   StripeValidation,
   InviteNoInvite,
   InviteNoKey,
+  InviteSoldOut,
   InviteNoDate,
   InviteExipred,
 }
@@ -51,7 +52,8 @@ export const error_messages = {
   [ErrorTypes.AlreadyDataExists]: "Already data exists",
   [ErrorTypes.StripeValidation]: "Stripe validation error",
   [ErrorTypes.InviteNoInvite]: "Invalid InviteId",
-  [ErrorTypes.InviteNoKey]: "Invalid InviteKey ",
+  [ErrorTypes.InviteNoKey]: "Invalid InviteKey",
+  [ErrorTypes.InviteSoldOut]: "Invite Sold Out",
   [ErrorTypes.InviteNoDate]: "Missing invite date",
   [ErrorTypes.InviteExipred]: "Expired invite",
 }
