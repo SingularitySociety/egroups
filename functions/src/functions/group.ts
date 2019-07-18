@@ -245,7 +245,8 @@ export const processInvite = async (db:FirebaseFirestore.Firestore, data, contex
       displayName: displayName || "",
       email: email || "",
       groupId: groupId,
-  });
+      invitedBy: invite.inviter,
+    });
   // LATER: Move this logic to didMemberCreate to avoid duplicate
   await refMember.collection("private").doc("history").set({
       // empty object
