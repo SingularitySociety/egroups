@@ -27,7 +27,7 @@ export const createGroup = async (db:FirebaseFirestore.Firestore, data, context)
   });
   const groupId = doc.id;
 
-  await db.doc(`/groups/${groupId}/members/${userId}/secret/membership`).set({
+  await db.doc(`/groups/${groupId}/members/${userId}/readonly/membership`).set({
     created,
     privilege: Privileges.owner
   });  
@@ -46,22 +46,17 @@ export const createGroup = async (db:FirebaseFirestore.Firestore, data, context)
 
 export const memberDidCreate = async (db, snapshot, context) => {
   const { groupId, userId } = context.params;
-  const membership = (await db.doc(`/groups/${groupId}/members/${userId}/secret/membership`).get()).data();
-  // We set the privilege of the owner here so that the owner can leave and join. 
+  const membership = (await db.doc(`/groups/${groupId}/members/${userId}/readonly/membership`).get()).data();
   const stripeData = (await db.doc(`/groups/${groupId}/members/${userId}/secret/stripe`).get()).data();
   // todo check valid subscription and set expire
   
   // LATER: Let the subscription logic to set membership as well
   const privilege = (membership && membership.privilege) || 
-    (stripeData && stripeData.subscription ? Privileges.subscriber : 1);
+    (stripeData && stripeData.subscription ? Privileges.subscriber : Privileges.member);
 
-  await db.doc("/groups/" + groupId + "/privileges/" + userId).set({
-    value: privilege,
-    created: new Date(),
-  });
   await messaging.subscribe_new_group(userId, groupId, db, messaging.subscribe_topic);
   
-  // This is for custom token to control the access to Firestore Storage.
+  // This is for custom token to control the access to Firestore Storage (as well as Firestore).
   return db.doc(`/privileges/${userId}`).set({
     [groupId]: privilege 
   }, {merge:true});
@@ -69,10 +64,10 @@ export const memberDidCreate = async (db, snapshot, context) => {
 
 export const memberDidDelete  = async (db, admin, snapshot, context) => {
   const { groupId, userId } = context.params;
-  await db.doc("/groups/" + groupId + "/privileges/" + userId).delete();
 
   await firebase_utils.deleteSubcollection(snapshot, "private");
   await firebase_utils.deleteSubcollection(snapshot, "secret");
+  await firebase_utils.deleteSubcollection(snapshot, "readonly");
 
   // This is for custom token to control the access to Firestore Storage.
   const ref = db.doc(`/privileges/${userId}`);
@@ -250,7 +245,7 @@ export const processInvite = async (db:FirebaseFirestore.Firestore, admin, data,
   }
 
   const now = new Date();
-  await refMember.collection("secret").doc("membership").set({
+  await refMember.collection("readonly").doc("membership").set({
     created:now,
     privilege: invite.privilege,
     invitedBy: invite.invitedBy,
