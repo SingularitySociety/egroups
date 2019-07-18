@@ -27,9 +27,10 @@ export const createGroup = async (db:FirebaseFirestore.Firestore, data, context)
   });
   const groupId = doc.id;
 
-  await db.doc(`/groups/${groupId}/owners/${userId}`).set({
-    created
-  });
+  await db.doc(`/groups/${groupId}/members/${userId}/secret/membership`).set({
+    created,
+    privilege: Privileges.owner
+  });  
   await db.doc(`/groups/${groupId}/members/${userId}`).set({
     created,
     displayName:ownerName,
@@ -45,13 +46,14 @@ export const createGroup = async (db:FirebaseFirestore.Firestore, data, context)
 
 export const memberDidCreate = async (db, snapshot, context) => {
   const { groupId, userId } = context.params;
-  const owner = (await db.doc(`/groups/${groupId}/owners/${userId}`).get()).data();
+  const membership = (await db.doc(`/groups/${groupId}/members/${userId}/secret/membership`).get()).data();
   // We set the privilege of the owner here so that the owner can leave and join. 
   const stripeData = (await db.doc(`/groups/${groupId}/members/${userId}/secret/stripe`).get()).data();
   // todo check valid subscription and set expire
   
   // owner or member
-  const privilege = owner ? 0x2000000 : (stripeData && stripeData.subscription ? Privileges.subscriber : 1);
+  const privilege = (membership && membership.privilege) || 
+    (stripeData && stripeData.subscription ? Privileges.subscriber : 1);
 
   await db.doc("/groups/" + groupId + "/privileges/" + userId).set({
     value: privilege,
@@ -174,9 +176,9 @@ export const groupDidDelete = async (db, admin, snapshot, context) => {
     await firebase_utils.deleteSubcollection(snapshot, "articles");
     await firebase_utils.deleteSubcollection(snapshot, "events");
     await firebase_utils.deleteSubcollection(snapshot, "members");
-    await firebase_utils.deleteSubcollection(snapshot, "owners");
     await firebase_utils.deleteSubcollection(snapshot, "private");
     await firebase_utils.deleteSubcollection(snapshot, "secret");
+    await firebase_utils.deleteSubcollection(snapshot, "owners"); // obsolete (but keep it for now)
 
     // We need to remove all the images associated with this user
     const bucket = admin.storage().bucket();
@@ -223,6 +225,21 @@ export const processInvite = async (db:FirebaseFirestore.Firestore, data, contex
   if (docMember.exists) {
     return error_handler({error_type: logger.ErrorTypes.AlreadyMember});
   }
+
+  /*
+  const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
+
+  await refMember.set({ 
+      created: new Date(), // firebase.firestore.FieldValue.serverTimestamp(),
+      displayName: user.displayName,
+      userId: user.uid,
+      email: user.email || "",
+      groupId: group.groupId,
+  }, {merge:true});
+  await refMember.collection("private").doc("history").set({
+      // empty object
+  }, {merge:true});
+  */
 
   return { result:true, validating };
 }

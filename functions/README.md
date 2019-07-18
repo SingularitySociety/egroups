@@ -112,8 +112,8 @@ StripeのSpecではカード情報は1:nで複数ひもづけ可能だが、egro
 # 入会時に記録、追加するもの。
     /groups/${groupId}/members/${userId} { profile } (group.createGroup(owner) or front or stripe.createSubscribe)
 
-    (オーナーのみ)
-    /groups/${groupId}/owners/${userId}   (group.createGroup)
+    (オーナーおよび招待者)
+    /groups/${groupId}/members/${userId}/private/membership   (group.createGroup)
 
     (課金ユーザ)
     /groups/${groupId}/privileges/${userId} {value: privilege}  (group.memberDidCreate) (自動的に削除される)
