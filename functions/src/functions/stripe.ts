@@ -98,8 +98,9 @@ export const createSubscription = async (db, data, context) => {
   }
 
   // check not subscription member yet.
-  const privileges = await db.doc(`groups/${groupId}/privileges/${userId}`).get();
-  if (privileges.exists && privileges.data().value && privileges.data().value >= Privileges.subscriber) {
+  const refMembership = db.doc(`/groups/${groupId}/members/${userId}/readonly/membership`);
+  const membership = await refMembership.get();
+  if (membership.exists && membership.data().privilege && membership.data().privilege >= Privileges.subscriber) {
     return error_handler({error_type: logger.ErrorTypes.AlreadyMember});
   }
 
@@ -117,8 +118,13 @@ export const createSubscription = async (db, data, context) => {
   };
   
   await updateSubscriptionData(db, groupId, userId, subscription, period);
+  const created = new Date();
+  await refMembership.set({
+    created,
+    privilege: Privileges.subscriber,
+  });
   await db.doc(`/groups/${groupId}/members/${userId}`).set({
-    created: new Date(),
+    created,
     displayName: displayName || "---",
     userId: userId,
     groupId: groupId,

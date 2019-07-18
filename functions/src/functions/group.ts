@@ -47,15 +47,15 @@ export const createGroup = async (db:FirebaseFirestore.Firestore, data, context)
 export const memberDidCreate = async (db, snapshot, context) => {
   const { groupId, userId } = context.params;
   const membership = (await db.doc(`/groups/${groupId}/members/${userId}/readonly/membership`).get()).data();
-  const stripeData = (await db.doc(`/groups/${groupId}/members/${userId}/secret/stripe`).get()).data();
-  // todo check valid subscription and set expire
-  
-  // LATER: Let the subscription logic to set membership as well
-  const privilege = (membership && membership.privilege) || 
-    (stripeData && stripeData.subscription ? Privileges.subscriber : Privileges.member);
+  const privilege = (membership && membership.privilege) || Privileges.member;
 
   await messaging.subscribe_new_group(userId, groupId, db, messaging.subscribe_topic);
-  
+
+  const refMember = db.doc(`groups/${groupId}/members/${userId}`);
+  await refMember.collection("private").doc("history").set({
+    // empty object
+  });
+
   // This is for custom token to control the access to Firestore Storage (as well as Firestore).
   return db.doc(`/privileges/${userId}`).set({
     [groupId]: privilege 
@@ -258,10 +258,6 @@ export const processInvite = async (db:FirebaseFirestore.Firestore, admin, data,
       groupId: groupId,
       invitedBy: invite.invitedBy,
     });
-  // LATER: Move this logic to didMemberCreate to avoid duplicate
-  await refMember.collection("private").doc("history").set({
-      // empty object
-  }, {merge:true});
 
   return { result:true, validating };
 }
