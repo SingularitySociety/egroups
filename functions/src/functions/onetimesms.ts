@@ -11,7 +11,7 @@ const aws_secret =  functions.config() && functions.config().aws &&  functions.c
 
 if (aws_key) {
   AWS.config.update({
-    region: 'ap-northeast-1',
+    region: 'us-east-1',
     credentials: new AWS.Credentials(
       aws_key,
       aws_secret,
