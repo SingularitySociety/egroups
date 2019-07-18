@@ -196,19 +196,18 @@ export const processInvite = async (db:FirebaseFirestore.Firestore, data, contex
   if (!invite) {
     return error_handler({error_type: logger.ErrorTypes.InviteNoInvite});
   }
-  if (invite[inviteKey] !== 1) {
+  const count = invite[inviteKey];
+  if (typeof count !== "number" || count < 1) { 
     return error_handler({error_type: logger.ErrorTypes.InviteNoKey});
   }
-  const created = invite.created && invite.created.toDate();
-  if (!created) {
+  const created = invite.created;
+  const duration = invite.duration;
+  if (!created || !duration || Date.now() < created + duration) {
     return error_handler({error_type: logger.ErrorTypes.InviteNoDate});
   }
-  const elapsed = Date.now() - created;
-  if (elapsed < 0 || elapsed > 24 * 60 * 60 * 1000) {
-    return error_handler({error_type: logger.ErrorTypes.InviteExipred});
-  }
+ 
   if (validating) {
-    return {result:true};
+    return { result:true, validating };
   }  
 
   if (!context.auth || !context.auth.uid) {
@@ -225,5 +224,5 @@ export const processInvite = async (db:FirebaseFirestore.Firestore, data, contex
     return error_handler({error_type: logger.ErrorTypes.AlreadyMember});
   }
 
-  return { result: true, validating:validating, invite, elapsed };
+  return { result:true, validating };
 }

@@ -40,6 +40,7 @@ function Invite(props) {
     const doc = await db.collection(`groups/${group.groupId}/invites`).add({
       [key]:1,
       created: firebase.firestore.FieldValue.serverTimestamp(),
+      duration: 60*60*1000, // one hour
       privilege: level,
     });
     const path = `${window.location.href}/${doc.id}/${key}`;
