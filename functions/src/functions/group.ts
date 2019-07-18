@@ -199,7 +199,7 @@ export const processInvite = async (db:FirebaseFirestore.Firestore, data, contex
     return error_handler({error_type: logger.ErrorTypes.InviteNoInvite});
   }
   const count = invite[inviteKey];
-  if (typeof count !== "number" || count < 1) { 
+  if (typeof count !== "number" || count < 1 || !invite.privilege) { 
     return error_handler({error_type: logger.ErrorTypes.InviteNoKey});
   }
   const created = invite.created;
@@ -216,6 +216,8 @@ export const processInvite = async (db:FirebaseFirestore.Firestore, data, contex
     return { result:true, validating };
   }  
 
+  const { email, displayName } = data;
+
   if (!context.auth || !context.auth.uid) {
     return error_handler({error_type: logger.ErrorTypes.NoUid});
   }
@@ -225,25 +227,28 @@ export const processInvite = async (db:FirebaseFirestore.Firestore, data, contex
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
 
-  const docMember = await db.doc(`/groups/${groupId}/members/${userId}`).get();
+  const refMember = db.doc(`groups/${groupId}/members/${userId}`);
+  const docMember = await refMember.get();
   if (docMember.exists) {
     return error_handler({error_type: logger.ErrorTypes.AlreadyMember});
   }
 
-  /*
-  const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
-
+  const now = new Date();
+  await refMember.collection("secret").doc("membership").set({
+    created:now,
+    privilege: invite.privilege,
+  });
   await refMember.set({ 
-      created: new Date(), // firebase.firestore.FieldValue.serverTimestamp(),
-      displayName: user.displayName,
-      userId: user.uid,
-      email: user.email || "",
-      groupId: group.groupId,
-  }, {merge:true});
+      created:now, // LATER: Make it sure that we use the same date format everywhere
+      userId: userId,
+      displayName: displayName || "",
+      email: email || "",
+      groupId: groupId,
+  });
+  // LATER: Move this logic to didMemberCreate to avoid duplicate
   await refMember.collection("private").doc("history").set({
       // empty object
   }, {merge:true});
-  */
 
   return { result:true, validating };
 }

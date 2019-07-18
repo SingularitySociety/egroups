@@ -8,6 +8,7 @@ import * as firebase from "firebase/app";
 import "firebase/functions";
 import PleaseLogin from './PleaseLogin';
 import ErrorMessage from '../../common/ErrorMessage';
+import { Redirect } from 'react-router-dom';
 
 const styles = theme => ({
   message: {
@@ -16,7 +17,7 @@ const styles = theme => ({
 });
 
 function Invited(props) {
-  const { classes, callbacks, group, user, match:{params:{inviteId, inviteKey}} } = props;
+  const { classes, callbacks, group, user, privilege, match:{params:{inviteId, inviteKey}} } = props;
   const groupId = group.groupId;
   const setTabbar = callbacks.setTabbar;
   const [validated, setValidated] = useState(null);
@@ -47,10 +48,15 @@ function Invited(props) {
 
   async function handleJoin() {
     setProcessing(true);
-    const payload = { groupId, inviteId, inviteKey };
+    const payload = { groupId, inviteId, inviteKey, 
+      displayName:user.displayName, email:user.email };
     const processInvite = firebase.functions().httpsCallable('processInvite');
     const result = (await processInvite(payload)).data;
-    setProcessing(false);
+    if (result.result) {
+      callbacks.memberDidUpdate();
+    } else {
+      setProcessing(false);
+    }
     console.log(result);
   }
 
@@ -64,6 +70,11 @@ function Invited(props) {
 
   if (!user) {
     return <PleaseLogin />;
+  }
+
+  if (privilege) {
+    console.log("Become a member or already a member. Redireting to the group home.");
+    return <Redirect to={"/" + group.groupName} />
   }
 
   return <div>
