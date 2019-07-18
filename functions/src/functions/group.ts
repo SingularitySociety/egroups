@@ -194,18 +194,18 @@ export const processInvite = async (db:FirebaseFirestore.Firestore, data, contex
 
   const invite = docInvite.data();
   if (!invite) {
-    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+    return error_handler({error_type: logger.ErrorTypes.InviteNoInvite});
   }
   if (invite[inviteKey] !== 1) {
-    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+    return error_handler({error_type: logger.ErrorTypes.InviteNoKey});
   }
   const created = invite.created && invite.created.toDate();
   if (!created) {
-    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+    return error_handler({error_type: logger.ErrorTypes.InviteNoDate});
   }
   const elapsed = Date.now() - created;
   if (elapsed < 0 || elapsed > 24 * 60 * 60 * 1000) {
-    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+    return error_handler({error_type: logger.ErrorTypes.InviteExipred});
   }
   if (validating) {
     return {result:true};

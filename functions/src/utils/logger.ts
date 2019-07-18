@@ -25,6 +25,10 @@ export enum ErrorTypes {
   SMSCodeExpired,
   AlreadyDataExists,
   StripeValidation,
+  InviteNoInvite,
+  InviteNoKey,
+  InviteNoDate,
+  InviteExipred,
 }
 
 export const error_messages = {
@@ -46,6 +50,10 @@ export const error_messages = {
   [ErrorTypes.SMSCodeExpired]: "SMSCode expired",
   [ErrorTypes.AlreadyDataExists]: "Already data exists",
   [ErrorTypes.StripeValidation]: "Stripe validation error",
+  [ErrorTypes.InviteNoInvite]: "Invalid InviteId",
+  [ErrorTypes.InviteNoKey]: "Invalid InviteKey ",
+  [ErrorTypes.InviteNoDate]: "Missing invite date",
+  [ErrorTypes.InviteExipred]: "Expired invite",
 }
 
 const get_error_string = (error, convString=true) => {
