@@ -154,12 +154,14 @@
     "US":"アメリカ合衆国",
     
     "billing.country":"拠点とする国",
-    "submit":"申請",
+    "submit":"送信",
 
     "sms.type.digit6":"六桁の数字",
     "phone.country":"国番号",
     "phone.number":"電話番号",
     "invalid.phone.number":"無効な電話番号です",
+    "invalid.digit6":"番号が一致しません",
+    "registered.phone":"登録された電話番号: {phone}",
 
     "dummy":"dummy"
 }

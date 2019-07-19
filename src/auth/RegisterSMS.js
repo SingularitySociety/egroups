@@ -52,36 +52,40 @@ function RegisterSMS(props) {
   function onCountryChange(e) {
     setCountry(e.currentTarget.value);
   }
-  async function onConfirm() {
+  async function onConfirm(e) {
     console.log("onConfirm");
+    e.preventDefault();
     setProcessing(true);
+    setError(false);
     const payload = { token:digit6 };
     const confirmOnetimeSMS = firebase.functions().httpsCallable('confirmOnetimeSMS');
     const result = (await confirmOnetimeSMS(payload)).data;
     console.log(result);
     if (!result.result) {
       setProcessing(false);
+      setError(<FormattedMessage id="invalid.digit6" />);
     }
   }
 
   if (confirming) {
     const label=<FormattedMessage id="sms.type.digit6" />
-    return <div>
+    return <form>
       <div className={classes.row}>
         <TextField label={label} value={digit6} onChange={onChangeDigit6}/>
       </div>
       <div className={classes.row}>
-        <Button variant="contained" onClick={onConfirm} disabled={ digit6.length<6 }>
+        <Button variant="contained" onClick={onConfirm} disabled={ digit6.length<6 } type="submit">
           <FormattedMessage id="submit" />
         </Button>
         <Processing active={processing} />
+        <ErrorInline message={error} />
       </div>
-    </div>
+    </form>
   }
   if (phone) {
     return <div className={classes.row}>
       <Typography >
-        { phone }
+        <FormattedMessage id="registered.phone" values={{ phone }} />
       </Typography>
     </div>
   }

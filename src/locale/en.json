@@ -159,6 +159,8 @@
     "phone.country":"Country Code",
     "phone.number":"Phone Number",
     "invalid.phone.number":"Invalid Phone Number",
+    "invalid.digit6":"Number Mismatch",
+    "registered.phone":"Registerd Phone Number: {phone}",
 
     "dummy":"dummy"
 }
