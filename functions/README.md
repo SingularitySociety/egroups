@@ -38,15 +38,18 @@ add this line you shell config ( .bash_rc or .zshrc)
 export AWS_ID="xxxx"
 export AWS_SECRET="xxxx"
 
+export AWS_SMTP_USERNAME="xxx"
+export AWS_SMTP_PASSWORD="xxx"
+
 ```
 
 ### set stripe secret key on firebase
 
 ```
-firebase functions:config:set  aws.id=${AWS_ID}
-
-firebase functions:config:set  aws.secret=${AWS_SECRET}
-
+firebase functions:config:set aws.id=${AWS_ID}
+firebase functions:config:set aws.secret=${AWS_SECRET}
+firebase functions:config:set aws.smtp_id=${AWS_SMTP_USERNAME}
+firebase functions:config:set aws.smtp_passwd=${AWS_SMTP_PASSWORD}
 ```
 
 
