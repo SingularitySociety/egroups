@@ -5,7 +5,6 @@ import { Typography, Button } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import PleaseLogin from './PleaseLogin';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import ErrorInline from '../../common/ErrorInline';
 import Processing from '../../common/Processing';
 

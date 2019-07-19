@@ -11,6 +11,7 @@ Blog: Top Image?
 
 Group: Invitation
 https://github.com/firebase/functions-samples/tree/master/quickstarts/email-users
+https://www.npmjs.com/package/email-templates#install
 Billing: Yen vs. USD
 Subscribe: Hide ZIP https://github.com/stripe/react-stripe-elements/issues/20
 
