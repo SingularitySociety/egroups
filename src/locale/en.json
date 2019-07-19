@@ -157,6 +157,7 @@
     "retry":"Retry",
     
     "please.enter.phone":"Please register your mobile phone number for the two-factor anthentication.",
+    "please.send.code":"Please click the 'Send Code' butto below. We will text you a 6-digit code.",
     "please.enter.code":"Please enter the 6-digit code you've received on your phone.",
     "sms.type.digit6":"6-digits Code",
     "phone.country":"Country Code",

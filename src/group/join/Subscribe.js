@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 //import { makeStyles } from '@material-ui/core/styles';
 //import { Typography } from '@material-ui/core';
@@ -23,6 +23,8 @@ function Subscribe(props) {
   const { callbacks, user, group, db, privilege } = props;
   const setTabbar = callbacks.setTabbar;
   const [sms] = useOnDocument(db, user && `users/${user.uid}`);
+  const [token, setToken] = useState(null);
+  const phone = sms && sms.phone;
 
   useEffect(()=>{
     setTabbar("subscribe");
@@ -35,15 +37,15 @@ function Subscribe(props) {
   // Test card numbers
   // 4242 4242 4242 4242
   const context = { group, db, user, privilege, callbacks };
+  const smsContext = { phone, token, setToken };
 
-  const phone = sms && sms.phone;
-  if (!phone) {
-    return <RegisterSMS phone={phone} />
+  if (!token) {
+    return <RegisterSMS {...smsContext} />
   }
 
   return (
     <div>
-      <RegisterSMS phone={phone} />
+      <RegisterSMS {...smsContext} />
       <StripeProvider apiKey="pk_test_iVo1YToPedpru7AJDpAj43cF00ftQJpoj8">
         <Elements>
           <InjectedCheckoutForm {...context} />

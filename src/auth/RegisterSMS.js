@@ -21,7 +21,7 @@ const styles = theme => ({
 const regex = /^[0-9\-()]*/    
 
 function RegisterSMS(props) {
-  const { classes, phone } = props;
+  const { classes, phone, token, setToken } = props;
   const [processing, setProcessing] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [digit6, setDigit6] = useState("");
@@ -64,8 +64,10 @@ function RegisterSMS(props) {
     const confirmOnetimeSMS = firebase.functions().httpsCallable('confirmOnetimeSMS');
     const result = (await confirmOnetimeSMS(payload)).data;
     console.log(result);
-    if (!result.result) {
-      setProcessing(false);
+    setProcessing(false);
+    if (result.result) {
+      setToken(result.token);
+    } else {
       setError(<FormattedMessage id="invalid.digit6" />);
     }
   }
@@ -73,11 +75,11 @@ function RegisterSMS(props) {
   if (confirming) {
     const label=<FormattedMessage id="sms.type.digit6" />
     return <form>
-    <div className={classes.row}>
-      <Typography>
-        <FormattedMessage id="please.enter.code" />
-      </Typography>
-    </div>
+      <div className={classes.row}>
+        <Typography>
+          <FormattedMessage id="please.enter.code" />
+        </Typography>
+      </div>
       <div className={classes.row}>
         <TextField label={label} value={digit6} onChange={onChangeDigit6}/>
       </div>
@@ -96,9 +98,28 @@ function RegisterSMS(props) {
   }
   if (phone) {
     return <div className={classes.row}>
-      <Typography >
-        <FormattedMessage id="registered.phone" values={{ phone }} />
-      </Typography>
+      <div className={classes.row}>
+        <Typography >
+          <FormattedMessage id="registered.phone" values={{ phone }} />
+        </Typography>
+      </div>
+      {
+        !token &&
+        <React.Fragment>
+          <div className={classes.row}>
+            <Typography>
+              <FormattedMessage id="please.send.code" />
+            </Typography>
+          </div>
+            <div className={classes.row} >
+            <Button variant="contained" onClick={onSubmit} type="submit" color="primary">
+              <FormattedMessage id="send.code" />
+            </Button>
+            <Processing active={processing} />
+            <ErrorInline message={error} />
+          </div>
+        </React.Fragment>
+      }
     </div>
   }
 
@@ -109,22 +130,22 @@ function RegisterSMS(props) {
         <FormattedMessage id="please.enter.phone" />
       </Typography>
     </div>
-    <div className={classes.row} />
+    <div className={classes.row} >
       <InputLabel><FormattedMessage id="phone.country" /></InputLabel>
       <Select native value={country}　onChange={onCountryChange}>
         <CountryPhoneOptions />
       </Select>
-    <div/>
-    <div className={classes.row} />
+      </div>
+    <div className={classes.row} >
       <TextField label={label} value={phoneNumber} onChange={onChangePhoneNumber}/>
-    <div/>
-    <div className={classes.row} />
+      </div>
+    <div className={classes.row} >
       <Button variant="contained" onClick={onSubmit} type="submit" color="primary">
         <FormattedMessage id="send.code" />
       </Button>
       <Processing active={processing} />
       <ErrorInline message={error} />
-    <div/>
+      </div>
   </form>
 }
 

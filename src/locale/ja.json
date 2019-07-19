@@ -158,6 +158,7 @@
     "retry":"リトライ",
 
     "please.enter.phone":"２段階認証のために、携帯電話の番号を登録してください。",
+    "please.send.code":"本人確認のため、携帯電話に６桁のコードを送ります。「コードを送信」ボタンを押してください",
     "please.enter.code":"受け取った六桁のコードを入力してください",
     "sms.type.digit6":"六桁のコード",
     "phone.country":"国番号",
