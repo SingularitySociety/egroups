@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import PleaseLogin from './PleaseLogin';
 import { StripeProvider, Elements } from 'react-stripe-elements';
 import InjectedCheckoutForm from './CheckoutForm';
+import RegisterSMS from '../../auth/RegisterSMS';
+import useOnDocument from '../../common/useOnDocument';
 
 /*
 const styles = theme => ({
@@ -20,6 +22,7 @@ function Subscribe(props) {
   //const classes = useStyles();
   const { callbacks, user, group, db, privilege } = props;
   const setTabbar = callbacks.setTabbar;
+  const [sms] = useOnDocument(db, `user/${user.uid}`);
 
   useEffect(()=>{
     setTabbar("subscribe");
@@ -32,12 +35,21 @@ function Subscribe(props) {
   // Test card numbers
   // 4242 4242 4242 4242
   const context = { group, db, user, privilege, callbacks };
+
+  const phone = sms && sms.phone;
+  if (!phone) {
+    return <RegisterSMS phone={phone} />
+  }
+
   return (
-    <StripeProvider apiKey="pk_test_iVo1YToPedpru7AJDpAj43cF00ftQJpoj8">
-      <Elements>
-        <InjectedCheckoutForm {...context} />
-      </Elements>
-    </StripeProvider>
+    <div>
+      <RegisterSMS phone={phone} />
+      <StripeProvider apiKey="pk_test_iVo1YToPedpru7AJDpAj43cF00ftQJpoj8">
+        <Elements>
+          <InjectedCheckoutForm {...context} />
+        </Elements>
+      </StripeProvider>
+    </div>
   )
 }
 
