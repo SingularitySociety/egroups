@@ -154,7 +154,19 @@
     "US":"アメリカ合衆国",
     
     "billing.country":"拠点とする国",
-    "submit":"申請",
+    "submit":"送信",
+    "retry":"リトライ",
+
+    "please.enter.phone":"２段階認証のために、携帯電話の番号を登録してください。",
+    "please.send.code":"本人確認のため、携帯電話に６桁のコードを送ります。「コードを送信」ボタンを押してください",
+    "please.enter.code":"受け取った六桁のコードを入力してください",
+    "sms.type.digit6":"六桁のコード",
+    "phone.country":"国番号",
+    "phone.number":"電話番号",
+    "send.code":"コードを送信",
+    "invalid.phone.number":"無効な電話番号です",
+    "invalid.digit6":"番号が一致しません",
+    "registered.phone":"登録された電話番号: {phone}",
 
     "dummy":"dummy"
 }
