@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography, Button, TextField } from '@material-ui/core';
+import { Typography, Button, TextField, FormControl, InputLabel, Select } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import Processing from '../common/Processing';
 import * as firebase from "firebase/app";
 import "firebase/functions";
+import CountryPhoneOptions from '../options/CountryPhoneOptions';
+import ErrorInline from '../common/ErrorInline';
 
 const styles = theme => ({
   root: {
@@ -18,20 +20,35 @@ function RegisterSMS(props) {
   const [processing, setProcessing] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [digit6, setDigit6] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [country, setCountry] = useState("+81");
+  const [error, setError] = useState(null);
   
-  async function onSubmit() {
+  async function onSubmit(e) {
     console.log("onSubmit");
+    e.preventDefault();
     setProcessing(true);
-    const payload = { phone:"+1-4255334731" };
+    setError(false);    
+    const payload = { phone:country + phoneNumber };
     const requestOnetimeSMS = firebase.functions().httpsCallable('requestOnetimeSMS');
     const result = (await requestOnetimeSMS(payload)).data;
     setConfirming(result.result);
     console.log(result);
     setProcessing(false);
+    if (!result.result) {
+      setError(<FormattedMessage id="invalid.phone.number" />);
+    }
   }
   function onChangeDigit6(e) {
     const value = parseInt(e.currentTarget.value) || "";
     setDigit6((""+value).substring(0,6));
+  }
+  function onChangePhoneNumber(e) {
+    setError(false);    
+    setPhoneNumber(e.currentTarget.value);
+  }
+  function onCountryChange(e) {
+    setCountry(e.currentTarget.value);
   }
   async function onConfirm() {
     console.log("onConfirm");
@@ -62,12 +79,22 @@ function RegisterSMS(props) {
       </Typography>
     </div>
   }
-  return <div className={classes.root}>
-    <Button variant="contained" onClick={onSubmit}>
+
+  const label=<FormattedMessage id="phone.number" />
+  return <form className={classes.root}>
+    <InputLabel><FormattedMessage id="phone.country" /></InputLabel>
+    <Select native value={country}　onChange={onCountryChange}>
+      <CountryPhoneOptions />
+    </Select>
+    <br/>
+    <TextField label={label} value={phoneNumber} onChange={onChangePhoneNumber}/>
+    <br/>
+    <Button variant="contained" onClick={onSubmit} type="submit">
       <FormattedMessage id="submit" />
     </Button>
     <Processing active={processing} />
-  </div>
+    <ErrorInline message={error} />
+  </form>
 }
 
 RegisterSMS.propTypes = {

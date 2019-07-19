@@ -156,6 +156,9 @@
     "submit":"Submit",
     
     "sms.type.digit6":"Please enter 6 digits you've received",
+    "phone.country":"Country Code",
+    "phone.number":"Phone Number",
+    "invalid.phone.number":"Invalid Phone Number",
 
     "dummy":"dummy"
 }

@@ -7,4 +7,9 @@ export const Currencies = {
   "US" : "usd",
 };
 
+export const PhonePrefixes = {
+  "JP" : "+81",
+  "US" : "+1",
+};
+
 export default Countries;
