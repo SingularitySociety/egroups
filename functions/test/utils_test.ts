@@ -1,11 +1,9 @@
-import * as supertest from 'supertest';
-import * as express from '../src/functions/express';
 import { should } from 'chai';
 import * as utils from '../src/utils/utils'
 
 should()
 
-describe('Hello function', () => {
+describe('utils function', () => {
   it('should return diff', () => {
     const res1 = utils.array_diff([1, 2, 3], [1, 2]);
     res1[0].should.members([3])
@@ -20,11 +18,13 @@ describe('Hello function', () => {
     res3[1].should.members([]);
   });
 
-  it('should return hello world', async () => {
-    const request = supertest(express.app);
-    const response = await request.get("/1.0/hello");
-
-    response.status.should.equal(200);
-    response.text.should.equal('{"message":"hello"}');
+  it('should send mail', async function() {
+    this.timeout(10000);
+    const to = "isamu@to-kyo.to";
+    const subject = "hello";
+    const text = "123";
+    const html = "<b>123</b>";
+    await utils.sendMail(to, subject, text, html);
   });
+  
 });
