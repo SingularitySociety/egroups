@@ -15,6 +15,8 @@ const styles = theme => ({
   },
 });
 
+const regex = /^[0-9\-\(\)]*/    
+
 function RegisterSMS(props) {
   const { classes, phone } = props;
   const [processing, setProcessing] = useState(false);
@@ -44,8 +46,8 @@ function RegisterSMS(props) {
     setDigit6((""+value).substring(0,6));
   }
   function onChangePhoneNumber(e) {
-    setError(false);    
-    setPhoneNumber(e.currentTarget.value);
+    setError(false);
+    setPhoneNumber(e.currentTarget.value.match(regex)[0]);
   }
   function onCountryChange(e) {
     setCountry(e.currentTarget.value);
