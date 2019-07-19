@@ -47,9 +47,13 @@ export const createGroup = async (db:FirebaseFirestore.Firestore, data, context)
 export const memberDidCreate = async (db, snapshot, context) => {
   const { groupId, userId } = context.params;
   const membership = (await db.doc(`/groups/${groupId}/members/${userId}/readonly/membership`).get()).data();
-  const privilege = (membership && membership.privilege) || Privileges.member;
 
-  await messaging.subscribe_new_group(userId, groupId, db, messaging.subscribe_topic);
+  const stripeData = (await db.doc(`/groups/${groupId}/members/${userId}/secret/stripe`).get()).data();
+  // todo check valid subscription and set expire
+  
+  const privilege = (membership && membership.privilege) || (stripeData && stripeData.subscription ? Privileges.subscriber : Privileges.member);
+
+  await messaging.subscribe_new_group(userId, groupId, db, messaging.unsubscribe_topic);
 
   const refMember = db.doc(`groups/${groupId}/members/${userId}`);
   await refMember.collection("private").doc("history").set({
