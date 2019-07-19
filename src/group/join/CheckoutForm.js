@@ -60,12 +60,12 @@ function CheckoutForm(props) {
     const plan = group.plans[planIndex];
     const displayName = user.displayName;
     const groupId = group.groupId;
-    const context = { groupId, plan, displayName };
-    console.log("subscribe", context);
+    const payload = { groupId, plan, displayName };
+    console.log("subscribe", payload);
     
     const createSubscription = firebase.functions().httpsCallable('createSubscription');
     setProcessing(true);
-    const result = (await createSubscription(context)).data;
+    const result = (await createSubscription(payload)).data;
     setProcessing(false);
     callbacks.memberDidUpdate();
     setJustSubscribed(result.result);

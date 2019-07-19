@@ -21,7 +21,7 @@ const styles = theme => ({
 const regex = /^[0-9\-()]*/    
 
 function RegisterSMS(props) {
-  const { classes, phone, token, setToken } = props;
+  const { classes, phone, marioToken, setMarioToken } = props;
   const [processing, setProcessing] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [digit6, setDigit6] = useState("");
@@ -66,7 +66,7 @@ function RegisterSMS(props) {
     console.log(result);
     setProcessing(false);
     if (result.result) {
-      setToken(result.token);
+      setMarioToken(result.token);
     } else {
       setError(<FormattedMessage id="invalid.digit6" />);
     }
@@ -104,7 +104,7 @@ function RegisterSMS(props) {
         </Typography>
       </div>
       {
-        !token &&
+        !marioToken &&
         <React.Fragment>
           <div className={classes.row}>
             <Typography>
@@ -151,6 +151,7 @@ function RegisterSMS(props) {
 
 RegisterSMS.propTypes = {
   classes: PropTypes.object.isRequired,
+  setMarioToken: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(RegisterSMS);

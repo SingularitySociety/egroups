@@ -23,7 +23,7 @@ function Subscribe(props) {
   const { callbacks, user, group, db, privilege } = props;
   const setTabbar = callbacks.setTabbar;
   const [sms] = useOnDocument(db, user && `users/${user.uid}`);
-  const [token, setToken] = useState(null);
+  const [marioToken, setMarioToken] = useState(null);
   const phone = sms && sms.phone;
 
   useEffect(()=>{
@@ -37,9 +37,9 @@ function Subscribe(props) {
   // Test card numbers
   // 4242 4242 4242 4242
   const context = { group, db, user, privilege, callbacks };
-  const smsContext = { phone, token, setToken };
+  const smsContext = { phone, marioToken, setMarioToken };
 
-  if (!token) {
+  if (!marioToken) {
     return <RegisterSMS {...smsContext} />
   }
 
