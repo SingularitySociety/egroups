@@ -22,9 +22,9 @@ function Subscribe(props) {
   //const classes = useStyles();
   const { callbacks, user, group, db, privilege } = props;
   const setTabbar = callbacks.setTabbar;
-  const [sms] = useOnDocument(db, user && `users/${user.uid}`);
+  const [sms] = useOnDocument(db, user && `users/${user.uid}/readonly/sms`);
   const [marioToken, setMarioToken] = useState(null);
-  const phone = sms && sms.phone;
+  const phone = sms && sms.phoneNumber;
 
   useEffect(()=>{
     setTabbar("subscribe");
