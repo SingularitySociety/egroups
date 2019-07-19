@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography, Button, TextField, FormControl, InputLabel, Select } from '@material-ui/core';
+import { Typography, Button, TextField, InputLabel, Select } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import Processing from '../common/Processing';
 import * as firebase from "firebase/app";
@@ -10,12 +10,12 @@ import CountryPhoneOptions from '../options/CountryPhoneOptions';
 import ErrorInline from '../common/ErrorInline';
 
 const styles = theme => ({
-  root: {
-    marginTop: theme.spacing(1),
-  },
+  row: {
+    marginBottom: theme.spacing(1),
+  }
 });
 
-const regex = /^[0-9\-\(\)]*/    
+const regex = /^[0-9\-()]*/    
 
 function RegisterSMS(props) {
   const { classes, phone } = props;
@@ -66,16 +66,20 @@ function RegisterSMS(props) {
 
   if (confirming) {
     const label=<FormattedMessage id="sms.type.digit6" />
-    return <div className={classes.root}>
-      <TextField label={label} value={digit6} onChange={onChangeDigit6}/>
-      <Button variant="contained" onClick={onConfirm} disabled={ digit6.length<6 }>
-        <FormattedMessage id="submit" />
-      </Button>
-      <Processing active={processing} />
+    return <div>
+      <div className={classes.row}>
+        <TextField label={label} value={digit6} onChange={onChangeDigit6}/>
+      </div>
+      <div className={classes.row}>
+        <Button variant="contained" onClick={onConfirm} disabled={ digit6.length<6 }>
+          <FormattedMessage id="submit" />
+        </Button>
+        <Processing active={processing} />
+      </div>
     </div>
   }
   if (phone) {
-    return <div className={classes.root}>
+    return <div className={classes.row}>
       <Typography >
         { phone }
       </Typography>
@@ -83,19 +87,23 @@ function RegisterSMS(props) {
   }
 
   const label=<FormattedMessage id="phone.number" />
-  return <form className={classes.root}>
-    <InputLabel><FormattedMessage id="phone.country" /></InputLabel>
-    <Select native value={country}　onChange={onCountryChange}>
-      <CountryPhoneOptions />
-    </Select>
-    <br/>
-    <TextField label={label} value={phoneNumber} onChange={onChangePhoneNumber}/>
-    <br/>
-    <Button variant="contained" onClick={onSubmit} type="submit">
-      <FormattedMessage id="submit" />
-    </Button>
-    <Processing active={processing} />
-    <ErrorInline message={error} />
+  return <form>
+    <div className={classes.row} />
+      <InputLabel><FormattedMessage id="phone.country" /></InputLabel>
+      <Select native value={country}　onChange={onCountryChange}>
+        <CountryPhoneOptions />
+      </Select>
+    <div/>
+    <div className={classes.row} />
+      <TextField label={label} value={phoneNumber} onChange={onChangePhoneNumber}/>
+    <div/>
+    <div className={classes.row} />
+      <Button variant="contained" onClick={onSubmit} type="submit">
+        <FormattedMessage id="submit" />
+      </Button>
+      <Processing active={processing} />
+      <ErrorInline message={error} />
+    <div/>
   </form>
 }
 

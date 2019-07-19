@@ -155,7 +155,7 @@
     "billing.country":"Residence Country",
     "submit":"Submit",
     
-    "sms.type.digit6":"Please enter 6 digits you've received",
+    "sms.type.digit6":"6 digits number",
     "phone.country":"Country Code",
     "phone.number":"Phone Number",
     "invalid.phone.number":"Invalid Phone Number",

@@ -156,7 +156,7 @@
     "billing.country":"拠点とする国",
     "submit":"申請",
 
-    "sms.type.digit6":"受け取った六桁の数字を入力してください",
+    "sms.type.digit6":"六桁の数字",
     "phone.country":"国番号",
     "phone.number":"電話番号",
     "invalid.phone.number":"無効な電話番号です",
