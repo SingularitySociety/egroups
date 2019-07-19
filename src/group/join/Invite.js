@@ -8,6 +8,7 @@ import "firebase/firestore";
 import Privileges from '../../const/Privileges';
 import PrivilegeOptions from '../../options/PrivilegeOptions';
 import Processing from '../../common/Processing';
+import ErrorInline from '../../common/ErrorInline';
 
 const styles = theme => ({
   formControl: {
@@ -28,6 +29,7 @@ function Invite(props) {
   const setTabbar = callbacks.setTabbar;
   const [level, setLevel] = useState(Privileges.member);
   const [processing, setProcessing] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(()=>{
     setTabbar("invite");
@@ -54,6 +56,7 @@ function Invite(props) {
       console.log(path);
     } catch(e) {
       console.log(e);
+      setError(<FormattedMessage id="error.failed" values={{error:e}}/>); 
     }
     setProcessing(false);
   }
@@ -70,6 +73,7 @@ function Invite(props) {
       <FormattedMessage id="invite" />
     </Button>
     <Processing active={processing} />
+    <ErrorInline message={error} />
   </React.Fragment>
 }
 

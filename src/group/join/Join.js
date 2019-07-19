@@ -22,7 +22,7 @@ function Join(props) {
   const { db, user, group, callbacks, classes, privilege } = props;
   const setTabbar = callbacks.setTabbar;
   const [error, setError] = useState(null);
-  const [ processing, setProcessing ] = useState(false);
+  const [processing, setProcessing] = useState(false);
   useEffect(()=>{
     setTabbar("join");
   }, [setTabbar]);
