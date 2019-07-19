@@ -66,11 +66,18 @@ export const createSubscription = async (db, data, context) => {
   if (!context.auth || !context.auth.uid) {
     return error_handler({error_type: logger.ErrorTypes.NoUid});
   }
-  if (!data || !data.groupId || !data.plan || !data.plan.price || !data.plan.currency) {
+  if (!data || !data.groupId || !data.plan || !data.plan.price || !data.plan.currency || !data.onetimetoken) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
-  
+
   const userId = context.auth.uid;
+  
+  const onetime = (await db.doc(`/users/${userId}/secret/onetime`).get()).data()
+
+  if (!onetime || onetime.onetimetoken !== data.token || onetime.ttl > Math.round(Date.now()  / 1000) ) {
+    return error_handler({error_type: logger.ErrorTypes.OnetimeKey});
+  }
+  
   const {groupId, plan, displayName} = data;
   const {price, currency} = plan;
   const plan_key = [String(price), currency].join("_")

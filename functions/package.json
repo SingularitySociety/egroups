@@ -10,8 +10,8 @@
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
     "mocha": "cp ../firestore.rules  ./ && mocha  -r ts-node/register --recursive test/*_test.ts",
-    "mocha2": "mocha  -r ts-node/register --recursive test/utils_test.ts",
-    "mocha3": "mocha  -r ts-node/register --recursive test/member_function_test.ts",
+    "mocha2": "mocha  -r ts-node/register --recursive test/stripe_test.ts",
+    "mocha3": "mocha  -r ts-node/register --recursive test/group_function_test.ts",
     "mocha4": "mocha  -r ts-node/register --recursive test/onetime_test.ts",
     "watch:mocha": "mocha -w -watch-extensions ts -r ts-node/register --recursive test/*_test.ts"
   },
