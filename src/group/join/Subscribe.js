@@ -36,7 +36,7 @@ function Subscribe(props) {
 
   // Test card numbers
   // 4242 4242 4242 4242
-  const context = { group, db, user, privilege, callbacks };
+  const context = { group, db, user, privilege, callbacks, marioToken };
   const smsContext = { phone, marioToken, setMarioToken };
 
   if (!marioToken) {
