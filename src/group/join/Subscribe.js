@@ -22,7 +22,7 @@ function Subscribe(props) {
   //const classes = useStyles();
   const { callbacks, user, group, db, privilege } = props;
   const setTabbar = callbacks.setTabbar;
-  const [sms] = useOnDocument(db, `user/${user.uid}`);
+  const [sms] = useOnDocument(db, user && `users/${user.uid}`);
 
   useEffect(()=>{
     setTabbar("subscribe");

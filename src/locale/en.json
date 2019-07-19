@@ -155,5 +155,7 @@
     "billing.country":"Residence Country",
     "submit":"Submit",
     
+    "sms.type.digit6":"Please enter 6 digits you've received",
+
     "dummy":"dummy"
 }

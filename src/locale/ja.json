@@ -156,5 +156,7 @@
     "billing.country":"拠点とする国",
     "submit":"申請",
 
+    "sms.type.digit6":"受け取った六桁の数字を入力してください",
+
     "dummy":"dummy"
 }
