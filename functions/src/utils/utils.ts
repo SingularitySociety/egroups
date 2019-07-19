@@ -30,7 +30,7 @@ const aws_smtp_passwd =  functions.config() && functions.config().aws &&  functi
 export const sendMail = async (to, subject, text, html) => {
   
   const transporter = nodemailer.createTransport({
-    host: "email-smtp.us-east-1.amazonaws.com",
+    host: "email-smtp.us-west-2.amazonaws.com",
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
@@ -43,7 +43,7 @@ export const sendMail = async (to, subject, text, html) => {
   });
   
   const info = await transporter.sendMail({
-    from: 'isamu@to-kyo.to',
+    from: 'info@gluepass.com',
     to, 
     subject,
     text,
