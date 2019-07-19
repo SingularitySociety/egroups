@@ -12,6 +12,9 @@ import ErrorInline from '../common/ErrorInline';
 const styles = theme => ({
   row: {
     marginBottom: theme.spacing(1),
+  },
+  button: {
+    marginRight: theme.spacing(1),
   }
 });
 
@@ -70,12 +73,21 @@ function RegisterSMS(props) {
   if (confirming) {
     const label=<FormattedMessage id="sms.type.digit6" />
     return <form>
+    <div className={classes.row}>
+      <Typography>
+        <FormattedMessage id="please.enter.code" />
+      </Typography>
+    </div>
       <div className={classes.row}>
         <TextField label={label} value={digit6} onChange={onChangeDigit6}/>
       </div>
       <div className={classes.row}>
-        <Button variant="contained" onClick={onConfirm} disabled={ digit6.length<6 } type="submit">
+        <Button variant="contained" onClick={onConfirm} disabled={ digit6.length<6 } 
+                type="submit" color="primary" className={classes.button}>
           <FormattedMessage id="submit" />
+        </Button>
+        <Button variant="contained" onClick={()=>{setConfirming(false)}} className={classes.button}>
+          <FormattedMessage id="retry" />
         </Button>
         <Processing active={processing} />
         <ErrorInline message={error} />
@@ -92,6 +104,11 @@ function RegisterSMS(props) {
 
   const label=<FormattedMessage id="phone.number" />
   return <form>
+    <div className={classes.row}>
+      <Typography>
+        <FormattedMessage id="please.enter.phone" />
+      </Typography>
+    </div>
     <div className={classes.row} />
       <InputLabel><FormattedMessage id="phone.country" /></InputLabel>
       <Select native value={country}　onChange={onCountryChange}>
@@ -102,8 +119,8 @@ function RegisterSMS(props) {
       <TextField label={label} value={phoneNumber} onChange={onChangePhoneNumber}/>
     <div/>
     <div className={classes.row} />
-      <Button variant="contained" onClick={onSubmit} type="submit">
-        <FormattedMessage id="submit" />
+      <Button variant="contained" onClick={onSubmit} type="submit" color="primary">
+        <FormattedMessage id="send.code" />
       </Button>
       <Processing active={processing} />
       <ErrorInline message={error} />

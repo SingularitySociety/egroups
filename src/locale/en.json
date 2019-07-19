@@ -154,10 +154,14 @@
 
     "billing.country":"Residence Country",
     "submit":"Submit",
+    "retry":"Retry",
     
-    "sms.type.digit6":"6 digits number",
+    "please.enter.phone":"Please register your mobile phone number for the two-factor anthentication.",
+    "please.enter.code":"Please enter the 6-digit code you've received on your phone.",
+    "sms.type.digit6":"6-digits Code",
     "phone.country":"Country Code",
     "phone.number":"Phone Number",
+    "send.code":"Send Code",
     "invalid.phone.number":"Invalid Phone Number",
     "invalid.digit6":"Number Mismatch",
     "registered.phone":"Registerd Phone Number: {phone}",
