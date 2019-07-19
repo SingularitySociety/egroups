@@ -29,19 +29,19 @@ function Join(props) {
     const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
     setProcessing(true);
     try {
-        await refMember.set({ 
-            created: new Date(), // firebase.firestore.FieldValue.serverTimestamp(),
-            displayName: user.displayName,
-            userId: user.uid,
-            email: user.email || "",
-            groupId: group.groupId,
-        }, {merge:true});
+      await refMember.set({ 
+          created: new Date(), // firebase.firestore.FieldValue.serverTimestamp(),
+          displayName: user.displayName,
+          userId: user.uid,
+          email: user.email || "",
+          groupId: group.groupId,
+      }, {merge:true});
 
-        callbacks.memberDidUpdate();
-        //window.location.pathname = "/" + group.groupName;
+      callbacks.memberDidUpdate();
+      //window.location.pathname = "/" + group.groupName;
     } catch(e) {
-        console.log(e);
-        setError("Unable to Join"); // BUGBUG
+      console.log(e);
+      setError(<FormattedMessage id="error.cannot.join" values={{error:e}}/>); 
     }
     setProcessing(false);
   }
@@ -50,43 +50,42 @@ function Join(props) {
                   <FormattedMessage id="application" />
                 </Typography>;
   if (!user) {
-      return <PleaseLogin />;
+    return <PleaseLogin />;
   }
   if (privilege) {
-      console.log("Become a member or already a member. Redireting to the group home.");
-      return <Redirect to={"/" + group.groupName} />
+    console.log("Become a member or already a member. Redireting to the group home.");
+    return <Redirect to={"/" + group.groupName} />
   }
   if (!(group && group.open)) {
-      return <div>
-          {title}
-          <Typography>
-            <FormattedMessage id="join.closed" />
-          </Typography>
-          <Button variant="contained" onClick={handleJoin} className={classes.button}>Try to Join</Button>
-          {
-              error && <p style={{color:"red"}}>{error}</p>
-          }
-      </div>
-
+    return <div>
+        {title}
+        <Typography>
+          <FormattedMessage id="join.closed" />
+        </Typography>
+        <Button variant="contained" onClick={handleJoin} className={classes.button}>Try to Join</Button>
+        {
+          error && <Typography style={{color:"red"}}>{error}</Typography>
+        }
+    </div>
   }
   return <div>
-          {title}
-          <Typography>
-            <FormattedMessage id="join.open" />
-          </Typography>
-          <Button variant="contained" color="primary" onClick={handleJoin} className={classes.button}><FormattedMessage id="join" /></Button>
-          {
-              error && <p style={{color:"red"}}>{error}</p>
-          }
-          {
-          processing && 
-          <CircularProgress size={24} />
-          }
-      </div>
+      {title}
+      <Typography>
+        <FormattedMessage id="join.open" />
+      </Typography>
+      <Button variant="contained" color="primary" onClick={handleJoin} className={classes.button}><FormattedMessage id="join" /></Button>
+      {
+        error && <Typography style={{color:"red"}}>{error}</Typography>
+      }
+      {
+        processing && 
+        <CircularProgress size={24} />
+      }
+  </div>
 }
 
 Join.propTypes = {
-    classes: PropTypes.object.isRequired,
-  };
+  classes: PropTypes.object.isRequired,
+};
   
 export default withStyles(styles)(Join);

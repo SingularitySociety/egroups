@@ -147,6 +147,7 @@
     "invitation.privilege":"招待者の権限",
     "you.are.invited":"あなたはこのグループに招待されています。参加しますか？",
     "error.invalid.invite":"この招待状は無効、もしくは期限切れです",
+    "error.cannot.join":"参加できませんでした ({error})",
 
     "JP":"日本",
     "US":"アメリカ合衆国",

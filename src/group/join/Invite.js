@@ -7,6 +7,7 @@ import * as firebase from "firebase/app";
 import "firebase/firestore";
 import Privileges from '../../const/Privileges';
 import PrivilegeOptions from '../../options/PrivilegeOptions';
+import Processing from '../../common/Processing';
 
 const styles = theme => ({
   formControl: {
@@ -26,6 +27,7 @@ function Invite(props) {
   const { callbacks, classes, db, group, user } = props;
   const setTabbar = callbacks.setTabbar;
   const [level, setLevel] = useState(Privileges.member);
+  const [processing, setProcessing] = useState(false);
 
   useEffect(()=>{
     setTabbar("invite");
@@ -37,17 +39,23 @@ function Invite(props) {
 
   async function handleInvite(e) {
     const key = uuidv4();
-    const doc = await db.collection(`groups/${group.groupId}/invites`).add({
-      key,
-      count:1,
-      created: firebase.firestore.FieldValue.serverTimestamp(),
-      duration: 60*60*1000, // one hour
-      privilege: level,
-      invitedBy: user.uid,
-      accepted:{},
-    });
-    const path = `${window.location.href}/${doc.id}/${key}`;
-    console.log(path);
+    setProcessing(true);
+    try {
+      const doc = await db.collection(`groups/${group.groupId}/invites`).add({
+        key,
+        count:1,
+        created: firebase.firestore.FieldValue.serverTimestamp(),
+        duration: 60*60*1000, // one hour
+        privilege: level,
+        invitedBy: user.uid,
+        accepted:{},
+      });
+      const path = `${window.location.href}/${doc.id}/${key}`;
+      console.log(path);
+    } catch(e) {
+      console.log(e);
+    }
+    setProcessing(false);
   }
 
   return <React.Fragment>
@@ -61,6 +69,7 @@ function Invite(props) {
     <Button variant="contained" onClick={handleInvite}>
       <FormattedMessage id="invite" />
     </Button>
+    <Processing active={processing} />
   </React.Fragment>
 }
 
