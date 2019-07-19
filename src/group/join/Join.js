@@ -6,14 +6,16 @@ import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import PleaseLogin from './PleaseLogin';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import ErrorInline from '../../common/ErrorInline';
+import Processing from '../../common/Processing';
 
 const styles = theme => ({
-    login: {
-        marginTop: theme.spacing(9),
-    },
-    button: {
-        margin: theme.spacing(1)
-    }
+  login: {
+      marginTop: theme.spacing(9),
+  },
+  button: {
+      margin: theme.spacing(1)
+  }
 });
 
 function Join(props) {
@@ -27,6 +29,7 @@ function Join(props) {
 
   const handleJoin = async () => {
     const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
+    setError(null);
     setProcessing(true);
     try {
       await refMember.set({ 
@@ -63,9 +66,8 @@ function Join(props) {
           <FormattedMessage id="join.closed" />
         </Typography>
         <Button variant="contained" onClick={handleJoin} className={classes.button}>Try to Join</Button>
-        {
-          error && <Typography style={{color:"red"}}>{error}</Typography>
-        }
+        <Processing active={processing} />
+        <ErrorInline message={error} />
     </div>
   }
   return <div>
@@ -74,13 +76,8 @@ function Join(props) {
         <FormattedMessage id="join.open" />
       </Typography>
       <Button variant="contained" color="primary" onClick={handleJoin} className={classes.button}><FormattedMessage id="join" /></Button>
-      {
-        error && <Typography style={{color:"red"}}>{error}</Typography>
-      }
-      {
-        processing && 
-        <CircularProgress size={24} />
-      }
+      <Processing active={processing} />
+      <ErrorInline message={error} />
   </div>
 }
 
