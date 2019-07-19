@@ -116,7 +116,8 @@ describe("My app", () => {
       alice_db.doc(`users/${bobUserId}/private/test`).get()
     );
   });
-  
+
+  /*
   it("should only read user's phone data", async () => {
     // await firebase.assertSucceeds(
     // alice_db.doc(`users/${charlieUserId}`).get()
@@ -202,4 +203,6 @@ describe("My app", () => {
     data.data().should.deep.equal({ phone: '1234', test: 'aaa' });
     
   })
+  */
+
 });

@@ -30,6 +30,7 @@ export enum ErrorTypes {
   InviteSoldOut,
   InviteNoDate,
   InviteExipred,
+  OnetimeKey,
 }
 
 export const error_messages = {
@@ -56,6 +57,7 @@ export const error_messages = {
   [ErrorTypes.InviteSoldOut]: "Invite Sold Out",
   [ErrorTypes.InviteNoDate]: "Missing invite date",
   [ErrorTypes.InviteExipred]: "Expired invite",
+  [ErrorTypes.OnetimeKey]: "No one time key",
 }
 
 const get_error_string = (error, convString=true) => {
