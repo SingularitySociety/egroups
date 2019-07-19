@@ -28,7 +28,7 @@ service cloud.firestore {
       return userPrivilege(groupId, userId) >= 16777216; // 0x1000000
     }
     function isUserOwner(groupId, userId) {
-      return exists(/databases/$(database)/documents/groups/$(groupId)/owners/$(userId));
+      return userPrivilege(groupId, userId) >= 33554432; // 0x2000000
     }
     function isUserMember(groupId, userId) {
       //return exists(/databases/$(database)/documents/groups/$(groupId)/members/$(userId));
@@ -83,20 +83,23 @@ service cloud.firestore {
                       && userId == request.resource.data.userId && groupId == request.resource.data.groupId;
       allow delete: if request.auth.uid == userId;
     }
+
     match /groups/{groupId}/members/{userId}/private/{itemId} {
       allow read, write: if request.auth.uid == userId;
     }
-		match /groups/{groupId}/privileges/{userId} {
-      // NEVER allow the client write anything here.   
-    	allow read: if request.auth.uid == userId || isUserAdmin(groupId, request.auth.uid);
+    match /groups/{groupId}/members/{userId}/readonly/{itemId} {
+      allow read: if request.auth.uid == userId;
     }
-		match /groups/{groupId}/owners/{userId} {
-      // NEVER allow the client write anything here.   
+    match /groups/{groupId}/members/{userId}/secret/{itemId} {
       allow read, write: if false;
     }
+
     match /groups/{groupId}/invites/{inviteId} {
-      // Only Admin can access it (we use HTTP call to process it for new users).
-      allow read, write: if request.auth.uid != null && isUserAdmin(groupId, request.auth.uid)
+      allow create: if request.auth.uid != null 
+            && groupInfo(groupId).privileges.invitation.create <= userPrivilege(groupId, request.auth.uid)
+            && request.resource.data.privilege <= userPrivilege(groupId, request.auth.uid)
+            && request.resource.data.invitedBy == request.auth.uid;
+      allow read, update, delete: if isUserAdmin(groupId, request.auth.uid);
     }
 		match /groups/{groupId}/channels/{channelId} {
       allow read: if groupInfo(groupId).privileges.channel.read <= userPrivilege(groupId, request.auth.uid);

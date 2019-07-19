@@ -36,9 +36,7 @@ function Join(props) {
             email: user.email || "",
             groupId: group.groupId,
         }, {merge:true});
-        await refMember.collection("private").doc("history").set({
-            // empty object
-        }, {merge:true});
+
         callbacks.memberDidUpdate();
         //window.location.pathname = "/" + group.groupName;
     } catch(e) {

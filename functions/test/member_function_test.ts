@@ -22,17 +22,18 @@ describe('Member function test', () => {
     await wrapped(snap, {params: {groupId, userId}});
 
 
-    const data = (await admin_db.doc(`/groups/${groupId}/privileges/${userId}`).get()).data();
-    data.value.should.equal(1);
+    const historyDoc = (await admin_db.doc(`/groups/${groupId}/members/${userId}/private/history`).get());
+    historyDoc.exists.should.equal(true);
 
-    // subscriber membrt
+    // subscriber member
     // create subscription
     await admin_db.doc(`/groups/${groupId}/members/${userId}/secret/stripe`).set({subscription: {}})
 
     await wrapped(snap, {params: {groupId, userId}});
     
-    const data2 = (await admin_db.doc(`/groups/${groupId}/privileges/${userId}`).get()).data();
-    data2.value.should.equal(Privileges.subscriber);
+    const data2 = (await admin_db.doc(`/privileges/${userId}`).get()).data();
+    console.log(data2);
+    data2[groupId].should.equal(Privileges.subscriber);
     
   });
 });
