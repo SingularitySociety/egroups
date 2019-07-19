@@ -28,13 +28,14 @@ export const requestOnetimeSMS = async (db, data, context) => {
   }
   const userId = context.auth.uid;
   
-  const profile = (await db.doc(`/users/${userId}`).get()).data();
-  const phone = (profile && profile.phone) ? profile.phone : data.phone;
+  const phoneData = (await db.doc(`/users/${userId}/readonly/sms`).get()).data();
+  const phone = (phoneData && phoneData.phoneNumber) ? phoneData.phoneNumber : data.phone;
+  
   if (!phone) {
     return error_handler({error_type: logger.ErrorTypes.NoPhoneNumber});
   }
   
-  const phoneNumber = parsePhoneNumberFromString(phone)
+  const phoneNumber = parsePhoneNumberFromString(phone);
   if (!phoneNumber || !phoneNumber.isValid()) {
     return error_handler({error_type: logger.ErrorTypes.InvalidPhoneNumber });
   }
@@ -117,9 +118,13 @@ export const confirmOnetimeSMS = async (db, data, context) => {
   }
 
   // if ok
-  const userData = (await db.doc(`/users/${userId}`).get()).data();
-  if (utils.isNull(userData.phone)) {
-    await db.doc(`/users/${userId}`).set({phone: onetime.smscode.phone}, {merge:true})
+  const phoneData = (await db.doc(`/users/${userId}/readonly/sms`).get()).data();
+  if (utils.isNull(phoneData) || utils.isNull(phoneData.phoneNumber)) {
+    const created = new Date();
+    await db.doc(`/users/${userId}/readonly/sms`).set({
+      phoneNumber: onetime.smscode.phone,
+      created,
+    })
   }
   const uuid = UUID();
 
