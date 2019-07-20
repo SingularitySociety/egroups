@@ -52,6 +52,9 @@ service cloud.firestore {
         allow read: if request.auth.uid != null;
         allow write: if request.auth.uid == userId;
       }
+      match /readonly/{itemId} {
+        allow read: if request.auth.uid == userId;
+      }
     }
     match /privileges/{userId} {
       // NEVER allow the client to modify or delete. This is for the custom token.
