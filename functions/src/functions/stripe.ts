@@ -74,8 +74,11 @@ export const createSubscription = async (db, data, context) => {
   
   const onetime = (await db.doc(`/users/${userId}/secret/onetime`).get()).data()
 
-  if (!onetime || onetime.onetimetoken !== data.token || onetime.ttl > Math.round(Date.now()  / 1000) ) {
-    return error_handler({error_type: logger.ErrorTypes.OnetimeKey});
+  if (!onetime || onetime.supermario.token !== data.onetimetoken || onetime.ttl > Math.round(Date.now()  / 1000) ) {
+    return error_handler({
+      error_type: logger.ErrorTypes.OnetimeKey,
+      message: "no onetime key"
+    });
   }
   
   const {groupId, plan, displayName} = data;
