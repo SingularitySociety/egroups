@@ -1,17 +1,19 @@
 import * as utils from '../utils/utils';
-//const fs = require('fs');
-//const util = require('util');
-
-//const readFile = util.promisify(fs.readFile);
+const fs = require('fs');
 
 export const sendMail = async (db, data, context) => {
-  try {
-    //const { err, body } = readFile('../../templates/foo.txt');
-    const err = "foo";
-    const body = "bar";
-    await utils.sendMail("satoshi.nakajima@gmail.com", "test", body, body);
-    return { return:true, err };
-  } catch(e) {
-    return { return:false, e };
-  }
+  return new Promise((resolve, reject) => {
+    try {
+      fs.readFile('../../templates/foo.txt', async (err, body) => {
+        if (err) {
+          resolve({ return:false, step:2, err });
+        } else {
+          await utils.sendMail("satoshi.nakajima@gmail.com", "test", body, body);
+          resolve({ return:true });
+        }
+      });
+    } catch(e) {
+      resolve({ return:false, step:1, e });
+    }
+  });
 };
