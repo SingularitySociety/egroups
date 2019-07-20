@@ -54,7 +54,13 @@ function Invite(props) {
       });
       const path = `${window.location.href}/${doc.id}/${key}`;
       console.log(path);
-    } catch(e) {
+
+      const payload = { path };
+      const sendMail = firebase.functions().httpsCallable('sendMail');
+      const result = (await sendMail(payload)).data;
+      console.log("sendMail:", result);
+
+      } catch(e) {
       console.log(e);
       setError(<FormattedMessage id="error.failed" values={{error:e}}/>); 
     }

@@ -8,6 +8,7 @@ import * as stripeFunctions from './functions/stripe';
 import * as imageFunctions from './functions/image';
 import * as groupFunctions from './functions/group';
 import * as onetimesmsFunctions from './functions/onetimesms';
+import * as emailFunctions from './functions/email';
 
 import * as express from './functions/express';
 
@@ -153,4 +154,6 @@ export const generateThumbnail = functions.storage.object().onFinalize(async (ob
   return imageFunctions.generateThumbnail(db, object);
 });
 
-
+export const sendMail = functions.https.onCall(async (data, context) => {
+  return await emailFunctions.sendMail(db, data, context);
+});
