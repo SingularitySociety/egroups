@@ -4,7 +4,7 @@ const fs = require('fs');
 export const sendMail = async (db, data, context) => {
   return new Promise((resolve, reject) => {
     try {
-      fs.readFile('../../templates/foo.txt', async (err, body) => {
+      fs.readFile('./templates/foo.txt', 'utf8', async (err, body) => {
         if (err) {
           resolve({ return:false, step:2, err });
         } else {
