@@ -32,7 +32,6 @@ describe('Member function test', () => {
     await wrapped(snap, {params: {groupId, userId}});
     
     const data2 = (await admin_db.doc(`/privileges/${userId}`).get()).data();
-    console.log(data2);
     data2[groupId].should.equal(Privileges.subscriber);
     
   });
