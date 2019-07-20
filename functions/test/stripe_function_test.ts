@@ -244,7 +244,7 @@ describe('function test', () => {
   });
 
   it ('stripe create and update customer in JP test', async function() {
-    this.timeout(30000);
+    this.timeout(80000);
     const aliceUserId = "test_user_" + UUID();
     const groupId = "group_" + UUID();
     const groupId2 = "group_" + UUID();
