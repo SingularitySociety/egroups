@@ -321,13 +321,37 @@ describe('function test', () => {
     const res20 = await wrapped(req20, context);
     res20.result.should.equal(true)
 
-    const req21 = {groupId: groupId2,
-                  ip: "211.132.97.58",
-                  type: "company",
-                  accountData: stripeCustomAccountData.postData["company"]};
+    const req21 = {
+      groupId: groupId2,
+      ip: "211.132.97.58",
+      type: "company",
+      accountData: stripeCustomAccountData.postData["company"],
+      external_account: stripeCustomAccountData.bank_jp,
+    };
     const wrapped21 = test.wrap(index.updateCustomAccount);
     const res21 = await wrapped21(req21, context);
+    // console.log(res21)
     res21.result.should.equal(true)
+    console.log(JSON.stringify(res21, undefined, 1))
+
+    const accountId = res21.account.id;
+    const person = await stripeApi.createPerson(accountId, {
+      "dob": {
+        "day": 1,
+        "month": 8,
+        "year": 1980,
+      },
+      "phone": "+819012345678",
+      "first_name_kana": "ニホン",
+      "first_name_kanji": "日本",
+      "last_name_kana": "タロウ",
+      "last_name_kanji": "太郎",
+      "gender":"female",
+    });
+    console.log(person)
+
+    const res100 = await stripeApi.getCustomAccount(accountId);
+    console.log(res100);
     
   });
 
@@ -381,10 +405,12 @@ describe('function test', () => {
     // set bank
     const req4 = {groupId,
                   type: "individual",
+                  business_profile: stripeCustomAccountData.postDataUS["business_profile2"],
                   external_account: stripeCustomAccountData.bank_us};
     const res4 = await wrapped2(req4, context);
     res4.result.should.equal(true)
     res4.account.external_accounts.total_count.should.equal(1)
+    res4.account.payouts_enabled.should.equal(true)
     // error
     /*
       const req10 = {groupId,

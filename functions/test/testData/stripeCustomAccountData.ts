@@ -22,10 +22,10 @@ export const postData = {
       "year": 1980,
     },
     "phone": "+819012345678",
-    "first_name_kana": "名前（カナ）",
-    "first_name_kanji": "名前（漢字）",
-    "last_name_kana": "姓（カナ）",
-    "last_name_kanji": "姓（漢字）",
+    "first_name_kana": "ニホン",
+    "first_name_kanji": "日本",
+    "last_name_kana": "タロウ",
+    "last_name_kanji": "太郎",
     "gender":"female",
   },
   "invalid_individual": {
@@ -58,10 +58,10 @@ export const postData = {
     "gender":"female",
   },
   "company": {
-    // "business_name": "会社名",
-    // "business_name_kana": "会社名（カナ）",
-    // "business_name_kanji": "会社名（漢字）",
-    // "business_tax_id": "会社法人等番号",
+    "name": "会社名",
+    "name_kana": "ヤマダショウカイ",
+    "name_kanji": "山田商会",
+    "tax_id": "123123",
     "address_kana":{
       "postal_code": "1690051",
       "state": "トウキョウト",
@@ -140,6 +140,10 @@ export const postDataUS = {
   "business_profile": {
     "url": "https://to-kyo.to/",
     "name": "zero to one corp",
+  },
+  "business_profile2": {
+    "url": "https://to-kyo.to/",
+    "name": "hello web",
   },
   "company": {
     // "business_name": "会社名",
