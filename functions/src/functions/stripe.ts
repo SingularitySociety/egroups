@@ -347,7 +347,6 @@ export const updateCustomAccount = async (db, data, context) => {
     postData.external_account = external_account;
   }
 
-  console.log(postData)
   try {
     const account = await db.runTransaction(async (tr)=>{
       const apiResponse = await stripeApi.updateCustomAccount(accoundId, postData);

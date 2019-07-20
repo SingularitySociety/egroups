@@ -49,6 +49,16 @@ const createDataForSubscription = async (userId, groupId, price, currency, ) => 
   await stripeApi.createCustomer(visa_token, userId);
 }
 
+const createOnetime = async (userId) => {
+  const token = UUID().replace(/\-/g,"");
+  const supermario = {
+    ttl: Math.round(Date.now()  / 1000) + 3600,
+    token: token,
+  }
+  await admin_db.doc(`/users/${userId}/secret/onetime`).set({supermario});
+  return token;
+}
+
 describe('function test', () => {
   it ('stripe error test', async function() {
     const error = await stripe.createSubscription("", "", "");
@@ -123,13 +133,24 @@ describe('function test', () => {
     const currency = "jpy";
 
     await createDataForSubscription(aliceUserId, groupId, price, currency);
+
+    const onetimetoken = await createOnetime(aliceUserId);
     // end of create
 
     // run test
-    const req = {groupId, plan: {price, currency}};
+    const req_error = {groupId, plan: {price, currency}};
     const context = {auth: {uid: aliceUserId}};
     const wrapped = test.wrap(index.createSubscription);
-
+    const error_response = await wrapped(req_error, context);
+    error_response.result.should.equal(false)
+    error_response.error.type.should.equal("Error");
+    
+    const req_error2 = {groupId, plan: {price, currency}, onetimetoken: "abc123"};
+    const error_response2 = await wrapped(req_error2, context);
+    error_response2.result.should.equal(false)
+    error_response2.error.type.should.equal("OnetimeKey");
+    // run test
+    const req = {groupId, plan: {price, currency}, onetimetoken};
     await wrapped(req, context);
 
     const subscriptionRaw = (await admin_db.doc(`/groups/${groupId}/members/${aliceUserId}/secret/stripe`).get()).data()
