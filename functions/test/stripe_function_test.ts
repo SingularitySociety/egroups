@@ -9,8 +9,11 @@ describe('function test', () => {
     const error = await stripe.createSubscription("", "", "");
     error.should.deep.equal({
       result: false,
-      message: 'invalid request',
-      error_message: 'createSubscription error: no authentication info'
+      error: {
+        message: 'invalid request',
+        type: 'Error',
+        error_message: 'createSubscription error: no authentication info',
+      }        
     });
   })
 })
