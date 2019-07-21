@@ -34,8 +34,8 @@ export const sendMail = async (db, data, context) => {
     const htmlTemplate = await readTextFile(`./templates/${locale}/${template}.html`);
     const html = replaceValues(htmlTemplate, values);
     await utils.sendMail(email, subject, text, html);
-    return { return:true };
+    return { result:true };
   } catch(err) {
-    return { return:false, err };
+    return { result:false, message:"invalid template or language" };
   }
 };

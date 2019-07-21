@@ -69,8 +69,10 @@ function Invite(props) {
       const sendMail = firebase.functions().httpsCallable('sendMail');
       const result = (await sendMail(payload)).data;
       console.log("sendMail:", result);
-
-      } catch(e) {
+      if (!result.result) {
+        setError(<FormattedMessage id="error.failed" values={{error:result.message}}/>); 
+      }
+    } catch(e) {
       console.log(e);
       setError(<FormattedMessage id="error.failed" values={{error:e}}/>); 
     }
