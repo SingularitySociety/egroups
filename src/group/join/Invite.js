@@ -9,6 +9,7 @@ import Privileges from '../../const/Privileges';
 import PrivilegeOptions from '../../options/PrivilegeOptions';
 import Processing from '../../common/Processing';
 import ErrorInline from '../../common/ErrorInline';
+import validator from 'validator';
 
 const styles = theme => ({
   formControl: {
@@ -31,6 +32,7 @@ function Invite(props) {
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState(null);
   const [email, setEmail] = useState("");
+  const [validated, setValidated] = useState(false);
 
   useEffect(()=>{
     setTabbar("invite");
@@ -75,6 +77,7 @@ function Invite(props) {
 
   function handleEmailChange(e) {
     setEmail(e.currentTarget.value);
+    setValidated(validator.isEmail(e.currentTarget.value));
   }
 
   return <React.Fragment>
@@ -95,7 +98,7 @@ function Invite(props) {
         />
     </FormControl>
     <br/>
-    <Button variant="contained" onClick={handleInvite}>
+    <Button variant="contained" onClick={handleInvite} disabled={!validated}>
       <FormattedMessage id="invite" />
     </Button>
     <Processing active={processing} />
