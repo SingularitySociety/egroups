@@ -2,7 +2,7 @@ import * as utils from '../utils/utils';
 import * as logger from '../utils/logger';
 const fs = require('fs');
 
-const readTextFile = async (path) => {
+const readTextFile = async (path):Promise<any> => {
   return new Promise((resolve, reject) => {
     fs.readFile(path, 'utf8', async (err, str) => {
       if (err) {
@@ -27,10 +27,11 @@ export const sendMail = async (db, data, context) => {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
   try { 
-    const text = await readTextFile(`./templates/${locale}/${template}.txt`);
-    const html = await readTextFile(`./templates/${locale}/${template}.html`);
-    await utils.sendMail(email, subject, 
-      replaceValues(text, values), replaceValues(html, values));
+    const textTemplate = await readTextFile(`./templates/${locale}/${template}.txt`);
+    const text = replaceValues(textTemplate, values);
+    const htmlTemplate = await readTextFile(`./templates/${locale}/${template}.html`);
+    const html = replaceValues(htmlTemplate, values);
+    await utils.sendMail(email, subject, text, html);
     return { return:true };
   } catch(err) {
     return { return:false, err };
