@@ -57,7 +57,6 @@ function Invite(props) {
       console.log(path);
 
       const payload = { template:"invite", locale:"jp", 
-                        subject:"You are invited",
                         email: email,
                         values: {
                           path, 
