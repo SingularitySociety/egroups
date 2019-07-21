@@ -330,11 +330,11 @@ export const updateCustomAccount = async (db, data, context) => {
       business_type: type,
       company: accountData,
     }
-    if (business_profile) {
-      postData.business_profile = business_profile;
-    }
   } else {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+  }
+  if (business_profile) {
+    postData.business_profile = business_profile;
   }
   if (ip) {
     const date = Math.round(Date.now()  / 1000);
