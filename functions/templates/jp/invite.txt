@@ -1,4 +1,4 @@
-{invitedBy} is inviting you to {groupName}
+{invitedBy}さんから{groupName}へ招待されました
 
-Please click the link below to accept the invitation. 
+{groupName}に参加するには、下のリンクをクリックしてください。
 {path}
