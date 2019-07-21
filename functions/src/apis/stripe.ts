@@ -185,3 +185,13 @@ export const updateCustomAccount = async(accountId, data) => {
   const account =  await getStripe().accounts.update(accountId, data);
   return account;
 }
+
+export const getCustomAccount = async(accountId) => {
+  const account =  await getStripe().accounts.retrieve(accountId);
+  return account;
+}
+
+export const createPerson = async (accoundId, data) => {
+  const person = await getStripe().accounts.createPerson(accoundId, data);
+  return person;
+}
