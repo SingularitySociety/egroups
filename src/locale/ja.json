@@ -149,6 +149,7 @@
     "error.invalid.invite":"この招待状は無効、もしくは期限切れです",
     "error.cannot.join":"参加できませんでした ({error})",
     "error.failed":"失敗しました ({error})",
+    "invite.email.address":"招待者のメールアドレス",
 
     "JP":"日本",
     "US":"アメリカ合衆国",
@@ -167,7 +168,6 @@
     "invalid.phone.number":"無効な電話番号です",
     "invalid.digit6":"番号が一致しません",
     "registered.phone":"登録された電話番号: {phone}",
-    "invite.subject":"{invitedBy} さんより {groupName} に招待されました",
 
     "dummy":"dummy"
 }

@@ -148,6 +148,7 @@
     "error.invalid.invite":"This invitation is invalid or expired.",
     "error.cannot.join":"Failed to join ({error})",
     "error.failed":"Failed ({error})",
+    "invite.email.address":"Email address to send the invitation",
 
     "JP":"Japan",
     "US":"United States",
@@ -166,7 +167,6 @@
     "invalid.phone.number":"Invalid Phone Number",
     "invalid.digit6":"Number Mismatch",
     "registered.phone":"Registerd Phone Number: {phone}",
-    "invite.subject":"{invitedBy} is inviting you to {groupName}",
 
     "dummy":"dummy"
 }

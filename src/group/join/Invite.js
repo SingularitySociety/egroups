@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { FormControl, InputLabel, Select, Button } from '@material-ui/core';
+import { FormControl, InputLabel, Select, Button, TextField } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
@@ -13,7 +13,7 @@ import ErrorInline from '../../common/ErrorInline';
 const styles = theme => ({
   formControl: {
     width:theme.spacing(38),
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(1),
   },
 });
 
@@ -30,6 +30,7 @@ function Invite(props) {
   const [level, setLevel] = useState(Privileges.member);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState(null);
+  const [email, setEmail] = useState("");
 
   useEffect(()=>{
     setTabbar("invite");
@@ -57,6 +58,7 @@ function Invite(props) {
 
       const payload = { template:"invite", locale:"jp", 
                         subject:"You are invited",
+                        email: email,
                         values: {
                           path, 
                           groupName:group.title, 
@@ -72,12 +74,26 @@ function Invite(props) {
     setProcessing(false);
   }
 
+  function handleEmailChange(e) {
+    setEmail(e.currentTarget.value);
+  }
+
   return <React.Fragment>
     <FormControl className={classes.formControl}>
       <InputLabel><FormattedMessage id="invitation.privilege" /></InputLabel>
       <Select　native　value={level}　onChange={handleLevel}>
         <PrivilegeOptions noSubscriber={true} />
       </Select>
+    </FormControl>
+    <br/>
+    <FormControl className={classes.formControl}>
+      <TextField
+          label={<FormattedMessage id="invite.email.address" />}
+          className={classes.textField}
+          value={email}
+          onChange={handleEmailChange}
+          margin="normal"
+        />
     </FormControl>
     <br/>
     <Button variant="contained" onClick={handleInvite}>

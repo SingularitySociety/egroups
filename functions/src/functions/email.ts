@@ -22,14 +22,14 @@ const replaceValues = (text, values) => {
 
 export const sendMail = async (db, data, context) => {
   const error_handler = logger.error_response_handler({func: "sendMail", message: "invalid request"});
-  const { template, locale, values, subject } = data;
-  if (!template || !locale || !values || !subject) {
+  const { template, locale, values, email, subject } = data;
+  if (!template || !locale || !values || !email || !subject) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
   try { 
     const text = await readTextFile(`./templates/${locale}/${template}.txt`);
     const html = await readTextFile(`./templates/${locale}/${template}.html`);
-    await utils.sendMail("satoshi.nakajima@gmail.com", subject, 
+    await utils.sendMail(email, subject, 
       replaceValues(text, values), replaceValues(html, values));
     return { return:true };
   } catch(err) {
