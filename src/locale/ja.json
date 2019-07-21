@@ -167,6 +167,7 @@
     "invalid.phone.number":"無効な電話番号です",
     "invalid.digit6":"番号が一致しません",
     "registered.phone":"登録された電話番号: {phone}",
+    "invite.subject":"{invitedBy} さんより {groupName} に招待されました",
 
     "dummy":"dummy"
 }

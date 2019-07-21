@@ -1,4 +1,4 @@
-You are invited to {groupName}.
+{invitedBy} invited you to {groupName}.
 
 Please click the link below to accept the invitation. 
 {path}

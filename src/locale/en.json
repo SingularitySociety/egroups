@@ -166,6 +166,7 @@
     "invalid.phone.number":"Invalid Phone Number",
     "invalid.digit6":"Number Mismatch",
     "registered.phone":"Registerd Phone Number: {phone}",
+    "invite.subject":"{invitedBy} is inviting you to {groupName}",
 
     "dummy":"dummy"
 }

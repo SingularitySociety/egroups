@@ -25,7 +25,7 @@ function uuidv4() {
 }
 
 function Invite(props) {
-  const { callbacks, classes, db, group, user } = props;
+  const { callbacks, classes, db, group, user, member } = props;
   const setTabbar = callbacks.setTabbar;
   const [level, setLevel] = useState(Privileges.member);
   const [processing, setProcessing] = useState(false);
@@ -57,7 +57,10 @@ function Invite(props) {
 
       const payload = { template:"invite", locale:"jp", 
                         subject:"You are invited",
-                        values:{path, groupName:group.title},  };
+                        values: {
+                          path, 
+                          groupName:group.title, 
+                          invitedBy: member.displayName } };
       const sendMail = firebase.functions().httpsCallable('sendMail');
       const result = (await sendMail(payload)).data;
       console.log("sendMail:", result);
