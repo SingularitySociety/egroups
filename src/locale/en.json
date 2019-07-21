@@ -148,6 +148,7 @@
     "error.invalid.invite":"This invitation is invalid or expired.",
     "error.cannot.join":"Failed to join ({error})",
     "error.failed":"Failed ({error})",
+    "invite.email.address":"Email address to send the invitation",
 
     "JP":"Japan",
     "US":"United States",

@@ -1,0 +1,4 @@
+{invitedBy}さんから{groupName}へ招待されました
+
+{groupName}に参加するには、下のリンクをクリックしてください。
+{path}
