@@ -1,5 +1,6 @@
 import React from 'react';
-import Link from '@material-ui/core/Link';
+import MUILink from '@material-ui/core/Link';
+import { Link } from 'react-router-dom';
 import { CompositeDecorator } from 'draft-js';
 
 const linkStrategy = (contentBlock, callback, contentState) => {
@@ -19,9 +20,9 @@ const linkComponent = (props) => {
   const { contentState, entityKey } = props;
   const { url } = contentState.getEntity(entityKey).getData();
   return (
-    <Link
-      href={url}
-    >{props.children}</Link>
+    <MUILink component={Link} to={url}>
+      {props.children}
+    </MUILink>
   );
 };
 
