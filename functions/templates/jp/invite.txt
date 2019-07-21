@@ -1,0 +1,4 @@
+You are invited.
+
+Please click the link below to accept the invitation. 
+{path}

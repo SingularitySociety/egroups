@@ -55,7 +55,8 @@ function Invite(props) {
       const path = `${window.location.href}/${doc.id}/${key}`;
       console.log(path);
 
-      const payload = { template:"invite", locale:"jp", values:{path} };
+      const payload = { template:"invite", locale:"jp", values:{path}, 
+                        subject:"You are invited" };
       const sendMail = firebase.functions().httpsCallable('sendMail');
       const result = (await sendMail(payload)).data;
       console.log("sendMail:", result);
