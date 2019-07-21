@@ -43,6 +43,7 @@ function Invite(props) {
   }
 
   async function handleInvite(e) {
+    e.preventDefault();
     const key = uuidv4();
     setProcessing(true);
     try {
@@ -59,7 +60,6 @@ function Invite(props) {
       console.log(path);
 
       const language = navigator.language.split(/[-_]/)[0];  // language without region code
-      console.log(language);
       const payload = { template:"invite", locale:language, 
                         email: email,
                         values: {
@@ -82,7 +82,7 @@ function Invite(props) {
     setValidated(validator.isEmail(e.currentTarget.value));
   }
 
-  return <React.Fragment>
+  return <form>
     <FormControl className={classes.formControl}>
       <InputLabel><FormattedMessage id="invitation.privilege" /></InputLabel>
       <Select　native　value={level}　onChange={handleLevel}>
@@ -100,12 +100,12 @@ function Invite(props) {
         />
     </FormControl>
     <br/>
-    <Button variant="contained" onClick={handleInvite} disabled={!validated}>
+    <Button variant="contained" onClick={handleInvite} disabled={!validated} type="submit">
       <FormattedMessage id="invite" />
     </Button>
     <Processing active={processing} />
     <ErrorInline message={error} />
-  </React.Fragment>
+  </form>
 }
 
 Invite.propTypes = {
