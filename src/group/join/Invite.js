@@ -58,7 +58,9 @@ function Invite(props) {
       const path = `${window.location.href}/${doc.id}/${key}`;
       console.log(path);
 
-      const payload = { template:"invite", locale:"jp", 
+      const language = navigator.language.split(/[-_]/)[0];  // language without region code
+      console.log(language);
+      const payload = { template:"invite", locale:language, 
                         email: email,
                         values: {
                           path, 
