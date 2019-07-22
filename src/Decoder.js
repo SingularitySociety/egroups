@@ -1,16 +1,14 @@
-import React from 'react';
-import { Redirect } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import ProcessingPage from './ProcessingPage';
 
 // This module performs an "instruction" after the login,
 // such as posting a high score (when the user play before login). 
 // This is done by redirecting to "/login/cmd/{encoded}", 
 // where the encoded is an encoded "instruction" (a Json object). 
-class Decoder extends React.Component {
-  state={ redirect:null }
+function Decoder(props) {
+  const { user, match:{params:{encoded}} } = props;
 
-  async componentDidMount() {
-    const { user, match:{params:{encoded}} } = this.props;
+  useEffect(() => {
     const str = decodeURIComponent(encoded);
     console.log(str);
     const params = JSON.parse(str);
@@ -18,18 +16,11 @@ class Decoder extends React.Component {
     // App specific code should be written here. This is just a sample. 
     if (params.cmd === "redirect") {
       const { path } = params; 
-      console.log("redirecting to", path, "as", user.displayName);
-      //this.setState({redirect:path});
       window.location.pathname = path;
     }
-  }
+  }, [encoded]);
 
-  render() {
-    if (this.state.redirect) {
-        return <Redirect to={this.state.redirect} />
-    }
-    return <ProcessingPage user={this.props.user} />
-  }
+  return <ProcessingPage user={user} />
 }
 
 export default Decoder;
