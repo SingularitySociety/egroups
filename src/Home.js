@@ -32,7 +32,9 @@ function Home(props) {
           <Typography color="error" style={{marginBottom:"5%"}}>
             <FormattedMessage id="underconstruction.service" />
           </Typography>
-          <NewGroupButton user={user} db={db} />
+          {
+            user && <NewGroupButton user={user} db={db} />
+          }
           <GroupList user={user} db={db} groupIds={privileges ? Object.keys(privileges) : []}/>
           <Typography component="h2" variant="h3"><FormattedMessage id="groups.subs" /></Typography>
           <GroupList user={user} db={db} filter={(q)=>{return q.where("subscription", "==", true)}} />
