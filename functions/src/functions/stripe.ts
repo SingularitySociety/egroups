@@ -275,12 +275,12 @@ export const createCustomAccount = async (db, data, context) => {
   }
   
   const account = await db.runTransaction(async (tr)=>{
-    const accountData = await stripeApi.createCustomAccount(groupId, country);
-    tr.set(refAccont, {account: accountData})
+    const account_data = await stripeApi.createCustomAccount(groupId, country);
+    tr.set(refAccont, {account: account_data})
     tr.set(refAccontPrivate, {
-      account: stripeUtils.convCustomAccountData(accountData)
+      account: stripeUtils.convCustomAccountData(account_data)
     })
-    return accountData;
+    return account_data;
   });
   return {
     result: true,
@@ -298,11 +298,11 @@ export const updateCustomAccount = async (db, data, context) => {
   if (!data.type) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
-  if (!data.accountData && !data.external_account) {
+  if (!data.account_data && !data.external_account) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
   
-  const {groupId, type, accountData, ip, external_account, business_profile} = data;
+  const {groupId, type, account_data, personal_data, ip, external_account, business_profile} = data;
 
   const refAccont = db.doc(`groups/${groupId}/secret/account`);
   const refAccontPrivate = db.doc(`groups/${groupId}/private/account`);
@@ -311,7 +311,7 @@ export const updateCustomAccount = async (db, data, context) => {
   if (!existAccountData) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
-  const accoundId = existAccountData.account.id;
+  const accountId = existAccountData.account.id;
   const exist_business_type = existAccountData.account.business_type;
   
   if (exist_business_type && (exist_business_type !== type)) {
@@ -323,12 +323,12 @@ export const updateCustomAccount = async (db, data, context) => {
   if (type === "individual") {
     postData = {
       business_type: type,
-      individual: accountData,
+      individual: account_data,
     }
   } else if (type === "company") {
     postData = {
       business_type: type,
-      company: accountData,
+      company: account_data,
     }
   } else {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
@@ -346,21 +346,29 @@ export const updateCustomAccount = async (db, data, context) => {
   if (external_account) {
     postData.external_account = external_account;
   }
-
+  
   try {
-    const account = await db.runTransaction(async (tr)=>{
-      const apiResponse = await stripeApi.updateCustomAccount(accoundId, postData);
-      tr.set(refAccont, {account: apiResponse})
-      tr.set(refAccontPrivate, {
-        account: stripeUtils.convCustomAccountData(apiResponse)
-      })
-      return apiResponse;
-    });
+    const res: any = {};
+    const privateRes: any = {};
+    res.account = await stripeApi.updateCustomAccount(accountId, postData);
+    privateRes.account = stripeUtils.convCustomAccountData(res.account);
     
-    return {
-      result: true,
-      account: account,
-    };
+    if (type === "company" && personal_data) {
+      const list = await stripeApi.listPersons(accountId);
+      const personId = list.data[0].id;
+      res.person = await stripeApi.updatePerson(accountId, personId, personal_data);
+      privateRes.person = res.person;
+      
+      res.account = await stripeApi.getCustomAccount(accountId);
+      privateRes.account = stripeUtils.convCustomAccountData(res.account);
+    }
+
+    await db.runTransaction(async (tr)=>{
+      tr.set(refAccont, res)
+      tr.set(refAccontPrivate, privateRes)
+    });
+    res.result = true;
+    return res;
   } catch (e) {
     if (e.type && e.type.startsWith("Stripe")) {
       return error_handler({
