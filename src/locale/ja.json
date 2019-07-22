@@ -150,6 +150,7 @@
     "error.cannot.join":"参加できませんでした ({error})",
     "error.failed":"失敗しました ({error})",
     "invite.email.address":"招待者のメールアドレス",
+    "success.mail.sent":"メールを送信しました",
 
     "JP":"日本",
     "US":"アメリカ合衆国",

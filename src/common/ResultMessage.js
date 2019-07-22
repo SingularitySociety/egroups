@@ -8,16 +8,28 @@ const styles = theme => ({
     marginTop: theme.spacing(1),
     color: "red",
   },
+  message: {
+    marginTop: theme.spacing(1),
+    color: theme.palette.primary[500],
+  },
 });
 
 function ResultMessage(props) {
-  const { classes, error } = props;
-  return <React.Fragment>{
-    error &&     
-    <Typography className={classes.errorMessage} >
-      { error }
-    </Typography>
-  }</React.Fragment>
+  const { classes, error, message } = props;
+  return <React.Fragment>
+    {
+      error &&     
+      <Typography className={classes.errorMessage} >
+        { error }
+      </Typography>
+    }
+    {
+      message &&     
+      <Typography className={classes.message} >
+        { message }
+      </Typography>
+    }
+  </React.Fragment>
 }
 
 ResultMessage.propTypes = {

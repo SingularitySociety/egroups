@@ -149,6 +149,7 @@
     "error.cannot.join":"Failed to join ({error})",
     "error.failed":"Failed ({error})",
     "invite.email.address":"Email address to send the invitation",
+    "success.mail.sent":"The email was sent.",
 
     "JP":"Japan",
     "US":"United States",

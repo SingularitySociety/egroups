@@ -31,6 +31,7 @@ function Invite(props) {
   const [level, setLevel] = useState(Privileges.member);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
   const [email, setEmail] = useState("");
   const [validated, setValidated] = useState(false);
 
@@ -69,7 +70,9 @@ function Invite(props) {
       const sendMail = firebase.functions().httpsCallable('sendMail');
       const result = (await sendMail(payload)).data;
       console.log("sendMail:", result);
-      if (!result.result) {
+      if (result.result) {
+        setMessage(<FormattedMessage id="success.mail.sent" />);
+      } else {
         setError(<FormattedMessage id="error.failed" values={{error:result.message}}/>); 
       }
     } catch(e) {
@@ -106,7 +109,7 @@ function Invite(props) {
       <FormattedMessage id="invite" />
     </Button>
     <Processing active={processing} />
-    <ResultMessage error={error} />
+    <ResultMessage error={error} message={message} />
   </form>
 }
 
