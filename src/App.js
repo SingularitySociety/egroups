@@ -30,6 +30,74 @@ const messages = {
 firebase.initializeApp(config);
 const db = firebase.firestore();
 
+// messaging
+async function getExistTokens(uid) {
+  const tokens = await db.doc(`users/${uid}/private/tokens`).get();
+  return tokens.exists ? tokens.data().tokens : [];
+}
+async function updatePushToken(uid, newToken, oldToken=null) {
+  let exist_tokens = await getExistTokens(uid);
+  if (!exist_tokens.includes(newToken)) {
+    exist_tokens.push(newToken)
+  }
+  if (oldToken && exist_tokens.includes(oldToken)) {
+    exist_tokens = exist_tokens.filter((elem) => elem !== oldToken);
+  }
+  await updateToken(uid, exist_tokens);
+  console.log({exist_tokens:exist_tokens})
+}
+async function updateToken(uid, tokens) {
+  db.doc(`users/${uid}/private/tokens`).set({tokens: tokens});
+}
+function getPushToken(user) {
+  if (config.messageKey && firebase.messaging.isSupported()) {
+    const messaging = firebase.messaging();
+    messaging.usePublicVapidKey(config.messageKey);
+
+    const exist_token = localStorage.getItem("pushToken");
+    messaging.requestPermission().then(async () => {
+      if (exist_token) {
+        console.log("exist_token")
+        messaging.getToken().then(function(refreshedToken) {
+          updatePushToken(user.uid, refreshedToken, localStorage.getItem("pushToken"));
+          localStorage.setItem("pushToken", refreshedToken);
+        });
+        /*
+        const exist_tokens = await getExistTokens(user.uid);
+        if (!exist_tokens.includes(exist_token)) {
+          console.log("exist_token: but not on");
+          exist_tokens.push(exist_token);
+          updateToken(user.uid, exist_tokens);
+        }
+        */
+        // watch refresh
+        messaging.onTokenRefresh(function() {
+
+          messaging.getToken().then(function(refreshedToken) {
+            console.log("refresh token");
+            updatePushToken(user.uid, refreshedToken, localStorage.getItem("pushToken"));
+            localStorage.setItem("pushToken", refreshedToken);
+          });
+        });
+        // update force
+        // firebase.functions().httpsCallable('updateTopicSubscription');
+      } else {
+        // new token
+        console.log("new_token")
+        messaging.getToken().then((token) => {
+          updatePushToken(user.uid, token);
+        })
+      }
+    }).catch((err) => {
+      console.log('Unable to get permission to notify.', err);
+    });
+    messaging.onMessage((payload) => {
+      // todo implement if push message receive
+      console.log(payload);
+    });
+  }
+}
+
 class App extends React.Component {
   state = {};
   
@@ -62,80 +130,13 @@ class App extends React.Component {
             newValue.displayName = user.displayName;
           }
           await refUser.set(newValue, { merge: true });
-          this.getPushToken(user);
+          getPushToken(user);
         }
       }
     );
     
   }
-  // messaging
-  async getExistTokens(uid) {
-    const tokens = await db.doc(`users/${uid}/private/tokens`).get();
-    return tokens.exists ? tokens.data().tokens : [];
-  }
-  async updatePushToken(uid, newToken, oldToken=null) {
-    let exist_tokens = await this.getExistTokens(uid);
-    if (!exist_tokens.includes(newToken)) {
-      exist_tokens.push(newToken)
-    }
-    if (oldToken && exist_tokens.includes(oldToken)) {
-      exist_tokens = exist_tokens.filter((elem) => elem !== oldToken);
-    }
-    await this.updateToken(uid, exist_tokens);
-    console.log({exist_tokens:exist_tokens})
-  }
-  async updateToken(uid, tokens) {
-    db.doc(`users/${uid}/private/tokens`).set({tokens: tokens});
-  }
-  getPushToken(user) {
-    if (config.messageKey && firebase.messaging.isSupported()) {
-      const messaging = firebase.messaging();
-      messaging.usePublicVapidKey(config.messageKey);
 
-      const exist_token = localStorage.getItem("pushToken");
-      messaging.requestPermission().then(async () => {
-        if (exist_token) {
-          console.log("exist_token")
-          const self = this;
-          messaging.getToken().then(function(refreshedToken) {
-            self.updatePushToken(user.uid, refreshedToken, localStorage.getItem("pushToken"));
-            localStorage.setItem("pushToken", refreshedToken);
-          });
-          /*
-          const exist_tokens = await this.getExistTokens(user.uid);
-          if (!exist_tokens.includes(exist_token)) {
-            console.log("exist_token: but not on");
-            exist_tokens.push(exist_token);
-            this.updateToken(user.uid, exist_tokens);
-          }
-          */
-          // watch refresh
-          messaging.onTokenRefresh(function() {
-
-            messaging.getToken().then(function(refreshedToken) {
-              console.log("refresh token");
-              self.updatePushToken(user.uid, refreshedToken, localStorage.getItem("pushToken"));
-              localStorage.setItem("pushToken", refreshedToken);
-            });
-          });
-          // update force
-          // firebase.functions().httpsCallable('updateTopicSubscription');
-        } else {
-          // new token
-          console.log("new_token")
-          messaging.getToken().then((token) => {
-            this.updatePushToken(user.uid, token);
-          })
-        }
-      }).catch((err) => {
-        console.log('Unable to get permission to notify.', err);
-      });
-      messaging.onMessage((payload) => {
-        // todo implement if push message receive
-        console.log(payload);
-      });
-    }
-  }
 
   componentWillUnmount() {
     if (this.detachPrivilegesObserver) {
