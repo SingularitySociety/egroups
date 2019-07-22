@@ -60,7 +60,7 @@ render() {
               <MenuIcon />
             </IconButton>
             <Typography variant="h4" color="inherit" className={classes.grow}>
-              Yet Another Collaboration Tool
+              GluePass
             </Typography>
             {
                 (user) ?
