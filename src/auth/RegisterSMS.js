@@ -7,7 +7,7 @@ import Processing from '../common/Processing';
 import * as firebase from "firebase/app";
 import "firebase/functions";
 import CountryPhoneOptions from '../options/CountryPhoneOptions';
-import ErrorInline from '../common/ErrorInline';
+import ResultMessage from '../common/ResultMessage';
 
 const styles = theme => ({
   row: {
@@ -92,7 +92,7 @@ function RegisterSMS(props) {
           <FormattedMessage id="retry" />
         </Button>
         <Processing active={processing} />
-        <ErrorInline message={error} />
+        <ResultMessage error={error} />
       </div>
     </form>
   }
@@ -116,7 +116,7 @@ function RegisterSMS(props) {
               <FormattedMessage id="send.code" />
             </Button>
             <Processing active={processing} />
-            <ErrorInline message={error} />
+            <ResultMessage error={error} />
           </div>
         </React.Fragment>
       }
@@ -144,7 +144,7 @@ function RegisterSMS(props) {
         <FormattedMessage id="send.code" />
       </Button>
       <Processing active={processing} />
-      <ErrorInline message={error} />
+      <ResultMessage error={error} />
       </div>
   </form>
 }

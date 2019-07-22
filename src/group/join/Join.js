@@ -5,7 +5,7 @@ import { Typography, Button } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import PleaseLogin from './PleaseLogin';
-import ErrorInline from '../../common/ErrorInline';
+import ResultMessage from '../../common/ResultMessage';
 import Processing from '../../common/Processing';
 
 const styles = theme => ({
@@ -66,7 +66,7 @@ function Join(props) {
         </Typography>
         <Button variant="contained" onClick={handleJoin} className={classes.button}>Try to Join</Button>
         <Processing active={processing} />
-        <ErrorInline message={error} />
+        <ResultMessage error={error} />
     </div>
   }
   return <div>
@@ -76,7 +76,7 @@ function Join(props) {
       </Typography>
       <Button variant="contained" color="primary" onClick={handleJoin} className={classes.button}><FormattedMessage id="join" /></Button>
       <Processing active={processing} />
-      <ErrorInline message={error} />
+      <ResultMessage error={error} />
   </div>
 }
 

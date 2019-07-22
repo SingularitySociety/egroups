@@ -8,7 +8,7 @@ import "firebase/firestore";
 import Privileges from '../../const/Privileges';
 import PrivilegeOptions from '../../options/PrivilegeOptions';
 import Processing from '../../common/Processing';
-import ErrorInline from '../../common/ErrorInline';
+import ResultMessage from '../../common/ResultMessage';
 import validator from 'validator';
 
 const styles = theme => ({
@@ -106,7 +106,7 @@ function Invite(props) {
       <FormattedMessage id="invite" />
     </Button>
     <Processing active={processing} />
-    <ErrorInline message={error} />
+    <ResultMessage error={error} />
   </form>
 }
 

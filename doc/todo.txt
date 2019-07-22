@@ -9,6 +9,9 @@ Chat: Rich Text?
 
 Blog: Top Image?
 
+Subscribe: Default Currency
+ErrorMessage: Turn it into ResultMessage (error, success)
+
 Group: Invitation
 https://github.com/firebase/functions-samples/tree/master/quickstarts/email-users
 https://www.npmjs.com/package/email-templates#install

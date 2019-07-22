@@ -10,18 +10,18 @@ const styles = theme => ({
   },
 });
 
-function ErrorInline(props) {
-  const { classes, message } = props;
+function ResultMessage(props) {
+  const { classes, error } = props;
   return <React.Fragment>{
-    message &&     
+    error &&     
     <Typography className={classes.errorMessage} >
-      { message }
+      { error }
     </Typography>
   }</React.Fragment>
 }
 
-ErrorInline.propTypes = {
+ResultMessage.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ErrorInline);
+export default withStyles(styles)(ResultMessage);
