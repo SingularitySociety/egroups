@@ -5,6 +5,7 @@ import { FormGroup, TextField } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import useDocument from '../../common/useDocument';
+import AccessDenied from '../AccessDenied';
 
 const styles = theme => ({
   textField: {
@@ -19,7 +20,7 @@ const styles = theme => ({
 function Profile(props) {
   const { db, group, user, callbacks, match:{params:{userId}}, classes  } = props;
   const setTabbar = callbacks.setTabbar;
-  const [member] = useDocument(db, `groups/${group.groupId}/members/${userId}`);
+  const [member, err] = useDocument(db, `groups/${group.groupId}/members/${userId}`);
 
   useEffect(()=>{
     setTabbar("profile", `pr/${userId}`);
@@ -27,6 +28,9 @@ function Profile(props) {
 
   if (!user) {
       return <Redirect to={`/${group.groupName}`} />
+  }
+  if (err) {
+    return <AccessDenied />
   }
   if (!member) {
       return "";
