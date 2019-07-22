@@ -95,6 +95,19 @@ export const postData = {
       "line2": "ほげほげ"
     },
     "phone": "+819012345678",
+  },
+  "person": {
+    "dob": {
+      "day": 1,
+      "month": 8,
+      "year": 1980,
+    },
+    "phone": "+819012345678",
+    "first_name_kana": "コジン",
+    "first_name_kanji": "個人",
+    "last_name_kana": "タロウ",
+    "last_name_kanji": "太郎",
+    "gender":"female",
   }
 };
 

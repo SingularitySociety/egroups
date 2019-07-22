@@ -195,3 +195,13 @@ export const createPerson = async (accoundId, data) => {
   const person = await getStripe().accounts.createPerson(accoundId, data);
   return person;
 }
+
+export const updatePerson = async (accoundId, personId, data) => {
+  const person = await getStripe().accounts.updatePerson(accoundId, personId, data);
+  return person;
+}
+
+export const listPersons =  async (accoundId) => {
+  const lists = await getStripe().accounts.listPersons(accoundId);
+  return lists;
+}

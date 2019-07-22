@@ -200,7 +200,7 @@ describe('function test', () => {
   });
 
   it ('stripe cancel subscription test', async function() {
-    this.timeout(10000);
+    this.timeout(50000);
     const uuid = UUID();
 
     const aliceUserId = "test_customer_" + uuid;
@@ -275,7 +275,7 @@ describe('function test', () => {
     const req2 = {groupId,
                   ip: "211.132.97.58",
                   type: "individual",
-                  accountData: stripeCustomAccountData.postData["individual"]};
+                  account_data: stripeCustomAccountData.postData["individual"]};
     const wrapped2 = test.wrap(index.updateCustomAccount);
     const res2 = await wrapped2(req2, context);
     res2.result.should.equal(true)
@@ -283,7 +283,7 @@ describe('function test', () => {
 
     const req3 = {groupId,
                   type: "individual",
-                  accountData: stripeCustomAccountData.postData["individual"]};
+                  account_data: stripeCustomAccountData.postData["individual"]};
     const res3 = await wrapped2(req3, context);
     res3.result.should.equal(true)
 
@@ -296,18 +296,18 @@ describe('function test', () => {
     // error
     const req10 = {groupId,
                   type: "individual",
-                  accountData: stripeCustomAccountData.postData["invalid_individual"]};
+                  account_data: stripeCustomAccountData.postData["invalid_individual"]};
     const error_res = await wrapped2(req10, context);
     error_res.result.should.equal(false);
 
     const req11 = {groupId,
                   type: "company",
-                  accountData: stripeCustomAccountData.postData["individual"]};
+                  account_data: stripeCustomAccountData.postData["individual"]};
     const res11 = await wrapped2(req11, context);
     res11.result.should.equal(false)
 
     const req12 = {groupId,
-                  accountData: stripeCustomAccountData.postData["individual"]};
+                  account_data: stripeCustomAccountData.postData["individual"]};
     const res12 = await wrapped2(req12, context);
     res12.result.should.equal(false)
 
@@ -325,34 +325,18 @@ describe('function test', () => {
       groupId: groupId2,
       ip: "211.132.97.58",
       type: "company",
-      accountData: stripeCustomAccountData.postData["company"],
+      account_data: stripeCustomAccountData.postData["company"],
+      personal_data: stripeCustomAccountData.postData["person"],
       external_account: stripeCustomAccountData.bank_jp,
     };
     const wrapped21 = test.wrap(index.updateCustomAccount);
     const res21 = await wrapped21(req21, context);
-    // console.log(res21)
     res21.result.should.equal(true)
-    console.log(JSON.stringify(res21, undefined, 1))
-
-    const accountId = res21.account.id;
-    const person = await stripeApi.createPerson(accountId, {
-      "dob": {
-        "day": 1,
-        "month": 8,
-        "year": 1980,
-      },
-      "phone": "+819012345678",
-      "first_name_kana": "ニホン",
-      "first_name_kanji": "日本",
-      "last_name_kana": "タロウ",
-      "last_name_kanji": "太郎",
-      "gender":"female",
-    });
-    console.log(person)
-
-    const res100 = await stripeApi.getCustomAccount(accountId);
-    console.log(res100);
-    
+    res21.account.payouts_enabled.should.equal(true)
+    res21.person.should.to.be.a("object");
+    res21.account.should.to.be.a("object");
+    // const res100 = await stripeApi.getCustomAccount(accountId);
+    // console.log(res100);
   });
 
   it ('stripe create and update customer in US test', async function() {
@@ -390,7 +374,7 @@ describe('function test', () => {
     const req2 = {groupId,
                   ip: "211.132.97.58",
                   type: "individual",
-                  accountData: stripeCustomAccountData.postDataUS["individual"]};
+                  account_data: stripeCustomAccountData.postDataUS["individual"]};
     const wrapped2 = test.wrap(index.updateCustomAccount);
     const res2 = await wrapped2(req2, context);
     res2.result.should.equal(true)
@@ -398,7 +382,7 @@ describe('function test', () => {
     // just update personal data
     const req3 = {groupId,
                   type: "individual",
-                  accountData: stripeCustomAccountData.postDataUS["individual"]};
+                  account_data: stripeCustomAccountData.postDataUS["individual"]};
     const res3 = await wrapped2(req3, context);
     res3.result.should.equal(true)
 
@@ -415,18 +399,18 @@ describe('function test', () => {
     /*
       const req10 = {groupId,
       type: "individual",
-      accountData: stripeCustomAccountData.postDataUS["invalid_individual"]};
+      account_data: stripeCustomAccountData.postDataUS["invalid_individual"]};
       const error_res = await wrapped2(req10, context);
       error_res.result.should.equal(false);
     */
     const req11 = {groupId,
                    type: "company",
-                   accountData: stripeCustomAccountData.postDataUS["individual"]};
+                   account_data: stripeCustomAccountData.postDataUS["individual"]};
     const res11 = await wrapped2(req11, context);
     res11.result.should.equal(false)
     
     const req12 = {groupId,
-                  accountData: stripeCustomAccountData.postDataUS["individual"]};
+                  account_data: stripeCustomAccountData.postDataUS["individual"]};
     const res12 = await wrapped2(req12, context);
     res12.result.should.equal(false)
 
@@ -444,7 +428,7 @@ describe('function test', () => {
                    ip: "211.132.97.58",
                    type: "company",
                    business_profile: stripeCustomAccountData.postDataUS["business_profile"],
-                   accountData: stripeCustomAccountData.postDataUS["company"]};
+                   account_data: stripeCustomAccountData.postDataUS["company"]};
     const wrapped21 = test.wrap(index.updateCustomAccount);
     const res21 = await wrapped21(req21, context);
 
@@ -487,7 +471,7 @@ describe('function test', () => {
 
     const req2 = {groupId,
                   type: "individual",
-                  accountData: {}};
+                  account_data: {}};
     const wrapped2 = test.wrap(index.updateCustomAccount);
     const res2 = await wrapped2(req2, context);
     res2.result.should.equal(true)
