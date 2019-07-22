@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ChannelItem from './ChannelItem';
-import ErrorMessage from '../ErrorMessage';
+import AccessDenied from '../../common/AccessDenied';
 
 const styles = theme => ({
 });
@@ -26,15 +26,13 @@ function ChannelList(props) {
       });
       setList(list);
     }, (e) => {
-      console.log(e);
-      const error = { key: "warning.access.denied" };
-      setError(error);
+      setError(e);
     })
     return detacher;
   }, [db, group, limit]);
 
   if (error) {
-    return <ErrorMessage error={error} />
+    return <AccessDenied error={error} />
   }
   return <div>
     {

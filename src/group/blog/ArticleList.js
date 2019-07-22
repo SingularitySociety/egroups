@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ArticleItem from './ArticleItem';
-import ErrorMessage from '../ErrorMessage';
+import AccessDenied from '../../common/AccessDenied';
 
 const styles = theme => ({
 });
@@ -24,9 +24,7 @@ class ArticleList extends React.Component {
       });
       this.setState({list});
     }, (e) => {
-      console.log(e);
-      const error = { key: "warning.access.denied" };
-      this.setState({error});
+      this.setState({error:e});
     })
   }
   componentWillUnmount() {
@@ -37,7 +35,7 @@ class ArticleList extends React.Component {
     const { group, history, arp } = this.props;
     const context = { group, history, arp }
     if (error) {
-      return <ErrorMessage error={error} />
+      return <AccessDenied error={error} />
     }
     return <div>
       <div>

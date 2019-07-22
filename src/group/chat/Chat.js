@@ -7,7 +7,6 @@ import AccessDenied from '../../common/AccessDenied';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import Privileges from '../../const/Privileges';
-import ErrorMessage from '../ErrorMessage';
 import Messages from './Messages';
 import useDocument from '../../common/useDocument';
 
@@ -31,7 +30,7 @@ function Chat(props) {
   }
 
   if (err) {
-    return <ErrorMessage error={{ key: "warning.access.denied", channelId:channelId }} />
+    return <AccessDenied error={err} />
   }
   if (!channel) {
     return "";

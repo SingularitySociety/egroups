@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import ErrorMessage from '../ErrorMessage';
+import AccessDenied from '../../common/AccessDenied';
 import BlogArticle from './BlogArticle';
 import useDocument from '../../common/useDocument';
 
@@ -31,7 +31,7 @@ function Blog(props) {
   },[db, articleId, pathHistory, user]);
 
   if (err) {
-    return <ErrorMessage error={{key:"error.invalid.articleId", value:articleId}} />
+    return <AccessDenied error={err} />
   }
   
   if (!article) {

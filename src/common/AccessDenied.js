@@ -12,8 +12,10 @@ const styles = theme => ({
 
 const useStyles = makeStyles(styles);
 
-function AccessDenied() {
+function AccessDenied(props) {
   const classes = useStyles();
+  const {error} = props;
+  console.log("error:", error);
   return (
     <Typography component="h1" variant="h1" gutterBottom　className={ classes.errorMessage} >
       <FormattedMessage id="warning.access.denied" />
