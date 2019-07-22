@@ -130,6 +130,8 @@ export const postDataUS = {
     "first_name": "alex",
     "last_name": "rose",
     "gender":"female",
+    "id_number": "078-05-1120",
+    "ssn_last_4": "1120",
   },
   "invalid_individual": {
     "address":{
