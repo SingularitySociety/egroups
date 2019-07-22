@@ -5,7 +5,7 @@ import { FormGroup, TextField } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import useDocument from '../../common/useDocument';
-import AccessDenied from '../AccessDenied';
+import AccessDenied from '../../common/AccessDenied';
 
 const styles = theme => ({
   textField: {
