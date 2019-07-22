@@ -10,7 +10,7 @@ const styles = theme => ({
       marginTop: theme.spacing(10),
     },
 });
-const Processing = props => {
+const ProcessingPage = props => {
     const {classes} = props;
     return <React.Fragment>
       <Header user={props.user} />
@@ -22,8 +22,8 @@ const Processing = props => {
     </React.Fragment>
 };
 
-Processing.propTypes = {
+ProcessingPage.propTypes = {
     classes: PropTypes.object.isRequired,
   };
   
-  export default withStyles(styles)(Processing);
+  export default withStyles(styles)(ProcessingPage);

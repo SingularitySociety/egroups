@@ -14,7 +14,7 @@ import GroupHome from './blog/GroupHome';
 import Events from './Events';
 import MountDetector from '../common/MountDetector';
 import Account from './profile/Account';
-import Processing from '../Processing';
+import ProcessingPage from '../ProcessingPage';
 import Chat from './chat/Chat';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
@@ -170,7 +170,7 @@ class GroupRouter extends React.Component {
       return "";
     }
     if (!group) {
-      return <Processing />;
+      return <ProcessingPage />;
     }
     const options = Object.assign({}, themeOptions);
     options.palette = {

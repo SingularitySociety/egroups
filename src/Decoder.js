@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import Processing from './Processing';
+import ProcessingPage from './ProcessingPage';
 
 // This module performs an "instruction" after the login,
 // such as posting a high score (when the user play before login). 
@@ -28,7 +28,7 @@ class Decoder extends React.Component {
     if (this.state.redirect) {
         return <Redirect to={this.state.redirect} />
     }
-    return <Processing user={this.props.user} />
+    return <ProcessingPage user={this.props.user} />
   }
 }
 
