@@ -31,11 +31,8 @@ firebase.initializeApp(config);
 const db = firebase.firestore();
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { user:null, width:0, height:0 };
-    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
-  }
+  state = {};
+  
   componentDidMount() {
     this.unregisterAuthObserver = firebase.auth().onAuthStateChanged(
       async (user) => {
@@ -69,8 +66,6 @@ class App extends React.Component {
         }
       }
     );
-    this.updateWindowDimensions();
-    window.addEventListener('resize', this.updateWindowDimensions);
     
   }
   // messaging
@@ -147,13 +142,8 @@ class App extends React.Component {
       this.detachPrivilegesObserver();
     }
     this.unregisterAuthObserver();
-    window.removeEventListener('resize', this.updateWindowDimensions);
   }
   
-  updateWindowDimensions() {
-    this.setState({ width: window.innerWidth, height: window.innerHeight });
-  }
-
   render() {
     const { user, privileges } = this.state;
     const params = { user, db, privileges, rootGroup:appConfig.rootGroup };
