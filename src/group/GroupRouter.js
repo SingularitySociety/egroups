@@ -22,7 +22,7 @@ import Settings from './Settings';
 import Blog from './blog/Blog';
 import Articles from './blog/Articles';
 import Channels from './chat/Channels';
-import ErrorMessage from '../ErrorMessage';
+import ErrorPage from '../ErrorPage';
 import Listing from './profile/Listing';
 import Profile from './profile/Profile';
 import MemberHome from './MemberHome';
@@ -163,7 +163,7 @@ class GroupRouter extends React.Component {
     const privilege = (privileges && group && privileges[group.groupId]) || Privileges.guest;
 
     if (error) {
-      return <ErrorMessage error={error} />
+      return <ErrorPage error={error} />
     }
 
     if (groupName.length < 3) {

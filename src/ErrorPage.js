@@ -17,7 +17,7 @@ const styles = theme => ({
   },
 });
 
-function ComplexGrid(props) {
+function ErrorPage(props) {
   const { classes, user, error } = props;
   return (
     <React.Fragment>
@@ -33,8 +33,8 @@ function ComplexGrid(props) {
   );
 }
 
-ComplexGrid.propTypes = {
+ErrorPage.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ComplexGrid);
+export default withStyles(styles)(ErrorPage);
