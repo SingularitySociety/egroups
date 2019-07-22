@@ -7,7 +7,7 @@ import Processing from '../../common/Processing';
 import * as firebase from "firebase/app";
 import "firebase/functions";
 import PleaseLogin from './PleaseLogin';
-import ErrorMessage from '../../common/ErrorMessage';
+import ResultMessage from '../../common/ResultMessage';
 import { Redirect } from 'react-router-dom';
 
 const styles = theme => ({
@@ -65,7 +65,7 @@ function Invited(props) {
   }
 
   if (validated.result === false) {
-    return <ErrorMessage error={{key:validated.message}} />
+    return <ResultMessage error={<FormattedMessage id="error.invalid.invite"/>} />
   }
 
   if (!user) {

@@ -4,13 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 
 const styles = theme => ({
-  errorMessage: {
-    marginTop: theme.spacing(1),
-    color: "red",
-  },
   message: {
     marginTop: theme.spacing(1),
-    color: theme.palette.primary[500],
   },
 });
 
@@ -19,13 +14,13 @@ function ResultMessage(props) {
   return <React.Fragment>
     {
       error &&     
-      <Typography className={classes.errorMessage} >
+      <Typography color="error" className={classes.message} >
         { error }
       </Typography>
     }
     {
       message &&     
-      <Typography className={classes.message} >
+      <Typography color="primary" className={classes.message} >
         { message }
       </Typography>
     }
