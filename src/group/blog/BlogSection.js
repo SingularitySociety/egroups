@@ -55,7 +55,7 @@ function BlogSection(props) {
     const textWidth = readOnly ? 12 : 11;
     return <Grid container justify="center">
       <Grid item xs={textWidth} style={{padding:"1px"}}>
-        <MarkdownViewer resource={resource} useHtml={false} />
+        <MarkdownViewer resource={resource} />
       </Grid>
       { !readOnly &&
         <Grid item xs={1}>
