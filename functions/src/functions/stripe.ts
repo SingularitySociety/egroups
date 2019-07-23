@@ -392,13 +392,14 @@ export const customAccountFileUpload = async (db, data, context) => {
   if (error_response) {
     return error_response;
   }
-  //if (!groupData.subscription || !data.country) {
-  // return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
-  //}
+
+  if (!groupData.type || !data.country) {
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+  }
   const {groupId} = data;
 
   const refAccont = db.doc(`groups/${groupId}/secret/account`);
-  const refAccontPrivate = db.doc(`groups/${groupId}/private/account`);
+  // const refAccontPrivate = db.doc(`groups/${groupId}/private/account`);
 
   const existAccount = await refAccont.get();
   if (existAccount.exists) {
