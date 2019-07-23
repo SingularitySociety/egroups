@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ArticleList from './ArticleList';
@@ -13,14 +13,16 @@ import { Redirect } from 'react-router-dom';
 const styles = theme => ({
 });
 
-class Articles extends React.Component {
-  state = {};
-  componentDidMount() {
-    const { callbacks, arp } = this.props;
-    callbacks.setTabbar(arp.tabRoot);
-  }
-  createArticle = async (title) => {
-    const { db, group, user, arp } = this.props;
+function Articles(props) {
+  const { db, group, user, callbacks, arp, privilege, history } = props;
+  const setTabbar = callbacks.setTabbar;
+  const [redirect, setRedirect] = useState(null);
+
+  useEffect(()=>{
+    setTabbar(arp.tabRoot);
+  }, [setTabbar, arp]);
+
+  const createArticle = async (title) => {
     console.log(arp);
     const doc = await db.collection(`groups/${group.groupId}/${arp.collection}`).add({
       title,
@@ -30,29 +32,26 @@ class Articles extends React.Component {
       comment: group.privileges[arp.tabLeaf].comment, 
       sections: [], // ordered list of sectionIds
     });
-    this.setState({redirect:`/${group.groupName}/${arp.leaf}/${doc.id}`});
+    setRedirect(`/${group.groupName}/${arp.leaf}/${doc.id}`);
   }
-  render() {
-      const { user, db, group, history, arp, privilege } = this.props;
-      const { redirect } = this.state;
-      if (redirect) {
-        return <Redirect to={redirect} />
-      }
-      const context = { user, group, db, history, arp };
-      const canCreateNew = privilege 
-            >= ((group.privileges && group.privileges[arp.tabLeaf] && group.privileges[arp.tabLeaf].create) || Privileges.member);
-      return (
-        <Grid container justify="center" spacing={1}>
-          <Grid item xs={12} style={{textAlign:"center"}}>
-            { canCreateNew && <CreateNew createNew={ this.createArticle } 
-                action={<FormattedMessage id="create" />} label={<FormattedMessage id={arp.tabLeaf} />}/> }
-          </Grid>
-          <Grid item xs={12}>
-            <ArticleList {...context} />
-          </Grid>
-        </Grid>
-        )
-    }
+
+  if (redirect) {
+    return <Redirect to={redirect} />
+  }
+  const context = { user, group, db, history, arp };
+  const canCreateNew = privilege 
+        >= ((group.privileges && group.privileges[arp.tabLeaf] && group.privileges[arp.tabLeaf].create) || Privileges.member);
+  return (
+    <Grid container justify="center" spacing={1}>
+      <Grid item xs={12} style={{textAlign:"center"}}>
+        { canCreateNew && <CreateNew createNew={ createArticle } 
+            action={<FormattedMessage id="create" />} label={<FormattedMessage id={arp.tabLeaf} />}/> }
+      </Grid>
+      <Grid item xs={12}>
+        <ArticleList {...context} />
+      </Grid>
+    </Grid>
+  )
 }
 
 Articles.propTypes = {
