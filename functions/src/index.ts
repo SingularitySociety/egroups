@@ -61,6 +61,10 @@ export const updateCustomAccount = functions.https.onCall(async (data, context) 
   return await stripeFunctions.updateCustomAccount(db, data, context);
 });
 
+export const customAccountFileUpload = functions.https.onCall(async (data, context) => {
+  return await stripeFunctions.customAccountFileUpload(db, data, context);
+});
+
 export const createCustomer = functions.https.onCall(async (data, context) => {
   return await stripeFunctions.createCustomer(db, data, context);
 });
