@@ -161,7 +161,7 @@ export const retrieveSubscription = async (subscriptionId) => {
   }
 }
      
-export const createCustomAccount = async (groupId, country="JP") => {
+export const createCustomAccount = async (groupId, country="JP", business_type=null) => {
   try {
     const options: any = {
       type: "custom",
@@ -170,6 +170,9 @@ export const createCustomAccount = async (groupId, country="JP") => {
         groupId,
       },
     };
+    if (business_type) {
+      options.business_type = business_type;
+    }
     if (country === "US") {
       options.requested_capabilities = ["platform_payments"];
     }
