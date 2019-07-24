@@ -51,6 +51,7 @@
 
     "settings.theme.primary":"Primary Color",
     "settings.billing":"Billing",
+    "settings.bank":"Bank Info",
     "subscription.enabled":"Enable Subscription",
     "plan.name":"Plan Name",
     "plan.price":"Monthly Fee",
@@ -153,6 +154,10 @@
 
     "JP":"Japan",
     "US":"United States",
+
+    "business.type":"Business Type",
+    "Individual":"Individual",
+    "company":"Company",
 
     "billing.country":"Residence Country",
     "submit":"Submit",
