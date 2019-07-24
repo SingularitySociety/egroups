@@ -18,7 +18,8 @@ function BankAccount(props) {
   const setTabbar = callbacks.setTabbar;
   const [error, setError] = useState(null);
   const [processing, setProcessing] = useState(false);
-  const [account] = useOnDocument(db, `groups/${group.groupId}/private/account`);
+  const [account] = useOnDocument(db, `groups/${groupId}/private/account`);
+  const [gender, setGender] = useState("male");
 
   useEffect(()=>{
     setTabbar("settings.bank");
@@ -31,7 +32,7 @@ function BankAccount(props) {
   async function handleSubmit(e) {
     e.preventDefault();
     setProcessing(true);
-    const context = { groupId, type:"individual", account_data:{}};
+    const context = { groupId, type:"individual", account_data:{ gender }};
     const updateCustomAccount = firebase.functions().httpsCallable('updateCustomAccount');
     const result = (await updateCustomAccount(context)).data;
     console.log(result);
