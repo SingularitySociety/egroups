@@ -92,7 +92,7 @@ class MyAppBar extends React.Component {
 
     let tabs = []; 
     let crams = [];
-    let cramHome = (privilege > 0) ? this.cramHome : this.cramHomePage;
+    //let cramHome = (privilege > 0) ? this.cramHome : this.cramHomePage;
     switch(pageInfo.tabId) {
       case "home":
         tabs = [this.tabHome];
@@ -118,10 +118,10 @@ class MyAppBar extends React.Component {
         break;
 
       case "pages":
-        crams = [cramHome, this.cramPages];
+        crams = [this.cramHomePage, this.cramPages];
         break;
       case "page":
-        crams = [cramHome, this.cramPages, this.breadCram(pageInfo.tabId, pageInfo.path)];
+        crams = [this.cramHomePage, this.cramPages, this.breadCram(pageInfo.tabId, pageInfo.path)];
         break;
       case "page.settings":
         crams = [this.cramHome, this.cramPages, this.breadCram("page", pageInfo.path),
