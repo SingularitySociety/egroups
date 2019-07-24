@@ -30,6 +30,11 @@ service firebase.storage {
       allow write: if request.auth.uid == userId && isValidImage(request.resource);
       allow read;
     }
+    match /groups/{groupId}/owner/verification/front {
+      allow write: if request.auth.uid == userId
+      allow read: if false;
+    }
+
     match /{allPaths=**} {
       allow read, write: if false
     }
