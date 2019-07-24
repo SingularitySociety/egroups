@@ -14,6 +14,7 @@ const styles = theme => ({
 
 function BankAccount(props) {
   const { db, user, group, callbacks, classes, privilege } = props;
+  const groupId = group.groupId;
   const setTabbar = callbacks.setTabbar;
   const [error, setError] = useState(null);
   const [processing, setProcessing] = useState(false);
@@ -30,7 +31,7 @@ function BankAccount(props) {
   async function handleSubmit(e) {
     e.preventDefault();
     setProcessing(true);
-    const context = {};
+    const context = { groupId, type:"individual", account_data:{}};
     const updateCustomAccount = firebase.functions().httpsCallable('updateCustomAccount');
     const result = (await updateCustomAccount(context)).data;
     console.log(result);
