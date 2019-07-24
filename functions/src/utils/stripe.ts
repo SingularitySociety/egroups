@@ -1,5 +1,5 @@
 import * as merge from 'deepmerge';
-
+import * as utils from './utils'
 // ids
 export const getProductId = (groupId) => {
   return "prod_" + groupId;
@@ -67,8 +67,8 @@ export const convSubscriptionData = (stripeSubscriptionData) => {
 }
 
 export const convCustomAccountData = (customAccountData) => {
-  const {id, object, country, created, default_currency, metadata, requirements, type} = customAccountData;
-  return {id, object, country, created, default_currency, metadata, requirements, type};
+  const {id, object, country, created, default_currency, metadata, requirements, type, business_type, individual, company} = customAccountData;
+  return utils.removeUndegined({id, object, country, created, default_currency, metadata, requirements, type, business_type, individual, company});
 }
 
 export const convPersonData = (personData) => {

@@ -24,6 +24,15 @@ export const isNull = (suspect) => {
   return suspect === null || suspect === undefined;
 }
 
+export const removeUndegined = (object) => {
+  Object.keys(object).forEach((key) => {
+    if (object[key] === undefined) {
+      delete object[key]
+    }
+  });
+  return object;
+}
+
 const aws_smtp_id =  functions.config() && functions.config().aws &&  functions.config().aws.smtp_id || process.env.AWS_SMTP_USERNAME;
 const aws_smtp_passwd =  functions.config() && functions.config().aws &&  functions.config().aws.smtp_passwd || process.env.AWS_SMTP_PASSWORD;
 
