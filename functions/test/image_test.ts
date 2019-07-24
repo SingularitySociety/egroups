@@ -2,13 +2,6 @@
 import * as image from '../src/utils/image';
 import { should } from 'chai';
 import * as constant from '../src/utils/constant'
-import * as image_function from '../src/functions/image';
-
-import * as stripeApi from '../src/apis/stripe';
-import * as test_helper from "../../lib/test/rules/test_helper";
-
-import * as admin from 'firebase-admin';
-import * as UUID from "uuid-v4";
 
 should()
 
