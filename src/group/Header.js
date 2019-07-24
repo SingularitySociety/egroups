@@ -58,6 +58,7 @@ class MyAppBar extends React.Component {
     this.cramAccount = this.breadCram("account");
     this.cramSettings = this.breadCram("settings");
     this.cramSettingsBilling = this.breadCram("settings.billing", "settings/billing");
+    this.cramSettingsBank = this.breadCram("settings.bank", "settings/bank");
     this.cramListing = this.breadCram("listing");
     this.cramJoin = this.breadCram("join", null, "application");
     this.cramSubscribe = this.breadCram("subscribe");
@@ -152,6 +153,9 @@ class MyAppBar extends React.Component {
         break;
       case "settings.billing":
           crams = [this.cramHome, this.cramSettings, this.cramSettingsBilling];
+          break;
+      case "settings.bank":
+          crams = [this.cramHome, this.cramSettings, this.cramSettingsBilling, this.cramSettingsBank];
           break;
       case "join":
         crams = [this.cramHomePage, this.cramJoin];
