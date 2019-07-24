@@ -1,24 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
 });
 
-class Events extends React.Component {
-  componentDidMount() {
-    const { callbacks } = this.props;
-    callbacks.setTabbar("events");
-  }
-  render() {
-      return (
-          "Under Construction"
-        )
-  }
+function Events(props) {
+  const { callbacks } = props;
+  const setTabbar = callbacks.setTabbar;
+
+  useEffect(()=>{
+    setTabbar("events")
+  }, [setTabbar])
+
+  return (
+    <Typography>
+      "Under Construction"
+    </Typography>
+  )
 }
 
 Events.propTypes = {
-    classes: PropTypes.object.isRequired,
-  };
+  classes: PropTypes.object.isRequired,
+};
   
 export default withStyles(styles)(Events);
