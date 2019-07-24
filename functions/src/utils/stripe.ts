@@ -67,8 +67,8 @@ export const convSubscriptionData = (stripeSubscriptionData) => {
 }
 
 export const convCustomAccountData = (customAccountData) => {
-  const {id, object, country, created, default_currency, metadata, requirements, type, individual, company} = customAccountData;
-  return utils.removeUndegined({id, object, country, created, default_currency, metadata, requirements, type, individual, company});
+  const {id, object, country, created, default_currency, metadata, requirements, type, business_type, individual, company} = customAccountData;
+  return utils.removeUndegined({id, object, country, created, default_currency, metadata, requirements, type, business_type, individual, company});
 }
 
 export const convPersonData = (personData) => {
