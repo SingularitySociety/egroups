@@ -7,26 +7,6 @@ import * as image from '../utils/image';
 import * as constant from '../utils/constant';
 import * as stripeApi from '../apis/stripe';
 
-
-export const imageProcessing = async (db, object) => {
-  const filePath = object.name; // groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q
-  const contentType = object.contentType; // image/jpeg
-  
-  if (!contentType || !contentType.startsWith("image")) {
-    return false;
-  }
-  if (!filePath) {
-    return false;
-  }
-  if (image.validImagePath(filePath, constant.matchImagePaths)) {
-    return await generateThumbnail(db, object);
-  } else if (image.validImagePath(filePath, [constant.stripeVerificationPath])) {
-    return await uploadStripeImage(db, object, image.downloadFile, image.removeFile);
-  } else {
-    console.log("not hit", filePath);
-    return false;
-  }
-}
 export const generateThumbnail = async (db, object) => {
   const filePath = object.name; // groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q
   const paths = filePath.split("/");
@@ -141,4 +121,24 @@ export const deleteImage = async (snapshot, context) => {
     console.log("deleting section images failed:", path, error);
   }
   return true;
+}
+
+export const imageProcessing = async (db, object) => {
+  const filePath = object.name; // groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q
+  const contentType = object.contentType; // image/jpeg
+  
+  if (!contentType || !contentType.startsWith("image")) {
+    return false;
+  }
+  if (!filePath) {
+    return false;
+  }
+  if (image.validImagePath(filePath, constant.matchImagePaths)) {
+    return await generateThumbnail(db, object);
+  } else if (image.validImagePath(filePath, [constant.stripeVerificationPath])) {
+    return await uploadStripeImage(db, object, image.downloadFile, image.removeFile);
+  } else {
+    console.log("not hit", filePath);
+    return false;
+  }
 }
