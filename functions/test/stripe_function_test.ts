@@ -282,7 +282,7 @@ describe('function test', () => {
     
     const req2 = {groupId,
                   ip: "211.132.97.58",
-                  type: "individual",
+                  business_type: "individual",
                   account_data: stripeCustomAccountData.postData["individual"]};
     const wrappedUpdate = test.wrap(index.updateCustomAccount);
     const res2 = await wrappedUpdate(req2, context);
@@ -290,26 +290,26 @@ describe('function test', () => {
     
 
     const req3 = {groupId,
-                  type: "individual",
+                  business_type: "individual",
                   account_data: stripeCustomAccountData.postData["individual"]};
     const res3 = await wrappedUpdate(req3, context);
     res3.result.should.equal(true)
 
     const req4 = {groupId,
-                  type: "individual",
+                  business_type: "individual",
                   external_account: stripeCustomAccountData.bank_jp};
     const res4 = await wrappedUpdate(req4, context);
     res4.result.should.equal(true)
     res4.account.external_accounts.total_count.should.equal(1)
     // error
     const req10 = {groupId,
-                  type: "individual",
+                  business_type: "individual",
                   account_data: stripeCustomAccountData.postData["invalid_individual"]};
     const error_res = await wrappedUpdate(req10, context);
     error_res.result.should.equal(false);
 
     const req11 = {groupId,
-                  type: "company",
+                  business_type: "company",
                   account_data: stripeCustomAccountData.postData["individual"]};
     const res11 = await wrappedUpdate(req11, context);
     res11.result.should.equal(false)
@@ -354,7 +354,7 @@ describe('function test', () => {
     const req21 = {
       groupId: groupId,
       ip: "211.132.97.58",
-      type: "company",
+      business_type: "company",
       account_data: stripeCustomAccountData.postData["company"],
       personal_data: stripeCustomAccountData.postData["person"],
       external_account: stripeCustomAccountData.bank_jp,
@@ -408,7 +408,7 @@ describe('function test', () => {
     // set personal data
     const req2 = {groupId,
                   ip: "211.132.97.58",
-                  type: "individual",
+                  business_type: "individual",
                   account_data: stripeCustomAccountData.postDataUS["individual"]};
     const wrapped2 = test.wrap(index.updateCustomAccount);
     const res2 = await wrapped2(req2, context);
@@ -416,14 +416,14 @@ describe('function test', () => {
     
     // just update personal data
     const req3 = {groupId,
-                  type: "individual",
+                  business_type: "individual",
                   account_data: stripeCustomAccountData.postDataUS["individual"]};
     const res3 = await wrapped2(req3, context);
     res3.result.should.equal(true)
 
     // set bank
     const req4 = {groupId,
-                  type: "individual",
+                  business_type: "individual",
                   business_profile: stripeCustomAccountData.postDataUS["business_profile2"],
                   external_account: stripeCustomAccountData.bank_us};
     const res4 = await wrapped2(req4, context);
@@ -432,7 +432,7 @@ describe('function test', () => {
     res4.account.payouts_enabled.should.equal(true)
 
     const req11 = {groupId,
-                   type: "company",
+                   business_type: "company",
                    account_data: stripeCustomAccountData.postDataUS["individual"]};
     const res11 = await wrapped2(req11, context);
     res11.result.should.equal(false)
@@ -470,7 +470,7 @@ describe('function test', () => {
 
     const req21 = {groupId: groupId,
                    ip: "211.132.97.58",
-                   type: "company",
+                   business_type: "company",
                    business_profile: stripeCustomAccountData.postDataUS["business_profile"],
                    account_data: stripeCustomAccountData.postDataUS["company"]};
     const wrapped21 = test.wrap(index.updateCustomAccount);
@@ -481,7 +481,7 @@ describe('function test', () => {
     // set bank
     const req22 = {groupId: groupId,
                    ip: "211.132.97.58",
-                   type: "company",
+                   business_type: "company",
                    external_account: stripeCustomAccountData.bank_us};
     const res22 = await wrapped21(req22, context);
     res22.result.should.equal(true)
@@ -514,7 +514,7 @@ describe('function test', () => {
     secret.account.type.should.equal('custom' )
 
     const req2 = {groupId,
-                  type: "individual",
+                  business_type: "individual",
                   account_data: {}};
     const wrapped2 = test.wrap(index.updateCustomAccount);
     const res2 = await wrapped2(req2, context);

@@ -295,14 +295,14 @@ export const updateCustomAccount = async (db, data, context) => {
   if (error_response) {
     return error_response;
   }
-  if (!data.type) {
+  if (!data.business_type) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
   if (!data.account_data && !data.external_account) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
   
-  const {groupId, type, account_data, personal_data, ip, external_account, business_profile} = data;
+  const {groupId, business_type, account_data, personal_data, ip, external_account, business_profile} = data;
 
   const refAccont = db.doc(`groups/${groupId}/secret/account`);
   const refAccontPrivate = db.doc(`groups/${groupId}/private/account`);
@@ -314,20 +314,20 @@ export const updateCustomAccount = async (db, data, context) => {
   const accountId = existAccountData.account.id;
   const exist_business_type = existAccountData.account.business_type;
   
-  if (exist_business_type && (exist_business_type !== type)) {
+  if (exist_business_type && (exist_business_type !== business_type)) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
   
   // https://stripe.com/docs/api/accounts/update
   let postData:any = {};
-  if (type === "individual") {
+  if (business_type === "individual") {
     postData = {
-      business_type: type,
+      business_type,
       individual: account_data,
     }
-  } else if (type === "company") {
+  } else if (business_type === "company") {
     postData = {
-      business_type: type,
+      business_type,
       company: account_data,
     }
   } else {
@@ -353,7 +353,7 @@ export const updateCustomAccount = async (db, data, context) => {
     res.account = await stripeApi.updateCustomAccount(accountId, postData);
     privateRes.account = stripeUtils.convCustomAccountData(res.account);
     
-    if (type === "company" && personal_data) {
+    if (business_type === "company" && personal_data) {
       const list = await stripeApi.listPersons(accountId);
       const personId = list.data[0].id;
       const personData = await stripeApi.updatePerson(accountId, personId, personal_data);
