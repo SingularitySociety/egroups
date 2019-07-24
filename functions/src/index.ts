@@ -61,10 +61,6 @@ export const updateCustomAccount = functions.https.onCall(async (data, context) 
   return await stripeFunctions.updateCustomAccount(db, data, context);
 });
 
-export const customAccountFileUpload = functions.https.onCall(async (data, context) => {
-  return await stripeFunctions.customAccountFileUpload(db, data, context);
-});
-
 export const createCustomer = functions.https.onCall(async (data, context) => {
   return await stripeFunctions.createCustomer(db, data, context);
 });
@@ -154,8 +150,8 @@ export const updateTopicSubscription = functions.https.onCall(async (data, conte
   return {  };
 });
 
-export const generateThumbnail = functions.storage.object().onFinalize(async (object) => {
-  return imageFunctions.generateThumbnail(db, object);
+export const imageProcessing = functions.storage.object().onFinalize(async (object) => {
+  return imageFunctions.imageProcessing(db, object);
 });
 
 export const sendMail = functions.https.onCall(async (data, context) => {

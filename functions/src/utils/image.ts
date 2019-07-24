@@ -42,7 +42,18 @@ const runImageMagick = async (bucket, originalFilePath, dirName, fileName, size,
   }
   return false;
 }
+export const downloadFile = async (object) => {
+  const fileBucket = object.bucket; // e-group-test.appspot.com
+  const filePath = object.name; // groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q
 
+  // Download file from bucket.
+  const bucket = admin.storage().bucket(fileBucket);
+  const tempFilePath = path.join(os.tmpdir(), UUID()); // fileName is not unique
+
+  await bucket.file(filePath).download({destination: tempFilePath});
+  console.log('Image downloaded locally to', tempFilePath);
+  return tempFilePath;
+};
 export const createThumbnail = async (object, sizes) => {
   const fileBucket = object.bucket; // e-group-test.appspot.com
   const filePath = object.name; // groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q
@@ -52,19 +63,14 @@ export const createThumbnail = async (object, sizes) => {
     return false;
   }
   // Get the file name.
+  const dirName = path.dirname(filePath);
   const fileName = path.basename(filePath);
   if (fileName.startsWith(thumbPrefix)) {
     console.log('Already a Thumbnail.');
     return false;
   }
-  const dirName = path.dirname(filePath);
-  
-  // Download file from bucket.
   const bucket = admin.storage().bucket(fileBucket);
-  const tempFilePath = path.join(os.tmpdir(), UUID()); // fileName is not unique
-
-  await bucket.file(filePath).download({destination: tempFilePath});
-  console.log('Image downloaded locally to', tempFilePath);
+  const tempFilePath = await downloadFile(object);
 
   const ret = {}
   await utils.asyncForEach(sizes, async(size) => {
@@ -76,6 +82,16 @@ export const createThumbnail = async (object, sizes) => {
   fs.unlinkSync(tempFilePath);
   return ret;
 }
+
+export const removeFile = async (object) => {
+  const fileBucket = object.bucket; // e-group-test.appspot.com
+  const filePath = object.name; // groups/PMVo9s1nCVoncEwju4P3/articles/6jInK0L8x16NYzh6touo/E42IMDbmuOAZHYkxhO1Q
+
+  const bucket = admin.storage().bucket(fileBucket);
+  await bucket.file(filePath).delete();
+}
+    
+
 export const validImagePath = (filePath, matchPaths) => {
   const paths = filePath.split("/");
   return matchPaths.reduce((ret, matchPath) => {

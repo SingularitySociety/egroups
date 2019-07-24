@@ -71,6 +71,9 @@ export const convCustomAccountData = (customAccountData) => {
   return {id, object, country, created, default_currency, metadata, requirements, type};
 }
 
+export const convPersonData = (personData) => {
+  return personData;
+}
 // stripe log
 export const stripeActions = {
   customerCreated: 1,
