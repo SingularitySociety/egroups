@@ -20,29 +20,44 @@ function BankAccount(props) {
   const [processing, setProcessing] = useState(false);
   const [account] = useOnDocument(db, `groups/${groupId}/private/account`);
   const [account_data, setAccountData] = useState({});
+  const [business_type, setBusinessType] = useState(null);
 
   useEffect(()=>{
     setTabbar("settings.bank");
   }, [setTabbar]);
 
   useEffect(()=> {
-    console.log(account);
-    if (account) {
-      if (account.type=="individual") {
-        setAccountData(account.individual || {});
-      } else if (account.type=="business") {
-        setAccountData(account.individual || {});
+    if (account && account.account) {
+      console.log(account.account);
+      setBusinessType(account.account.business_type);
+      if (account.account.business_type === "company") {
+        console.log("company");
+        setAccountData(account.account.company || {});
+      } else if (account.account.business_type === "individual") {
+        console.log("individual");
+        setAccountData(account.account.individual || {});
       }
     }
   }, [account]);
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setError(null);
     setProcessing(true);
-    const context = { groupId, business_type:"individual", account_data};
-    const updateCustomAccount = firebase.functions().httpsCallable('updateCustomAccount');
+    console.log(account_data);
+    const context = { groupId, business_type, 
+        account_data:{
+          name:null,
+        }
+      };
+      console.log(context);
+      const updateCustomAccount = firebase.functions().httpsCallable('updateCustomAccount');
     const result = (await updateCustomAccount(context)).data;
     console.log(result);
+    if (!result.result) {
+      console.log("error", result.error.message);
+      setError(result.error.message);
+    }
     setProcessing(false);
   }
  
