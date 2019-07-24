@@ -356,11 +356,13 @@ export const updateCustomAccount = async (db, data, context) => {
     if (type === "company" && personal_data) {
       const list = await stripeApi.listPersons(accountId);
       const personId = list.data[0].id;
-      res.person = await stripeApi.updatePerson(accountId, personId, personal_data);
-      privateRes.person = res.person; // todo
+      const personData = await stripeApi.updatePerson(accountId, personId, personal_data);
+      res.person = personData;
+      privateRes.person = stripeUtils.convPersonData(personData);
       
-      res.account = await stripeApi.getCustomAccount(accountId);
-      privateRes.account = stripeUtils.convCustomAccountData(res.account);
+      const accountData = await stripeApi.getCustomAccount(accountId);
+      res.account = accountData;
+      privateRes.account = stripeUtils.convCustomAccountData(accountData);
     }
 
     await db.runTransaction(async (tr)=>{
@@ -385,52 +387,3 @@ export const updateCustomAccount = async (db, data, context) => {
   }
 };
 
-export const customAccountFileUpload = async (db, data, context) => {
-  const error_handler = logger.error_response_handler({func: "createCustomAccount", message: "invalid request"});
-
-  const [error_response, groupData] = await validateCustomAccountFunc(error_handler, db, data, context);
-  if (error_response) {
-    return error_response;
-  }
-
-  if (!groupData.type || !data.country) {
-    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
-  }
-  const {groupId} = data;
-
-  const refAccont = db.doc(`groups/${groupId}/secret/account`);
-  // const refAccontPrivate = db.doc(`groups/${groupId}/private/account`);
-
-  const existAccount = await refAccont.get();
-  if (existAccount.exists) {
-    return error_handler({error_type: logger.ErrorTypes.AlreadyDataExists});
-  }
-/*  
-  const accountId = existAccountData.account.id;
-
-  const fileRes = await stripeApi.getStripe().files.create(
-    {
-      purpose: 'identity_document',
-      file: {
-        data: fs.readFileSync(__dirname + '/testData/1.jpg'),
-        name: '1.jpg',
-        type: 'application/octet-stream'
-      }
-    },
-    {stripe_account: accountId}
-  );
-  const fileId = fileRes.id;
-  const postData: any = Object.assign({}, stripeCustomAccountData.postDataUS["individual"]);
-  
-  const postData = {
-    verification: {
-      document: {
-        front: fileId,
-      }
-    }
-  };
-*/  
-  return {
-    result: true,
-  };
-}

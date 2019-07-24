@@ -5,6 +5,7 @@ import * as stripeApi from '../src/apis/stripe';
 import * as stripeUtils from "../src/utils/stripe"
 
 import * as stripeCustomAccountData from './testData/stripeCustomAccountData'
+import * as image_function from '../src/functions/image';
 
 import { should } from 'chai';
 import * as UUID from "uuid-v4";
@@ -57,8 +58,16 @@ const createOnetime = async (userId) => {
   }
   await admin_db.doc(`/users/${userId}/secret/onetime`).set({supermario});
   return token;
+
 }
 
+const downloadFunc = (object) => {
+  const tmpFile = __dirname + '/testData/1.jpg';
+  return tmpFile;
+}
+const removeFile = (object) => {
+  console.log(object);
+}
 describe('function test', () => {
   it ('stripe error test', async function() {
     const error = await stripe.createSubscription("", "", "");
@@ -243,11 +252,10 @@ describe('function test', () => {
     
   });
 
-  it ('stripe create and update customer in JP test', async function() {
+  it ('stripe create and update customer in JP individual test', async function() {
     this.timeout(80000);
     const aliceUserId = "test_user_" + UUID();
     const groupId = "group_" + UUID();
-    const groupId2 = "group_" + UUID();
     const country = "JP";
     
     await admin_db.doc(`groups/${groupId}`).set({
@@ -257,9 +265,9 @@ describe('function test', () => {
     
     const req = {groupId, country};
     const context = {auth: {uid: aliceUserId}};
-    const wrapped = test.wrap(index.createCustomAccount);
+    const wrappedCreate = test.wrap(index.createCustomAccount);
 
-    const res = await wrapped(req, context);
+    const res = await wrappedCreate(req, context);
     res.result.should.equal(true)
     
     const secret = (await admin_db.doc(`groups/${groupId}/secret/account`).get()).data();
@@ -269,81 +277,108 @@ describe('function test', () => {
     secret.account.object.should.equal('account')
     secret.account.type.should.equal('custom' )
 
-    const res1 = await wrapped(req, context);
+    const res1 = await wrappedCreate(req, context);
     res1.result.should.equal(false)
     
     const req2 = {groupId,
                   ip: "211.132.97.58",
                   type: "individual",
                   account_data: stripeCustomAccountData.postData["individual"]};
-    const wrapped2 = test.wrap(index.updateCustomAccount);
-    const res2 = await wrapped2(req2, context);
+    const wrappedUpdate = test.wrap(index.updateCustomAccount);
+    const res2 = await wrappedUpdate(req2, context);
     res2.result.should.equal(true)
     
 
     const req3 = {groupId,
                   type: "individual",
                   account_data: stripeCustomAccountData.postData["individual"]};
-    const res3 = await wrapped2(req3, context);
+    const res3 = await wrappedUpdate(req3, context);
     res3.result.should.equal(true)
 
     const req4 = {groupId,
                   type: "individual",
                   external_account: stripeCustomAccountData.bank_jp};
-    const res4 = await wrapped2(req4, context);
+    const res4 = await wrappedUpdate(req4, context);
     res4.result.should.equal(true)
     res4.account.external_accounts.total_count.should.equal(1)
     // error
     const req10 = {groupId,
                   type: "individual",
                   account_data: stripeCustomAccountData.postData["invalid_individual"]};
-    const error_res = await wrapped2(req10, context);
+    const error_res = await wrappedUpdate(req10, context);
     error_res.result.should.equal(false);
 
     const req11 = {groupId,
                   type: "company",
                   account_data: stripeCustomAccountData.postData["individual"]};
-    const res11 = await wrapped2(req11, context);
+    const res11 = await wrappedUpdate(req11, context);
     res11.result.should.equal(false)
 
     const req12 = {groupId,
                   account_data: stripeCustomAccountData.postData["individual"]};
-    const res12 = await wrapped2(req12, context);
+    const res12 = await wrappedUpdate(req12, context);
     res12.result.should.equal(false)
 
-    // wip company
-    await admin_db.doc(`groups/${groupId2}`).set({
+    // upload file
+    const filePath = `groups/${groupId}/owner/verification/front`;
+    const object = {
+      name: filePath,
+    };
+    await image_function.uploadStripeImage(admin_db, object, downloadFunc, removeFile);
+
+  });
+
+  it ('stripe create and update customer in JP company test', async function() {
+    this.timeout(80000);
+    const aliceUserId = "test_user_" + UUID();
+    const groupId = "group_" + UUID();
+    const country = "JP";
+    
+    await admin_db.doc(`groups/${groupId}`).set({
+      owner: aliceUserId,
+      subscription: true,
+    })
+    
+    const context = {auth: {uid: aliceUserId}};
+    const wrappedCreate = test.wrap(index.createCustomAccount);
+
+    await admin_db.doc(`groups/${groupId}`).set({
       owner: aliceUserId,
       subscription: true,
     })
 
-    const req20 = {groupId: groupId2, country};
-    const res20 = await wrapped(req20, context);
+    const req20 = {groupId: groupId, country};
+    const res20 = await wrappedCreate(req20, context);
     res20.result.should.equal(true)
 
     const req21 = {
-      groupId: groupId2,
+      groupId: groupId,
       ip: "211.132.97.58",
       type: "company",
       account_data: stripeCustomAccountData.postData["company"],
       personal_data: stripeCustomAccountData.postData["person"],
       external_account: stripeCustomAccountData.bank_jp,
     };
-    const wrapped21 = test.wrap(index.updateCustomAccount);
-    const res21 = await wrapped21(req21, context);
+    const wrappedUpdate = test.wrap(index.updateCustomAccount);
+    const res21 = await wrappedUpdate(req21, context);
     res21.result.should.equal(true)
     res21.account.payouts_enabled.should.equal(true)
     res21.person.should.to.be.a("object");
     res21.account.should.to.be.a("object");
-    // const res100 = await stripeApi.getCustomAccount(accountId);
-    // console.log(res100);
+
+    // upload file
+    const filePath = `groups/${groupId}/owner/verification/front`;
+    const object = {
+      name: filePath,
+    };
+    await image_function.uploadStripeImage(admin_db, object, downloadFunc, removeFile);
+
   });
 
-  it ('stripe create and update customer in US test', async function() {
+  it ('stripe create and update customer in US individual test', async function() {
     this.timeout(30000);
     const aliceUserId = "test_user_" + UUID();
     const groupId = "group_" + UUID();
-    const groupId2 = "group_" + UUID();
     const country = "US";
     
     await admin_db.doc(`groups/${groupId}`).set({
@@ -395,14 +430,7 @@ describe('function test', () => {
     res4.result.should.equal(true)
     res4.account.external_accounts.total_count.should.equal(1)
     res4.account.payouts_enabled.should.equal(true)
-    // error
-    /*
-      const req10 = {groupId,
-      type: "individual",
-      account_data: stripeCustomAccountData.postDataUS["invalid_individual"]};
-      const error_res = await wrapped2(req10, context);
-      error_res.result.should.equal(false);
-    */
+
     const req11 = {groupId,
                    type: "company",
                    account_data: stripeCustomAccountData.postDataUS["individual"]};
@@ -414,17 +442,33 @@ describe('function test', () => {
     const res12 = await wrapped2(req12, context);
     res12.result.should.equal(false)
 
-    // wip company
-    await admin_db.doc(`groups/${groupId2}`).set({
+    // upload file
+    const filePath = `groups/${groupId}/owner/verification/front`;
+    const object = {
+      name: filePath,
+    };
+    await image_function.uploadStripeImage(admin_db, object, downloadFunc, removeFile);
+  })
+
+  it ('stripe create and update customer in US company test', async function() {
+    this.timeout(30000);
+    const aliceUserId = "test_user_" + UUID();
+    const groupId = "group_" + UUID();
+    const country = "US";
+    
+    await admin_db.doc(`groups/${groupId}`).set({
       owner: aliceUserId,
       subscription: true,
     })
-
-    const req20 = {groupId: groupId2, country};
+    
+    const context = {auth: {uid: aliceUserId}};
+    const wrapped = test.wrap(index.createCustomAccount);
+  
+    const req20 = {groupId: groupId, country};
     const res20 = await wrapped(req20, context);
     res20.result.should.equal(true)
 
-    const req21 = {groupId: groupId2,
+    const req21 = {groupId: groupId,
                    ip: "211.132.97.58",
                    type: "company",
                    business_profile: stripeCustomAccountData.postDataUS["business_profile"],
@@ -435,7 +479,7 @@ describe('function test', () => {
     res21.result.should.equal(true)
     res21.account.payouts_enabled.should.equal(false);
     // set bank
-    const req22 = {groupId: groupId2,
+    const req22 = {groupId: groupId,
                    ip: "211.132.97.58",
                    type: "company",
                    external_account: stripeCustomAccountData.bank_us};

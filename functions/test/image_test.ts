@@ -2,6 +2,13 @@
 import * as image from '../src/utils/image';
 import { should } from 'chai';
 import * as constant from '../src/utils/constant'
+import * as image_function from '../src/functions/image';
+
+import * as stripeApi from '../src/apis/stripe';
+import * as test_helper from "../../lib/test/rules/test_helper";
+
+import * as admin from 'firebase-admin';
+import * as UUID from "uuid-v4";
 
 should()
 
@@ -45,4 +52,38 @@ describe('image function', () => {
     const path3 = "groups/qIGkgW44sxFn78v8E0xu/members/deOR82RFtWMXTO9xULKYNzvADdq2/images/profile";
     image.getStorePath(path3).should.equal("groups/qIGkgW44sxFn78v8E0xu/members/deOR82RFtWMXTO9xULKYNzvADdq2");
   })  
+
+  it('should test getStorePath', async function() {
+    this.timeout(10000);
+    const groupId = UUID();
+
+    const customAccountResponse = await stripeApi.createCustomAccount(groupId); 
+    const accountId = customAccountResponse.id;
+    const res2 = await stripeApi.updateCustomAccount(customAccountResponse.id, {
+      business_type: "individual",
+    });
+
+    admin.initializeApp({});
+
+   
+    const admin_db = test_helper.adminDB();
+    await admin_db.doc(`groups/${groupId}`).set({
+      a: 1,
+    });
+    await admin_db.doc(`groups/${groupId}/secret/account`).set({
+      account: {
+        id: accountId,
+      },
+    });
+    const downloadFunc = (object) => {
+      const tmpFile = __dirname + '/testData/1.jpg';
+      return tmpFile;
+    }
+
+    const filePath = `groups/${groupId}/owner/verification/front`;
+    const object = {
+      name: filePath,
+    };
+    await image_function.uploadStripeImage(admin_db, object, downloadFunc);
+  });
 })
