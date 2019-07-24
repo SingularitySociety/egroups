@@ -257,13 +257,14 @@ describe('function test', () => {
     const aliceUserId = "test_user_" + UUID();
     const groupId = "group_" + UUID();
     const country = "JP";
+    const business_type = "individual";
     
     await admin_db.doc(`groups/${groupId}`).set({
       owner: aliceUserId,
       subscription: true,
     })
     
-    const req = {groupId, country};
+    const req = {groupId, country, business_type};
     const context = {auth: {uid: aliceUserId}};
     const wrappedCreate = test.wrap(index.createCustomAccount);
 
