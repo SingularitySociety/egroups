@@ -51,6 +51,7 @@
 
     "settings.theme.primary":"Primary Color",
     "settings.billing":"Billing",
+    "settings.account":"Account",
     "subscription.enabled":"Enable Subscription",
     "plan.name":"Plan Name",
     "plan.price":"Monthly Fee",
