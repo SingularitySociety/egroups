@@ -103,7 +103,8 @@ export const validImagePath = (filePath, matchPaths) => {
 
 export const getStorePath = (filePath) => {
   const paths = filePath.split("/");
-  if (validImagePath(filePath, [constant.articlePath])) {
+  if (validImagePath(filePath, [constant.articlePath]) 
+   || validImagePath(filePath, [constant.pagePath])) {
     return paths.slice(0,4).concat(["sections"], paths.slice(4,5)).join("/");
   } else if (validImagePath(filePath, [constant.groupProfilePath])) {
     return paths.slice(0,2).join("/");
