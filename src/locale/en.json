@@ -155,6 +155,10 @@
     "JP":"Japan",
     "US":"United States",
 
+    "business.type":"Business Type",
+    "Individual":"Individual",
+    "company":"Company",
+
     "billing.country":"Residence Country",
     "submit":"Submit",
     "retry":"Retry",

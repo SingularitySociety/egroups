@@ -155,6 +155,10 @@
 
     "JP":"日本",
     "US":"アメリカ合衆国",
+
+    "business.type":"事業形態",
+    "Individual":"個人事業",
+    "company":"企業",
     
     "billing.country":"拠点とする国",
     "submit":"送信",
