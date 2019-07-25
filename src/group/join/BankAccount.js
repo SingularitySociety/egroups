@@ -1,16 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography, Button } from '@material-ui/core';
+import { TextField, Button } from '@material-ui/core';
 import ResultMessage from '../../common/ResultMessage';
 import Processing from '../../common/Processing';
 import useOnDocument from '../../common/useOnDocument';
 import { FormattedMessage } from 'react-intl';
 import * as firebase from "firebase/app";
 import "firebase/functions";
+import AccountCompanyJP from './AccountCompanyJP';
 
 const styles = theme => ({
 });
+
+function smartCopy(obj) {
+  const copy = {};
+  const keys = Object.keys(obj);
+  return keys.reduce((values, key)=>{
+    const value = obj[key];
+    if (value !== null && value !== "" && typeof value !== 'boolean') {
+      values[key] = value;
+    }
+    return values;
+  }, {})
+}
 
 function BankAccount(props) {
   const { db, user, group, callbacks, classes, privilege } = props;
@@ -20,6 +33,7 @@ function BankAccount(props) {
   const [processing, setProcessing] = useState(false);
   const [account] = useOnDocument(db, `groups/${groupId}/private/account`);
   const [account_data, setAccountData] = useState({});
+  const [requirements, setRequirements] = useState({});
   const [business_type, setBusinessType] = useState(null);
 
   useEffect(()=>{
@@ -37,19 +51,31 @@ function BankAccount(props) {
         console.log("individual");
         setAccountData(account.account.individual || {});
       }
+
+      if (account.account.requirements) {
+        const array = account.account.requirements.eventually_due;
+        const reqs = array.reduce((values, key)=>{
+          values[key] = true;
+          return values;
+        }, {});
+        console.log(reqs);
+        setRequirements(reqs);
+      }
     }
   }, [account]);
+
+  function setAccountValue(name, value) {
+    const account_copy = smartCopy(account_data);
+    account_copy[name] = value;
+    setAccountData(account_copy);
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
     setProcessing(true);
-    console.log(account_data);
-    const context = { groupId, business_type, 
-        account_data:{
-          name:null,
-        }
-      };
+    console.log(account_data, smartCopy(account_data));
+    const context = { groupId, business_type, account_data:smartCopy(account_data) };
       console.log(context);
       const updateCustomAccount = firebase.functions().httpsCallable('updateCustomAccount');
     const result = (await updateCustomAccount(context)).data;
@@ -62,6 +88,7 @@ function BankAccount(props) {
   }
  
   return <form>
+      <AccountCompanyJP account_data={account_data} requirements={requirements} setAccountValue={setAccountValue} />
       <div>
         <Button variant="contained" type="submit" onClick={handleSubmit}>
           <FormattedMessage id="submit" />
