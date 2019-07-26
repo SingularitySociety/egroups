@@ -381,11 +381,12 @@ export const updateCustomAccount = async (db, data, context) => {
       const personData = await stripeApi.updatePerson(accountId, personId, personal_data);
       res.person = personData;
       privateRes.person = stripeUtils.convPersonData(personData);
-      
-      const accountData = await stripeApi.getCustomAccount(accountId);
-      res.account = accountData;
-      privateRes.account = stripeUtils.convCustomAccountData(accountData);
+
     }
+
+    const accountData = await stripeApi.getCustomAccount(accountId);
+    res.account = accountData;
+    privateRes.account = stripeUtils.convCustomAccountData(accountData);
 
     await db.runTransaction(async (tr)=>{
       tr.set(refAccont, res)
