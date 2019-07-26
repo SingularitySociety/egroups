@@ -32,7 +32,6 @@ function CountrySetting(props) {
   const { messages } = props.intl;
   const groupId = group.groupId;
 
-  console.log(account);
   const [country, setCountry] = useState((account && account.account && account.account.country) || "JP");
   const [business_type, setBusinessType] = useState((account && account.account && account.account.business_type) || "company");
   const [processing, setProcessing] = useState(false);

@@ -36,6 +36,9 @@ function BankAccount(props) {
   const [requirements, setRequirements] = useState({});
   const [business_type, setBusinessType] = useState(null);
 
+  console.log(account);
+  console.log(account_data);
+
   useEffect(()=>{
     setTabbar("settings.bank");
   }, [setTabbar]);

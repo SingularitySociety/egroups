@@ -126,11 +126,14 @@ function SettingsBilling(props) {
         <FormattedMessage id="cancel" />
         </Button>
       </div>
-      <div>
-        <Button variant="contained" color="primary" component={Link} to={`/${group.groupName}/settings/bank`}>
-          <FormattedMessage id="settings.bank" />
-        </Button>
-      </div>
+      {
+        plans.length>0 && isValid && !modified &&
+        <div>
+          <Button variant="contained" color="primary" component={Link} to={`/${group.groupName}/settings/bank`}>
+            <FormattedMessage id="settings.bank" />
+          </Button>
+        </div>
+      }
     </div>
   );
 }

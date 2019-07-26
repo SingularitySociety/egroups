@@ -15,11 +15,7 @@ const styles = theme => ({
 });
 
 function companyed(key) {
-  switch(key) {
-    case "name_kana": return "company.business_name_kana";
-    case "name_kanji": return "company.business_name_kanji"; 
-    default: return "company."+key;
-  }
+  return "individual."+key;
 }
 
 const address_keys = ["postal_code", "state", "city", "town", "line1", "line2"];
@@ -29,7 +25,7 @@ function AccountIndividualJP(props) {
   console.log(requirements);
   return (<React.Fragment>
     {
-      ["name", "name_kana", "name_kanji", "tax_id"].map((key)=>{
+      ["first_name_kana", "first_name_kanji", "last_name_kana", "last_name_kanji"].map((key)=>{
         const ckey = companyed(key);
         return <FormControl key={key} className={classes.form}>
         <TextField error={requirements[ckey]} label={<FormattedMessage id={ckey} />} 
@@ -40,7 +36,7 @@ function AccountIndividualJP(props) {
     }
     {
       address_keys.map((subkey)=>{
-        const ckey="company.address_kana."+subkey;
+        const ckey="individual.address_kana."+subkey;
         return <FormControl key={ckey} className={classes.form}>
         <TextField error={requirements[ckey]} label={<FormattedMessage id={ckey} />} 
               value={(account_data["address_kana"]||{})[subkey] || ""} 
@@ -50,7 +46,7 @@ function AccountIndividualJP(props) {
     }
     {
       address_keys.map((subkey)=>{
-        const ckey="company.address_kanji."+subkey;
+        const ckey="individual.address_kanji."+subkey;
         return <FormControl key={ckey} className={classes.form}>
         <TextField error={requirements[ckey]} label={<FormattedMessage id={ckey} />} 
               value={(account_data["address_kanji"]||{})[subkey] || ""} 
@@ -59,7 +55,7 @@ function AccountIndividualJP(props) {
       })      
     }
     <FormControl className={classes.form}>
-      <TextField error={requirements["company.phone"]} label={<FormattedMessage id="company.phone" />} 
+      <TextField error={requirements["individual.phone"]} label={<FormattedMessage id="individual.phone" />} 
             value={account_data.phone || ""} 
             onChange={(e)=>setAccountValue("phone", null, e.target.value)} />
     </FormControl>
