@@ -252,6 +252,26 @@ describe('function test', () => {
     
   });
 
+  it ('stripe create error test', async function() {
+    this.timeout(80000);
+    const aliceUserId = "test_user_" + UUID();
+    const groupId = "group_" + UUID();
+    const country = "JP";
+    const business_type = "hogehoge";
+    
+    await admin_db.doc(`groups/${groupId}`).set({
+      owner: aliceUserId,
+      subscription: true,
+    })
+    
+    const req = {groupId, country, business_type};
+    const context = {auth: {uid: aliceUserId}};
+    const wrappedCreate = test.wrap(index.createCustomAccount);
+
+    const res = await wrappedCreate(req, context);
+    res.result.should.equal(false)
+  });
+
   it ('stripe create and update customer in JP individual test', async function() {
     this.timeout(80000);
     const aliceUserId = "test_user_" + UUID();

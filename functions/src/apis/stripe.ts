@@ -162,26 +162,21 @@ export const retrieveSubscription = async (subscriptionId) => {
 }
      
 export const createCustomAccount = async (groupId, country="JP", business_type=null) => {
-  try {
-    const options: any = {
-      type: "custom",
-      country,
-      metadata: {
-        groupId,
-      },
-    };
-    if (business_type) {
-      options.business_type = business_type;
-    }
-    if (country === "US") {
-      options.requested_capabilities = ["platform_payments"];
-    }
-    const account =  await getStripe().accounts.create(options);
-    return account;
-  } catch (e) {
-    console.log(e);
-    return false;
+  const options: any = {
+    type: "custom",
+    country,
+    metadata: {
+      groupId,
+    },
+  };
+  if (business_type) {
+    options.business_type = business_type;
   }
+  if (country === "US") {
+    options.requested_capabilities = ["platform_payments"];
+  }
+  const account =  await getStripe().accounts.create(options);
+  return account;
 }
 
 export const updateCustomAccount = async(accountId, data) => {
