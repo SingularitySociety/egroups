@@ -35,6 +35,7 @@ import Privileges from '../const/Privileges';
 import Invite from './join/Invite';
 import Invited from './join/Invited';
 import {themeOptions} from '../theme.js';
+import BankAccount from './join/BankAccount';
 
 const colorMap = { red, pink, purple, deepPurple, indigo, 
   blue, lightBlue, cyan, teal, green,
@@ -211,6 +212,8 @@ class GroupRouter extends React.Component {
                 render={(props) => <Settings {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/settings/billing`} 
                 render={(props) => <SettingsBilling {...props} {...context} />} />
+              <Route exact path={`/${group.groupName}/settings/bank`} 
+                render={(props) => <BankAccount {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/channels`} render={(props) => <Channels {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/ch/:channelId`} render={(props) => <Chat {...props} {...context} />} />
               <Route exact path={`/${group.groupName}/ch/:channelId/settings`} render={(props) => <ChannelSettings {...props} {...context} />} />

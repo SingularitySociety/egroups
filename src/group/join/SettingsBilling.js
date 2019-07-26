@@ -7,6 +7,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { FormattedMessage } from 'react-intl';
 import CountrySetting from './CountrySetting';
 import useOnDocument from '../../common/useOnDocument';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
   subsciption: {
@@ -23,6 +24,7 @@ const styles = theme => ({
   },
   buttons: {
     marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(1),
   },
   button: {
     marginRight: theme.spacing(1),
@@ -122,6 +124,11 @@ function SettingsBilling(props) {
         </Button>
         <Button variant="contained" onClick={onCancel} className={classes.button} disabled={!modified}>
         <FormattedMessage id="cancel" />
+        </Button>
+      </div>
+      <div>
+        <Button variant="contained" color="primary" component={Link} to={`/${group.groupName}/settings/bank`}>
+          <FormattedMessage id="settings.bank" />
         </Button>
       </div>
     </div>
