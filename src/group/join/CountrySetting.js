@@ -38,9 +38,11 @@ function CountrySetting(props) {
   const [processing, setProcessing] = useState(false);
 
   function handleCountryChange(e) {
+    console.log(e.currentTarget.value);
     setCountry(e.currentTarget.value);
   }
   function handleBusinessTypeChange(e) {
+    console.log(e.currentTarget.value);
     setBusinessType(e.currentTarget.value);
   }
   async function onSubmit(e) {

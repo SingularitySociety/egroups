@@ -1,7 +1,7 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 
-const businessTypes = ["company", "Individual"];
+const businessTypes = ["company", "individual"];
 
 function BusinessType(props) {
   const { messages } = props.intl;
