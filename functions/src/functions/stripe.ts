@@ -279,7 +279,7 @@ export const createCustomAccount = async (db, data, context) => {
   if (!groupData.subscription || !data.country) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
-  if (data.business_type !== "company" && data.business_type !== "individual") {
+  if (data.business_type && (data.business_type !== "company" && data.business_type !== "individual")) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
   const {groupId, country, business_type} = data;
