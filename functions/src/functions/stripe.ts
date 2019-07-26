@@ -254,6 +254,21 @@ const validateCustomAccountFunc = async (error_handler, db, data, context) => {
   return [null, groupData];
 }
 
+const api_error_handler = (e, error_handler) => {
+  if (e.type && e.type.startsWith("Stripe")) {
+    return error_handler({
+      // error_type: logger.ErrorTypes.StripeValidation,
+      log: {
+        message: "stripeValidationError",
+        type: e.type,
+        stripe_message: e.message,
+      }
+    });
+  } else {
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+  }
+};
+
 export const createCustomAccount = async (db, data, context) => {
   const error_handler = logger.error_response_handler({func: "createCustomAccount", message: "invalid request"});
 
@@ -262,6 +277,9 @@ export const createCustomAccount = async (db, data, context) => {
     return error_response;
   }
   if (!groupData.subscription || !data.country) {
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+  }
+  if (data.business_type !== "company" && data.business_type !== "individual") {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
   const {groupId, country, business_type} = data;
@@ -274,17 +292,21 @@ export const createCustomAccount = async (db, data, context) => {
     return error_handler({error_type: logger.ErrorTypes.AlreadyDataExists});
   }
   
-  const account = await db.runTransaction(async (tr)=>{
-    const account_data = await stripeApi.createCustomAccount(groupId, country, business_type);
-    tr.set(refAccont, {account: account_data})
-    tr.set(refAccontPrivate, {
-      account: stripeUtils.convCustomAccountData(account_data)
-    })
-    return account_data;
-  });
-  return {
-    result: true,
-    account: stripeUtils.convCustomAccountData(account),
+  try {
+    const account = await db.runTransaction(async (tr)=>{
+      const account_data = await stripeApi.createCustomAccount(groupId, country, business_type);
+      tr.set(refAccont, {account: account_data})
+      tr.set(refAccontPrivate, {
+        account: stripeUtils.convCustomAccountData(account_data)
+      })
+      return account_data;
+    });
+    return {
+      result: true,
+      account: stripeUtils.convCustomAccountData(account),
+    }
+  } catch (e) {
+    return api_error_handler(e, error_handler);
   }
 }
 
@@ -372,18 +394,7 @@ export const updateCustomAccount = async (db, data, context) => {
     res.result = true;
     return res;
   } catch (e) {
-    if (e.type && e.type.startsWith("Stripe")) {
-      return error_handler({
-        // error_type: logger.ErrorTypes.StripeValidation,
-        log: {
-          message: "stripeValidationError",
-          type: e.type,
-          stripe_message: e.message,
-        }
-      });
-    } else {
-      return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
-    }
+    return api_error_handler(e, error_handler);
   }
 };
 
