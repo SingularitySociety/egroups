@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { TextField, Button } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import ResultMessage from '../../common/ResultMessage';
 import Processing from '../../common/Processing';
 import useOnDocument from '../../common/useOnDocument';
@@ -14,7 +14,6 @@ const styles = theme => ({
 });
 
 function smartCopy(obj) {
-  const copy = {};
   const keys = Object.keys(obj);
   return keys.reduce((values, key)=>{
     const value = obj[key];
@@ -26,7 +25,7 @@ function smartCopy(obj) {
 }
 
 function BankAccount(props) {
-  const { db, user, group, callbacks, classes, privilege } = props;
+  const { db, group, callbacks } = props;
   const groupId = group.groupId;
   const setTabbar = callbacks.setTabbar;
   const [error, setError] = useState(null);
