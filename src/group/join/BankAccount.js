@@ -63,9 +63,16 @@ function BankAccount(props) {
     }
   }, [account]);
 
-  function setAccountValue(name, value) {
+  function setAccountValue(key, subkey, value) {
     const account_copy = smartCopy(account_data);
-    account_copy[name] = value;
+    if (subkey) {
+      const obj = account_data[key] || {};
+      obj[subkey] = value;
+      account_copy[key] = obj;
+      console.log(account_copy);
+    } else {
+      account_copy[key] = value;
+    }
     setAccountData(account_copy);
   }
 

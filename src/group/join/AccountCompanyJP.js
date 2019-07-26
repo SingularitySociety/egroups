@@ -22,6 +22,8 @@ function companyed(key) {
   }
 }
 
+const address_keys = ["postal_code", "state", "city", "town", "line1", "line2"];
+
 function AccountCompanyJP(props) {
   const { classes, account_data, requirements, setAccountValue } = props;
   console.log(requirements);
@@ -32,14 +34,34 @@ function AccountCompanyJP(props) {
         return <FormControl key={key} className={classes.form}>
         <TextField error={requirements[ckey]} label={<FormattedMessage id={ckey} />} 
               value={account_data[key] || ""} 
-              onChange={(e)=>setAccountValue(key, e.target.value)} />
+              onChange={(e)=>setAccountValue(key, null, e.target.value)} />
+      </FormControl>
+      })      
+    }
+    {
+      address_keys.map((subkey)=>{
+        const ckey="company.address_kana."+subkey;
+        return <FormControl key={ckey} className={classes.form}>
+        <TextField error={requirements[ckey]} label={<FormattedMessage id={ckey} />} 
+              value={(account_data["address_kana"]||{})[subkey] || ""} 
+              onChange={(e)=>setAccountValue("address_kana", subkey, e.target.value)} />
+      </FormControl>
+      })      
+    }
+    {
+      address_keys.map((subkey)=>{
+        const ckey="company.address_kanji."+subkey;
+        return <FormControl key={ckey} className={classes.form}>
+        <TextField error={requirements[ckey]} label={<FormattedMessage id={ckey} />} 
+              value={(account_data["address_kanji"]||{})[subkey] || ""} 
+              onChange={(e)=>setAccountValue("address_kanji", subkey, e.target.value)} />
       </FormControl>
       })      
     }
     <FormControl className={classes.form}>
       <TextField error={requirements["company.phone"]} label={<FormattedMessage id="company.phone" />} 
             value={account_data.phone || ""} 
-            onChange={(e)=>setAccountValue("phone", e.target.value)} />
+            onChange={(e)=>setAccountValue("phone", null, e.target.value)} />
     </FormControl>
   </React.Fragment>)
 }
