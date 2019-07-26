@@ -32,8 +32,9 @@ function CountrySetting(props) {
   const { messages } = props.intl;
   const groupId = group.groupId;
 
-  const [country, setCountry] = useState("JP");
-  const [business_type, setBusinessType] = useState("company");
+  console.log(account);
+  const [country, setCountry] = useState((account && account.account && account.account.country) || "JP");
+  const [business_type, setBusinessType] = useState((account && account.account && account.account.business_type) || "company");
   const [processing, setProcessing] = useState(false);
 
   function handleCountryChange(e) {
@@ -55,7 +56,7 @@ function CountrySetting(props) {
   }
   if (account) {
     try {
-      const { account:{country} } = account;
+      //const { account:{country} } = account;
       return (<div>
         <FormGroup row>
           <TextField label={<FormattedMessage id="billing.country"/>} 

@@ -9,6 +9,7 @@ import { FormattedMessage } from 'react-intl';
 import * as firebase from "firebase/app";
 import "firebase/functions";
 import AccountCompanyJP from './AccountCompanyJP';
+import AccountIndividualJP from './AccountIndividualJP';
 
 const styles = theme => ({
 });
@@ -94,7 +95,14 @@ function BankAccount(props) {
   }
  
   return <form>
-      <AccountCompanyJP account_data={account_data} requirements={requirements} setAccountValue={setAccountValue} />
+      {
+         (business_type === "company") &&       
+           <AccountCompanyJP account_data={account_data} requirements={requirements} setAccountValue={setAccountValue} />
+      }
+      {
+         (business_type === "individual") &&       
+           <AccountIndividualJP account_data={account_data} requirements={requirements} setAccountValue={setAccountValue} />
+      }
       <div>
         <Button variant="contained" type="submit" onClick={handleSubmit}>
           <FormattedMessage id="submit" />
