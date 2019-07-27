@@ -67,8 +67,40 @@ export const convSubscriptionData = (stripeSubscriptionData) => {
 }
 
 export const convCustomAccountData = (customAccountData) => {
-  const {id, object, country, created, default_currency, metadata, requirements, type, business_type, individual, company} = customAccountData;
-  return utils.removeUndegined({id, object, country, created, default_currency, metadata, requirements, type, business_type, individual, company});
+  const {id, object, country, created, default_currency, external_accounts, metadata, payouts_enabled, requirements, type, business_type, individual, company} = customAccountData;
+  let verification, ssn_last_4_provided;
+  if (individual) {
+    delete individual.requirements;
+    delete individual.relationship;
+    delete individual.id;
+    delete individual.created;
+    delete individual.object;
+    delete individual.account;
+    delete individual.metadata;
+    delete individual.id_number_provided;
+    delete individual.status;
+
+    ssn_last_4_provided = individual.ssn_last_4_provided;
+    verification = individual.verification;
+    delete individual.ssn_last_4_provided;
+    delete individual.verification;
+  }
+  return utils.removeUndegined({id,
+				object,
+				country,
+				created,
+				default_currency,
+        external_accounts,
+				metadata,
+				requirements,
+				type,
+        payouts_enabled,
+				business_type,
+				individual,
+				company,
+				ssn_last_4_provided,
+				verification
+			       });
 }
 
 export const convPersonData = (personData) => {

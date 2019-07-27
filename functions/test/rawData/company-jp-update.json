@@ -1,0 +1,123 @@
+{
+ "id": "acct_1F0dxnBgahIkKaF6",
+ "object": "account",
+ "business_profile": {
+  "mcc": null,
+  "name": "会社名",
+  "product_description": null,
+  "support_address": null,
+  "support_email": null,
+  "support_phone": null,
+  "support_url": null,
+  "url": null
+ },
+ "business_type": "company",
+ "capabilities": {
+  "legacy_payments": "active"
+ },
+ "charges_enabled": true,
+ "company": {
+  "address_kana": {
+   "city": "シンジュクク",
+   "country": "JP",
+   "line1": "4-1",
+   "line2": "ホゲホゲ",
+   "postal_code": "1690051",
+   "state": "トウキョウト",
+   "town": "ニシワセダ３チョウメ"
+  },
+  "address_kanji": {
+   "city": "新宿区",
+   "country": "JP",
+   "line1": "4-1",
+   "line2": "ほげほげ",
+   "postal_code": "１６９００５１",
+   "state": "東京都",
+   "town": "西早稲田3"
+  },
+  "directors_provided": false,
+  "name": "会社名",
+  "name_kana": "ヤマダショウカイ",
+  "name_kanji": "山田商会",
+  "owners_provided": false,
+  "phone": "+819012345678",
+  "tax_id_provided": true
+ },
+ "country": "JP",
+ "created": 1564188043,
+ "default_currency": "jpy",
+ "details_submitted": false,
+ "email": null,
+ "external_accounts": {
+  "object": "list",
+  "data": [
+   {
+    "id": "ba_1F0dxqBgahIkKaF6d2jOqYm8",
+    "object": "bank_account",
+    "account": "acct_1F0dxnBgahIkKaF6",
+    "account_holder_name": "ヤマダハナコ",
+    "account_holder_type": "individual",
+    "bank_name": "STRIPE TEST BANK",
+    "country": "JP",
+    "currency": "jpy",
+    "default_for_currency": true,
+    "fingerprint": "CZNVIPBUyeBABnZH",
+    "last4": "2345",
+    "metadata": {},
+    "routing_number": "1100000",
+    "status": "new"
+   }
+  ],
+  "has_more": false,
+  "total_count": 1,
+  "url": "/v1/accounts/acct_1F0dxnBgahIkKaF6/external_accounts"
+ },
+ "metadata": {
+  "groupId": "group_93f57034-9f39-4f36-b617-d974411e95a5"
+ },
+ "payouts_enabled": true,
+ "requirements": {
+  "current_deadline": null,
+  "currently_due": [],
+  "disabled_reason": null,
+  "eventually_due": [],
+  "past_due": []
+ },
+ "settings": {
+  "branding": {
+   "icon": null,
+   "logo": null,
+   "primary_color": null
+  },
+  "card_payments": {
+   "decline_on": {
+    "avs_failure": false,
+    "cvc_failure": false
+   }
+  },
+  "dashboard": {
+   "display_name": null,
+   "timezone": "Etc/UTC"
+  },
+  "payments": {
+   "statement_descriptor": "",
+   "statement_descriptor_kana": null,
+   "statement_descriptor_kanji": null
+  },
+  "payouts": {
+   "debit_negative_balances": false,
+   "schedule": {
+    "delay_days": 4,
+    "interval": "weekly",
+    "weekly_anchor": "friday"
+   },
+   "statement_descriptor": null
+  }
+ },
+ "tos_acceptance": {
+  "date": 1564188045,
+  "ip": "211.132.97.58",
+  "user_agent": null
+ },
+ "type": "custom"
+}
