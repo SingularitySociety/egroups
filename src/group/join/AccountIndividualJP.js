@@ -9,6 +9,7 @@ const styles = theme => ({
     marginBottom: theme.spacing(1),
   },
   form: {
+    marginRight: theme.spacing(1),
     marginBottom: theme.spacing(1),
     width: '20rem',
   },
