@@ -18,6 +18,9 @@ function smartCopy(obj) {
   const keys = Object.keys(obj);
   return keys.reduce((values, key)=>{
     const value = obj[key];
+    if (key === 'dob' && typeof value === 'object' && value["day"] === null) {
+      return values;
+    }
     if (value !== null && value !== "" && typeof value !== 'boolean') {
       values[key] = value;
     }
@@ -84,8 +87,10 @@ function BankAccount(props) {
     e.preventDefault();
     setError(null);
     setProcessing(true);
-    console.log(account_data, smartCopy(account_data));
-    const context = { groupId, business_type, account_data:smartCopy(account_data) };
+    const account_copy = smartCopy(account_data);
+    console.log(account_data, account_copy);
+
+    const context = { groupId, business_type, account_data:account_copy };
       console.log(context);
       const updateCustomAccount = firebase.functions().httpsCallable('updateCustomAccount');
     const result = (await updateCustomAccount(context)).data;
