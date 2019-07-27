@@ -1,0 +1,67 @@
+{
+ "id": "acct_1F0dxnBgahIkKaF6",
+ "object": "account",
+ "country": "JP",
+ "created": 1564188043,
+ "default_currency": "jpy",
+ "metadata": {
+  "groupId": "group_93f57034-9f39-4f36-b617-d974411e95a5"
+ },
+ "requirements": {
+  "current_deadline": null,
+  "currently_due": [
+   "business_type",
+   "company.address_kana.city",
+   "company.address_kana.line1",
+   "company.address_kana.postal_code",
+   "company.address_kana.state",
+   "company.address_kana.town",
+   "company.address_kanji.city",
+   "company.address_kanji.line1",
+   "company.address_kanji.postal_code",
+   "company.address_kanji.state",
+   "company.address_kanji.town",
+   "company.phone",
+   "external_account",
+   "relationship.account_opener",
+   "tos_acceptance.date",
+   "tos_acceptance.ip"
+  ],
+  "disabled_reason": "requirements.past_due",
+  "eventually_due": [
+   "business_type",
+   "company.address_kana.city",
+   "company.address_kana.line1",
+   "company.address_kana.postal_code",
+   "company.address_kana.state",
+   "company.address_kana.town",
+   "company.address_kanji.city",
+   "company.address_kanji.line1",
+   "company.address_kanji.postal_code",
+   "company.address_kanji.state",
+   "company.address_kanji.town",
+   "company.phone",
+   "external_account",
+   "relationship.account_opener",
+   "tos_acceptance.date",
+   "tos_acceptance.ip"
+  ],
+  "past_due": [
+   "business_type",
+   "company.address_kana.city",
+   "company.address_kana.line1",
+   "company.address_kana.postal_code",
+   "company.address_kana.state",
+   "company.address_kana.town",
+   "company.address_kanji.city",
+   "company.address_kanji.line1",
+   "company.address_kanji.postal_code",
+   "company.address_kanji.state",
+   "company.address_kanji.town",
+   "company.phone",
+   "relationship.account_opener"
+  ]
+ },
+ "type": "custom",
+ "business_type": null
+}

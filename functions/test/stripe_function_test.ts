@@ -9,14 +9,16 @@ import * as image_function from '../src/functions/image';
 
 import { should } from 'chai';
 import * as UUID from "uuid-v4";
-import * as fs from 'fs';
+// import * as fs from 'fs';
 
 const {index, admin_db, test} = functions_test_helper.initFunctionsTest();
 
 should()
 
 export const writeFile = (name, json) => {
-  fs.writeFileSync(`${__dirname}/rawData/${name}`, JSON.stringify(json, undefined, 1));
+  // fs.writeFileSync(`${__dirname}/rawData/${name}.json`, JSON.stringify(json, undefined, 1));
+  JSON.stringify(json, undefined, 1);
+  JSON.stringify(name, undefined, 1);
 }
 
 const checkCancel = async (db, groupId, userId, cancel) => {
@@ -295,7 +297,8 @@ describe('function test', () => {
 
     const res = await wrappedCreate(req, context);
     res.result.should.equal(true)
-    console.log(res);
+    writeFile("individual-jp-create", res.account);
+
     const secret = (await admin_db.doc(`groups/${groupId}/secret/account`).get()).data();
     secret.account.country.should.equal('JP')
     secret.account.default_currency.should.equal('jpy')
@@ -305,7 +308,6 @@ describe('function test', () => {
 
     const res1 = await wrappedCreate(req, context);
     res1.result.should.equal(false)
-    writeFile("individual-create", res1.account);
     
     const req2 = {groupId,
                   ip: "211.132.97.58",
@@ -313,10 +315,8 @@ describe('function test', () => {
                   account_data: stripeCustomAccountData.postData["individual"]};
     const wrappedUpdate = test.wrap(index.updateCustomAccount);
     const res2 = await wrappedUpdate(req2, context);
-    writeFile("individual-update", res2.account);
+    writeFile("individual-jp-update", res2.account);
     res2.result.should.equal(true)
-    console.log(res2);
-    
 
     const req3 = {groupId,
                   business_type: "individual",
@@ -379,6 +379,7 @@ describe('function test', () => {
     const req20 = {groupId: groupId, country};
     const res20 = await wrappedCreate(req20, context);
     res20.result.should.equal(true)
+    writeFile("company-jp-create", res20.account);
 
     const req21 = {
       groupId: groupId,
@@ -394,7 +395,7 @@ describe('function test', () => {
     res21.account.payouts_enabled.should.equal(true)
     res21.person.should.to.be.a("object");
     res21.account.should.to.be.a("object");
-    writeFile("company-update", res21.account);
+    writeFile("company-jp-update", res21.account);
 
     // upload file
     const filePath = `groups/${groupId}/owner/verification/front`;
@@ -423,6 +424,7 @@ describe('function test', () => {
     // just create
     const res = await wrapped(req, context);
     res.result.should.equal(true)
+    writeFile("individual-us-create", res.account);
     
     const secret = (await admin_db.doc(`groups/${groupId}/secret/account`).get()).data();
     secret.account.country.should.equal('US')
@@ -443,6 +445,7 @@ describe('function test', () => {
     const wrapped2 = test.wrap(index.updateCustomAccount);
     const res2 = await wrapped2(req2, context);
     res2.result.should.equal(true)
+    writeFile("individual-us-update", res2.account);
     
     // just update personal data
     const req3 = {groupId,

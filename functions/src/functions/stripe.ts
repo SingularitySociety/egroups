@@ -372,8 +372,7 @@ export const updateCustomAccount = async (db, data, context) => {
   try {
     const res: any = {};
     const privateRes: any = {};
-    res.account = await stripeApi.updateCustomAccount(accountId, postData);
-    privateRes.account = stripeUtils.convCustomAccountData(res.account);
+    await stripeApi.updateCustomAccount(accountId, postData);
     
     if (business_type === "company" && personal_data) {
       const list = await stripeApi.listPersons(accountId);
@@ -381,7 +380,6 @@ export const updateCustomAccount = async (db, data, context) => {
       const personData = await stripeApi.updatePerson(accountId, personId, personal_data);
       res.person = personData;
       privateRes.person = stripeUtils.convPersonData(personData);
-
     }
 
     const accountData = await stripeApi.getCustomAccount(accountId);
