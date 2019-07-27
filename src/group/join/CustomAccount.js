@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
+import { Button, Paper, Tabs, Tab } from '@material-ui/core';
 import ResultMessage from '../../common/ResultMessage';
 import Processing from '../../common/Processing';
 import useOnDocument from '../../common/useOnDocument';
@@ -12,6 +12,9 @@ import AccountCompanyJP from './AccountCompanyJP';
 import AccountIndividualJP from './AccountIndividualJP';
 
 const styles = theme => ({
+  paper: {
+    marginBottom: theme.spacing(2),
+  }
 });
 
 function smartCopy(obj) {
@@ -28,8 +31,8 @@ function smartCopy(obj) {
   }, {})
 }
 
-function BankAccount(props) {
-  const { db, group, callbacks } = props;
+function CustomAccount(props) {
+  const { db, group, callbacks, classes } = props;
   const groupId = group.groupId;
   const setTabbar = callbacks.setTabbar;
   const [error, setError] = useState(null);
@@ -38,6 +41,7 @@ function BankAccount(props) {
   const [account_data, setAccountData] = useState({});
   const [requirements, setRequirements] = useState({});
   const [business_type, setBusinessType] = useState(null);
+  const [tabValue, setTabValue] = useState(0);
 
   console.log(account);
   console.log(account_data);
@@ -101,28 +105,52 @@ function BankAccount(props) {
     }
     setProcessing(false);
   }
+  function handleTabChange(e, newValue) {
+    setTabValue(newValue);
+  }
  
   return <form>
-      {
-         (business_type === "company") &&       
-           <AccountCompanyJP account_data={account_data} requirements={requirements} setAccountValue={setAccountValue} />
-      }
-      {
-         (business_type === "individual") &&       
-           <AccountIndividualJP account_data={account_data} requirements={requirements} setAccountValue={setAccountValue} />
-      }
+    {
+      (business_type === "company") ?
       <div>
-        <Button variant="contained" type="submit" onClick={handleSubmit}>
-          <FormattedMessage id="submit" />
-        </Button>
-        <Processing active={processing} />
-      </div>  
-      <ResultMessage error={error} />
+        <Paper square className={classes.paper}>
+        <Tabs value={tabValue} indicatorColor="primary" onChange={handleTabChange}>
+          <Tab label={<FormattedMessage id="tab.company"/>} />
+          <Tab label={<FormattedMessage id="tab.person"/>} />
+          <Tab label={<FormattedMessage id="tab.bank"/>} />
+        </Tabs>
+        </Paper>
+        {
+         (tabValue === 0) &&       
+           <AccountCompanyJP account_data={account_data} requirements={requirements} setAccountValue={setAccountValue} />
+        }
+      </div>
+      :
+      <div>
+        <Paper square className={classes.paper}>
+        <Tabs value={tabValue} indicatorColor="primary" onChange={handleTabChange}>
+          <Tab label={<FormattedMessage id="tab.individual"/>} />
+          <Tab label={<FormattedMessage id="tab.bank" />} />
+        </Tabs>
+        </Paper>
+        {
+         (tabValue === 0) &&       
+           <AccountIndividualJP account_data={account_data} requirements={requirements} setAccountValue={setAccountValue} />
+        }
+      </div>
+    }
+    <div>
+      <Button variant="contained" type="submit" onClick={handleSubmit}>
+        <FormattedMessage id="submit" />
+      </Button>
+      <Processing active={processing} />
+    </div>  
+    <ResultMessage error={error} />
   </form>
 }
 
-BankAccount.propTypes = {
+CustomAccount.propTypes = {
   classes: PropTypes.object.isRequired,
 };
   
-export default withStyles(styles)(BankAccount);
+export default withStyles(styles)(CustomAccount);
