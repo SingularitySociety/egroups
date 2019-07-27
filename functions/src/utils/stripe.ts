@@ -67,7 +67,7 @@ export const convSubscriptionData = (stripeSubscriptionData) => {
 }
 
 export const convCustomAccountData = (customAccountData) => {
-  const {id, object, country, created, default_currency, metadata, requirements, type, business_type, individual, company} = customAccountData;
+  const {id, object, country, created, default_currency, external_accounts, metadata, payouts_enabled, requirements, type, business_type, individual, company} = customAccountData;
   let verification, ssn_last_4_provided;
   if (individual) {
     delete individual.requirements;
@@ -90,9 +90,11 @@ export const convCustomAccountData = (customAccountData) => {
 				country,
 				created,
 				default_currency,
+        external_accounts,
 				metadata,
 				requirements,
 				type,
+        payouts_enabled,
 				business_type,
 				individual,
 				company,

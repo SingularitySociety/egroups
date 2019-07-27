@@ -390,8 +390,8 @@ export const updateCustomAccount = async (db, data, context) => {
       tr.set(refAccont, res)
       tr.set(refAccontPrivate, privateRes)
     });
-    res.result = true;
-    return res;
+    privateRes.result = true;
+    return privateRes;
   } catch (e) {
     return api_error_handler(e, error_handler);
   }
