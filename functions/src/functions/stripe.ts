@@ -256,13 +256,16 @@ const validateCustomAccountFunc = async (error_handler, db, data, context) => {
 
 const api_error_handler = (e, error_handler) => {
   if (e.type && e.type.startsWith("Stripe")) {
+    const log =  {
+      message: "stripeValidationError",
+      type: e.type,
+      stripe_message: e.message,
+    }
+
     return error_handler({
       // error_type: logger.ErrorTypes.StripeValidation,
-      log: {
-        message: "stripeValidationError",
-        type: e.type,
-        stripe_message: e.message,
-      }
+      log: log,
+      message: log,
     });
   } else {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});

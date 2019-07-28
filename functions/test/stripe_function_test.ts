@@ -404,6 +404,17 @@ describe('function test', () => {
     };
     await image_function.uploadStripeImage(admin_db, object, downloadFunc, removeFile);
 
+    // update failed and get error message from stripe
+    const req22 = {
+      groupId: groupId,
+      business_type: "company",
+      account_data: {name: "aaa"},
+    };
+    const res22 = await wrappedUpdate(req22, context);
+    // console.log(res22);
+    res22.result.should.equal(false)
+    res22.error.message.message.should.equal("stripeValidationError");
+    res22.error.message.type.should.equal("StripeInvalidRequestError");
   });
 
   it ('stripe create and update customer in US individual test', async function() {
