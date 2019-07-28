@@ -9,6 +9,7 @@ import { FormattedMessage } from 'react-intl';
 import * as firebase from "firebase/app";
 import "firebase/functions";
 import AccountCompanyJP from './AccountCompanyJP';
+import AccountCompanyPersonJP from './AccountCompanyPersonJP';
 import AccountIndividualJP from './AccountIndividualJP';
 
 const styles = theme => ({
@@ -39,6 +40,7 @@ function CustomAccount(props) {
   const [processing, setProcessing] = useState(false);
   const [account] = useOnDocument(db, `groups/${groupId}/private/account`);
   const [account_data, setAccountData] = useState({});
+  const [personal_data, setPersonalData] = useState({});
   const [requirements, setRequirements] = useState({});
   const [business_type, setBusinessType] = useState(null);
   const [tabValue, setTabValue] = useState(0);
@@ -87,6 +89,13 @@ function CustomAccount(props) {
     setAccountData(account_copy);
   }
 
+  function setPersonValue(key, value) {
+    console.log(key);
+    const new_data = smartCopy(personal_data);
+    new_data[key] = value;
+    setPersonalData(new_data);
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
@@ -95,6 +104,9 @@ function CustomAccount(props) {
     console.log(account_data, account_copy);
 
     const context = { groupId, business_type, account_data:account_copy };
+    if (business_type === "company" && Object.keys(personal_data).length>0) {
+      context.personal_data = personal_data;
+    }
       console.log(context);
       const updateCustomAccount = firebase.functions().httpsCallable('updateCustomAccount');
     const result = (await updateCustomAccount(context)).data;
@@ -121,8 +133,12 @@ function CustomAccount(props) {
         </Tabs>
         </Paper>
         {
-         (tabValue === 0) &&       
+          (tabValue === 0) &&       
            <AccountCompanyJP account_data={account_data} requirements={requirements} setAccountValue={setAccountValue} />
+        }
+        {
+           (tabValue === 1) &&       
+           <AccountCompanyPersonJP personal_data={personal_data} requirements={requirements} setPersonValue={setPersonValue} />
         }
       </div>
       :
