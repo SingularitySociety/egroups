@@ -13,9 +13,25 @@ const styles = theme => ({
     marginBottom: theme.spacing(1),
     width: '24rem',
   },
+  year: {
+    marginRight: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+    width: '10rem',
+  },
+  month: {
+    marginRight: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+    width: '5rem',
+  },
+  day: {
+    marginRight: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+    width: '5rem',
+  },
 });
 
 const person_keys = ["last_name_kana", "last_name_kanji", "first_name_kana", "first_name_kanji", "phone"];
+const dob_keys = ["year", "month", "day"];
 
 function AccountCompanyPersonJP(props) {
   const { classes, personal_data, requirements, setPersonValue } = props;
@@ -26,7 +42,17 @@ function AccountCompanyPersonJP(props) {
         return <FormControl key={key} className={classes.form}>
         <TextField label={<FormattedMessage id={"individual."+key} />} 
               value={personal_data[key] || ""} 
-              onChange={(e)=>setPersonValue(key, e.target.value)} />
+              onChange={(e)=>setPersonValue(key, null, e.target.value)} />
+      </FormControl>
+      })      
+    }
+    <br/>
+    {
+      dob_keys.map((key)=>{
+        return <FormControl key={key} className={classes[key]}>
+        <TextField label={<FormattedMessage id={"individual.dob."+key} />} 
+              value={(personal_data.dob && personal_data.dob[key]) || ""} 
+              onChange={(e)=>setPersonValue("dob", key, e.target.value)} />
       </FormControl>
       })      
     }

@@ -77,22 +77,29 @@ function CustomAccount(props) {
   }, [account]);
 
   function setAccountValue(key, subkey, value) {
-    const account_copy = smartCopy(account_data);
+    const new_data = smartCopy(account_data);
     if (subkey) {
       const obj = account_data[key] || {};
       obj[subkey] = value;
-      account_copy[key] = obj;
-      console.log(account_copy);
+      new_data[key] = obj;
+      console.log(obj);
     } else {
-      account_copy[key] = value;
+      new_data[key] = value;
     }
-    setAccountData(account_copy);
+    setAccountData(new_data);
   }
 
-  function setPersonValue(key, value) {
-    console.log(key);
+  function setPersonValue(key, subkey, value) {
     const new_data = smartCopy(personal_data);
-    new_data[key] = value;
+    if (subkey) {
+      const obj = personal_data[key] || {};
+      obj[subkey] = value;
+      new_data[key] = obj;
+      console.log(obj);
+    } else {
+      new_data[key] = value;
+    }
+    console.log(new_data);
     setPersonalData(new_data);
   }
 
