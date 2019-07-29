@@ -33,6 +33,17 @@ const styles = theme => ({
 
 const person_keys = ["last_name_kana", "last_name_kanji", "first_name_kana", "first_name_kanji", "phone"];
 const dob_keys = ["year", "month", "day"];
+const person_keys_all = ["last_name_kana", "last_name_kanji", "first_name_kana", "first_name_kanji", "phone", "dob", "gender"];
+
+export function extract_personal_dataJP(person) {
+  return person_keys_all.reduce((values, key) => {
+    const value = person[key];
+    if (value) {
+      values[key] = value;
+    }
+    return values;
+  }, {});
+}
 
 function AccountCompanyPersonJP(props) {
   const { classes, personal_data, setPersonValue } = props;
@@ -59,7 +70,7 @@ function AccountCompanyPersonJP(props) {
     }
     <FormControl className={classes.form}>
       <InputLabel><FormattedMessage id="gender" /></InputLabel>
-      <Select native value={personal_data["gender"] || "female"} 　onChange={(e)=>setPersonValue("gender", null, e.target.value)} >
+      <Select native value={personal_data["gender"] || "please.specify"} onChange={(e)=>setPersonValue("gender", null, e.target.value)} >
         <GenderOptions />
       </Select>
     </FormControl>

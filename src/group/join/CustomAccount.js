@@ -9,7 +9,7 @@ import { FormattedMessage } from 'react-intl';
 import * as firebase from "firebase/app";
 import "firebase/functions";
 import AccountCompanyJP from './AccountCompanyJP';
-import AccountCompanyPersonJP from './AccountCompanyPersonJP';
+import AccountCompanyPersonJP, {extract_personal_dataJP} from './AccountCompanyPersonJP';
 import AccountIndividualJP from './AccountIndividualJP';
 
 const styles = theme => ({
@@ -59,6 +59,12 @@ function CustomAccount(props) {
       if (account.account.business_type === "company") {
         console.log("company");
         setAccountData(account.account.company || {});
+        const country = account.account.country;
+        const person = account.person;
+        if (country === "JP") {
+          console.log("###### JP", person);
+          setPersonalData(extract_personal_dataJP(person));
+        }
       } else if (account.account.business_type === "individual") {
         console.log("individual");
         setAccountData(account.account.individual || {});
@@ -113,6 +119,9 @@ function CustomAccount(props) {
     const context = { groupId, business_type, account_data:account_copy };
     if (business_type === "company" && Object.keys(personal_data).length>0) {
       context.personal_data = personal_data;
+      if (context.personal_data.gender === "please.specify") {
+        delete context.personal_data.gender;
+      }
     }
     console.log(context);
     const updateCustomAccount = firebase.functions().httpsCallable('updateCustomAccount');

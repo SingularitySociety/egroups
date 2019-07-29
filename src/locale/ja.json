@@ -163,6 +163,7 @@
     "gender":"性別",
     "female":"女性",
     "male":"男性",
+    "please.specify":"選択してください",
 
     "billing.country":"拠点とする国",
     "submit":"送信",
