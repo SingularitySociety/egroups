@@ -122,6 +122,7 @@ function CustomAccount(props) {
       if (context.personal_data.gender === "please.specify") {
         delete context.personal_data.gender;
       }
+      context.personal_data.relationship = {account_opener:true}; // HACK;
     }
     console.log(context);
     const updateCustomAccount = firebase.functions().httpsCallable('updateCustomAccount');
