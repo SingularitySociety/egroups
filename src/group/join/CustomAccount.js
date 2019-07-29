@@ -45,8 +45,8 @@ function CustomAccount(props) {
   const [business_type, setBusinessType] = useState(null);
   const [tabValue, setTabValue] = useState(0);
 
-  console.log(account);
-  console.log(account_data);
+  //console.log(account);
+  //console.log(account_data);
 
   useEffect(()=>{
     setTabbar("settings.bank");
@@ -95,7 +95,7 @@ function CustomAccount(props) {
       const obj = personal_data[key] || {};
       obj[subkey] = value;
       new_data[key] = obj;
-      console.log(obj);
+      //console.log(obj);
     } else {
       new_data[key] = value;
     }
@@ -108,18 +108,18 @@ function CustomAccount(props) {
     setError(null);
     setProcessing(true);
     const account_copy = smartCopy(account_data);
-    console.log(account_data, account_copy);
+    //console.log(account_data, account_copy);
 
     const context = { groupId, business_type, account_data:account_copy };
     if (business_type === "company" && Object.keys(personal_data).length>0) {
       context.personal_data = personal_data;
     }
-      console.log(context);
-      const updateCustomAccount = firebase.functions().httpsCallable('updateCustomAccount');
+    console.log(context);
+    const updateCustomAccount = firebase.functions().httpsCallable('updateCustomAccount');
     const result = (await updateCustomAccount(context)).data;
     console.log(result);
     if (!result.result) {
-      console.log("error", result.error.message);
+      //console.log("error", result.error.message);
       setError(result.error.message);
     }
     setProcessing(false);
