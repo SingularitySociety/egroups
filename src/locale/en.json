@@ -159,6 +159,10 @@
     "Individual":"Individual",
     "company":"Company",
 
+    "gender":"Gender",
+    "female":"Female",
+    "male":"Male",
+
     "billing.country":"Residence Country",
     "submit":"Submit",
     "retry":"Retry",

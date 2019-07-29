@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { TextField, FormControl } from '@material-ui/core';
+import { TextField, FormControl, InputLabel, Select } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
+import GenderOptions from '../../options/GenderOptions';
 
 const styles = theme => ({
   field: {
@@ -34,8 +35,8 @@ const person_keys = ["last_name_kana", "last_name_kanji", "first_name_kana", "fi
 const dob_keys = ["year", "month", "day"];
 
 function AccountCompanyPersonJP(props) {
-  const { classes, personal_data, requirements, setPersonValue } = props;
-  console.log(requirements);
+  const { classes, personal_data, setPersonValue } = props;
+
   return (<React.Fragment>
     {
       person_keys.map((key)=>{
@@ -52,10 +53,16 @@ function AccountCompanyPersonJP(props) {
         return <FormControl key={key} className={classes[key]}>
         <TextField label={<FormattedMessage id={"individual.dob."+key} />} 
               value={(personal_data.dob && personal_data.dob[key]) || ""} 
-              onChange={(e)=>setPersonValue("dob", key, e.target.value)} />
+              onChange={(e)=>setPersonValue("dob", key, parseInt(e.target.value))} />
       </FormControl>
       })      
     }
+    <FormControl className={classes.form}>
+      <InputLabel><FormattedMessage id="gender" /></InputLabel>
+      <Select native value={personal_data["gender"] || "female"} 　onChange={(e)=>setPersonValue("gender", null, e.target.value)} >
+        <GenderOptions />
+      </Select>
+    </FormControl>
   </React.Fragment>)
 }
 

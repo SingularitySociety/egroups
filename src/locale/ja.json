@@ -159,7 +159,11 @@
     "business.type":"事業形態",
     "individual":"個人事業",
     "company":"企業",
-    
+
+    "gender":"性別",
+    "female":"女性",
+    "male":"男性",
+
     "billing.country":"拠点とする国",
     "submit":"送信",
     "retry":"リトライ",
