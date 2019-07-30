@@ -11,7 +11,7 @@ const styles = theme => ({
   form: {
     marginRight: theme.spacing(1),
     marginBottom: theme.spacing(1),
-    width: '24rem',
+    width: '22rem',
   },
 });
 
@@ -41,22 +41,22 @@ function AccountCompanyJP(props) {
     }
     {
       address_keys.map((subkey)=>{
-        const ckey="company.address_kana."+subkey;
+        const ckey="company.address_kanji."+subkey;
         return <FormControl key={ckey} className={classes.form}>
-        <TextField error={requirements[ckey]} label={<FormattedMessage id={ckey} />} 
-              value={(account_data["address_kana"]||{})[subkey] || ""} 
-              onChange={(e)=>setAccountValue("address_kana", subkey, e.target.value)} />
-      </FormControl>
+          <TextField error={requirements[ckey]} label={<FormattedMessage id={ckey} />} 
+              value={(account_data["address_kanji"]||{})[subkey] || ""} 
+              onChange={(e)=>setAccountValue("address_kanji", subkey, e.target.value)} />
+        </FormControl>
       })      
     }
     {
       address_keys.map((subkey)=>{
-        const ckey="company.address_kanji."+subkey;
+        const ckey="company.address_kana."+subkey;
         return <FormControl key={ckey} className={classes.form}>
-        <TextField error={requirements[ckey]} label={<FormattedMessage id={ckey} />} 
-              value={(account_data["address_kanji"]||{})[subkey] || ""} 
-              onChange={(e)=>setAccountValue("address_kanji", subkey, e.target.value)} />
-      </FormControl>
+          <TextField error={requirements[ckey]} label={<FormattedMessage id={ckey} />} 
+              value={(account_data["address_kana"]||{})[subkey] || ""} 
+              onChange={(e)=>setAccountValue("address_kana", subkey, e.target.value)} />
+        </FormControl>
       })      
     }
     <FormControl className={classes.form}>

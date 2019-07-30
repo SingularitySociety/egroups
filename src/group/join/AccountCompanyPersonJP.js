@@ -12,7 +12,7 @@ const styles = theme => ({
   form: {
     marginRight: theme.spacing(1),
     marginBottom: theme.spacing(1),
-    width: '24rem',
+    width: '22rem',
   },
   year: {
     marginRight: theme.spacing(1),
@@ -31,7 +31,7 @@ const styles = theme => ({
   },
 });
 
-const person_keys = ["last_name_kana", "last_name_kanji", "first_name_kana", "first_name_kanji", "phone"];
+const person_keys = ["last_name_kana", "last_name_kanji", "first_name_kana", "first_name_kanji"];
 const dob_keys = ["year", "month", "day"];
 const address_keys = ["postal_code", "state", "city", "town", "line1", "line2"];
 const person_keys_all = ["last_name_kana", "last_name_kanji", "first_name_kana", "first_name_kanji", "phone", "dob", "gender", "address_kanji", "address_kana"];
@@ -60,16 +60,28 @@ function AccountCompanyPersonJP(props) {
       </FormControl>
       })      
     }
+    <br/>
+    <FormControl className={classes.form}>
+      <InputLabel><FormattedMessage id="gender" /></InputLabel>
+      <Select native value={personal_data["gender"] || "please.specify"} onChange={(e)=>setPersonValue("gender", null, e.target.value)} >
+        <GenderOptions />
+      </Select>
+    </FormControl>
     {
-      address_keys.map((subkey)=>{
-        const ckey="address_kana."+subkey;
-        return <FormControl key={ckey} className={classes.form}>
-        <TextField error={requirements[ckey]} label={<FormattedMessage id={"individual."+ckey} />} 
-              value={(personal_data["address_kana"]||{})[subkey] || ""} 
-              onChange={(e)=>setPersonValue("address_kana", subkey, e.target.value)} />
+      dob_keys.map((key)=>{
+        return <FormControl key={key} className={classes[key]}>
+        <TextField label={<FormattedMessage id={"individual.dob."+key} />} 
+              value={(personal_data.dob && personal_data.dob[key]) || ""} 
+              onChange={(e)=>setPersonValue("dob", key, parseInt(e.target.value))} />
       </FormControl>
       })      
     }
+    <FormControl key={"phone"} className={classes.form}>
+        <TextField error={requirements["phone"]} label={<FormattedMessage id={"individual.phone"} />} 
+              value={personal_data["phone"] || ""} 
+              onChange={(e)=>setPersonValue("phone", null, e.target.value)} />
+    </FormControl>
+    <br/>
     {
       address_keys.map((subkey)=>{
         const ckey="address_kanji."+subkey;
@@ -80,22 +92,16 @@ function AccountCompanyPersonJP(props) {
       </FormControl>
       })      
     }
-    <br/>
     {
-      dob_keys.map((key)=>{
-        return <FormControl key={key} className={classes[key]}>
-        <TextField label={<FormattedMessage id={"individual.dob."+key} />} 
-              value={(personal_data.dob && personal_data.dob[key]) || ""} 
-              onChange={(e)=>setPersonValue("dob", key, parseInt(e.target.value))} />
+      address_keys.map((subkey)=>{
+        const ckey="address_kana."+subkey;
+        return <FormControl key={ckey} className={classes.form}>
+        <TextField error={requirements[ckey]} label={<FormattedMessage id={"individual."+ckey} />} 
+              value={(personal_data["address_kana"]||{})[subkey] || ""} 
+              onChange={(e)=>setPersonValue("address_kana", subkey, e.target.value)} />
       </FormControl>
       })      
     }
-    <FormControl className={classes.form}>
-      <InputLabel><FormattedMessage id="gender" /></InputLabel>
-      <Select native value={personal_data["gender"] || "please.specify"} onChange={(e)=>setPersonValue("gender", null, e.target.value)} >
-        <GenderOptions />
-      </Select>
-    </FormControl>
   </React.Fragment>)
 }
 
