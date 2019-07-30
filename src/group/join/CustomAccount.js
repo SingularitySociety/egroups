@@ -32,6 +32,13 @@ function smartCopy(obj) {
   }, {})
 }
 
+function arrayToFlags(array) {
+  return array.reduce((values, key)=>{
+    values[key] = true;
+    return values;
+  }, {});
+}
+
 function CustomAccount(props) {
   const { db, group, callbacks, classes } = props;
   const groupId = group.groupId;
@@ -65,13 +72,7 @@ function CustomAccount(props) {
         if (country === "JP") {
           console.log("###### JP", person);
           if (person.requirements) {
-            const array = person.requirements.eventually_due;
-            const reqs = array.reduce((values, key)=>{
-              values[key] = true;
-              return values;
-            }, {});
-            console.log(reqs);
-            setRequirementsP(reqs);
+            setRequirementsP(arrayToFlags(person.requirements.eventually_due));
           }
           setPersonalData(extract_personal_dataJP(person));
         }
@@ -81,13 +82,7 @@ function CustomAccount(props) {
       }
 
       if (account.account.requirements) {
-        const array = account.account.requirements.eventually_due;
-        const reqs = array.reduce((values, key)=>{
-          values[key] = true;
-          return values;
-        }, {});
-        console.log(reqs);
-        setRequirements(reqs);
+        setRequirements(arrayToFlags(account.account.requirements.eventually_due));
       }
     }
   }, [account]);
@@ -140,7 +135,10 @@ function CustomAccount(props) {
     console.log(result);
     if (!result.result) {
       console.log("error", result);
-      setError(result.error.message.stripe_message);
+      const message = result.error.message;
+      if (typeof message === 'object') {
+        setError(message.stripe_message || message.message);
+      }
     }
     setProcessing(false);
   }

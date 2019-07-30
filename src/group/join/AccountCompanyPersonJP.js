@@ -34,7 +34,7 @@ const styles = theme => ({
 const person_keys = ["last_name_kana", "last_name_kanji", "first_name_kana", "first_name_kanji", "phone"];
 const dob_keys = ["year", "month", "day"];
 const address_keys = ["postal_code", "state", "city", "town", "line1", "line2"];
-const person_keys_all = ["last_name_kana", "last_name_kanji", "first_name_kana", "first_name_kanji", "phone", "dob", "gender"];
+const person_keys_all = ["last_name_kana", "last_name_kanji", "first_name_kana", "first_name_kanji", "phone", "dob", "gender", "address_kanji", "address_kana"];
 
 export function extract_personal_dataJP(person) {
   return person_keys_all.reduce((values, key) => {
