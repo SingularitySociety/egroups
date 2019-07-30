@@ -33,6 +33,7 @@ const styles = theme => ({
 
 const person_keys = ["last_name_kana", "last_name_kanji", "first_name_kana", "first_name_kanji", "phone"];
 const dob_keys = ["year", "month", "day"];
+const address_keys = ["postal_code", "state", "city", "town", "line1", "line2"];
 const person_keys_all = ["last_name_kana", "last_name_kanji", "first_name_kana", "first_name_kanji", "phone", "dob", "gender"];
 
 export function extract_personal_dataJP(person) {
@@ -46,15 +47,36 @@ export function extract_personal_dataJP(person) {
 }
 
 function AccountCompanyPersonJP(props) {
-  const { classes, personal_data, setPersonValue } = props;
+  const { classes, personal_data, setPersonValue, requirements } = props;
+  console.log(requirements);
 
   return (<React.Fragment>
     {
       person_keys.map((key)=>{
         return <FormControl key={key} className={classes.form}>
-        <TextField label={<FormattedMessage id={"individual."+key} />} 
+        <TextField error={requirements[key]} label={<FormattedMessage id={"individual."+key} />} 
               value={personal_data[key] || ""} 
               onChange={(e)=>setPersonValue(key, null, e.target.value)} />
+      </FormControl>
+      })      
+    }
+    {
+      address_keys.map((subkey)=>{
+        const ckey="address_kana."+subkey;
+        return <FormControl key={ckey} className={classes.form}>
+        <TextField error={requirements[ckey]} label={<FormattedMessage id={"individual."+ckey} />} 
+              value={(personal_data["address_kana"]||{})[subkey] || ""} 
+              onChange={(e)=>setPersonValue("address_kana", subkey, e.target.value)} />
+      </FormControl>
+      })      
+    }
+    {
+      address_keys.map((subkey)=>{
+        const ckey="address_kanji."+subkey;
+        return <FormControl key={ckey} className={classes.form}>
+        <TextField error={requirements[ckey]} label={<FormattedMessage id={"individual."+ckey} />} 
+              value={(personal_data["address_kanji"]||{})[subkey] || ""} 
+              onChange={(e)=>setPersonValue("address_kanji", subkey, e.target.value)} />
       </FormControl>
       })      
     }

@@ -42,6 +42,7 @@ function CustomAccount(props) {
   const [account_data, setAccountData] = useState({});
   const [personal_data, setPersonalData] = useState({});
   const [requirements, setRequirements] = useState({});
+  const [requirementsP, setRequirementsP] = useState({});
   const [business_type, setBusinessType] = useState(null);
   const [tabValue, setTabValue] = useState(0);
 
@@ -63,6 +64,15 @@ function CustomAccount(props) {
         const person = account.person;
         if (country === "JP") {
           console.log("###### JP", person);
+          if (person.requirements) {
+            const array = person.requirements.eventually_due;
+            const reqs = array.reduce((values, key)=>{
+              values[key] = true;
+              return values;
+            }, {});
+            console.log(reqs);
+            setRequirementsP(reqs);
+          }
           setPersonalData(extract_personal_dataJP(person));
         }
       } else if (account.account.business_type === "individual") {
@@ -129,8 +139,8 @@ function CustomAccount(props) {
     const result = (await updateCustomAccount(context)).data;
     console.log(result);
     if (!result.result) {
-      //console.log("error", result.error.message);
-      setError(result.error.message);
+      console.log("error", result);
+      setError(result.error.message.stripe_message);
     }
     setProcessing(false);
   }
@@ -155,7 +165,7 @@ function CustomAccount(props) {
         }
         {
            (tabValue === 1) &&       
-           <AccountCompanyPersonJP personal_data={personal_data} requirements={requirements} setPersonValue={setPersonValue} />
+           <AccountCompanyPersonJP personal_data={personal_data} requirements={requirementsP} setPersonValue={setPersonValue} />
         }
       </div>
       :
