@@ -54,6 +54,7 @@ function CustomAccount(props) {
   const [requirementsP, setRequirementsP] = useState({});
   const [business_type, setBusinessType] = useState(null);
   const [tabValue, setTabValue] = useState(0);
+  const [bank_page, setBankPage] = useState(false);
 
   //console.log(account);
   //console.log(account_data);
@@ -132,7 +133,7 @@ function CustomAccount(props) {
     //console.log(account_data, account_copy);
 
     const context = { groupId, business_type, account_data:account_copy };
-    if (bank_data) {
+    if (bank_page && bank_data) {
       context.external_account = bank_data;
     }
     if (business_type === "company" && Object.keys(personal_data).length>0) {
@@ -189,6 +190,7 @@ function CustomAccount(props) {
            (tabValue === 2) &&       
            <AccountBankJP bank_data={bank_data} 
               requirements={requirementsP} 
+              setBankPage={setBankPage}
               business_type={business_type}
               setBankData={setBankData} />
         }
