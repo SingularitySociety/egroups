@@ -1,9 +1,13 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { TextField, FormControl, InputLabel, Select } from '@material-ui/core';
+import { TextField, FormControl, InputLabel, Select, Button } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import GenderOptions from '../../options/GenderOptions';
+import UploadButton from '@material-ui/icons/CloudUpload';
+import * as firebase from "firebase/app";
+import "firebase/storage";
+import Processing from '../../common/Processing';
 
 const styles = theme => ({
   field: {
@@ -13,6 +17,13 @@ const styles = theme => ({
     marginRight: theme.spacing(1),
     marginBottom: theme.spacing(1),
     width: '22rem',
+  },
+  verification: {
+    marginBottom: theme.spacing(1),
+    width: '11rem',
+  },
+  upload: {
+    marginRight: theme.spacing(1),
   },
   year: {
     marginRight: theme.spacing(1),
@@ -48,11 +59,27 @@ export function extract_personal_dataJP(person) {
 
 function AccountCompanyPersonJP(props) {
   const { groupId, classes, personal_data, setPersonValue, requirements } = props;
+  const [processing, setProcessing] = useState(false);
   console.log(requirements);
 
-  function foo() {
+  function onFileInput(e) {
+    const file = e.target.files[0];
     const filePath = `groups/${groupId}/owner/verification/front`;
-  }
+    console.log(file, filePath)
+    const storagRef = firebase.storage().ref();
+    const imageRef = storagRef.child(filePath);
+    const task = imageRef.put(file);
+    setProcessing(true);
+    task.on('state_changed', (snapshot)=>{
+      console.log("progress", snapshot);
+    }, (error) => {
+      console.log("failed", error);
+      setProcessing(false);
+    }, async () => {
+      console.log("success");
+      setProcessing(false);
+    });
+}
   return (<React.Fragment>
     {
       person_keys.map((key)=>{
@@ -107,7 +134,22 @@ function AccountCompanyPersonJP(props) {
       </FormControl>
       })      
     }
-  </React.Fragment>)
+    <br/>
+    {
+      requirements["verification.document"] && 
+      <div>
+        <FormControl className={classes.verification} >
+          <Button variant="contained" component="label">
+            <UploadButton className={classes.upload}/>
+            <FormattedMessage id="verification.document" />
+            <input type="file" accept="image/*" style={{ display: "none" }} onChange={onFileInput} />
+          </Button>
+        </FormControl>
+        <Processing active={processing} />
+      </div>
+    }
+
+    </React.Fragment>)
 }
 
 AccountCompanyPersonJP.propTypes = {

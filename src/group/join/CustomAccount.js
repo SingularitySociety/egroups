@@ -208,7 +208,7 @@ function CustomAccount(props) {
       </div>
     }
     <div>
-      <Button variant="contained" type="submit" onClick={handleSubmit}>
+      <Button variant="contained" color="primary" type="submit" onClick={handleSubmit}>
         <FormattedMessage id="submit" />
       </Button>
       <Processing active={processing} />

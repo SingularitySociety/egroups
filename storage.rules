@@ -31,7 +31,7 @@ service firebase.storage {
       allow read;
     }
     match /groups/{groupId}/owner/verification/front {
-      allow write: if request.auth.uid == userId
+      allow write: if isUserAdmin(groupId, request.auth.uid);
       allow read: if false;
     }
 
