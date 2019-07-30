@@ -172,18 +172,25 @@ function CustomAccount(props) {
         </Paper>
         {
           (tabValue === 0) &&       
-           <AccountCompanyJP account_data={account_data} requirements={requirements} setAccountValue={setAccountValue} />
+           <AccountCompanyJP 
+              account_data={account_data} 
+              requirements={requirements} 
+              setAccountValue={setAccountValue} />
         }
         {
            (tabValue === 1) &&       
-           <AccountCompanyPersonJP personal_data={personal_data} requirements={requirementsP} setPersonValue={setPersonValue} />
+           <AccountCompanyPersonJP 
+              personal_data={personal_data}
+              groupId={groupId}
+              requirements={requirementsP}
+              setPersonValue={setPersonValue} />
         }
         {
            (tabValue === 2) &&       
            <AccountBankJP bank_data={bank_data} 
-                requirements={requirementsP} 
-                business_type={business_type}
-                setBankData={setBankData} />
+              requirements={requirementsP} 
+              business_type={business_type}
+              setBankData={setBankData} />
         }
       </div>
       :

@@ -47,9 +47,12 @@ export function extract_personal_dataJP(person) {
 }
 
 function AccountCompanyPersonJP(props) {
-  const { classes, personal_data, setPersonValue, requirements } = props;
+  const { groupId, classes, personal_data, setPersonValue, requirements } = props;
   console.log(requirements);
 
+  function foo() {
+    const filePath = `groups/${groupId}/owner/verification/front`;
+  }
   return (<React.Fragment>
     {
       person_keys.map((key)=>{
@@ -67,6 +70,7 @@ function AccountCompanyPersonJP(props) {
         <GenderOptions />
       </Select>
     </FormControl>
+    <br/>
     {
       dob_keys.map((key)=>{
         return <FormControl key={key} className={classes[key]}>
@@ -76,6 +80,7 @@ function AccountCompanyPersonJP(props) {
       </FormControl>
       })      
     }
+    <br/>
     <FormControl key={"phone"} className={classes.form}>
         <TextField error={requirements["phone"]} label={<FormattedMessage id={"individual.phone"} />} 
               value={personal_data["phone"] || ""} 
@@ -110,6 +115,7 @@ AccountCompanyPersonJP.propTypes = {
   personal_data: PropTypes.object.isRequired,
   requirements: PropTypes.object.isRequired,
   setPersonValue: PropTypes.func.isRequired,
+  groupId: PropTypes.string.isRequired,
 };
   
 export default withStyles(styles)(AccountCompanyPersonJP);
