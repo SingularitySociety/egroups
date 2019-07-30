@@ -27,7 +27,7 @@ const address_keys = ["postal_code", "state", "city", "town", "line1", "line2"];
 
 function AccountCompanyJP(props) {
   const { classes, account_data, requirements, setAccountValue } = props;
-  console.log(requirements);
+  //console.log(requirements);
   return (<React.Fragment>
     {
       ["name", "name_kana", "name_kanji", "tax_id"].map((key)=>{

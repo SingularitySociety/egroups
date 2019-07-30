@@ -23,7 +23,7 @@ const address_keys = ["postal_code", "state", "city", "town", "line1", "line2"];
 
 function AccountIndividualJP(props) {
   const { classes, account_data, requirements, setAccountValue } = props;
-  console.log(requirements);
+  //console.log(requirements);
   return (<React.Fragment>
     {
       ["first_name_kana", "first_name_kanji", "last_name_kana", "last_name_kanji"].map((key)=>{

@@ -12,24 +12,39 @@ const styles = theme => ({
     },
   });
 
+export function extract_bank_data(data) {
+  return { 
+    object:"bank_account",
+    saved:true,
+    routing_number: data.routing_number,
+    account_number: "***"+data.last4,
+    account_holder_type: data.account_holder_type,
+    account_holder_name: data.account_holder_name,
+    country:data.country,
+    currency:data.currency,
+  }
+}
+
 function AccountBankJP(props) {
-  const { bank_data, setBankData, classes } = props;
+  const { bank_data, setBankData, classes, business_type } = props;
   function setBankValue(key, value) {
     const new_data = (() => {
       if (bank_data) {
         return Object.assign({}, bank_data);
       } 
-      return { object:"bank_account", country:"JP", currency:"jpy" };
+      return { object:"bank_account", country:"JP", currency:"jpy", 
+                account_holder_type:business_type };
     })();
     new_data[key] = value;
     setBankData(new_data);
   }
 
+  const valid = bank_data && bank_data.saved;
   return (<React.Fragment>
     {
       ["routing_number", "account_number", "account_holder_name"].map((key)=>{
         return <FormControl key={key} className={classes.form}>
-        <TextField error={true} label={<FormattedMessage id={key} />} 
+        <TextField error={!valid} label={<FormattedMessage id={key} />} 
               value={(bank_data && bank_data[key]) || ""} 
               onChange={(e)=>setBankValue(key, e.target.value)} />
       </FormControl>

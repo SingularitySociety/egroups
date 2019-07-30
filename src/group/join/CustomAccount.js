@@ -11,7 +11,7 @@ import "firebase/functions";
 import AccountCompanyJP from './AccountCompanyJP';
 import AccountCompanyPersonJP, {extract_personal_dataJP} from './AccountCompanyPersonJP';
 import AccountIndividualJP from './AccountIndividualJP';
-import AccountBankJP from './AccountBankJP';
+import AccountBankJP, {extract_bank_data} from './AccountBankJP';
 
 const styles = theme => ({
   paper: {
@@ -68,24 +68,31 @@ function CustomAccount(props) {
       const country = account.account.country;
       setBusinessType(account.account.business_type);
       if (account.account.business_type === "company") {
-        console.log("company");
+        //console.log("company");
         setAccountData(account.account.company || {});
         const person = account.person;
         if (country === "JP") {
-          console.log("###### JP", person);
+          //console.log("###### JP", person);
           if (person.requirements) {
             setRequirementsP(arrayToFlags(person.requirements.eventually_due));
           }
           setPersonalData(extract_personal_dataJP(person));
 
         }
-    } else if (account.account.business_type === "individual") {
-        console.log("individual");
+      } else if (account.account.business_type === "individual") {
+        //console.log("individual");
         setAccountData(account.account.individual || {});
+      }
+      const external_accounts = account.account.external_accounts;
+      if (external_accounts && external_accounts.data && external_accounts.data.length > 0) {
+        const data = external_accounts.data[0];
+        setBankData(extract_bank_data(data));
       }
 
       if (account.account.requirements) {
-        setRequirements(arrayToFlags(account.account.requirements.eventually_due));
+        const reqs = arrayToFlags(account.account.requirements.eventually_due);
+        console.log(reqs);
+        setRequirements(reqs);
       }
     }
   }, [account]);
@@ -173,7 +180,10 @@ function CustomAccount(props) {
         }
         {
            (tabValue === 2) &&       
-           <AccountBankJP bank_data={bank_data} requirements={requirementsP} setBankData={setBankData} />
+           <AccountBankJP bank_data={bank_data} 
+                requirements={requirementsP} 
+                business_type={business_type}
+                setBankData={setBankData} />
         }
       </div>
       :
