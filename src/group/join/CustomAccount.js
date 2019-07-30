@@ -49,6 +49,7 @@ function CustomAccount(props) {
   const [account] = useOnDocument(db, `groups/${groupId}/private/account`);
   const [account_data, setAccountData] = useState({});
   const [personal_data, setPersonalData] = useState({});
+  const [bank_data, setBankData] = useState(null);
   const [requirements, setRequirements] = useState({});
   const [requirementsP, setRequirementsP] = useState({});
   const [business_type, setBusinessType] = useState(null);
@@ -64,11 +65,11 @@ function CustomAccount(props) {
   useEffect(()=> {
     if (account && account.account) {
       console.log(account.account);
+      const country = account.account.country;
       setBusinessType(account.account.business_type);
       if (account.account.business_type === "company") {
         console.log("company");
         setAccountData(account.account.company || {});
-        const country = account.account.country;
         const person = account.person;
         if (country === "JP") {
           console.log("###### JP", person);
@@ -76,8 +77,9 @@ function CustomAccount(props) {
             setRequirementsP(arrayToFlags(person.requirements.eventually_due));
           }
           setPersonalData(extract_personal_dataJP(person));
+
         }
-      } else if (account.account.business_type === "individual") {
+    } else if (account.account.business_type === "individual") {
         console.log("individual");
         setAccountData(account.account.individual || {});
       }
@@ -123,6 +125,9 @@ function CustomAccount(props) {
     //console.log(account_data, account_copy);
 
     const context = { groupId, business_type, account_data:account_copy };
+    if (bank_data) {
+      context.external_account = bank_data;
+    }
     if (business_type === "company" && Object.keys(personal_data).length>0) {
       context.personal_data = personal_data;
       if (context.personal_data.gender === "please.specify") {
@@ -168,7 +173,7 @@ function CustomAccount(props) {
         }
         {
            (tabValue === 2) &&       
-           <AccountBankJP personal_data={personal_data} requirements={requirementsP} setPersonValue={setPersonValue} />
+           <AccountBankJP bank_data={bank_data} requirements={requirementsP} setBankData={setBankData} />
         }
       </div>
       :

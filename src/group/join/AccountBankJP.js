@@ -11,11 +11,24 @@ const styles = theme => ({
   });
 
 function AccountBankJP(props) {
+  const { bank_data, setBankData } = props;
+  function setBankValue(key, e) {
+    const new_data = (() => {
+      if (bank_data) {
+        return Object.assign({}, bank_data);
+      } 
+      return { country:"JP", currenty:"jpy" };
+    })();
+    new_data[key] = e.target.value;
+    setBankData(new_data);
+  }
+
   return <p>"bank"</p>;
 }
 
 AccountBankJP.propTypes = {
   classes: PropTypes.object.isRequired,
+  setBankData: PropTypes.func.isRequired,
 };
   
 export default withStyles(styles)(AccountBankJP);
