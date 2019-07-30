@@ -11,6 +11,7 @@ import "firebase/functions";
 import AccountCompanyJP from './AccountCompanyJP';
 import AccountCompanyPersonJP, {extract_personal_dataJP} from './AccountCompanyPersonJP';
 import AccountIndividualJP from './AccountIndividualJP';
+import AccountBankJP from './AccountBankJP';
 
 const styles = theme => ({
   paper: {
@@ -164,6 +165,10 @@ function CustomAccount(props) {
         {
            (tabValue === 1) &&       
            <AccountCompanyPersonJP personal_data={personal_data} requirements={requirementsP} setPersonValue={setPersonValue} />
+        }
+        {
+           (tabValue === 2) &&       
+           <AccountBankJP personal_data={personal_data} requirements={requirementsP} setPersonValue={setPersonValue} />
         }
       </div>
       :
