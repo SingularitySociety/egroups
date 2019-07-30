@@ -221,6 +221,9 @@
     "individual.address_kanji.town":"町（漢字）",
     "individual.address_kanji.line1":"番地（漢字）",
     "individual.address_kanji.line2":"マンション・アパート名（漢字）",
+    "routing_number":"ルーティング番号",
+    "account_number":"口座番号",
+    "account_holder_name":"講座名義（カナ）",
 
     "dummy":"dummy"
 }
