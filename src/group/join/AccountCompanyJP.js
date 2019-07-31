@@ -51,6 +51,9 @@ function AccountCompanyJP(props) {
     }
     {
       address_keys.map((subkey)=>{
+        if (subkey==="postal_code") {
+          return false; // no need to show Kanji version of postal code
+        }
         const ckey="company.address_kanji."+subkey;
         return <FormControl key={ckey} className={classes.form}>
           <TextField error={requirements[ckey]} label={<FormattedMessage id={ckey} />} 
