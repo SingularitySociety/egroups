@@ -125,7 +125,7 @@ function AccountCompanyPersonJP(props) {
         }
         const ckey="address_kanji."+subkey;
         return <FormControl key={ckey} className={classes.form}>
-        <TextField error={requirements[ckey]} label={<FormattedMessage id={"individual."+ckey} />} 
+        <TextField error={requirements[ckey]} label={<FormattedMessage id={ckey} />} 
               value={(personal_data["address_kanji"]||{})[subkey] || ""} 
               onChange={(e)=>setPersonValue("address_kanji", subkey, e.target.value)} />
       </FormControl>
@@ -135,7 +135,7 @@ function AccountCompanyPersonJP(props) {
       address_keys.map((subkey)=>{
         const ckey="address_kana."+subkey;
         return <FormControl key={ckey} className={classes.form}>
-        <TextField error={requirements[ckey]} label={<FormattedMessage id={"individual."+ckey} />} 
+        <TextField error={requirements[ckey]} label={<FormattedMessage id={ckey} />} 
               value={(personal_data["address_kana"]||{})[subkey] || ""} 
               onChange={(e)=>setPersonValue("address_kana", subkey, e.target.value)} />
       </FormControl>

@@ -56,7 +56,7 @@ function AccountCompanyJP(props) {
         }
         const ckey="company.address_kanji."+subkey;
         return <FormControl key={ckey} className={classes.form}>
-          <TextField error={requirements[ckey]} label={<FormattedMessage id={ckey} />} 
+          <TextField error={requirements[ckey]} label={<FormattedMessage id={"address_kanji."+subkey} />} 
               value={(account_data["address_kanji"]||{})[subkey] || ""} 
               onChange={(e)=>setAccountValue("address_kanji", subkey, e.target.value)} />
         </FormControl>
@@ -66,7 +66,7 @@ function AccountCompanyJP(props) {
       address_keys.map((subkey)=>{
         const ckey="company.address_kana."+subkey;
         return <FormControl key={ckey} className={classes.form}>
-          <TextField error={requirements[ckey]} label={<FormattedMessage id={ckey} />} 
+          <TextField error={requirements[ckey]} label={<FormattedMessage id={"address_kanji."+subkey} />} 
               value={(account_data["address_kana"]||{})[subkey] || ""} 
               onChange={(e)=>setAccountValue("address_kana", subkey, e.target.value)} />
         </FormControl>
