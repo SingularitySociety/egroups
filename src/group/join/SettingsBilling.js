@@ -8,6 +8,7 @@ import { FormattedMessage } from 'react-intl';
 import CountrySetting from './CountrySetting';
 import useOnDocument from '../../common/useOnDocument';
 import { Link } from 'react-router-dom';
+import Processing from '../../common/Processing';
 
 const styles = theme => ({
   subsciption: {
@@ -41,6 +42,7 @@ function SettingsBilling(props) {
   const subscription = group.subscription;
   const [plans, setPlans] = useState(group.plans || []);
   const [modified, setModified] = useState(false);
+  const [processing, setProcessing] = useState(false);
   const [account] = useOnDocument(db, `groups/${groupId}/private/account`);
   const setTabbar = callbacks.setTabbar;
 
@@ -73,11 +75,13 @@ function SettingsBilling(props) {
     setModified(false);
   }
   async function onUpdate() {
+    setProcessing(true);
     plans.sort((a, b) => { return a.price - b.price });
     const refGroup = db.doc(`groups/${groupId}`);
     await refGroup.set({plans:plans}, {merge:true});
     props.callbacks.groupDidUpdate();
     setModified(false);
+    setProcessing(false);
   }
   let isValid = true;
   if (!subscription) {
@@ -125,6 +129,7 @@ function SettingsBilling(props) {
         <Button variant="contained" onClick={onCancel} className={classes.button} disabled={!modified}>
         <FormattedMessage id="cancel" />
         </Button>
+        <Processing active={processing} />
       </div>
       {
         plans.length>0 && isValid && !modified &&
