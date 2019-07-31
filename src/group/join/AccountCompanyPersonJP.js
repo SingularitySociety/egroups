@@ -107,7 +107,7 @@ function AccountCompanyPersonJP(props) {
         return <FormControl key={key} className={classes[key]}>
         <TextField label={<FormattedMessage id={"individual.dob."+key} />} 
               value={(personal_data.dob && personal_data.dob[key]) || ""} 
-              onChange={(e)=>setPersonValue("dob", key, parseInt(e.target.value))} />
+              onChange={(e)=>setPersonValue("dob", key, parseInt(e.target.value) || null)} />
       </FormControl>
       })      
     }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Button, Paper, Tabs, Tab } from '@material-ui/core';
@@ -57,7 +57,8 @@ function CustomAccount(props) {
   const [tabValue, setTabValue] = useState(0);
   const [page, setPage] = useState(false);
   const [acceptance, setAcceptance] = useState(false);
-  
+  const resultRef = useRef(null);
+
   //console.log(account);
   //console.log(account_data);
 
@@ -68,6 +69,13 @@ function CustomAccount(props) {
   useEffect(()=>{
     console.log("page:", page);
   }, [page]);
+
+  useEffect(()=>{
+    console.log("----", error);
+    if (error) {
+      resultRef.current.scrollIntoView();
+    }
+  }, [error]);
 
   useEffect(()=> {
     if (account && account.account) {
@@ -240,8 +248,10 @@ function CustomAccount(props) {
         <FormattedMessage id="submit" />
       </Button>
       <Processing active={processing} />
+    </div>
+    <div ref={resultRef}>
+      <ResultMessage error={error} />
     </div>  
-    <ResultMessage error={error} />
   </form>
 }
 
