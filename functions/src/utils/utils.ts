@@ -61,3 +61,15 @@ export const sendMail = async (to, subject, text, html) => {
   console.log("Message sent: %s", info.messageId);
 
 }
+
+export const getIp = (context) => {
+  if (process.env.NODE_ENV === "test") {
+    return "123.123.123.123";
+  } else {
+    if (context.rawRequest && context.rawRequest.headers) {
+      return context.rawRequest.headers["x-appengine-user-ip"];
+    } else {
+      return null;
+    }
+  }
+}

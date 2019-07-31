@@ -327,7 +327,7 @@ export const updateCustomAccount = async (db, data, context) => {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
   
-  const {groupId, business_type, account_data, personal_data, ip, external_account, business_profile} = data;
+  const {groupId, business_type, account_data, personal_data, external_account, business_profile, acceptance} = data;
 
   const refAccont = db.doc(`groups/${groupId}/secret/account`);
   const refAccontPrivate = db.doc(`groups/${groupId}/private/account`);
@@ -361,7 +361,9 @@ export const updateCustomAccount = async (db, data, context) => {
   if (business_profile) {
     postData.business_profile = business_profile;
   }
-  if (ip) {
+   
+  const ip = utils.getIp(context)
+  if (acceptance && ip) {
     const date = Math.round(Date.now()  / 1000);
     postData.tos_acceptance = {
       date,
