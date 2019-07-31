@@ -184,6 +184,7 @@
     "tab.individual":"個人事業者情報",
     "tab.person":"担当者情報",
     "tab.bank":"口座情報",
+    "tab.accept":"同意",
     "company.name":"会社名",
     "company.tax_id":"会社法人等番号",
     "company.phone":"電話番号",
@@ -225,6 +226,8 @@
     "account_number":"口座番号",
     "account_holder_name":"講座名義（カナ）",
     "verification.document":"身分証明書",
+    "acceptance.complete":"同意済み",
+    "do.accept":"同意します",
 
     "dummy":"dummy"
 }

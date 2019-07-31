@@ -12,6 +12,7 @@ import AccountCompanyJP from './AccountCompanyJP';
 import AccountCompanyPersonJP, {extract_personal_dataJP} from './AccountCompanyPersonJP';
 import AccountIndividualJP from './AccountIndividualJP';
 import AccountBankJP, {extract_bank_data} from './AccountBankJP';
+import AccountAccept from './AccountAccept';
 
 const styles = theme => ({
   paper: {
@@ -55,6 +56,7 @@ function CustomAccount(props) {
   const [business_type, setBusinessType] = useState(null);
   const [tabValue, setTabValue] = useState(0);
   const [bank_page, setBankPage] = useState(false);
+  const [acceptance, setAcceptance] = useState(false);
 
   //console.log(account);
   //console.log(account_data);
@@ -136,6 +138,9 @@ function CustomAccount(props) {
     if (bank_page && bank_data) {
       context.external_account = bank_data;
     }
+    if (acceptance) {
+      context.acceptance = true;
+    }
     if (business_type === "company" && Object.keys(personal_data).length>0) {
       context.personal_data = personal_data;
       if (context.personal_data.gender === "please.specify") {
@@ -169,6 +174,7 @@ function CustomAccount(props) {
           <Tab label={<FormattedMessage id="tab.company"/>} />
           <Tab label={<FormattedMessage id="tab.person"/>} />
           <Tab label={<FormattedMessage id="tab.bank"/>} />
+          <Tab label={<FormattedMessage id="tab.accept"/>} />
         </Tabs>
         </Paper>
         {
@@ -194,6 +200,13 @@ function CustomAccount(props) {
               business_type={business_type}
               setBankData={setBankData} />
         }
+        {
+          (tabValue === 3) &&
+          <AccountAccept 
+            acceptance={acceptance}
+            requirements={requirements} 
+            setAcceptance={setAcceptance}/>
+        }
       </div>
       :
       <div>
@@ -201,6 +214,7 @@ function CustomAccount(props) {
         <Tabs value={tabValue} indicatorColor="primary" onChange={handleTabChange}>
           <Tab label={<FormattedMessage id="tab.individual"/>} />
           <Tab label={<FormattedMessage id="tab.bank" />} />
+          <Tab label={<FormattedMessage id="tab.accept"/>} />
         </Tabs>
         </Paper>
         {
