@@ -78,13 +78,14 @@ function CustomAccount(props) {
         //console.log("company");
         setAccountData(account.account.company || {});
         const person = account.person;
-        if (country === "JP") {
+        if (person) {
           //console.log("###### JP", person);
           if (person.requirements) {
             setRequirementsP(arrayToFlags(person.requirements.eventually_due));
           }
-          setPersonalData(extract_personal_dataJP(person));
-
+          if (country === "JP") {
+            setPersonalData(extract_personal_dataJP(person));
+          }
         }
       } else if (account.account.business_type === "individual") {
         //console.log("individual");
