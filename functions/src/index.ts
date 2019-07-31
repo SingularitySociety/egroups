@@ -157,3 +157,11 @@ export const imageProcessing = functions.storage.object().onFinalize(async (obje
 export const sendMail = functions.https.onCall(async (data, context) => {
   return await emailFunctions.sendMail(db, data, context);
 });
+
+export const getClientIP = functions.https.onCall(async (data, context) => {
+  if (context.auth) {
+    console.log(context.rawRequest.connection.remoteAddress);
+    return { address:context.rawRequest.connection.remoteAddress };
+  }
+  return { result:false };
+});
