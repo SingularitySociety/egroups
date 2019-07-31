@@ -16,7 +16,11 @@ const styles = theme => ({
   });
 
 function AccountAccept(props) {
-  const { setAcceptance, acceptance, requirements, classes } = props;
+  const { setAcceptance, acceptance, requirements, classes, setPage } = props;
+  useEffect(()=>{
+    setPage("acceptance");
+  }, [setPage]);
+
   useEffect(()=>{
     return () => {
       setAcceptance(false);
@@ -51,6 +55,7 @@ AccountAccept.propTypes = {
   classes: PropTypes.object.isRequired,
   requirements: PropTypes.object.isRequired,
   setAcceptance: PropTypes.func.isRequired,
+  setPage: PropTypes.func.isRequired,
 };
   
 export default withStyles(styles)(AccountAccept);

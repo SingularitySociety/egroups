@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { TextField, FormControl } from '@material-ui/core';
@@ -22,7 +22,12 @@ function companyed(key) {
 const address_keys = ["postal_code", "state", "city", "town", "line1", "line2"];
 
 function AccountIndividualJP(props) {
-  const { classes, account_data, requirements, setAccountValue } = props;
+  const { classes, account_data, requirements, setAccountValue, setPage } = props;
+
+  useEffect(()=>{
+    setPage("individual");
+  }, [setPage]);
+
   //console.log(requirements);
   return (<React.Fragment>
     {
@@ -68,6 +73,7 @@ AccountIndividualJP.propTypes = {
   account_data: PropTypes.object.isRequired,
   requirements: PropTypes.object.isRequired,
   setAccountValue: PropTypes.func.isRequired,
+  setPage: PropTypes.func.isRequired,
 };
   
 export default withStyles(styles)(AccountIndividualJP);

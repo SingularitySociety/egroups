@@ -26,14 +26,11 @@ export function extract_bank_data(data) {
 }
 
 function AccountBankJP(props) {
-  const { bank_data, setBankData, setBankPage, classes, business_type } = props;
+  const { bank_data, setBankData, setPage, classes, business_type } = props;
 
   useEffect(()=>{
-    setBankPage(true);
-    return ()=>{
-      setBankPage(false)
-    }
-  }, [setBankPage])
+    setPage("bank");
+  }, [setPage])
   function setBankValue(key, value) {
     const new_data = (() => {
       if (bank_data) {
@@ -62,7 +59,7 @@ function AccountBankJP(props) {
 AccountBankJP.propTypes = {
   classes: PropTypes.object.isRequired,
   setBankData: PropTypes.func.isRequired,
-  setBankPage: PropTypes.func.isRequired,
+  setPage: PropTypes.func.isRequired,
 };
   
 export default withStyles(styles)(AccountBankJP);

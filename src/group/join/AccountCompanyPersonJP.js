@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { TextField, FormControl, InputLabel, Select, Button } from '@material-ui/core';
@@ -58,9 +58,13 @@ export function extract_personal_dataJP(person) {
 }
 
 function AccountCompanyPersonJP(props) {
-  const { groupId, classes, personal_data, setPersonValue, requirements } = props;
+  const { groupId, classes, personal_data, setPersonValue, requirements, setPage } = props;
   const [processing, setProcessing] = useState(false);
   console.log(requirements);
+
+  useEffect(()=>{
+    setPage("opener");
+  }, [setPage]);
 
   function onFileInput(e) {
     const file = e.target.files[0];
@@ -158,6 +162,7 @@ AccountCompanyPersonJP.propTypes = {
   requirements: PropTypes.object.isRequired,
   setPersonValue: PropTypes.func.isRequired,
   groupId: PropTypes.string.isRequired,
+  setPage: PropTypes.func.isRequired,
 };
   
 export default withStyles(styles)(AccountCompanyPersonJP);

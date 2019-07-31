@@ -55,15 +55,19 @@ function CustomAccount(props) {
   const [requirementsP, setRequirementsP] = useState({});
   const [business_type, setBusinessType] = useState(null);
   const [tabValue, setTabValue] = useState(0);
-  const [bank_page, setBankPage] = useState(false);
+  const [page, setPage] = useState(false);
   const [acceptance, setAcceptance] = useState(false);
-
+  
   //console.log(account);
   //console.log(account_data);
 
   useEffect(()=>{
     setTabbar("settings.bank");
   }, [setTabbar]);
+
+  useEffect(()=>{
+    console.log("page:", page);
+  }, [page]);
 
   useEffect(()=> {
     if (account && account.account) {
@@ -135,7 +139,7 @@ function CustomAccount(props) {
     //console.log(account_data, account_copy);
 
     const context = { groupId, business_type, account_data:account_copy };
-    if (bank_page && bank_data) {
+    if (page==="bank" && bank_data) {
       context.external_account = bank_data;
     }
     if (acceptance) {
@@ -182,6 +186,7 @@ function CustomAccount(props) {
            <AccountCompanyJP 
               account_data={account_data} 
               requirements={requirements} 
+              setPage={setPage}
               setAccountValue={setAccountValue} />
         }
         {
@@ -189,6 +194,7 @@ function CustomAccount(props) {
            <AccountCompanyPersonJP 
               personal_data={personal_data}
               groupId={groupId}
+              setPage={setPage}
               requirements={requirementsP}
               setPersonValue={setPersonValue} />
         }
@@ -196,7 +202,7 @@ function CustomAccount(props) {
            (tabValue === 2) &&       
            <AccountBankJP bank_data={bank_data} 
               requirements={requirementsP} 
-              setBankPage={setBankPage}
+              setPage={setPage}
               business_type={business_type}
               setBankData={setBankData} />
         }
@@ -205,6 +211,7 @@ function CustomAccount(props) {
           <AccountAccept 
             acceptance={acceptance}
             requirements={requirements} 
+            setPage={setPage}
             setAcceptance={setAcceptance}/>
         }
       </div>
@@ -219,7 +226,11 @@ function CustomAccount(props) {
         </Paper>
         {
          (tabValue === 0) &&       
-           <AccountIndividualJP account_data={account_data} requirements={requirements} setAccountValue={setAccountValue} />
+           <AccountIndividualJP 
+            account_data={account_data} 
+            requirements={requirements} 
+            setPage={setPage}
+            setAccountValue={setAccountValue} />
         }
       </div>
     }
