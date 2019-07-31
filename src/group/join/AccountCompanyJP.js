@@ -32,13 +32,19 @@ function AccountCompanyJP(props) {
     setPage("company");
   }, [setPage]);
 
-return (<React.Fragment>
+  console.log("###", account_data);
+  return (<React.Fragment>
     {
       ["name", "name_kana", "name_kanji", "tax_id"].map((key)=>{
         const ckey = companyed(key);
+        let value = account_data[key] || "";
+        const disabled = (key === "tax_id") && account_data.tax_id_provided;
+        if (disabled) {
+          value = "*****";
+        }
         return <FormControl key={key} className={classes.form}>
         <TextField error={requirements[ckey]} label={<FormattedMessage id={ckey} />} 
-              value={account_data[key] || ""} 
+              value={value} disabled={disabled}
               onChange={(e)=>setAccountValue(key, null, e.target.value)} />
       </FormControl>
       })      
