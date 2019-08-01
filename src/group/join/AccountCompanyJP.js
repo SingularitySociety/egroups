@@ -66,7 +66,7 @@ function AccountCompanyJP(props) {
       address_keys.map((subkey)=>{
         const ckey="company.address_kana."+subkey;
         return <FormControl key={ckey} className={classes.form}>
-          <TextField error={requirements[ckey]} label={<FormattedMessage id={"address_kanji."+subkey} />} 
+          <TextField error={requirements[ckey]} label={<FormattedMessage id={"address_kana."+subkey} />} 
               value={(account_data["address_kana"]||{})[subkey] || ""} 
               onChange={(e)=>setAccountValue("address_kana", subkey, e.target.value)} />
         </FormControl>
