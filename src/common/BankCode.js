@@ -20,9 +20,9 @@ function BankCode(props) {
   const [branchFilter, setBranchFilter] = useState("");
   const [bankCode, setBankCode] = useState("0001");
   const [keys, setKeys] = useState(allKeys);
-  const [branchKeys, setBranchKeys] = useState(allKeys);
+  const [branchKeys, setBranchKeys] = useState([]);
   const [branchCode, setBranchCode] = useState("001");
-  const [branches, setBranches] = useState({});
+  const branches = zenginCode[bankCode].branches;
 
   function onBankCodeChange(e) {
     setBankCode(e.target.value);
@@ -49,8 +49,20 @@ function BankCode(props) {
   }, [bankFilter]);
 
   useEffect(()=>{
-    setBranches(zenginCode[bankCode].branches);
+    setBranchFilter("");
   }, [bankCode]);
+
+  useEffect(()=>{
+    const allBranchKeys = Object.keys(branches);
+    if (branchFilter === "") {
+      setBranchKeys(allBranchKeys);
+    }
+    const regex = new RegExp(branchFilter);
+    setBranchKeys(allBranchKeys.filter((key)=>{
+      return regex.test(branches[key].name + key);
+    }));
+
+  }, [branchFilter, branches]);
 
   console.log(branches);
 
@@ -83,7 +95,10 @@ function BankCode(props) {
                 value={branchCode} 
                 onChange={onBranchCodeChange} >
           {
-            Object.keys(branches).map((key)=>{
+            branchKeys.map((key)=>{
+              if (!branches[key]) {
+                return false;　// mismaatch (because of timing)
+              }
               return <option key={key} value={key}>
                   {branches[key].name} ({key})
                 </option>;
