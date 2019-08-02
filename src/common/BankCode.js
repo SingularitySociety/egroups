@@ -21,7 +21,7 @@ function BankCode(props) {
   const [bankCode, setBankCode] = useState("0001");
   const [keys, setKeys] = useState(allKeys);
   const [branchKeys, setBranchKeys] = useState([]);
-  const [branchCode, setBranchCode] = useState("001");
+  const [branchCode, setBranchCode] = useState("");
   const branches = zenginCode[bankCode].branches;
 
   function onBankCodeChange(e) {
@@ -49,6 +49,7 @@ function BankCode(props) {
   }, [bankFilter]);
 
   useEffect(()=>{
+    setBranchCode("");
     setBranchFilter("");
   }, [bankCode]);
 
@@ -94,6 +95,7 @@ function BankCode(props) {
         <Select native 
                 value={branchCode} 
                 onChange={onBranchCodeChange} >
+          <option key="not selected" value=""></option>
           {
             branchKeys.map((key)=>{
               if (!branches[key]) {
