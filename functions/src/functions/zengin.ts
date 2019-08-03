@@ -1,33 +1,25 @@
 import * as utils from '../utils/utils';
 import * as logger from '../utils/logger';
-const bankCodes = require('../../zengin/bankCodes.json');
 
 export const storeZenginData = async (db, data, context) => {
   const error_handler = logger.error_response_handler({func: "storeZenginData", message: "invalid request"});
   try { 
     //console.log(bankCodes);
-    const keys = bankCodes.keys;
+    const zenginData = await utils.readTextFile(`./zengin/zengin.json`);
+    const zengin = JSON.parse(zenginData);
+    const zenginCode = zengin.zenginCode;
+    const keys = Object.keys(zenginCode);
     const document = {};
-    for (let i=0; i< keys.length; i++) {
+    for (let i=0; i< 10 /*keys.length*/; i++) {
       const key = keys[i];
-      const bankData = await utils.readTextFile(`./zengin/${key}.json`);
-      const bankInfo = JSON.parse(bankData);
-      //console.log(bankInfo);
+      const bankInfo = zenginCode[key];      
       const branches = bankInfo.branches;
-      delete bankInfo.branches;
-      document[key] = bankInfo;
+      const { name } = bankInfo;
+      document[key] = { name };
       await db.doc(`static/zengin/branches/${key}`).set(branches);
     };
+  console.log(document);
     await db.doc('static/zengin').set(document);
-    /*
-    const bankCodes = await utils.readTextFile(`./zengin/bank`);
-    const text = replaceValues(textTemplate, values);
-    const lines = text.split('\n');
-    const subject = lines[0];
-    const htmlTemplate = await utils.readTextFile(`./templates/${locale}/${template}.html`);
-    const html = replaceValues(htmlTemplate, values);
-    await utils.sendMail(email, subject, text, html);
-    */
     return { result:true };
   } catch(err) {
     console.log(err);

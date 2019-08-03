@@ -16,6 +16,16 @@ function writeFile(path, data) {
 }
 
 async function main() {
+  const date = Date.now();
+  const data = JSON.stringify({zenginCode, date});
+  try {
+    await writeFile('./functions/zengin/zengin.json', data);
+    console.log("success");
+  } catch(err) {
+    console.log(err);
+  }
+
+  /*
   const keys = Object.keys(zenginCode);
   const date = Date.now();
   const data = JSON.stringify({keys, date});
@@ -32,6 +42,7 @@ async function main() {
   } catch(err) {
     console.log(err);
   }
+  */
 }
 
 main();
