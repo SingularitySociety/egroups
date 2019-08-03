@@ -1,17 +1,5 @@
 import * as utils from '../utils/utils';
 import * as logger from '../utils/logger';
-const fs = require('fs');
-
-const readTextFile = async (path):Promise<any> => {
-  return new Promise((resolve, reject) => {
-    fs.readFile(path, 'utf8', async (err, str) => {
-      if (err) {
-        reject(err);
-      }
-      resolve(str);
-    });
-  });
-}
 
 const replaceValues = (text, values) => {
   return Object.keys(values).reduce((str, key)=>{
@@ -27,11 +15,11 @@ export const sendMail = async (db, data, context) => {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
   try { 
-    const textTemplate = await readTextFile(`./templates/${locale}/${template}.txt`);
+    const textTemplate = await utils.readTextFile(`./templates/${locale}/${template}.txt`);
     const text = replaceValues(textTemplate, values);
     const lines = text.split('\n');
     const subject = lines[0];
-    const htmlTemplate = await readTextFile(`./templates/${locale}/${template}.html`);
+    const htmlTemplate = await utils.readTextFile(`./templates/${locale}/${template}.html`);
     const html = replaceValues(htmlTemplate, values);
     await utils.sendMail(email, subject, text, html);
     return { result:true };
