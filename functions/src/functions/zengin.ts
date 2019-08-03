@@ -8,16 +8,16 @@ export const storeZenginData = async (db, data, context) => {
     //console.log(bankCodes);
     const keys = bankCodes.keys;
     const document = {};
-    const key = keys[0];
- 
+    for (let i=0; i< keys.length; i++) {
+      const key = keys[i];
       const bankData = await utils.readTextFile(`./zengin/${key}.json`);
       const bankInfo = JSON.parse(bankData);
-      console.log(bankInfo);
+      //console.log(bankInfo);
       const branches = bankInfo.branches;
       delete bankInfo.branches;
       document[key] = bankInfo;
       await db.doc(`static/zengin/branches/${key}`).set(branches);
-
+    };
     await db.doc('static/zengin').set(document);
     /*
     const bankCodes = await utils.readTextFile(`./zengin/bank`);
