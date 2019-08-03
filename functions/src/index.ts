@@ -9,7 +9,6 @@ import * as imageFunctions from './functions/image';
 import * as groupFunctions from './functions/group';
 import * as onetimesmsFunctions from './functions/onetimesms';
 import * as emailFunctions from './functions/email';
-import * as zenginFunctions from './functions/zengin';
 
 import * as express from './functions/express';
 
@@ -157,8 +156,4 @@ export const imageProcessing = functions.storage.object().onFinalize(async (obje
 
 export const sendMail = functions.https.onCall(async (data, context) => {
   return await emailFunctions.sendMail(db, data, context);
-});
-
-export const storeZenginData = functions.https.onCall(async (data, context) => {
-  return await zenginFunctions.storeZenginData(db, data, context);
 });

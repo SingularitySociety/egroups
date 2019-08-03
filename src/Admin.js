@@ -1,11 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Header from './Header';
 import Grid from '@material-ui/core/Grid';
-import * as firebase from "firebase/app";
-import "firebase/functions";
 
 const styles = theme => ({
   root: {
@@ -21,16 +19,6 @@ const styles = theme => ({
 
 const Admin = props => {
   const { classes, user } = props;
-
-  useEffect(()=>{
-    async function store() {
-      const context = {};
-      const storeZenginData = firebase.functions().httpsCallable('storeZenginData');
-      const result = (await storeZenginData(context)).data;
-      console.log(result);
-    }
-    store();
-  }, []);
 
   return (
     <React.Fragment>
