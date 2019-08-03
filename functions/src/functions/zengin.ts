@@ -5,11 +5,20 @@ const bankCodes = require('../../zengin/bankCodes.json');
 export const storeZenginData = async (db, data, context) => {
   const error_handler = logger.error_response_handler({func: "storeZenginData", message: "invalid request"});
   try { 
-    console.log(bankCodes);
+    //console.log(bankCodes);
     const keys = bankCodes.keys;
+    const document = {};
     const key = keys[0];
-    const bankInfo = await utils.readTextFile(`./zengin/${key}.json`);
-    console.log(bankInfo);
+ 
+      const bankData = await utils.readTextFile(`./zengin/${key}.json`);
+      const bankInfo = JSON.parse(bankData);
+      console.log(bankInfo);
+      const branches = bankInfo.branches;
+      delete bankInfo.branches;
+      document[key] = bankInfo;
+      await db.doc(`static/zengin/branches/${key}`).set(branches);
+
+    await db.doc('static/zengin').set(document);
     /*
     const bankCodes = await utils.readTextFile(`./zengin/bank`);
     const text = replaceValues(textTemplate, values);
@@ -21,6 +30,7 @@ export const storeZenginData = async (db, data, context) => {
     */
     return { result:true };
   } catch(err) {
+    console.log(err);
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
 };
