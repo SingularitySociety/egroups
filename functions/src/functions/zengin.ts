@@ -6,21 +6,28 @@ export const storeZenginData = async (db, data, context) => {
   try { 
     //console.log(bankCodes);
     const zenginData = await utils.readTextFile(`./zengin/zengin.json`);
-    const zengin = JSON.parse(zenginData);
-    const zenginCode = zengin.zenginCode;
+    const { date, zenginCode} = JSON.parse(zenginData);
+    const prev = (await db.doc('static/zengin').get()).data();
+    if (prev && prev.date) {
+      console.log(date, prev.date);
+      if (date <= prev.date) {
+        return { result:true, message:"already done" };
+      }
+    }
+
     const keys = Object.keys(zenginCode);
-    const document = {};
+    const banks = {};
     for (let i=0; i< 10 /*keys.length*/; i++) {
       const key = keys[i];
       const bankInfo = zenginCode[key];      
       const branches = bankInfo.branches;
       const { name } = bankInfo;
-      document[key] = { name };
+      banks[key] = { name };
       await db.doc(`static/zengin/branches/${key}`).set(branches);
     };
-  console.log(document);
+    const document = { date, banks };
     await db.doc('static/zengin').set(document);
-    return { result:true };
+    return { result:true, message:"stored" };
   } catch(err) {
     console.log(err);
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
