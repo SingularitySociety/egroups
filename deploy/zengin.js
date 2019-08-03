@@ -24,25 +24,6 @@ async function main() {
   } catch(err) {
     console.log(err);
   }
-
-  /*
-  const keys = Object.keys(zenginCode);
-  const date = Date.now();
-  const data = JSON.stringify({keys, date});
-  //console.log(data);
-  try {
-    await writeFile('./functions/zengin/bankCodes.json', data);
-    console.log("step 1");
-    keys.forEach(async (key)=>{
-      const bankInfo = zenginCode[key];
-      const bankData = JSON.stringify(bankInfo);
-      console.log(key);
-      await writeFile(`./functions/zengin/${key}.json`, bankData);      
-    });    
-  } catch(err) {
-    console.log(err);
-  }
-  */
 }
 
 main();
