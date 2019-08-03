@@ -9,13 +9,14 @@ const allKeys = Object.keys(zenginCode);
 
 const styles = theme => ({
   formControl: {
-    width:theme.spacing(38),
-    marginBottom: theme.spacing(2),
+    width:theme.spacing(30),
+    marginBottom: theme.spacing(1),
+    marginRight: theme.spacing(1),
   },
 });
 
 function BankCode(props) {
-  const { classes } = props;
+  const { classes, setRoutingNumber } = props;
   const [bankFilter, setBankFilter] = useState("");
   const [branchFilter, setBranchFilter] = useState("");
   const [bankCode, setBankCode] = useState("0001");
@@ -28,7 +29,11 @@ function BankCode(props) {
     setBankCode(e.target.value);
   }
   function onBranchCodeChange(e) {
-    setBranchCode(e.target.value);
+    const newValue = e.target.value;
+    setBranchCode(newValue);
+    if (newValue !== "") {
+      setRoutingNumber(bankCode + newValue);
+    }
   }
   function onBankFilterChange(e) {
     setBankFilter(e.target.value);
@@ -65,7 +70,7 @@ function BankCode(props) {
 
   }, [branchFilter, branches]);
 
-  console.log(branches);
+  //console.log(branches);
 
   return (
     <div>
@@ -86,6 +91,7 @@ function BankCode(props) {
           }
         </Select>
       </FormControl>
+      <br/>
       <FormControl className={classes.formControl}>
         <TextField label={<FormattedMessage id="branch.name.filter" />} 
                     value={branchFilter} onChange={onBranchFilterChange} />
@@ -114,6 +120,7 @@ function BankCode(props) {
 
 BankCode.propTypes = {
   classes: PropTypes.object.isRequired,
+  setRoutingNumber: PropTypes.func.isRequired,
 };
   
 export default withStyles(styles)(BankCode);

@@ -44,9 +44,14 @@ function AccountBankJP(props) {
     setBankData(new_data);
   }
 
+  function setRoutingNumber(number) {
+    console.log(number);
+    setBankValue("routing_number", number);
+  }
+
   const valid = bank_data && bank_data.saved;
   return (<React.Fragment>
-    <BankCode />
+    <BankCode setRoutingNumber={setRoutingNumber} />
     {
       ["routing_number", "account_number", "account_holder_name"].map((key)=>{
         return <FormControl key={key} className={classes.form}>
