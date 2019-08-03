@@ -1,4 +1,4 @@
-//import * as utils from '../utils/utils';
+import * as utils from '../utils/utils';
 import * as logger from '../utils/logger';
 const bankCodes = require('../../zengin/bankCodes.json');
 
@@ -6,6 +6,10 @@ export const storeZenginData = async (db, data, context) => {
   const error_handler = logger.error_response_handler({func: "storeZenginData", message: "invalid request"});
   try { 
     console.log(bankCodes);
+    const keys = bankCodes.keys;
+    const key = keys[0];
+    const bankInfo = await utils.readTextFile(`./zengin/${key}.json`);
+    console.log(bankInfo);
     /*
     const bankCodes = await utils.readTextFile(`./zengin/bank`);
     const text = replaceValues(textTemplate, values);
