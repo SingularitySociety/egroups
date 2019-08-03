@@ -17,7 +17,7 @@ export const storeZenginData = async (db, data, context) => {
 
     const keys = Object.keys(zenginCode);
     const banks = {};
-    for (let i=0; i< 10 /*keys.length*/; i++) {
+    for (let i=0; i< keys.length; i++) {
       const key = keys[i];
       const bankInfo = zenginCode[key];      
       const branches = bankInfo.branches;
