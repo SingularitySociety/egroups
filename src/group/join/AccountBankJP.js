@@ -51,11 +51,12 @@ function AccountBankJP(props) {
 
   const valid = bank_data && bank_data.saved;
   return (<React.Fragment>
-    <BankCode setRoutingNumber={setRoutingNumber} />
+    <BankCode setRoutingNumber={setRoutingNumber} routingNumber={bank_data && bank_data.routing_number} />
     {
       ["routing_number", "account_number", "account_holder_name"].map((key)=>{
         return <FormControl key={key} className={classes.form}>
-        <TextField error={!valid} label={<FormattedMessage id={key} />} 
+        <TextField error={!valid} label={<FormattedMessage id={key} />}
+              disabled={false && key==="routing_number"} // TESTING 
               value={(bank_data && bank_data[key]) || ""} 
               onChange={(e)=>setBankValue(key, e.target.value)} />
       </FormControl>

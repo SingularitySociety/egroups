@@ -16,14 +16,14 @@ const styles = theme => ({
 });
 
 function BankCode(props) {
-  const { classes, setRoutingNumber } = props;
+  const { classes, setRoutingNumber, routingNumber } = props;
   const [bankFilter, setBankFilter] = useState("");
   const [branchFilter, setBranchFilter] = useState("");
   const [bankCode, setBankCode] = useState("0001");
   const [keys, setKeys] = useState(allKeys);
   const [branchKeys, setBranchKeys] = useState([]);
   const [branchCode, setBranchCode] = useState("");
-  const branches = zenginCode[bankCode].branches;
+  const branches = (zenginCode[bankCode] && zenginCode[bankCode].branches) || {};
 
   function onBankCodeChange(e) {
     setBankCode(e.target.value);
@@ -41,6 +41,14 @@ function BankCode(props) {
   function onBranchFilterChange(e) {
     setBranchFilter(e.target.value);
   }
+
+  useEffect(()=>{
+    console.log(routingNumber);
+    if (routingNumber && routingNumber.length===7) {
+      setBankCode(routingNumber.slice(0,4));
+      setBranchCode(routingNumber.slice(4,7));      
+    }
+  }, [routingNumber]);
 
   useEffect(()=>{
     if (bankFilter === "") {
