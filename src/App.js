@@ -20,6 +20,7 @@ import ja from 'react-intl/locale-data/ja';
 import message_en from './locale/en.json';
 import message_ja from './locale/ja.json';
 import NewGroup from './NewGroup';
+import Admin from './Admin';
 
 addLocaleData([...en, ...ja]);
 const messages = {
@@ -157,6 +158,7 @@ function App() {
           }
           <Route path="/:gp" render={(props) => <GroupRouter {...props} {...params} />} />
           <Route exact path="/a/about" render={(props) => <About {...props} {...params} />} />
+          <Route exact path="/a/admin" render={(props) => <Admin {...props} {...params} />} />
           <Route exact path="/a/new/:groupId" render={(props) => <NewGroup {...props} {...params} />} />
           <Route exact path="/a/login" render={(props) => <Login {...props} {...params} />} />
           <Route exact path="/a/login/cmd/:encoded" render={(props) => <Login {...props} {...params} />} />
