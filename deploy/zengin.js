@@ -17,7 +17,8 @@ function writeFile(path, data) {
 
 async function main() {
   const keys = Object.keys(zenginCode);
-  const data = JSON.stringify(keys);
+  const date = Date.now();
+  const data = JSON.stringify({keys, date});
   //console.log(data);
   try {
     await writeFile('./functions/zengin/bankCodes.json', data);

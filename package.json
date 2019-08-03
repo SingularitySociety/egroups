@@ -32,7 +32,8 @@
     "eject": "react-scripts eject",
     "mocha": "mocha --require @babel/register --recursive test/rules/user_test.js",
     "babel": "babel src/const -d ./functions/react-lib/src/const && babel test -d lib/test",
-    "deploy": "react-scripts build && firebase deploy"
+    "deploy": "react-scripts build && firebase deploy",
+    "zengin": "node ./deploy/zengin.js"
   },
   "eslintConfig": {
     "extends": "react-app"
