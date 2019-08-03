@@ -18,7 +18,8 @@
     "react-router-dom": "^5.0.0",
     "react-scripts": "3.0.1",
     "react-stripe-elements": "^3.0.0",
-    "validator": "^11.1.0"
+    "validator": "^11.1.0",
+    "zengin-code": "^1.0.0-p20190729"
   },
   "scripts": {
     "start": "react-scripts start",

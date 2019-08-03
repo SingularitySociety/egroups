@@ -228,6 +228,10 @@
     "verification.document":"身分証明書",
     "acceptance.complete":"同意済み",
     "do.accept":"同意します",
+    "bank.name.filter":"銀行名検索",
+    "bank.name":"銀行名",
+    "branch.name.filter":"支店名検索",
+    "branch.name":"支店名",
 
     "dummy":"dummy"
 }

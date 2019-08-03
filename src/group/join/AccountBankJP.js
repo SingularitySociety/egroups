@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { TextField, FormControl } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
+import BankCode from '../../common/BankCode';
 
 const styles = theme => ({
     form: {
@@ -30,7 +31,7 @@ function AccountBankJP(props) {
 
   useEffect(()=>{
     setPage("bank");
-  }, [setPage])
+  }, [setPage]);
   function setBankValue(key, value) {
     const new_data = (() => {
       if (bank_data) {
@@ -43,12 +44,19 @@ function AccountBankJP(props) {
     setBankData(new_data);
   }
 
+  function setRoutingNumber(number) {
+    console.log(number);
+    setBankValue("routing_number", number);
+  }
+
   const valid = bank_data && bank_data.saved;
   return (<React.Fragment>
+    <BankCode setRoutingNumber={setRoutingNumber} routingNumber={bank_data && bank_data.routing_number} />
     {
       ["routing_number", "account_number", "account_holder_name"].map((key)=>{
         return <FormControl key={key} className={classes.form}>
-        <TextField error={!valid} label={<FormattedMessage id={key} />} 
+        <TextField error={!valid} label={<FormattedMessage id={key} />}
+              disabled={false && key==="routing_number"} // TESTING 
               value={(bank_data && bank_data[key]) || ""} 
               onChange={(e)=>setBankValue(key, e.target.value)} />
       </FormControl>
