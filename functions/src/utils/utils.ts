@@ -1,5 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as nodemailer from 'nodemailer';
+const fs = require('fs');
 
 export const array_diff = (a: any[], b: any[]) => {
   let new_b = b.slice();
@@ -72,4 +73,15 @@ export const getIp = (context) => {
       return null;
     }
   }
+}
+
+export const readTextFile = async (path):Promise<any> => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, 'utf8', async (err, str) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(str);
+    });
+  });
 }
