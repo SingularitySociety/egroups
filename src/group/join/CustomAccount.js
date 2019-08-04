@@ -211,6 +211,7 @@ function CustomAccount(props) {
            (tabValue === 2) &&       
            <AccountBankJP bank_data={bank_data} 
               requirements={requirementsP} 
+              db={db}
               setPage={setPage}
               business_type={business_type}
               setBankData={setBankData} />

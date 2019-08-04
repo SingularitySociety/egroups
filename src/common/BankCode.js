@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Select, InputLabel, TextField, FormControl } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
-import zenginCode from 'zengin-code';
+//import zenginCode from 'zengin-code';
+import useDocument from './useDocument';
 
-const allKeys = Object.keys(zenginCode);
+//const allKeys = Object.keys(zenginCode);
 
 const styles = theme => ({
   formControl: {
@@ -16,14 +17,21 @@ const styles = theme => ({
 });
 
 function BankCode(props) {
-  const { classes, setRoutingNumber, routingNumber } = props;
+  const { db, classes, setRoutingNumber, routingNumber } = props;
+  const [zengin] = useDocument(db, 'static/zengin');
+  const [allKeys, setAllKeys] = useState([]);
   const [bankFilter, setBankFilter] = useState("");
   const [branchFilter, setBranchFilter] = useState("");
   const [bankCode, setBankCode] = useState("0001");
   const [keys, setKeys] = useState(allKeys);
   const [branchKeys, setBranchKeys] = useState([]);
   const [branchCode, setBranchCode] = useState("");
-  const branches = (zenginCode[bankCode] && zenginCode[bankCode].branches) || {};
+  const [branches] = useDocument(db, zengin && bankCode && `static/zengin/branches/${bankCode}`);
+  
+  useEffect(()=>{
+    const banks = (zengin && zengin.banks) || {};
+    setAllKeys(Object.keys(banks));
+  }, [zengin]);
 
   function onBankCodeChange(e) {
     setBankCode(e.target.value);
@@ -51,15 +59,18 @@ function BankCode(props) {
   }, [routingNumber]);
 
   useEffect(()=>{
+    if (!zengin) {
+      setKeys([]);
+    }
     if (bankFilter === "") {
       setKeys(allKeys);
     }
     const regex = new RegExp(bankFilter);
     setKeys(allKeys.filter((key)=>{
-      return regex.test(zenginCode[key].name);
+      return regex.test(zengin.banks[key].name);
     }));
 
-  }, [bankFilter]);
+  }, [bankFilter, allKeys, zengin]);
 
   useEffect(()=>{
     setBranchCode("");
@@ -67,7 +78,7 @@ function BankCode(props) {
   }, [bankCode]);
 
   useEffect(()=>{
-    const allBranchKeys = Object.keys(branches);
+    const allBranchKeys = Object.keys(branches || {});
     if (branchFilter === "") {
       setBranchKeys(allBranchKeys);
     }
@@ -93,7 +104,7 @@ function BankCode(props) {
                 onChange={onBankCodeChange} >
           {
             keys.map(key=>{
-              const bankInfo = zenginCode[key];
+              const bankInfo = zengin.banks[key];
               return <option key={key} value={key}>{bankInfo.name}</option>;
             })
           }
@@ -128,6 +139,7 @@ function BankCode(props) {
 
 BankCode.propTypes = {
   classes: PropTypes.object.isRequired,
+  db: PropTypes.object.isRequired,
   setRoutingNumber: PropTypes.func.isRequired,
 };
   

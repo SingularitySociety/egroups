@@ -27,7 +27,7 @@ export function extract_bank_data(data) {
 }
 
 function AccountBankJP(props) {
-  const { bank_data, setBankData, setPage, classes, business_type } = props;
+  const { db, bank_data, setBankData, setPage, classes, business_type } = props;
 
   useEffect(()=>{
     setPage("bank");
@@ -51,7 +51,7 @@ function AccountBankJP(props) {
 
   const valid = bank_data && bank_data.saved;
   return (<React.Fragment>
-    <BankCode setRoutingNumber={setRoutingNumber} routingNumber={bank_data && bank_data.routing_number} />
+    <BankCode db={db} setRoutingNumber={setRoutingNumber} routingNumber={bank_data && bank_data.routing_number} />
     {
       ["routing_number", "account_number", "account_holder_name"].map((key)=>{
         return <FormControl key={key} className={classes.form}>
@@ -66,6 +66,7 @@ function AccountBankJP(props) {
 
 AccountBankJP.propTypes = {
   classes: PropTypes.object.isRequired,
+  db: PropTypes.object.isRequired,
   setBankData: PropTypes.func.isRequired,
   setPage: PropTypes.func.isRequired,
 };
