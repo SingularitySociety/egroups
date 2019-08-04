@@ -48,7 +48,6 @@ function BankCode(props) {
   }
 
   useEffect(()=>{
-    console.log(routingNumber);
     if (routingNumber && routingNumber.length===7) {
       setBankCode(routingNumber.slice(0,4));
       setBranchCode(routingNumber.slice(4,7));      
@@ -117,7 +116,7 @@ function BankCode(props) {
                 onChange={onBranchCodeChange} >
           <option key="not selected" value=""></option>
           {
-            branchKeys.map((key)=>{
+            branches && branchKeys.map((key)=>{
               if (!branches[key]) {
                 return false;　// mismaatch (because of timing)
               }
