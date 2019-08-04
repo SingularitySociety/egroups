@@ -3,10 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Select, InputLabel, TextField, FormControl } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
-//import zenginCode from 'zengin-code';
 import useDocument from './useDocument';
-
-//const allKeys = Object.keys(zenginCode);
 
 const styles = theme => ({
   formControl: {
@@ -88,8 +85,6 @@ function BankCode(props) {
     }));
 
   }, [branchFilter, branches]);
-
-  //console.log(branches);
 
   return (
     <div>
