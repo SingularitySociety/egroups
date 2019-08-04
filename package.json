@@ -18,8 +18,7 @@
     "react-router-dom": "^5.0.0",
     "react-scripts": "3.0.1",
     "react-stripe-elements": "^3.0.0",
-    "validator": "^11.1.0",
-    "zengin-code": "^1.0.0-p20190729"
+    "validator": "^11.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -56,6 +55,7 @@
     "@firebase/testing": "^0.10.1",
     "chai": "^4.2.0",
     "firebase-admin": "^8.3.0",
-    "mocha": "^6.1.4"
+    "mocha": "^6.1.4",
+    "zengin-code": "^1.0.0-p20190729"
   }
 }
