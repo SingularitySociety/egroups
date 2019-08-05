@@ -210,7 +210,6 @@ function CustomAccount(props) {
         {
            (tabValue === 2) &&       
            <AccountBankJP bank_data={bank_data} 
-              requirements={requirementsP} 
               db={db}
               setPage={setPage}
               business_type={business_type}
@@ -245,7 +244,6 @@ function CustomAccount(props) {
         {
            (tabValue === 1) &&       
            <AccountBankJP bank_data={bank_data} 
-              requirements={requirementsP} 
               db={db}
               setPage={setPage}
               business_type={business_type}
