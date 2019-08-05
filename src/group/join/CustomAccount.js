@@ -120,6 +120,9 @@ function CustomAccount(props) {
       obj[subkey] = value;
       new_data[key] = obj;
       console.log(obj);
+    } else if (key === "gender" && value === "please.specify") {
+      console.log("please_specify was selected");
+      delete new_data.gender;
     } else {
       new_data[key] = value;
     }
@@ -133,6 +136,9 @@ function CustomAccount(props) {
       obj[subkey] = value;
       new_data[key] = obj;
       //console.log(obj);
+    } else if (key === "gender" && value === "please.specify") {
+      console.log("please_specify was selected");
+      delete new_data.gender;
     } else {
       new_data[key] = value;
     }
@@ -156,9 +162,11 @@ function CustomAccount(props) {
     }
     if (business_type === "company" && Object.keys(personal_data).length>0) {
       context.personal_data = personal_data;
+      /*
       if (context.personal_data.gender === "please.specify") {
         delete context.personal_data.gender;
       }
+      */
       context.personal_data.relationship = {account_opener:true}; // HACK;
     }
     console.log(context);

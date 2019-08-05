@@ -5,6 +5,16 @@
 npm run watch:mocha
 ```
 
+## Zengin
+
+### Generate zengin.json code
+
+npm run zengin
+
+### Deploy zengin data to the firestore
+
+call storeZenginData from the client (open /a/admin)
+
 ## Stripe
 
 Get secret key from https://dashboard.stripe.com/test/apikeys
