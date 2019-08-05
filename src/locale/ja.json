@@ -232,6 +232,8 @@
     "bank.name":"銀行名",
     "branch.name.filter":"支店名検索",
     "branch.name":"支店名",
+    "title.country":"国名と事業形態（一度設定すると変更できません）",
+    "title.plans":"プラン（少なくとも一つ設定してください）",
 
     "dummy":"dummy"
 }

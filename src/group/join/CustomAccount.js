@@ -10,7 +10,7 @@ import * as firebase from "firebase/app";
 import "firebase/functions";
 import AccountCompanyJP from './AccountCompanyJP';
 import AccountCompanyPersonJP, {extract_personal_dataJP} from './AccountCompanyPersonJP';
-import AccountIndividualJP from './AccountIndividualJP';
+//import AccountIndividualJP from './AccountIndividualJP';
 import AccountBankJP, {extract_bank_data} from './AccountBankJP';
 import AccountAccept from './AccountAccept';
 

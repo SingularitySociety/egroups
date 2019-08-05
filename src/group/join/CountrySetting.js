@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CountryOptions from '../../options/CountryOptions';
 import BusinessTypeOptions from '../../options/BusinessTypeOptions';
-import { FormControl, InputLabel, Select, Button, FormGroup, TextField } from '@material-ui/core';
+import { FormControl, InputLabel, Select, Button, TextField, Typography } from '@material-ui/core';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import * as firebase from "firebase/app";
 import "firebase/functions";
@@ -59,17 +59,20 @@ function CountrySetting(props) {
     try {
       //const { account:{country} } = account;
       return (<div>
-        <FormGroup row>
+        <Typography variant="h4" component="h4">
+          <FormattedMessage id="title.country" />
+        </Typography>
+        <FormControl className={classes.formControl}>
           <TextField label={<FormattedMessage id="billing.country"/>} 
             value={messages[country]} disabled={true} className={classes.textField}
             InputProps={{classes:{input:classes.textColor}}}/>
-        </FormGroup>
+        </FormControl>
         <br/>
-        <FormGroup row>
+        <FormControl className={classes.formControl}>
           <TextField label={<FormattedMessage id="business.type"/>} 
             value={messages[business_type]} disabled={true} className={classes.textField}
             InputProps={{classes:{input:classes.textColor}}}/>
-        </FormGroup>
+        </FormControl>
       </div>)
     } catch(e) {
       return "error"; // BUGBUG
@@ -77,6 +80,9 @@ function CountrySetting(props) {
   }
 
   return <div>
+    <Typography variant="h4" component="h4">
+      <FormattedMessage id="title.country" />
+    </Typography>
     <FormControl className={classes.formControl}>
       <InputLabel><FormattedMessage id="billing.country" /></InputLabel>
       <Select native value={country}　onChange={handleCountryChange}>

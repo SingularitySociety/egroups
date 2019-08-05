@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { Fab, TextField, Grid, Button, IconButton } from '@material-ui/core';
+import { Fab, TextField, Grid, Button, IconButton, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { FormattedMessage } from 'react-intl';
@@ -93,6 +93,9 @@ function SettingsBilling(props) {
   return (
     <div>
       <CountrySetting group={group} account={account}/>
+      <Typography variant="h4" component="h4">
+          <FormattedMessage id="title.plans" />
+      </Typography>
       {
         plans.map((plan, index)=>{
           const isNameValid = plan.name.length > 0;
