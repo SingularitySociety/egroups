@@ -205,6 +205,7 @@ function CustomAccount(props) {
               groupId={groupId}
               setPage={setPage}
               requirements={requirementsP}
+              prefix={""}
               setPersonValue={setPersonValue} />
         }
         {
@@ -234,12 +235,14 @@ function CustomAccount(props) {
         </Tabs>
         </Paper>
         {
-         (tabValue === 0) &&       
-           <AccountIndividualJP 
-            account_data={account_data} 
-            requirements={requirements} 
-            setPage={setPage}
-            setAccountValue={setAccountValue} />
+            (tabValue === 0) &&       
+            <AccountCompanyPersonJP 
+              personal_data={account_data}
+              groupId={groupId}
+              setPage={setPage}
+              requirements={requirements}
+              prefix={"individual."}
+              setPersonValue={setAccountValue} />
         }
         {
            (tabValue === 1) &&       
@@ -256,8 +259,9 @@ function CustomAccount(props) {
             requirements={requirements} 
             setPage={setPage}
             setAcceptance={setAcceptance}/>
-        }      </div>
-    }
+        }      
+       </div>
+   }
     <div>
       <Button variant="contained" color="primary" type="submit" onClick={handleSubmit}>
         <FormattedMessage id="submit" />

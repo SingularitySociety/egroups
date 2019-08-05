@@ -42,7 +42,7 @@ const styles = theme => ({
   },
 });
 
-const person_keys = ["last_name_kana", "last_name_kanji", "first_name_kana", "first_name_kanji"];
+const person_keys = ["last_name_kanji", "last_name_kana", "first_name_kanji", "first_name_kana"];
 const dob_keys = ["year", "month", "day"];
 const address_keys = ["postal_code", "state", "city", "town", "line1", "line2"];
 const person_keys_all = ["last_name_kana", "last_name_kanji", "first_name_kana", "first_name_kanji", "phone", "dob", "gender", "address_kanji", "address_kana"];
@@ -58,12 +58,12 @@ export function extract_personal_dataJP(person) {
 }
 
 function AccountCompanyPersonJP(props) {
-  const { groupId, classes, personal_data, setPersonValue, requirements, setPage } = props;
+  const { groupId, classes, personal_data, setPersonValue, requirements, setPage, prefix } = props;
   const [processing, setProcessing] = useState(false);
   console.log(requirements);
 
   useEffect(()=>{
-    setPage("opener");
+    setPage("person");
   }, [setPage]);
 
   function onFileInput(e) {
@@ -88,7 +88,7 @@ function AccountCompanyPersonJP(props) {
     {
       person_keys.map((key)=>{
         return <FormControl key={key} className={classes.form}>
-        <TextField error={requirements[key]} label={<FormattedMessage id={"individual."+key} />} 
+        <TextField error={requirements[prefix+key]} label={<FormattedMessage id={"individual."+key} />} 
               value={personal_data[key] || ""} 
               onChange={(e)=>setPersonValue(key, null, e.target.value)} />
       </FormControl>
@@ -113,7 +113,7 @@ function AccountCompanyPersonJP(props) {
     }
     <br/>
     <FormControl key={"phone"} className={classes.form}>
-        <TextField error={requirements["phone"]} label={<FormattedMessage id={"individual.phone"} />} 
+        <TextField error={requirements[prefix+"phone"]} label={<FormattedMessage id={"individual.phone"} />} 
               value={personal_data["phone"] || ""} 
               onChange={(e)=>setPersonValue("phone", null, e.target.value)} />
     </FormControl>
@@ -125,7 +125,7 @@ function AccountCompanyPersonJP(props) {
         }
         const ckey="address_kanji."+subkey;
         return <FormControl key={ckey} className={classes.form}>
-        <TextField error={requirements[ckey]} label={<FormattedMessage id={ckey} />} 
+        <TextField error={requirements[prefix+ckey]} label={<FormattedMessage id={ckey} />} 
               value={(personal_data["address_kanji"]||{})[subkey] || ""} 
               onChange={(e)=>setPersonValue("address_kanji", subkey, e.target.value)} />
       </FormControl>
@@ -135,7 +135,7 @@ function AccountCompanyPersonJP(props) {
       address_keys.map((subkey)=>{
         const ckey="address_kana."+subkey;
         return <FormControl key={ckey} className={classes.form}>
-        <TextField error={requirements[ckey]} label={<FormattedMessage id={ckey} />} 
+        <TextField error={requirements[prefix+ckey]} label={<FormattedMessage id={ckey} />} 
               value={(personal_data["address_kana"]||{})[subkey] || ""} 
               onChange={(e)=>setPersonValue("address_kana", subkey, e.target.value)} />
       </FormControl>
@@ -143,7 +143,7 @@ function AccountCompanyPersonJP(props) {
     }
     <br/>
     {
-      requirements["verification.document"] && 
+      requirements[prefix+"verification.document"] && 
       <div>
         <FormControl className={classes.verification} >
           <Button variant="contained" component="label">

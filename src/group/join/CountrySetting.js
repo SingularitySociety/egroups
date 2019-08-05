@@ -91,7 +91,7 @@ function CountrySetting(props) {
       </Select>
     </FormControl>
     <br/>
-    <Button variant="contained" onClick={onSubmit} className={ classes.button }>
+    <Button variant="contained" color="primary" onClick={onSubmit} className={ classes.button }>
       <FormattedMessage id="submit" />
     </Button>
     {
