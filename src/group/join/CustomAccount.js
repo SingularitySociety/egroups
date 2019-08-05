@@ -242,7 +242,23 @@ function CustomAccount(props) {
             setPage={setPage}
             setAccountValue={setAccountValue} />
         }
-      </div>
+        {
+           (tabValue === 1) &&       
+           <AccountBankJP bank_data={bank_data} 
+              requirements={requirementsP} 
+              db={db}
+              setPage={setPage}
+              business_type={business_type}
+              setBankData={setBankData} />
+        }
+        {
+          (tabValue === 2) &&
+          <AccountAccept 
+            acceptance={acceptance}
+            requirements={requirements} 
+            setPage={setPage}
+            setAcceptance={setAcceptance}/>
+        }      </div>
     }
     <div>
       <Button variant="contained" color="primary" type="submit" onClick={handleSubmit}>
