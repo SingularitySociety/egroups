@@ -96,7 +96,7 @@ function AccountCompanyPersonJP(props) {
     }
     <br/>
     <FormControl className={classes.form}>
-      <InputLabel><FormattedMessage id="gender" /></InputLabel>
+      <InputLabel error={!personal_data["gender"]}><FormattedMessage id="gender" /></InputLabel>
       <Select native value={personal_data["gender"] || "please.specify"} onChange={(e)=>setPersonValue("gender", null, e.target.value)} >
         <GenderOptions />
       </Select>
