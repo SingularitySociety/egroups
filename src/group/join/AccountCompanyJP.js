@@ -23,7 +23,19 @@ function companyed(key) {
   }
 }
 
+const name_keys = ["name", "name_kana", "name_kanji", "tax_id"];
 const address_keys = ["postal_code", "state", "city", "town", "line1", "line2"];
+
+export function company_data_required(requirements) {
+  let keys = ["company.phone"];
+  keys = keys.concat(name_keys.map(key => "company."+key));
+  keys = keys.concat(address_keys.map(key => "company.address_kanji."+key));
+  keys = keys.concat(address_keys.map(key => "company.address_kana."+key));
+
+  return keys.reduce((summary, key)=>{
+    return summary || requirements[key];
+  }, false);
+}
 
 function AccountCompanyJP(props) {
   const { classes, account_data, requirements, setAccountValue, setPage } = props;
@@ -35,7 +47,7 @@ function AccountCompanyJP(props) {
   console.log("###", account_data);
   return (<React.Fragment>
     {
-      ["name", "name_kana", "name_kanji", "tax_id"].map((key)=>{
+      name_keys.map((key)=>{
         const ckey = companyed(key);
         let value = account_data[key] || "";
         const disabled = (key === "tax_id") && account_data.tax_id_provided;

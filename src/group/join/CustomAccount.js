@@ -8,7 +8,7 @@ import useOnDocument from '../../common/useOnDocument';
 import { FormattedMessage } from 'react-intl';
 import * as firebase from "firebase/app";
 import "firebase/functions";
-import AccountCompanyJP from './AccountCompanyJP';
+import AccountCompanyJP, {company_data_required} from './AccountCompanyJP';
 import AccountCompanyPersonJP, {extract_personal_dataJP} from './AccountCompanyPersonJP';
 //import AccountIndividualJP from './AccountIndividualJP';
 import AccountBankJP, {extract_bank_data, bank_data_required} from './AccountBankJP';
@@ -57,6 +57,7 @@ function CustomAccount(props) {
   const [tabValue, setTabValue] = useState(0);
   const [page, setPage] = useState(false);
   const [acceptance, setAcceptance] = useState(false);
+  const [tabColors, setTabColors] = useState({});
   const resultRef = useRef(null);
 
   //console.log(account);
@@ -112,6 +113,13 @@ function CustomAccount(props) {
       }
     }
   }, [account]);
+
+  useEffect(()=>{
+    const colors = {};
+    colors.bank = bank_data_required(requirements) ? "error" : "inherit";
+    colors.company = company_data_required(requirements) ? "error" : "inherit";
+    setTabColors(colors);
+  }, [requirements]);
 
   function setAccountValue(key, subkey, value) {
     const new_data = smartCopy(account_data);
@@ -186,16 +194,13 @@ function CustomAccount(props) {
     setTabValue(newValue);
   }
  
-  const tabColors = {};
-  tabColors.bank = bank_data_required(requirements) ? "error" : "inherit";
-
   return <form>
     {
       (business_type === "company") ?
       <div>
         <Paper square className={classes.paper}>
         <Tabs value={tabValue} indicatorColor="primary" onChange={handleTabChange}>
-          <Tab label={<Typography color="inherit"><FormattedMessage id="tab.company"/></Typography>} />
+          <Tab label={<Typography color={tabColors.company}><FormattedMessage id="tab.company"/></Typography>} />
           <Tab label={<Typography color="inherit"><FormattedMessage id="tab.person"/></Typography>} />
           <Tab label={<Typography color={tabColors.bank}><FormattedMessage id="tab.bank"/></Typography>} />
           <Tab label={<Typography color="inherit"><FormattedMessage id="tab.accept"/></Typography>} />
