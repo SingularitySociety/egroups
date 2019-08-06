@@ -15,6 +15,13 @@ const styles = theme => ({
     }
   });
 
+export function accept_data_required(requirements) {
+  const keys = ["tos_acceptance.date"];
+  return keys.reduce((summary, key)=>{
+    return summary || requirements[key];
+  }, false);
+}
+  
 function AccountAccept(props) {
   const { setAcceptance, acceptance, requirements, classes, setPage } = props;
   useEffect(()=>{

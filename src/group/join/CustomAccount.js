@@ -12,7 +12,7 @@ import AccountCompanyJP, {company_data_required} from './AccountCompanyJP';
 import AccountCompanyPersonJP, {extract_personal_dataJP, person_data_required} from './AccountCompanyPersonJP';
 //import AccountIndividualJP from './AccountIndividualJP';
 import AccountBankJP, {extract_bank_data, bank_data_required} from './AccountBankJP';
-import AccountAccept from './AccountAccept';
+import AccountAccept, {accept_data_required} from './AccountAccept';
 
 const styles = theme => ({
   paper: {
@@ -117,6 +117,7 @@ function CustomAccount(props) {
   useEffect(()=>{
     const colors = {};
     colors.bank = bank_data_required(requirements) ? "error" : "inherit";
+    colors.accept = accept_data_required(requirements) ? "error" : "inherit";
     if (business_type === "company") {
       colors.company = company_data_required(requirements) ? "error" : "inherit";
       colors.opener = "inherit";
@@ -213,7 +214,7 @@ function CustomAccount(props) {
           <Tab label={<Typography color={tabColors.company}><FormattedMessage id="tab.company"/></Typography>} />
           <Tab label={<Typography color={tabColors.opener}><FormattedMessage id="tab.person"/></Typography>} />
           <Tab label={<Typography color={tabColors.bank}><FormattedMessage id="tab.bank"/></Typography>} />
-          <Tab label={<Typography color="inherit"><FormattedMessage id="tab.accept"/></Typography>} />
+          <Tab label={<Typography color={tabColors.accept}><FormattedMessage id="tab.accept"/></Typography>} />
         </Tabs>
         </Paper>
         {
@@ -257,7 +258,7 @@ function CustomAccount(props) {
         <Tabs value={tabValue} indicatorColor="primary" onChange={handleTabChange}>
           <Tab label={<Typography color={tabColors.individual}><FormattedMessage id="tab.individual"/></Typography>} />
           <Tab label={<Typography color={tabColors.bank}><FormattedMessage id="tab.bank" /></Typography>} />
-          <Tab label={<Typography color="inherit"><FormattedMessage id="tab.accept"/></Typography>} />
+          <Tab label={<Typography color={tabColors.accept}><FormattedMessage id="tab.accept"/></Typography>} />
         </Tabs>
         </Paper>
         {
