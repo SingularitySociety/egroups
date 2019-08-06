@@ -125,6 +125,8 @@ function CustomAccount(props) {
       } else if (requirementsP) {
         colors.opener = person_data_required("", requirementsP) ? "error" : "inherit";
       }
+    } else if (business_type === "individual") {
+      colors.individual = person_data_required("individual.", requirements) ? "error" : "inherit";
     }
     setTabColors(colors);
   }, [requirements, requirementsP, business_type]);
@@ -253,7 +255,7 @@ function CustomAccount(props) {
       <div>
         <Paper square className={classes.paper}>
         <Tabs value={tabValue} indicatorColor="primary" onChange={handleTabChange}>
-          <Tab label={<Typography color="inherit"><FormattedMessage id="tab.individual"/></Typography>} />
+          <Tab label={<Typography color={tabColors.individual}><FormattedMessage id="tab.individual"/></Typography>} />
           <Tab label={<Typography color={tabColors.bank}><FormattedMessage id="tab.bank" /></Typography>} />
           <Tab label={<Typography color="inherit"><FormattedMessage id="tab.accept"/></Typography>} />
         </Tabs>
