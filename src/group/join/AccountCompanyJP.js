@@ -44,7 +44,7 @@ function AccountCompanyJP(props) {
     setPage("company");
   }, [setPage]);
 
-  console.log("###", account_data);
+  //console.log("###", account_data);
   return (<React.Fragment>
     {
       name_keys.map((key)=>{

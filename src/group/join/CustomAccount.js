@@ -231,6 +231,7 @@ function CustomAccount(props) {
            (tabValue === 1) &&       
            <AccountCompanyPersonJP 
               personal_data={personal_data}
+              no_opener={requirements["relationship.account_opener"]}
               groupId={groupId}
               setPage={setPage}
               requirements={requirementsP}

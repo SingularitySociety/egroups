@@ -72,7 +72,7 @@ export function person_data_required(prefix, requirements) {
 }
 
 function AccountCompanyPersonJP(props) {
-  const { groupId, classes, personal_data, setPersonValue, requirements, setPage, prefix } = props;
+  const { groupId, classes, personal_data, setPersonValue, requirements, setPage, prefix, no_opener } = props;
   const [processing, setProcessing] = useState(false);
   //console.log(requirements);
 
@@ -102,7 +102,7 @@ function AccountCompanyPersonJP(props) {
     {
       person_keys.map((key)=>{
         return <FormControl key={key} className={classes.form}>
-        <TextField error={requirements[prefix+key]} label={<FormattedMessage id={"individual."+key} />} 
+        <TextField error={no_opener || requirements[prefix+key]} label={<FormattedMessage id={"individual."+key} />} 
               value={personal_data[key] || ""} 
               onChange={(e)=>setPersonValue(key, null, e.target.value)} />
       </FormControl>
@@ -120,6 +120,7 @@ function AccountCompanyPersonJP(props) {
       dob_keys.map((key)=>{
         return <FormControl key={key} className={classes[key]}>
         <TextField label={<FormattedMessage id={"individual.dob."+key} />} 
+              error={no_opener}
               value={(personal_data.dob && personal_data.dob[key]) || ""} 
               onChange={(e)=>setPersonValue("dob", key, parseInt(e.target.value) || null)} />
       </FormControl>
@@ -127,7 +128,7 @@ function AccountCompanyPersonJP(props) {
     }
     <br/>
     <FormControl key={"phone"} className={classes.form}>
-        <TextField error={requirements[prefix+"phone"]} label={<FormattedMessage id={"individual.phone"} />} 
+        <TextField error={no_opener || requirements[prefix+"phone"]} label={<FormattedMessage id={"individual.phone"} />} 
               value={personal_data["phone"] || ""} 
               onChange={(e)=>setPersonValue("phone", null, e.target.value)} />
     </FormControl>
@@ -139,7 +140,7 @@ function AccountCompanyPersonJP(props) {
         }
         const ckey="address_kanji."+subkey;
         return <FormControl key={ckey} className={classes.form}>
-        <TextField error={requirements[prefix+ckey]} label={<FormattedMessage id={ckey} />} 
+        <TextField error={no_opener || requirements[prefix+ckey]} label={<FormattedMessage id={ckey} />} 
               value={(personal_data["address_kanji"]||{})[subkey] || ""} 
               onChange={(e)=>setPersonValue("address_kanji", subkey, e.target.value)} />
       </FormControl>
@@ -149,7 +150,7 @@ function AccountCompanyPersonJP(props) {
       address_keys.map((subkey)=>{
         const ckey="address_kana."+subkey;
         return <FormControl key={ckey} className={classes.form}>
-        <TextField error={requirements[prefix+ckey]} label={<FormattedMessage id={ckey} />} 
+        <TextField error={no_opener || requirements[prefix+ckey]} label={<FormattedMessage id={ckey} />} 
               value={(personal_data["address_kana"]||{})[subkey] || ""} 
               onChange={(e)=>setPersonValue("address_kana", subkey, e.target.value)} />
       </FormControl>
