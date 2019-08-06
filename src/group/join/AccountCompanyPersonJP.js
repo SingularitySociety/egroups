@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { TextField, FormControl, InputLabel, Select, Button } from '@material-ui/core';
+import { TextField, FormControl, InputLabel, Select, Button, Typography } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import GenderOptions from '../../options/GenderOptions';
 import UploadButton from '@material-ui/icons/CloudUpload';
@@ -58,7 +58,7 @@ export function extract_personal_dataJP(person) {
 }
 
 export function person_data_required(prefix, requirements) {
-  let keys = [];
+  let keys = [prefix+"verification.document"];
   keys = keys.concat(person_keys.map(key => prefix+key));
   keys = keys.concat(dob_keys.map(key => prefix+"dob."+key));
   keys = keys.concat(address_keys.map(key => prefix+"address_kanji."+key));
@@ -74,7 +74,7 @@ export function person_data_required(prefix, requirements) {
 function AccountCompanyPersonJP(props) {
   const { groupId, classes, personal_data, setPersonValue, requirements, setPage, prefix } = props;
   const [processing, setProcessing] = useState(false);
-  console.log(requirements);
+  //console.log(requirements);
 
   useEffect(()=>{
     setPage("person");
@@ -162,8 +162,10 @@ function AccountCompanyPersonJP(props) {
         <FormControl className={classes.verification} >
           <Button variant="contained" component="label">
             <UploadButton className={classes.upload}/>
-            <FormattedMessage id="verification.document" />
-            <input type="file" accept="image/*" style={{ display: "none" }} onChange={onFileInput} />
+            <Typography color={ requirements[prefix+"verification.document"] ? "error" : "inherit"}>
+              <FormattedMessage id="verification.document" />
+            </Typography>
+              <input type="file" accept="image/*" style={{ display: "none" }} onChange={onFileInput} />
           </Button>
         </FormControl>
         <Processing active={processing} />

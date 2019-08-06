@@ -34,7 +34,7 @@ function AccountAccept(props) {
     };
   }, [setAcceptance])
 
-  console.log(requirements);
+  //console.log(requirements);
   if (!requirements["tos_acceptance.ip"]) {
     return (
       <Typography className={classes.accepted}>

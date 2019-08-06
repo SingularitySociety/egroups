@@ -55,7 +55,7 @@ function CustomAccount(props) {
   const [requirementsP, setRequirementsP] = useState({});
   const [business_type, setBusinessType] = useState(null);
   const [tabValue, setTabValue] = useState(0);
-  const [page, setPage] = useState(false);
+  const [page, setPage] = useState(null);
   const [acceptance, setAcceptance] = useState(false);
   const [tabColors, setTabColors] = useState({});
   const resultRef = useRef(null);
@@ -67,12 +67,14 @@ function CustomAccount(props) {
     setTabbar("settings.bank");
   }, [setTabbar]);
 
+  /*
   useEffect(()=>{
     console.log("page:", page);
   }, [page]);
+  */
 
   useEffect(()=>{
-    console.log("----", error);
+    //console.log("----", error);
     if (error) {
       resultRef.current.scrollIntoView();
     }
