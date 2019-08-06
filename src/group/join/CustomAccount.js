@@ -186,7 +186,8 @@ function CustomAccount(props) {
     setTabValue(newValue);
   }
  
-  const bankColor = bank_data_required(requirements) ? "error" : "inherit";
+  const tabColors = {};
+  tabColors.bank = bank_data_required(requirements) ? "error" : "inherit";
 
   return <form>
     {
@@ -196,7 +197,7 @@ function CustomAccount(props) {
         <Tabs value={tabValue} indicatorColor="primary" onChange={handleTabChange}>
           <Tab label={<Typography color="inherit"><FormattedMessage id="tab.company"/></Typography>} />
           <Tab label={<Typography color="inherit"><FormattedMessage id="tab.person"/></Typography>} />
-          <Tab label={<Typography color={bankColor}><FormattedMessage id="tab.bank"/></Typography>} />
+          <Tab label={<Typography color={tabColors.bank}><FormattedMessage id="tab.bank"/></Typography>} />
           <Tab label={<Typography color="inherit"><FormattedMessage id="tab.accept"/></Typography>} />
         </Tabs>
         </Paper>
@@ -240,7 +241,7 @@ function CustomAccount(props) {
         <Paper square className={classes.paper}>
         <Tabs value={tabValue} indicatorColor="primary" onChange={handleTabChange}>
           <Tab label={<Typography color="inherit"><FormattedMessage id="tab.individual"/></Typography>} />
-          <Tab label={<Typography color={bankColor}><FormattedMessage id="tab.bank" /></Typography>} />
+          <Tab label={<Typography color={tabColors.bank}><FormattedMessage id="tab.bank" /></Typography>} />
           <Tab label={<Typography color="inherit"><FormattedMessage id="tab.accept"/></Typography>} />
         </Tabs>
         </Paper>
