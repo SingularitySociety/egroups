@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Button, Paper, Tabs, Tab } from '@material-ui/core';
+import { Button, Paper, Tabs, Tab, Typography } from '@material-ui/core';
 import ResultMessage from '../../common/ResultMessage';
 import Processing from '../../common/Processing';
 import useOnDocument from '../../common/useOnDocument';
@@ -11,7 +11,7 @@ import "firebase/functions";
 import AccountCompanyJP from './AccountCompanyJP';
 import AccountCompanyPersonJP, {extract_personal_dataJP} from './AccountCompanyPersonJP';
 //import AccountIndividualJP from './AccountIndividualJP';
-import AccountBankJP, {extract_bank_data} from './AccountBankJP';
+import AccountBankJP, {extract_bank_data, bank_data_required} from './AccountBankJP';
 import AccountAccept from './AccountAccept';
 
 const styles = theme => ({
@@ -186,16 +186,18 @@ function CustomAccount(props) {
     setTabValue(newValue);
   }
  
+  const bankColor = bank_data_required(requirements) ? "error" : "inherit";
+
   return <form>
     {
       (business_type === "company") ?
       <div>
         <Paper square className={classes.paper}>
         <Tabs value={tabValue} indicatorColor="primary" onChange={handleTabChange}>
-          <Tab label={<FormattedMessage id="tab.company"/>} />
-          <Tab label={<FormattedMessage id="tab.person"/>} />
-          <Tab label={<FormattedMessage id="tab.bank"/>} />
-          <Tab label={<FormattedMessage id="tab.accept"/>} />
+          <Tab label={<Typography color="inherit"><FormattedMessage id="tab.company"/></Typography>} />
+          <Tab label={<Typography color="inherit"><FormattedMessage id="tab.person"/></Typography>} />
+          <Tab label={<Typography color={bankColor}><FormattedMessage id="tab.bank"/></Typography>} />
+          <Tab label={<Typography color="inherit"><FormattedMessage id="tab.accept"/></Typography>} />
         </Tabs>
         </Paper>
         {
@@ -237,9 +239,9 @@ function CustomAccount(props) {
       <div>
         <Paper square className={classes.paper}>
         <Tabs value={tabValue} indicatorColor="primary" onChange={handleTabChange}>
-          <Tab label={<FormattedMessage id="tab.individual"/>} />
-          <Tab label={<FormattedMessage id="tab.bank" />} />
-          <Tab label={<FormattedMessage id="tab.accept"/>} />
+          <Tab label={<Typography color="inherit"><FormattedMessage id="tab.individual"/></Typography>} />
+          <Tab label={<Typography color={bankColor}><FormattedMessage id="tab.bank" /></Typography>} />
+          <Tab label={<Typography color="inherit"><FormattedMessage id="tab.accept"/></Typography>} />
         </Tabs>
         </Paper>
         {

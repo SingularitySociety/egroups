@@ -26,6 +26,13 @@ export function extract_bank_data(data) {
   }
 }
 
+export function bank_data_required(requirements) {
+  const keys = ["external_account"];
+  return keys.reduce((summary, key)=>{
+    return summary || requirements[key];
+  }, false);
+}
+
 function AccountBankJP(props) {
   const { db, bank_data, setBankData, setPage, classes, business_type } = props;
 
