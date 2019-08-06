@@ -57,6 +57,20 @@ export function extract_personal_dataJP(person) {
   }, {});
 }
 
+export function person_data_required(prefix, requirements) {
+  let keys = [];
+  keys = keys.concat(person_keys.map(key => prefix+key));
+  keys = keys.concat(dob_keys.map(key => prefix+"dob."+key));
+  keys = keys.concat(address_keys.map(key => prefix+"address_kanji."+key));
+  keys = keys.concat(address_keys.map(key => prefix+"address_kana."+key));
+  keys.push(prefix+"phone");
+  keys.push(prefix+"gender");
+
+  return keys.reduce((summary, key)=>{
+    return summary || requirements[key];
+  }, false);
+}
+
 function AccountCompanyPersonJP(props) {
   const { groupId, classes, personal_data, setPersonValue, requirements, setPage, prefix } = props;
   const [processing, setProcessing] = useState(false);

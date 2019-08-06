@@ -9,7 +9,7 @@ import { FormattedMessage } from 'react-intl';
 import * as firebase from "firebase/app";
 import "firebase/functions";
 import AccountCompanyJP, {company_data_required} from './AccountCompanyJP';
-import AccountCompanyPersonJP, {extract_personal_dataJP} from './AccountCompanyPersonJP';
+import AccountCompanyPersonJP, {extract_personal_dataJP, person_data_required} from './AccountCompanyPersonJP';
 //import AccountIndividualJP from './AccountIndividualJP';
 import AccountBankJP, {extract_bank_data, bank_data_required} from './AccountBankJP';
 import AccountAccept from './AccountAccept';
@@ -80,7 +80,7 @@ function CustomAccount(props) {
 
   useEffect(()=> {
     if (account && account.account) {
-      console.log(account.account);
+      console.log(account);
       const country = account.account.country;
       setBusinessType(account.account.business_type);
       if (account.account.business_type === "company") {
@@ -117,9 +117,17 @@ function CustomAccount(props) {
   useEffect(()=>{
     const colors = {};
     colors.bank = bank_data_required(requirements) ? "error" : "inherit";
-    colors.company = company_data_required(requirements) ? "error" : "inherit";
+    if (business_type === "company") {
+      colors.company = company_data_required(requirements) ? "error" : "inherit";
+      colors.opener = "inherit";
+      if (requirements["relationship.account_opener"]) {
+        colors.opener = "error";
+      } else if (requirementsP) {
+        colors.opener = person_data_required("", requirementsP) ? "error" : "inherit";
+      }
+    }
     setTabColors(colors);
-  }, [requirements]);
+  }, [requirements, requirementsP, business_type]);
 
   function setAccountValue(key, subkey, value) {
     const new_data = smartCopy(account_data);
@@ -201,7 +209,7 @@ function CustomAccount(props) {
         <Paper square className={classes.paper}>
         <Tabs value={tabValue} indicatorColor="primary" onChange={handleTabChange}>
           <Tab label={<Typography color={tabColors.company}><FormattedMessage id="tab.company"/></Typography>} />
-          <Tab label={<Typography color="inherit"><FormattedMessage id="tab.person"/></Typography>} />
+          <Tab label={<Typography color={tabColors.opener}><FormattedMessage id="tab.person"/></Typography>} />
           <Tab label={<Typography color={tabColors.bank}><FormattedMessage id="tab.bank"/></Typography>} />
           <Tab label={<Typography color="inherit"><FormattedMessage id="tab.accept"/></Typography>} />
         </Tabs>
