@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { TextField, FormControl } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
+import PhoneNumber from './PhoneNumber';
 
 const styles = theme => ({
   field: {
@@ -84,11 +85,18 @@ function AccountCompanyJP(props) {
         </FormControl>
       })      
     }
+    <PhoneNumber setPhoneNumber={(value)=>setAccountValue("phone", null, value)} 
+      phoneNumber={account_data.phone}
+      required={requirements["company.phone"]} />
+    {
+      /*
     <FormControl className={classes.form}>
       <TextField error={requirements["company.phone"]} label={<FormattedMessage id="company.phone" />} 
             value={account_data.phone || ""} 
             onChange={(e)=>setAccountValue("phone", null, e.target.value)} />
     </FormControl>
+      */
+    }
   </React.Fragment>)
 }
 
