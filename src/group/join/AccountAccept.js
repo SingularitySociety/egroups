@@ -44,6 +44,16 @@ function AccountAccept(props) {
   }
 
   return (<React.Fragment>
+      <Typography>
+        <FormattedMessage id="please.agree" />
+      </Typography>
+      <ul>
+        <li>
+          <Link to="https://stripe.com/ja-us/connect-account/legal">
+            <FormattedMessage id="stripe.agreement" />
+          </Link>
+        </li>        
+      </ul>
       <FormControlLabel
         className={classes.acceptance}
         control={
@@ -55,12 +65,6 @@ function AccountAccept(props) {
         }
         label={<FormattedMessage id="do.accept" />}
       />
-      <Typography>
-      By registering your account, you agree to our Services Agreement
-      and the&nbsp;
-      <Link to="https://stripe.com/ja-us/connect-account/legal">
-        Stripe Connected Account Agreement</Link>.
-      </Typography>
     </React.Fragment>);
 }
 

@@ -222,6 +222,8 @@
     "branch.name":"支店名",
     "title.country":"国名と事業形態（一度設定すると変更できません）",
     "title.plans":"プラン（少なくとも一つ設定してください）",
+    "please.agree":"課金サービスを利用するには、以下の利用規約に同意していただく必要があります。",
+    "stripe.agreement":"Stripe Connected Account Agreement",
 
     "dummy":"dummy"
 }
