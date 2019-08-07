@@ -133,13 +133,18 @@ function AccountCompanyPersonJP(props) {
       })      
     }
     <br/>
-    <PhoneNumber setPhoneNumber={setPhoneNumber} phoneNumber={personal_data && personal_data.phone}/>
+    <PhoneNumber setPhoneNumber={setPhoneNumber} 
+          phoneNumber={personal_data && personal_data.phone}
+          required={no_opener || requirements[prefix+"phone"]} />
+    {
+    /*
     <FormControl key={"phone"} className={classes.form}>
         <TextField error={no_opener || requirements[prefix+"phone"]} label={<FormattedMessage id={"individual.phone"} />} 
               value={personal_data["phone"] || ""} 
               onChange={(e)=>setPersonValue("phone", null, e.target.value)} />
     </FormControl>
-    <br/>
+    */
+    }    
     {
       address_keys.map((subkey)=>{
         if (subkey==="postal_code") {

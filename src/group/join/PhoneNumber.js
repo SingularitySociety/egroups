@@ -21,7 +21,7 @@ const styles = theme => ({
 const regex = /^[0-9\-()]*/  
 
 function PhoneNumber(props) {
-  const { classes, setPhoneNumber, phoneNumber } = props;
+  const { classes, setPhoneNumber, phoneNumber, required } = props;
   const [countryCode, setCountryCode] = useState("+81");
   const [number, setNumber] = useState("");
 
@@ -63,13 +63,16 @@ function PhoneNumber(props) {
 
   return (<div>
       <FormControl className={classes.country}>
-        <InputLabel><FormattedMessage id="country.code" /></InputLabel>
+        <InputLabel error={required}>
+          <FormattedMessage id="country.code" />
+        </InputLabel>
         <Select native value={countryCode} onChange={onCountryCodeChange}>
           <CountryPhoneOptions />
         </Select>
       </FormControl>
       <FormControl className={classes.number}>
         <TextField value={number} onChange={onNumberChange}
+          error={required}
           label={<FormattedMessage id={"individual.phone"} />}/>
       </FormControl>
     </div>);
