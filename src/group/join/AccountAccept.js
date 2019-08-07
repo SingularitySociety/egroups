@@ -37,10 +37,19 @@ function AccountAccept(props) {
   //console.log(requirements);
   if (!requirements["tos_acceptance.ip"]) {
     return (
-      <Typography className={classes.accepted}>
-        <FormattedMessage id="acceptance.complete" />
-      </Typography> 
-    );
+      <React.Fragment>
+        <Typography className={classes.accepted}>
+          <FormattedMessage id="acceptance.complete" />
+        </Typography> 
+        <ul>
+          <li>
+            <Link to="https://stripe.com/ja-us/connect-account/legal">
+              <FormattedMessage id="stripe.agreement" />
+            </Link>
+          </li>        
+        </ul>
+      </React.Fragment>
+  );
   }
 
   return (<React.Fragment>

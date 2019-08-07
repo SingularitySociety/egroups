@@ -8,6 +8,7 @@ import UploadButton from '@material-ui/icons/CloudUpload';
 import * as firebase from "firebase/app";
 import "firebase/storage";
 import Processing from '../../common/Processing';
+import PhoneNumber from './PhoneNumber';
 
 const styles = theme => ({
   field: {
@@ -127,6 +128,7 @@ function AccountCompanyPersonJP(props) {
       })      
     }
     <br/>
+    <PhoneNumber />
     <FormControl key={"phone"} className={classes.form}>
         <TextField error={no_opener || requirements[prefix+"phone"]} label={<FormattedMessage id={"individual.phone"} />} 
               value={personal_data["phone"] || ""} 
