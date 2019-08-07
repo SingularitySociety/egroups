@@ -120,7 +120,7 @@ function AccountCompanyPersonJP(props) {
       dob_keys.map((key)=>{
         return <FormControl key={key} className={classes[key]}>
         <TextField label={<FormattedMessage id={"individual.dob."+key} />} 
-              error={no_opener}
+              error={no_opener || requirements[prefix+"dob."+key]}
               value={(personal_data.dob && personal_data.dob[key]) || ""} 
               onChange={(e)=>setPersonValue("dob", key, parseInt(e.target.value) || null)} />
       </FormControl>
