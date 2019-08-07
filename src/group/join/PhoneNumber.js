@@ -21,9 +21,22 @@ const styles = theme => ({
 const regex = /^[0-9\-()]*/  
 
 function PhoneNumber(props) {
-  const { classes, setPhoneNumber } = props;
+  const { classes, setPhoneNumber, phoneNumber } = props;
   const [countryCode, setCountryCode] = useState("+81");
   const [number, setNumber] = useState("");
+
+  useEffect(()=>{
+    console.log(phoneNumber);
+    if (phoneNumber) {
+      if (phoneNumber.slice(0,3)==="+81") {
+        setCountryCode("+81");
+        setNumber("0"+phoneNumber.slice(3));
+      } else if (phoneNumber.slice(0,2)==="+1") {
+        setCountryCode("+1");
+        setNumber(phoneNumber.slice(2));
+      }
+    }
+  }, [phoneNumber]);
 
   function onUpdate(co, num) {
     let newValue = co + num;    
@@ -50,7 +63,7 @@ function PhoneNumber(props) {
 
   return (<div>
       <FormControl className={classes.country}>
-        <InputLabel><FormattedMessage id="gender" /></InputLabel>
+        <InputLabel><FormattedMessage id="country.code" /></InputLabel>
         <Select native value={countryCode} onChange={onCountryCodeChange}>
           <CountryPhoneOptions />
         </Select>

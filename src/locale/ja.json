@@ -214,7 +214,7 @@
     "account_number":"口座番号",
     "account_holder_name":"講座名義（カナ）",
     "verification.document":"身分証明書",
-    "acceptance.complete":"同意済み",
+    "acceptance.complete":"以下の利用規約に同意済みです。",
     "do.accept":"同意します",
     "bank.name.filter":"銀行名検索",
     "bank.name":"銀行名",
@@ -224,6 +224,7 @@
     "title.plans":"プラン（少なくとも一つ設定してください）",
     "please.agree":"課金サービスを利用するには、以下の利用規約に同意していただく必要があります。",
     "stripe.agreement":"Stripe Connected Account Agreement",
+    "country.code":"国コード",
 
     "dummy":"dummy"
 }
