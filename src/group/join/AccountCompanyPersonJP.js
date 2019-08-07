@@ -98,7 +98,12 @@ function AccountCompanyPersonJP(props) {
       console.log("success");
       setProcessing(false);
     });
-}
+  }
+
+  function setPhoneNumber(value) {
+    setPersonValue("phone", null, value);
+  }
+
   return (<React.Fragment>
     {
       person_keys.map((key)=>{
@@ -128,7 +133,7 @@ function AccountCompanyPersonJP(props) {
       })      
     }
     <br/>
-    <PhoneNumber />
+    <PhoneNumber setPhoneNumber={setPhoneNumber} />
     <FormControl key={"phone"} className={classes.form}>
         <TextField error={no_opener || requirements[prefix+"phone"]} label={<FormattedMessage id={"individual.phone"} />} 
               value={personal_data["phone"] || ""} 

@@ -21,25 +21,31 @@ const styles = theme => ({
 const regex = /^[0-9\-()]*/  
 
 function PhoneNumber(props) {
-  const { classes } = props;
+  const { classes, setPhoneNumber } = props;
   const [countryCode, setCountryCode] = useState("+81");
   const [number, setNumber] = useState("");
 
-  useEffect(() => {
-    let newValue = countryCode + number;    
-    if (countryCode === "+81" && number[0] === "0") {
-      newValue = countryCode + number.slice(1);    
+  function onUpdate(co, num) {
+    let newValue = co + num;    
+    if (co === "+81" && num[0] === "0") {
+      newValue = co + num.slice(1);    
+    } else if (co === "+1" && num[0] === "1") {
+      newValue = co + num.slice(1);    
     }
     console.log(newValue);
-  }, [countryCode, number]);
+    setPhoneNumber(newValue);
+  }
 
   function onCountryCodeChange(e) {
-    console.log(e.target.value);
-    setCountryCode(e.target.value.match(regex)[0]);
+    const newValue = e.target.value;
+    setCountryCode(newValue);
+    onUpdate(newValue, number);
   }
 
   function onNumberChange(e) {
-    setNumber(e.target.value);
+    const newValue = e.target.value.match(regex)[0];
+    setNumber(newValue);
+    onUpdate(countryCode, newValue)
   }
 
   return (<div>
@@ -58,6 +64,7 @@ function PhoneNumber(props) {
 
 PhoneNumber.propTypes = {
   classes: PropTypes.object.isRequired,
+  setPhoneNumber: PropTypes.func.isRequired,
 };
   
 export default withStyles(styles)(PhoneNumber);
