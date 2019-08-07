@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 //import * as firebase from "firebase/app";
 //import "firebase/functions";
-import { FormControlLabel, Switch, Typography } from '@material-ui/core';
+import { FormControlLabel, Switch, Typography, Link } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 
 const styles = theme => ({
@@ -55,6 +55,12 @@ function AccountAccept(props) {
         }
         label={<FormattedMessage id="do.accept" />}
       />
+      <Typography>
+      By registering your account, you agree to our Services Agreement
+      and the&nbsp;
+      <Link to="https://stripe.com/ja-us/connect-account/legal">
+        Stripe Connected Account Agreement</Link>.
+      </Typography>
     </React.Fragment>);
 }
 
