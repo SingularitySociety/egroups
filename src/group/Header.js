@@ -230,7 +230,10 @@ class MyAppBar extends React.Component {
             <MenuItem onClick={this.logout}><FormattedMessage id="logout" /></MenuItem>
         </Menu>
         { subbar }
-        <JoinButton privilege={privilege} pageInfo={pageInfo} group={group} />
+        {
+          (pageInfo.tabId !== "invited") && 
+          <JoinButton privilege={privilege} pageInfo={pageInfo} group={group} />
+        }
       </div>
     );
   }
