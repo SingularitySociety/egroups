@@ -52,7 +52,7 @@ function Invite(props) {
         key,
         count:1,
         created: firebase.firestore.FieldValue.serverTimestamp(),
-        duration: 60*60*1000, // one hour
+        duration: 60*60*1000 * 24 * 2, // one hour * 24 * 2 = 2 days
         privilege: level,
         invitedBy: user.uid,
         accepted:{},

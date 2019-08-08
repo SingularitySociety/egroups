@@ -32,6 +32,7 @@
     "mocha": "mocha --require @babel/register --recursive test/rules/user_test.js",
     "babel": "babel src/const -d ./functions/react-lib/src/const && babel test -d lib/test",
     "deploy": "react-scripts build && firebase deploy",
+    "deploy_hosting": "react-scripts build && firebase deploy --only hosting",
     "zengin": "babel batch/src/ -d batch/dist/ &&  node ./batch/dist/zengin.js"
   },
   "eslintConfig": {
