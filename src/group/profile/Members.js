@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AccessDenied from '../../common/AccessDenied';
 import MemberItem from './MemberItem';
+import useOnCollection from '../../common/useOnCollection';
 
 const styles = theme => ({
   member: {
@@ -12,27 +13,20 @@ const styles = theme => ({
 
 const useStyles = makeStyles(styles);
 
+function queryFilter(query) {
+  return query.orderBy("lastAccessed", "desc").limit(100);
+}
+
 function Members(props) {
   const classes = useStyles();
-  const { db, group, user, privilege } = props;
-  const [ list, setList ] = useState([]);
+  const { db, group, user } = props;
+  const [list, error] = useOnCollection(db, `groups/${group.groupId}/members`, queryFilter);
 
-  useEffect(() => {
-    const detacher = db.collection(`groups/${group.groupId}/members`).orderBy("lastAccessed", "desc").onSnapshot((snapshot) => {
-      const newList = [];
-      snapshot.forEach((doc)=>{
-        newList.push(doc.data());
-      });
-      setList(newList);
-    })
-    return detacher;
-  }, [db, group]);
-
-  const canRead = privilege >= group.privileges.member.read;
+  console.log(list.length);
+  if (error) {
+    return <AccessDenied error={error} />    
+  }
   return <div>
-    { 
-      !canRead && <AccessDenied />
-    }
     {
       list.map((item)=>{
         const context = { group, user, item };
@@ -47,7 +41,6 @@ function Members(props) {
 Members.propTypes = {
   privilege: PropTypes.number.isRequired,
   db: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
   group: PropTypes.object.isRequired,
 };
   
