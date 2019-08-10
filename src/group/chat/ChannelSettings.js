@@ -31,7 +31,7 @@ function ChannelSettings(props) {
 
   if (!entity) {
     if (entity === null) {
-      return <Redirect to={`/${group.groupName}/channels`} />
+      return <Redirect to={`/g/${group.groupName}/channels`} />
     }
     return "";
   }

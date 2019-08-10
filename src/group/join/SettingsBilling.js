@@ -137,7 +137,7 @@ function SettingsBilling(props) {
       {
         plans.length>0 && isValid && !modified &&
         <div>
-          <Button variant="contained" color="primary" component={Link} to={`/${group.groupName}/settings/bank`}>
+          <Button variant="contained" color="primary" component={Link} to={`/g/${group.groupName}/settings/bank`}>
             <FormattedMessage id="settings.bank" />
           </Button>
         </div>

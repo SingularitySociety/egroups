@@ -156,7 +156,7 @@ function App() {
             <Route exact path="/" render={(props) => <GroupRouter {...props} {...params} />} />
             : <Route exact path="/" render={(props) => <Home {...props} {...params} />} />
           }
-          <Route path="/:gp" render={(props) => <GroupRouter {...props} {...params} />} />
+          <Route path="/g/:gp" render={(props) => <GroupRouter {...props} {...params} />} />
           <Route exact path="/a/about" render={(props) => <About {...props} {...params} />} />
           <Route exact path="/a/admin" render={(props) => <Admin {...props} {...params} />} />
           <Route exact path="/a/new/:groupId" render={(props) => <NewGroup {...props} {...params} />} />

@@ -62,7 +62,7 @@ function GroupList(props) {
         return (
           <Grid item key={group.groupId} xs={12}>
             <MUILink component={Link} className={classes.link}
-              to={"/" + (group.groupName || group.groupId)}>
+              to={"/g/" + (group.groupName || group.groupId)}>
               <Paper className={classes.paper}>
                 <Grid container spacing={1}>
                   <ImageUploader imagePath={`/groups/${group.groupId}/images/profile`}

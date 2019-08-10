@@ -157,7 +157,7 @@ function BlogArticle(props) {
             <IconButton size="small" onClick={toggleReadOnly}>
               <EditIcon />
             </IconButton>
-            <IconButton size="small" component={Link} to={`/${group.groupName}/${arp.leaf}/${article.articleId}/settings`}>
+            <IconButton size="small" component={Link} to={`/g/${group.groupName}/${arp.leaf}/${article.articleId}/settings`}>
               <SettingsIcon />
             </IconButton>
           </Grid>

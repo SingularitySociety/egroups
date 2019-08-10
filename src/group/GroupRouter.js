@@ -198,32 +198,32 @@ class GroupRouter extends React.Component {
                 rootGroup &&
                   <Route exact path={`/`} render={(props) => <GroupHome {...props} {...context} />} />
               }
-              <Route exact path={`/${group.groupName}`} render={(props) => <GroupHome {...props} {...context} arp={arps.pages} />} />
-              <Route exact path={`/${group.groupName}/member`} render={(props) => <MemberHome {...props} {...context} arps={arps} />} />
-              <Route exact path={`/${group.groupName}/events`} render={(props) => <Events {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/listing`} render={(props) => <Listing {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/join`} render={(props) => <Join {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/subscribe`} render={(props) => <Subscribe {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/invite`} render={(props) => <Invite {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/invite/:inviteId/:inviteKey`} render={(props) => <Invited {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/account`} 
+              <Route exact path={`/g/${group.groupName}`} render={(props) => <GroupHome {...props} {...context} arp={arps.pages} />} />
+              <Route exact path={`/g/${group.groupName}/member`} render={(props) => <MemberHome {...props} {...context} arps={arps} />} />
+              <Route exact path={`/g/${group.groupName}/events`} render={(props) => <Events {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/listing`} render={(props) => <Listing {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/join`} render={(props) => <Join {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/subscribe`} render={(props) => <Subscribe {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/invite`} render={(props) => <Invite {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/invite/:inviteId/:inviteKey`} render={(props) => <Invited {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/account`} 
                 render={(props) => <Account {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/settings`} 
+              <Route exact path={`/g/${group.groupName}/settings`} 
                 render={(props) => <Settings {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/settings/billing`} 
+              <Route exact path={`/g/${group.groupName}/settings/billing`} 
                 render={(props) => <SettingsBilling {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/settings/bank`} 
+              <Route exact path={`/g/${group.groupName}/settings/bank`} 
                 render={(props) => <CustomAccount {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/channels`} render={(props) => <Channels {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/ch/:channelId`} render={(props) => <Chat {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/ch/:channelId/settings`} render={(props) => <ChannelSettings {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/pr/:userId`} render={(props) => <Profile {...props} {...context} />} />
-              <Route exact path={`/${group.groupName}/blog`} render={(props) => <Articles {...props} {...context} arp={arps.blog} />} />
-              <Route exact path={`/${group.groupName}/bl/:articleId`} render={(props) => <Blog {...props} {...context} arp={arps.blog} />} />
-              <Route exact path={`/${group.groupName}/bl/:articleId/settings`} render={(props) => <ArticleSettings {...props} {...context} arp={arps.blog} />} />
-              <Route exact path={`/${group.groupName}/pages`} render={(props) => <Articles {...props} {...context} arp={arps.pages} />} />
-              <Route exact path={`/${group.groupName}/pg/:articleId`} render={(props) => <Blog {...props} {...context} arp={arps.pages} />} />
-              <Route exact path={`/${group.groupName}/pg/:articleId/settings`} render={(props) => <ArticleSettings {...props} {...context} arp={arps.pages} />} />
+              <Route exact path={`/g/${group.groupName}/channels`} render={(props) => <Channels {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/ch/:channelId`} render={(props) => <Chat {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/ch/:channelId/settings`} render={(props) => <ChannelSettings {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/pr/:userId`} render={(props) => <Profile {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/blog`} render={(props) => <Articles {...props} {...context} arp={arps.blog} />} />
+              <Route exact path={`/g/${group.groupName}/bl/:articleId`} render={(props) => <Blog {...props} {...context} arp={arps.blog} />} />
+              <Route exact path={`/g/${group.groupName}/bl/:articleId/settings`} render={(props) => <ArticleSettings {...props} {...context} arp={arps.blog} />} />
+              <Route exact path={`/g/${group.groupName}/pages`} render={(props) => <Articles {...props} {...context} arp={arps.pages} />} />
+              <Route exact path={`/g/${group.groupName}/pg/:articleId`} render={(props) => <Blog {...props} {...context} arp={arps.pages} />} />
+              <Route exact path={`/g/${group.groupName}/pg/:articleId/settings`} render={(props) => <ArticleSettings {...props} {...context} arp={arps.pages} />} />
             </Grid>
         </Grid>
       </MuiThemeProvider>

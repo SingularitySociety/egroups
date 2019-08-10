@@ -77,7 +77,7 @@ function CheckoutForm(props) {
   }
   if (privilege > 0) {
     if (justSubscribed) {
-      return <Redirect to={`/${group.groupName}/member`} />
+      return <Redirect to={`/g/${group.groupName}/member`} />
     }
   }
   return <div>

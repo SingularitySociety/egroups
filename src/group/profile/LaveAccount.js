@@ -39,7 +39,7 @@ function LeaveAccount(props) {
     const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
     await refMember.delete();
     callbacks.memberDidUpdate();
-    window.location.pathname = "/"; // + group.groupName;
+    window.location.pathname = "/"; 
   }
 
   // cancel:true means we are unsubscribing

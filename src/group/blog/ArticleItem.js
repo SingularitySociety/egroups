@@ -41,7 +41,7 @@ function ArticleItem(props) {
   return (
     <Paper className={classes.item}>
       <MUILink component={Link} 
-        to={`/${group.groupName}/${arp.leaf}/${article.articleId}`}>
+        to={`/g/${group.groupName}/${arp.leaf}/${article.articleId}`}>
         <Grid container >
           <Grid item><SubjectIcon /></Grid>
           <Grid item xs={7} className={className}>
