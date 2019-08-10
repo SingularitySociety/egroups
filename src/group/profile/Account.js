@@ -37,7 +37,7 @@ function Account(props) {
   }
     
   if (!user) {
-    return <Redirect to={`/${group.groupName}`} />
+    return <Redirect to={`/g/${group.groupName}`} />
   }
   if (!member) {
     return "";

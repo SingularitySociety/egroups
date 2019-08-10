@@ -22,7 +22,7 @@ function JoinButton(props) {
       return false;
   }
   
-  const path = `/${group.groupName}/` 
+  const path = `/g/${group.groupName}/` 
           + (group.subscription ? "subscribe" : "join");
 
   return (

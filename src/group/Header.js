@@ -39,17 +39,17 @@ class MyAppBar extends React.Component {
     this.tabExit = <Tab key="exit" label={<FormattedMessage id="exit" />} 
                               to={`/`} component={Link} />;
     this.tabMember = <Tab key="member" label={<FormattedMessage id="home" />} 
-                              to={`/${group.groupName}/member`} component={Link} />;
+                              to={`/g/${group.groupName}/member`} component={Link} />;
     this.tabMemberOnly = <Tab key="member" label={<FormattedMessage id="page.member" />} 
-                              to={`/${group.groupName}/member`} component={Link} />;
+                              to={`/g/${group.groupName}/member`} component={Link} />;
     this.tabHome = <Tab key="home" label={<FormattedMessage id="page.home" />} 
-                              to={`/${group.groupName}`} component={Link} />;
+                              to={`/g/${group.groupName}`} component={Link} />;
     this.tabChannels = <Tab key="channels" label={<FormattedMessage id="channels" />} 
-                              to={`/${group.groupName}/channels`} component={Link} />;
+                              to={`/g/${group.groupName}/channels`} component={Link} />;
     this.tabBlog = <Tab key="blog" label={<FormattedMessage id="blog" />} 
-                              to={`/${group.groupName}/blog`} component={Link} />;
+                              to={`/g/${group.groupName}/blog`} component={Link} />;
     this.tabEvents = <Tab key="events" label={<FormattedMessage id="events" />} 
-                              to={`/${group.groupName}/events`} component={Link} />;
+                              to={`/g/${group.groupName}/events`} component={Link} />;
     this.cramHome = this.breadCram("home", "member", "home");
     this.cramBlog = this.breadCram("blog");
     this.cramPages = this.breadCram("pages");
@@ -63,13 +63,13 @@ class MyAppBar extends React.Component {
     this.cramJoin = this.breadCram("join", null, "application");
     this.cramSubscribe = this.breadCram("subscribe");
     this.cramInvite = this.breadCram("invite");
-    this.cramHomePage = <MUILink key="page.home" color="inherit" component={Link} to={`/${group.groupName}`}>
+    this.cramHomePage = <MUILink key="page.home" color="inherit" component={Link} to={`/g/${group.groupName}`}>
             <FormattedMessage id="page.home" />
           </MUILink>;
   }
   breadCram = (tabId, path, label) => {
     const { group } = this.props;
-    return <MUILink key={tabId} color="inherit" component={Link} to={`/${group.groupName}/${path || tabId}`}>
+    return <MUILink key={tabId} color="inherit" component={Link} to={`/g/${group.groupName}/${path || tabId}`}>
             <FormattedMessage id={label || tabId} />
           </MUILink>;
   }
@@ -197,7 +197,7 @@ class MyAppBar extends React.Component {
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h4" color="inherit" className={classes.grow} >
-              <MUILink color="inherit" component={Link} to={`/${group.groupName}`}>
+              <MUILink color="inherit" component={Link} to={`/g/${group.groupName}`}>
                 {group.title}
               </MUILink>
             </Typography>
@@ -212,18 +212,18 @@ class MyAppBar extends React.Component {
         <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={this.closeMe}>
           {
             (privilege >= group.privileges.member.read) && 
-            <MenuItem key="listing" onClick={this.closeMe} component={Link} to={`/${group.groupName}/listing`}><FormattedMessage id="listing" /></MenuItem>
+            <MenuItem key="listing" onClick={this.closeMe} component={Link} to={`/g/${group.groupName}/listing`}><FormattedMessage id="listing" /></MenuItem>
           }
           {
             privilege && [
-            <MenuItem key="account" onClick={this.closeMe} component={Link} to={`/${group.groupName}/account`}><FormattedMessage id="account" /></MenuItem>,
-            <MenuItem key="pages" onClick={this.closeMe} component={Link} to={`/${group.groupName}/pages`}><FormattedMessage id="pages" /></MenuItem>
+            <MenuItem key="account" onClick={this.closeMe} component={Link} to={`/g/${group.groupName}/account`}><FormattedMessage id="account" /></MenuItem>,
+            <MenuItem key="pages" onClick={this.closeMe} component={Link} to={`/g/${group.groupName}/pages`}><FormattedMessage id="pages" /></MenuItem>
             ]
           }
           {
             (privilege >= group.privileges.invitation.create) && [
-            <MenuItem key="invite" onClick={this.closeMe} component={Link} to={`/${group.groupName}/invite`}><FormattedMessage id="invite" /></MenuItem>,
-            <MenuItem key="settings" onClick={this.closeMe} component={Link} to={`/${group.groupName}/settings`}><FormattedMessage id="settings" /></MenuItem>
+            <MenuItem key="invite" onClick={this.closeMe} component={Link} to={`/g/${group.groupName}/invite`}><FormattedMessage id="invite" /></MenuItem>,
+            <MenuItem key="settings" onClick={this.closeMe} component={Link} to={`/g/${group.groupName}/settings`}><FormattedMessage id="settings" /></MenuItem>
             ]
           }
           <Divider />

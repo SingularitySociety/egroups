@@ -32,7 +32,7 @@ function Articles(props) {
       comment: group.privileges[arp.tabLeaf].comment, 
       sections: [], // ordered list of sectionIds
     });
-    setRedirect(`/${group.groupName}/${arp.leaf}/${doc.id}`);
+    setRedirect(`/g/${group.groupName}/${arp.leaf}/${doc.id}`);
   }
 
   if (redirect) {

@@ -121,7 +121,7 @@ function Settings(props) {
 
       <FormGroup row className={classes.billing}>
         { subscription && 
-          <Button variant="contained" color="primary" component={Link} to={`/${group.groupName}/settings/billing`}>
+          <Button variant="contained" color="primary" component={Link} to={`/g/${group.groupName}/settings/billing`}>
             <FormattedMessage id="settings.billing" />
           </Button>
         }

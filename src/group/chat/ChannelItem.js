@@ -36,7 +36,7 @@ function ChannelItem(props) {
   }
   return (
     <Paper className={classes.root}>
-      <MUILink component={Link} to={`/${group.groupName}/ch/${channel.channelId}`} >
+      <MUILink component={Link} to={`/g/${group.groupName}/ch/${channel.channelId}`} >
         <Grid container spacing={1}>
           <Grid item><ChatIcon /></Grid>
           <Grid item className={className}>{ channel.title }</Grid>

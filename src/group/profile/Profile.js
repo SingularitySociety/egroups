@@ -27,7 +27,7 @@ function Profile(props) {
   }, [setTabbar, userId]);
 
   if (!user) {
-      return <Redirect to={`/${group.groupName}`} />
+      return <Redirect to={`/g/${group.groupName}`} />
   }
   if (err) {
     return <AccessDenied />
