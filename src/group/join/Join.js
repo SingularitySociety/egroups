@@ -55,7 +55,7 @@ function Join(props) {
   }
   if (privilege) {
     console.log("Become a member or already a member. Redireting to the group home.");
-    return <Redirect to={`/g/${group.groupName}`g} />
+    return <Redirect to={`/g/${group.groupName}`} />
   }
   if (!(group && group.open)) {
     return <div>
