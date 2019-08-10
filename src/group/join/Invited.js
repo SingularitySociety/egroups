@@ -74,7 +74,7 @@ function Invited(props) {
 
   if (privilege) {
     console.log("Become a member or already a member. Redireting to the group home.");
-    return <Redirect to={"/" + group.groupName} />
+    return <Redirect to={`/g/${group.groupName}`} />
   }
 
   return <div>

@@ -40,7 +40,6 @@ function Join(props) {
       }, {merge:true});
 
       callbacks.memberDidUpdate();
-      //window.location.pathname = "/" + group.groupName;
     } catch(e) {
       console.log(e);
       setError(<FormattedMessage id="error.cannot.join" values={{error:e}}/>); 
@@ -56,7 +55,7 @@ function Join(props) {
   }
   if (privilege) {
     console.log("Become a member or already a member. Redireting to the group home.");
-    return <Redirect to={"/" + group.groupName} />
+    return <Redirect to={`/g/${group.groupName}`g} />
   }
   if (!(group && group.open)) {
     return <div>
