@@ -110,7 +110,12 @@ const ogpPage = async (req:any, res:any) =>{
   const { groupName } = req.params;
   const snapshot = await db.doc(`groupNames/${groupName}`).get();
   const data = snapshot.data() || {};
-  res.json({message: groupName, data});
+  const groupId = data.groupId;
+  if (!groupId) {
+    res.json({result: false});
+  }
+  const group = (await db.doc(`groups/${groupId}`).get()).data() || {};
+  res.json({name: groupName, title:group.title});
 };
 
 router.get('/hello',
