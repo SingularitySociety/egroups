@@ -107,7 +107,10 @@ export const stripe_parser = async (req, res) => {
 };
 
 const ogpPage = async (req:any, res:any) =>{
-  res.json({message: "s-group"});
+  const { groupName } = req.params;
+  const snapshot = await db.doc(`groupNames/${groupName}`).get();
+  const data = snapshot.data() || {};
+  res.json({message: groupName, data});
 };
 
 router.get('/hello',
@@ -121,3 +124,4 @@ router.post('/stripe',
 app.use('/1.0', router);
 
 app.get('/s/:groupName', ogpPage);
+app.get('/s/:groupName/*', ogpPage);
