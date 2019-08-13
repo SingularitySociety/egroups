@@ -106,6 +106,10 @@ export const stripe_parser = async (req, res) => {
   }
 };
 
+const ogpPage = async (req:any, res:any) =>{
+  res.json({message: "s-group"});
+};
+
 router.get('/hello',
            logger,
            hello_response);
@@ -115,3 +119,5 @@ router.post('/stripe',
             stripe_parser);
 
 app.use('/1.0', router);
+
+app.get('/s/:groupName', ogpPage);
