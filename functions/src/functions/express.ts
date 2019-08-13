@@ -112,11 +112,13 @@ const ogpPage = async (req:any, res:any) =>{
   const snapshot = await db.doc(`groupNames/${groupName}`).get();
   const groupInfo = snapshot.data() || {};
   const groupId = groupInfo.groupId;
-  if (!groupId) {
-    res.json({result: false});
-  }
-  const group = (await db.doc(`groups/${groupId}`).get()).data() || {};
-  //res.json({name: groupName, title:group.title});
+
+  const group = groupId ?
+    ((await db.doc(`groups/${groupId}`).get()).data() || {})
+    :
+    { title:"Invalid Group Name" };
+
+    //res.json({name: groupName, title:group.title});
   console.log("group:", group);
 
   function escapeHtml (str:string):string {
@@ -158,5 +160,7 @@ router.post('/stripe',
 
 app.use('/1.0', router);
 
-app.get('/s/:groupName', ogpPage);
-app.get('/s/:groupName/*', ogpPage);
+app.get('/s/:groupName', ogpPage); // obsolete
+app.get('/s/:groupName/*', ogpPage); // obsolete
+app.get('/g/:groupName', ogpPage);
+app.get('/g/:groupName/*', ogpPage);
