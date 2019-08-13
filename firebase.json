@@ -23,7 +23,7 @@
         "function": "api"
       },
       {
-        "source": "/s/**",
+        "source": "/g/**",
         "function": "api"
       },
       {

@@ -160,7 +160,5 @@ router.post('/stripe',
 
 app.use('/1.0', router);
 
-app.get('/s/:groupName', ogpPage); // obsolete
-app.get('/s/:groupName/*', ogpPage); // obsolete
 app.get('/g/:groupName', ogpPage);
 app.get('/g/:groupName/*', ogpPage);
