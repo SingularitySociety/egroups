@@ -10,11 +10,14 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     padding: theme.spacing(1),
-    paddingTop: theme.spacing(10),
+    paddingTop: theme.spacing(1),
   },
-  caption: {
-    textAlign: "center",
+  main: {
     width: "100%",
+    padding: theme.spacing(1),
+    '@media (min-width:480px)': {
+      maxWidth: "50rem",
+    },
   },
 });
 
@@ -24,10 +27,7 @@ const About = props => {
     <React.Fragment>
       <Header user={user} login="/Login/target/about" />
       <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
-          <Grid className={classes.caption}>
-          <Typography component="h1" variant="h1" gutterBottom>
-            Stay Hungry, Stay Foolish. 
-          </Typography>
+          <Grid className={classes.main}>
           <LegalInfo />
           </Grid>
       </Grid>

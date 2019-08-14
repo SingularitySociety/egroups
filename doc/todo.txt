@@ -1,3 +1,7 @@
+Bug: Logout when looking at listing
+Bug: Manifest
+Bug: Github
+
 Chat: P 2 P
 Chat: Scroll to the bottom
 Chat: Infinit scroll
@@ -10,7 +14,6 @@ Chat: Rich Text?
 Blog: Top Image?
 
 Subscribe: Default Currency
-ErrorMessage: Turn it into ResultMessage (error, success)
 
 Group: Invitation
 https://github.com/firebase/functions-samples/tree/master/quickstarts/email-users
@@ -20,6 +23,8 @@ Subscribe: Hide ZIP https://github.com/stripe/react-stripe-elements/issues/20
 Stripe: https://qiita.com/t2h5/items/c08f618f3c1559299e30
 
 ----- Done -----
+ErrorMessage: Turn it into ResultMessage (error, success)
+ErrorMessage: Turn it into ResultMessage (error, success)
 Image Uploader: Verify the privacy ANSWER: downloadURL is NOT secure
 https://stackoverflow.com/questions/47653021/cant-get-firebase-storage-security-rules-to-refuse-access-to-a-file
 Account: Fix image upload bug
