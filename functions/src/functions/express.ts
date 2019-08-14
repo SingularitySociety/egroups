@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import * as fs from 'fs';
 
 export const app = express();
 export const router = express.Router();
@@ -106,6 +107,49 @@ export const stripe_parser = async (req, res) => {
   }
 };
 
+const ogpPage = async (req:any, res:any) =>{
+  const { groupName } = req.params;
+  const snapshot = await db.doc(`groupNames/${groupName}`).get();
+  const groupInfo = snapshot.data() || {};
+  const groupId = groupInfo.groupId;
+
+  const group = groupId ?
+    ((await db.doc(`groups/${groupId}`).get()).data() || {})
+    :
+    { title:"Invalid Group Name" };
+
+    //res.json({name: groupName, title:group.title});
+  console.log("group:", group);
+
+  function escapeHtml (str:string):string {
+    if(typeof str !== 'string') {
+      return '';
+    }
+    const mapping:any = {
+      '&': '&amp;',
+      "'": '&#x27;',
+      '`': '&#x60;',
+      '"': '&quot;',
+      '<': '&lt;',
+      '>': '&gt;',
+    };
+    return str.replace(/[&'`"<>]/g, function(match) {
+      return mapping[match]
+    });
+  }
+
+  res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
+  fs.readFile('./templates/index.html', 'utf8', (err, data) => {
+    //console.log('template', err, data);
+    const regex = /<meta property="og:title".*title>/
+    const metas = 
+      '\n<meta property="og:title" content="' + escapeHtml(group.title) + '" />'
+      //+ '\n<meta property="og:description" content="Speech Bubbles by ' + escapeHtml(article.name) + '" />'
+      + '\n<title>' + escapeHtml(group.title) + '</title>\n';
+    res.send(data.replace(regex, metas));
+  });  
+};
+
 router.get('/hello',
            logger,
            hello_response);
@@ -115,3 +159,6 @@ router.post('/stripe',
             stripe_parser);
 
 app.use('/1.0', router);
+
+app.get('/g/:groupName', ogpPage);
+app.get('/g/:groupName/*', ogpPage);

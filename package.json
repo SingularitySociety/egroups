@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && cp build/index.html functions/templates/index.html",
     "test": "react-scripts test",
     "use_staging": "cp src/config/staging.js src/config.js && firebase use staging",
     "use_default": "cp src/config/default.js src/config.js && firebase use default",
