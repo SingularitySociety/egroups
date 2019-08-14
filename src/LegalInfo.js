@@ -4,7 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Header from './Header';
 import Grid from '@material-ui/core/Grid';
-import LegalInfo from './LegalInfo';
 
 const styles = theme => ({
   root: {
@@ -18,25 +17,19 @@ const styles = theme => ({
   },
 });
 
-const About = props => {
+const LegalInfoJP = props => {
   const { classes, user } = props;
   return (
     <React.Fragment>
-      <Header user={user} login="/Login/target/about" />
-      <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
-          <Grid className={classes.caption}>
           <Typography component="h1" variant="h1" gutterBottom>
-            Stay Hungry, Stay Foolish. 
+          Legal Info
           </Typography>
-          <LegalInfo />
-          </Grid>
-      </Grid>
     </React.Fragment>
   );
 }
 
-About.propTypes = {
+LegalInfoJP.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(About);
+export default withStyles(styles)(LegalInfoJP);
