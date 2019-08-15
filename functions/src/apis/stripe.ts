@@ -173,7 +173,8 @@ export const createCustomAccount = async (groupId, country="JP", business_type=n
     options.business_type = business_type;
   }
   if (country === "US") {
-    options.requested_capabilities = ["platform_payments"];
+    // options.requested_capabilities = ["platform_payments"];
+    options.requested_capabilities = ["card_payments"];
   }
   const account =  await getStripe().accounts.create(options);
   return account;
