@@ -5,36 +5,26 @@ import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Header from './Header';
-import Grid from '@material-ui/core/Grid';
 
 const styles = theme => ({
-  root: {
-    flexGrow: 1,
-    padding: theme.spacing(1),
-    paddingTop: theme.spacing(10),
-  },
-  caption: {
-    textAlign: "center",
-    width: "100%",
+  field: {
+    width: "9rem",
   },
 });
 
-
 const LegalInfoJP = props => {
-  const { classes, user } = props;
+  const { classes } = props;
   const  createRow = (name, value) => { return {name, value} };
   const rows = [
-    createRow("販売事業者", "一般財団法人シンギュラリティソサエティ"),    
-    createRow("代表責任者名", "中島聡"),    
-    createRow("所在地", "東京都渋谷区"),    
-    createRow("電話番号", "05031858208"),    
-    createRow("電話受付時間", "24時間、自動応答"),    
-    createRow("メールアドレス", "info@singularitysociety.org"),    
-    createRow("ホームページURL", "https://singularitysociety.org"),    
+    createRow("販売事業者", "一般財団法人シンギュラリティ・ソサエティ"),    
+    createRow("代表責任者", "中島聡"),    
+    createRow("所在地", "〒150-0002 東京都渋谷区渋谷3丁目1-8-604"),    
+    createRow("電話番号", "050-3185-8208"),    
+    createRow("電話受付時間", "24時間"),    
+    createRow("メアド", "info@singularitysociety.org"),    
+    createRow("ウェブサイト", "https://singularitysociety.org"),    
     createRow("お支払い方法", "クレジットカード"),
     createRow("課金方法", "サロンごとの月会費を登録したクレジットカードに毎月請求します"),    
     createRow("月会費", "各サロンの課金ページをご覧ください"),    
@@ -52,7 +42,7 @@ const LegalInfoJP = props => {
               rows.map(row => {
                 return (
                   <TableRow key={row.name}>
-                    <TableCell>{row.name}</TableCell>
+                    <TableCell className={classes.field}>{row.name}</TableCell>
                     <TableCell>{row.value}</TableCell>
                   </TableRow>
                 );
