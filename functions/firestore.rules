@@ -35,6 +35,9 @@ service cloud.firestore {
       return userPrivilege(groupId, userId) >= 1; // 0x1
     }
 
+    match /static/{anything=**} {
+      allow read;
+    }
     match /users/{userId} {
       allow read, delete: if request.auth.uid == userId;
       allow create: if request.auth.uid == userId;

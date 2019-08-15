@@ -132,6 +132,7 @@ export const postDataUS = {
     "gender":"female",
     "id_number": "078-05-1120",
     "ssn_last_4": "1120",
+    "email": "hogehoge@example.com",
   },
   "invalid_individual": {
     "address":{
@@ -155,10 +156,12 @@ export const postDataUS = {
   "business_profile": {
     "url": "https://to-kyo.to/",
     "name": "zero to one corp",
+    "mcc": 5734,
   },
   "business_profile2": {
     "url": "https://to-kyo.to/",
     "name": "hello web",
+    "mcc": 5734,
   },
   "company": {
     // "business_name": "会社名",
@@ -182,6 +185,25 @@ export const postDataUS = {
     },
     "phone": "541-754-3010",
     "tax_id": "123123123123",
+  },
+  "person": {
+    "dob": {
+      "day": 1,
+      "month": 8,
+      "year": 1980,
+    },
+    "phone": "+819012345678",
+    "email": "hogehoge@example.com",
+    "first_name": "michael",
+    "last_name": "jackson",
+    "gender":"female",
+    "ssn_last_4": "1120",
+    "relationship": {
+      "title": "hoge",
+      "owner": true,
+      "percent_ownership": 100,
+    },
+    
   }
 };
 

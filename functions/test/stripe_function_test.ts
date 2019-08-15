@@ -216,7 +216,7 @@ describe('function test', () => {
   });
 
   it ('stripe cancel subscription test', async function() {
-    this.timeout(50000);
+    this.timeout(100000);
     const uuid = UUID();
 
     const aliceUserId = "test_customer_" + uuid;
@@ -419,7 +419,7 @@ describe('function test', () => {
   });
 
   it ('stripe create and update customer in US individual test', async function() {
-    this.timeout(30000);
+    this.timeout(100000);
     const aliceUserId = "test_user_" + UUID();
     const groupId = "group_" + UUID();
     const country = "US";
@@ -474,7 +474,8 @@ describe('function test', () => {
     const res4 = await wrapped2(req4, context);
     res4.result.should.equal(true)
     res4.account.external_accounts.total_count.should.equal(1)
-    res4.account.payouts_enabled.should.equal(true)
+
+    const accountID = res4.id;
 
     const req11 = {groupId,
                    business_type: "company",
@@ -493,10 +494,14 @@ describe('function test', () => {
       name: filePath,
     };
     await image_function.uploadStripeImage(admin_db, object, downloadFunc, removeFile);
+
+    const accountData = await stripeApi.getCustomAccount(accountID);
+    accountData.payouts_enabled.should.equal(true)
+
   })
 
   it ('stripe create and update customer in US company test', async function() {
-    this.timeout(30000);
+    this.timeout(60000);
     const aliceUserId = "test_user_" + UUID();
     const groupId = "group_" + UUID();
     const country = "US";
@@ -517,6 +522,7 @@ describe('function test', () => {
                    acceptance: true,
                    business_type: "company",
                    business_profile: stripeCustomAccountData.postDataUS["business_profile"],
+                   personal_data: stripeCustomAccountData.postDataUS["person"],
                    account_data: stripeCustomAccountData.postDataUS["company"]};
     const wrapped21 = test.wrap(index.updateCustomAccount);
     const res21 = await wrapped21(req21, context);
@@ -531,7 +537,12 @@ describe('function test', () => {
     const res22 = await wrapped21(req22, context);
     res22.result.should.equal(true)
     res22.account.external_accounts.total_count.should.equal(1)
-    res22.account.payouts_enabled.should.equal(true);
+
+    const accountID = res22.id;
+
+    const accountData = await stripeApi.getCustomAccount(accountID);
+    accountData.payouts_enabled.should.equal(true)
+
   });
   
   it ('stripe create customer test', async function() {
