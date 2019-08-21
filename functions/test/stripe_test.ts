@@ -123,7 +123,7 @@ describe('Stripe test', () => {
   });
 
   it('subscription', async function() {
-    this.timeout(10000);
+    this.timeout(50000);
     const uuid = UUID();
     const userId =  "test_customer_" + uuid;
 
