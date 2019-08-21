@@ -169,7 +169,7 @@ export const groupDidUpdate = async (db, change, context) => {
   const error_handler = logger.error_response_handler({func: "groupDidUpdate", message: "invalid request"});
 
   if (after.subscription) {
-
+    
     const AccontPrivate = (await db.doc(`groups/${groupId}/private/account`).get()).data();
     if (AccontPrivate && AccontPrivate.account) {
       const accountId = AccontPrivate.account.id;
@@ -209,11 +209,12 @@ export const groupDidUpdate = async (db, change, context) => {
           await stripeRef.set({plans: updatedPlan}, {merge:true});
         }
       }
-    }
-    const secretData = await stripeRef.get();
-    if (secretData.exists) {
-      const privateData = stripeUtils.convProductData(secretData.data());
-      await db.doc(`/groups/${groupId}/private/stripe`).set(privateData, {merge:true});
+
+      const secretData = await stripeRef.get();
+      if (secretData.exists) {
+        const privateData = stripeUtils.convProductData(secretData.data());
+        await db.doc(`/groups/${groupId}/private/stripe`).set(privateData, {merge:true});
+      }
     }
     // const value = snapshot.data();
   }
