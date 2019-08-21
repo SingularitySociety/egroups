@@ -11,10 +11,10 @@
     "logs": "firebase functions:log",
     "mocha": "cp ../firestore.rules  ./ && NODE_ENV=test mocha  -r ts-node/register --recursive test/*_test.ts",
     "mocha2": "NODE_ENV=test mocha  -r ts-node/register --recursive test/stripe_test.ts",
-    "mocha3": "NODE_ENV=test mocha  -r ts-node/register --recursive test/group_function_test.ts",
+    "mocha3": "NODE_ENV=test mocha  -r ts-node/register --recursive test/stripe_function_test.ts",
     "mocha4": "NODE_ENV=test mocha  -r ts-node/register --recursive test/image_test.ts",
     "mocha5": "NODE_ENV=test mocha  -r ts-node/register --recursive test/group_function_test.ts",
-    "mocha6": "NODE_ENV=test mocha  -r ts-node/register --recursive test/stripe_function_test.ts",
+    "mocha6": "NODE_ENV=test mocha  -r ts-node/register --recursive test/stripe_shared_customer_test.ts",
     "watch:mocha": "NODE_ENV=test mocha -w -watch-extensions ts -r ts-node/register --recursive test/*_test.ts"
   },
   "engines": {

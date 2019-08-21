@@ -169,39 +169,45 @@ export const groupDidUpdate = async (db, change, context) => {
   const error_handler = logger.error_response_handler({func: "groupDidUpdate", message: "invalid request"});
 
   if (after.subscription) {
-    const userId = after.owner;
-    const stripeRef = db.doc(`/groups/${groupId}/secret/stripe`);
-    const stripeData = (await stripeRef.get()).data();
-    if (!stripeData || !stripeData.production) {
-      const production = await stripeApi.createProduct(after.groupName, after.groupName, groupId);
-      if (!production) {
-        return error_handler({error_type: logger.ErrorTypes.StripeApi});
-      }
-      await stripeRef.set({production: production}, {merge:true});
-      await stripeUtils.stripeLog(db, userId, {production}, stripeUtils.stripeActions.productCreated);
-    }
+
+    const AccontPrivate = (await db.doc(`groups/${groupId}/private/account`).get()).data();
+    if (AccontPrivate && AccontPrivate.account) {
+      const accountId = AccontPrivate.account.id;
     
-    if (after.plans) {
-      const existPlans = (stripeData && stripeData.plans) || {};
-      const newPlans = {};
-      await utils.asyncForEach(after.plans, async(plan) => {
-        // todo validate plan
-        const price = plan.price;
-        const currency = plan.currency || "jpy";
-        const key = [String(price), currency].join("_")
-        if (!stripeData || !stripeData.plans || !stripeData.plans[key]) {
-          const stripePlan = await stripeApi.createPlan(groupId, price, currency);
-          if (!stripePlan) {
-            return error_handler({error_type: logger.ErrorTypes.StripeApi});
-          }
-          newPlans[key] = stripePlan;
-          await stripeUtils.stripeLog(db, userId, {plan}, stripeUtils.stripeActions.planCreated);
+      const userId = after.owner;
+      const stripeRef = db.doc(`/groups/${groupId}/secret/stripe`);
+      const stripeData = (await stripeRef.get()).data();
+      if (!stripeData || !stripeData.production) {
+        const production = await stripeApi.createProduct2(after.groupName, after.groupName, groupId, accountId);
+        if (!production) {
+          return error_handler({error_type: logger.ErrorTypes.StripeApi});
         }
-        return true
-      });
-      if (Object.keys(newPlans).length > 0) {
-        const updatedPlan = merge(existPlans, newPlans);
-        await stripeRef.set({plans: updatedPlan}, {merge:true});
+        await stripeRef.set({production: production}, {merge:true});
+        await stripeUtils.stripeLog(db, userId, {production}, stripeUtils.stripeActions.productCreated);
+      }
+      
+      if (after.plans) {
+        const existPlans = (stripeData && stripeData.plans) || {};
+        const newPlans = {};
+        await utils.asyncForEach(after.plans, async(plan) => {
+          // todo validate plan
+          const price = plan.price;
+          const currency = plan.currency || "jpy";
+          const key = [String(price), currency].join("_")
+          if (!stripeData || !stripeData.plans || !stripeData.plans[key]) {
+            const stripePlan = await stripeApi.createPlan2(groupId, price, currency, accountId);
+            if (!stripePlan) {
+              return error_handler({error_type: logger.ErrorTypes.StripeApi});
+            }
+            newPlans[key] = stripePlan;
+            await stripeUtils.stripeLog(db, userId, {plan}, stripeUtils.stripeActions.planCreated);
+          }
+          return true
+        });
+        if (Object.keys(newPlans).length > 0) {
+          const updatedPlan = merge(existPlans, newPlans);
+          await stripeRef.set({plans: updatedPlan}, {merge:true});
+        }
       }
     }
     const secretData = await stripeRef.get();
