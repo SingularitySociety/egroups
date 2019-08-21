@@ -2,7 +2,8 @@
 import * as functions_test_helper from "./functions_test_helper";
 import * as stripeApi from '../src/apis/stripe';
 import * as stripeUtils from "../src/utils/stripe"
-import * as stripeCustomAccountData from './testData/stripeCustomAccountData'
+
+import * as stripeTestUtils from "./stripe_utils"
 
 import { should } from 'chai';
 import * as UUID from "uuid-v4";
@@ -12,24 +13,6 @@ should()
 const groupId = "unit_test_plan";
 const SharedGroupId = "shared_unit_test_plan";
 
-const createCustomAccount = async (groupId) => {
-  const business_type = "individual";
-  const customAccountResponse = await stripeApi.createCustomAccount(groupId, "JP", "individual"); 
-
-  const date = Math.round(Date.now()  / 1000);
-  const ip = "123.123.123.123";
-  const postData = {
-    business_type,
-    individual: stripeCustomAccountData.postData["individual"],
-    tos_acceptance: {
-      date,
-      ip,
-    },
-  }
-
-  await stripeApi.updateCustomAccount(customAccountResponse.id, postData);
-  return customAccountResponse;
-}
 
 describe('Stripe test', () => {
 
@@ -44,7 +27,7 @@ describe('Stripe test', () => {
   it('hello', async function() {
     this.timeout(10000);
 
-    const account = await createCustomAccount(groupId);
+    const account = await stripeTestUtils.createCustomAccount(groupId);
     const accountId = account.id;
     
     const product = await stripeApi.createProduct2("unit_test", "hello", groupId, accountId);
@@ -149,7 +132,7 @@ describe('Stripe test', () => {
 
     const customer = await stripeApi.createCustomer(visa_token, userId);
     
-    const account = await createCustomAccount(SharedGroupId);
+    const account = await stripeTestUtils.createCustomAccount(SharedGroupId);
     const accountId = account.id;
 
     const customerToken = await stripeApi.createCustomerToken(customer.id, accountId);
@@ -214,7 +197,7 @@ describe('Stripe test', () => {
 
     const customer = await stripeApi.createCustomer(visa_token, userId);
 
-    const account = await createCustomAccount(SharedGroupId);
+    const account = await stripeTestUtils.createCustomAccount(SharedGroupId);
     const accountId = account.id;
     
     await stripeApi.createProduct2("unit_test_cancel", "hello", SharedGroupId, accountId);
