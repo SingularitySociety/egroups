@@ -262,6 +262,18 @@ export const retrieveSubscription = async (subscriptionId) => {
     return false;
   }
 }
+
+export const retrieveSubscription2 = async (subscriptionId, accountId) => {
+  try {
+    const subscription = await getStripe().subscriptions.retrieve(subscriptionId, {
+      stripe_account: accountId,
+    })
+    return  subscription;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
      
 export const createCustomAccount = async (groupId, country="JP", business_type="") => {
   const options: any = {

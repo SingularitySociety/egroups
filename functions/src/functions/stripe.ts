@@ -114,9 +114,25 @@ export const createSubscription = async (db, data, context) => {
     return error_handler({error_type: logger.ErrorTypes.AlreadyMember});
   }
 
+  const AccontPrivate = await db.doc(`groups/${groupId}/private/account`).get();
+
+  const accountId = AccontPrivate.data().account.id;
+  const customerId = stripeUtils.getCustomerId(userId);
+  const token = await stripeApi.getStripe().tokens.create({
+    customer: customerId,
+  }, {
+    stripe_account: accountId,
+  });
+  const customer2 = await stripeApi.getStripe().customers.create({
+    description: "Shared customer",
+    source: token.id,
+  }, {
+    stripe_account: accountId,
+  });
+
   // everything ok
   const planId = stripeUtils.getPlanId(groupId, price, currency);
-  const subscription = await stripeApi.createSubscription(userId, groupId, planId);
+  const subscription = await stripeApi.createSubscription2(userId, customer2.id, groupId, planId, accountId);
 
   if (!subscription) {
     return error_handler({error_type: logger.ErrorTypes.StripeSubscriptionCreation});
@@ -147,6 +163,7 @@ export const createSubscription = async (db, data, context) => {
 
 // create production and plan
 export const groupDidUpdate = async (db, change, context) => {
+  // todo support accountid
   const { groupId } = context.params;
   const after = change.after.exists ? change.after.data() ||{} : {};
   const error_handler = logger.error_response_handler({func: "groupDidUpdate", message: "invalid request"});
@@ -217,8 +234,14 @@ export const cancelSubscription = async (db, data, context) => {
   }
   const subscriptionId = secret.subscription.id;
   const cancel = data.cancel === undefined ? true : data.cancel;
+
+  const AccontPrivate = (await db.doc(`groups/${groupId}/private/account`).get()).data();
+  if (!AccontPrivate || !AccontPrivate.account) {
+    return error_handler({error_type: logger.ErrorTypes.NoAccountPrivate});
+  }
+  const accountId = AccontPrivate.account.id;
   
-  const subscription = await stripeApi.cancelSubscription(subscriptionId, cancel);
+  const subscription = await stripeApi.cancelSubscription2(subscriptionId, accountId, cancel);
 
   if (!subscription) {
     return error_handler({error_type: logger.ErrorTypes.StripeApi});
@@ -381,7 +404,6 @@ export const updateCustomAccount = async (db, data, context) => {
     
     if (business_type === "company" && personal_data) {
       const list = await stripeApi.listPersons(accountId);
-      console.log("list.data=", list.data);
       const personData = await (async ()=>{
         if (list.data.length > 0) {
           const personId = list.data[0].id;
