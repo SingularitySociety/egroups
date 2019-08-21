@@ -149,8 +149,10 @@ export const createCustomer = async (token, userId) => {
   
 }
 
-export const createSharedCustomer = async(source, accountId) => {
+export const createSharedCustomer = async(groupId, userId, source, accountId) => {
+  const customerId = stripeUtils.getSharedCustomerId(groupId, userId);
   const customer = await getStripe().customers.create({
+    id: customerId,
     description: "Shared customer",
     source: source
   }, {

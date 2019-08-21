@@ -12,6 +12,9 @@ export const getPlanId = (groupId, amount, currency) => {
 export const getCustomerId = (userId) => {
   return "cus_" + userId;
 }
+export const getSharedCustomerId = (group_id, userId) => {
+  return "shared_cus_" + group_id + "_" + userId;
+}
 export const getUSerIdFromCustomerId = (customerId) => {
   if (customerId.startsWith("cus_")) {
     return customerId.slice(4);
