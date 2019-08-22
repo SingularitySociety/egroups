@@ -60,8 +60,8 @@ class NewGroup extends React.Component {
     const result = (await createGroupName(context)).data;
     if (result.result) {
       // BUGBUG: For some reason, redirect does not work (infinit spiral)
-      //  this.setState({redirect:`/${path}`});
-      window.location.pathname = `/${path}`;
+      //  this.setState({redirect:`/g/${path}`});
+      window.location.pathname = `/g/${path}`;
     } else {
       this.setState({processing:false});
       console.log(result);
@@ -146,7 +146,7 @@ class NewGroup extends React.Component {
               <FormControl className={classes.formControl}>
               <TextField label={<FormattedMessage id={conflict ? "path.conflict" : "group.path"} />} value={path} autoFocus={true} error={ invalid }
                   onChange={this.handleChange('path')} className={classes.textField} margin="normal" />
-              <span>URL: {`https:/${window.location.host}/${path || "..."}`}</span>
+              <span>URL: {`https:/${window.location.host}/g/${path || "..."}`}</span>
               </FormControl>
               <div>
                 { processing ?
