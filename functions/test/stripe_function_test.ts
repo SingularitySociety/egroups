@@ -4,6 +4,8 @@ import * as test_helper from "../../lib/test/rules/test_helper";
 import * as stripeApi from '../src/apis/stripe';
 import * as stripeUtils from "../src/utils/stripe"
 
+import * as stripeTestUtils from "./stripe_utils"
+
 import * as stripeCustomAccountData from './testData/stripeCustomAccountData'
 import * as image_function from '../src/functions/image';
 
@@ -31,6 +33,13 @@ const checkCancel = async (db, groupId, userId, cancel) => {
 }
 
 const createDataForSubscription = async (userId, groupId, price, currency, ) => {
+  const account = await stripeTestUtils.createCustomAccount(groupId);
+  const accountId = account.id;
+
+  await admin_db.doc(`groups/${groupId}/private/account`).set({
+    account: account,
+  });
+
   // need group, product, plan, 
   await admin_db.doc(`users/${userId}`).set({
     uid: userId,
@@ -40,9 +49,9 @@ const createDataForSubscription = async (userId, groupId, price, currency, ) => 
   await test_helper.create_group(alice_group, "hello", "hello", true);
       
   const stripeGroupSecretRef = admin_db.doc(`/groups/${groupId}/secret/stripe`);
-  const production = await stripeApi.createProduct(groupId, "hello", groupId);
+  const production = await stripeApi.createProduct2(groupId, "hello", groupId, accountId);
   
-  const plan = await stripeApi.createPlan(groupId, price, currency);
+  const plan = await stripeApi.createPlan2(groupId, price, currency, accountId);
   const plan_key = [String(price), currency].join("_")
   
   await stripeGroupSecretRef.set({
@@ -55,6 +64,11 @@ const createDataForSubscription = async (userId, groupId, price, currency, ) => 
   const visa_token = visa_source.id;
   
   await stripeApi.createCustomer(visa_token, userId);
+
+  // const customerToken = await stripeApi.createCustomerToken(customer.id, accountId);
+  // const sharedCustomer = await stripeApi.createSharedCustomer(groupId, userId, customerToken.id, accountId);
+
+  return accountId;
 }
 
 const createOnetime = async (userId) => {
@@ -140,10 +154,10 @@ describe('function test', () => {
 
 
   it ('stripe create subscription test', async function() {
-    this.timeout(10000);
+    this.timeout(30000);
     const uuid = UUID();
     const aliceUserId = "test_customer_" + uuid;
-    const groupId = "sub_test";
+    const groupId = "shared_sub_test";
 
     const price = 5000;
     const currency = "jpy";
@@ -177,7 +191,7 @@ describe('function test', () => {
     subscriptionRaw.subscription.plan.amount.should.equal(5000);
     subscriptionRaw.subscription.plan.billing_scheme.should.equal('per_unit');
     subscriptionRaw.subscription.plan.currency.should.equal('jpy');
-    subscriptionRaw.subscription.plan.id.should.equal('plan_sub_test_5000_jpy');
+    subscriptionRaw.subscription.plan.id.should.equal('plan_shared_sub_test_5000_jpy');
     subscriptionRaw.subscription.plan.interval.should.equal('month');
     subscriptionRaw.subscription.plan.interval_count.should.equal(1);
     subscriptionRaw.subscription.plan.object.should.equal('plan');
@@ -187,7 +201,7 @@ describe('function test', () => {
 
     const member = (await admin_db.doc(`/groups/${groupId}/members/${aliceUserId}`).get()).data();
     member.displayName.should.equal('---');
-    member.groupId.should.equal('sub_test');
+    member.groupId.should.equal('shared_sub_test');
     member.userId.should.equal(aliceUserId);
       
     const memberStripe = (await admin_db.doc(`/groups/${groupId}/members/${aliceUserId}/private/stripe`).get()).data();
@@ -204,15 +218,15 @@ describe('function test', () => {
 
     const userPrivate = (await admin_db.doc(`users/${aliceUserId}/private/stripe`).get()).data();
     
-    userPrivate.subscription.sub_test.billing.should.equal('charge_automatically');
-    userPrivate.subscription.sub_test.object.should.equal('subscription');
-    userPrivate.subscription.sub_test.plan.active.should.equal(true);
-    userPrivate.subscription.sub_test.plan.amount.should.equal(5000);
-    userPrivate.subscription.sub_test.plan.currency.should.equal('jpy');
-    userPrivate.subscription.sub_test.plan.interval.should.equal('month');
-    userPrivate.subscription.sub_test.plan.interval_count.should.equal(1);
-    userPrivate.subscription.sub_test.quantity.should.equal(1);
-    userPrivate.subscription.sub_test.status.should.equal('active');
+    userPrivate.subscription.shared_sub_test.billing.should.equal('charge_automatically');
+    userPrivate.subscription.shared_sub_test.object.should.equal('subscription');
+    userPrivate.subscription.shared_sub_test.plan.active.should.equal(true);
+    userPrivate.subscription.shared_sub_test.plan.amount.should.equal(5000);
+    userPrivate.subscription.shared_sub_test.plan.currency.should.equal('jpy');
+    userPrivate.subscription.shared_sub_test.plan.interval.should.equal('month');
+    userPrivate.subscription.shared_sub_test.plan.interval_count.should.equal(1);
+    userPrivate.subscription.shared_sub_test.quantity.should.equal(1);
+    userPrivate.subscription.shared_sub_test.status.should.equal('active');
   });
 
   it ('stripe cancel subscription test', async function() {
@@ -220,15 +234,20 @@ describe('function test', () => {
     const uuid = UUID();
 
     const aliceUserId = "test_customer_" + uuid;
-    const groupId = "sub_test";
+    const groupId = "shared_sub_test";
     const price = 5000;
     const currency = "jpy";
 
-    await createDataForSubscription(aliceUserId, groupId, price, currency);
+    const accountId = await createDataForSubscription(aliceUserId, groupId, price, currency);
+
+    // create sharedCustomer
+    const customerId = stripeUtils.getCustomerId(aliceUserId)
+    const customerToken = await stripeApi.createCustomerToken(customerId, accountId);
+    const sharedCustomer = await stripeApi.createSharedCustomer(groupId, aliceUserId, customerToken.id, accountId);
 
     const planId = stripeUtils.getPlanId(groupId, price, currency);
-    const subscription = await stripeApi.createSubscription(aliceUserId, groupId, planId);
-
+    const subscription = await stripeApi.createSubscription2(aliceUserId, sharedCustomer.id, groupId, planId, accountId);
+    
     await admin_db.doc(`/groups/${groupId}/members/${aliceUserId}/secret/stripe`).set({
       subscription: subscription
     });
@@ -243,7 +262,7 @@ describe('function test', () => {
 
     await wrapped(req, context);
 
-    const subscription2 = await stripeApi.retrieveSubscription(subscriptionId);
+    const subscription2 = await stripeApi.retrieveSubscription2(subscriptionId, accountId);
     subscription2.cancel_at_period_end.should.equal(true);
 
     await checkCancel(admin_db, groupId, aliceUserId, true);
@@ -253,7 +272,7 @@ describe('function test', () => {
 
     await wrapped2(req2, context);
 
-    const subscription3 = await stripeApi.retrieveSubscription(subscriptionId);
+    const subscription3 = await stripeApi.retrieveSubscription2(subscriptionId, accountId);
     subscription3.cancel_at_period_end.should.equal(false);
     await checkCancel(admin_db, groupId, aliceUserId, false);
     

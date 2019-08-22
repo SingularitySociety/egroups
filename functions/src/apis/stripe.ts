@@ -78,6 +78,49 @@ export const createPlan = async(groupId, amount, currency = "jpy") => {
   return plan;
 };
 
+export const createPlan2 = async(groupId, amount, currency = "jpy", accoundId) => {
+  const productId = "prod_" + groupId;
+  const planId = stripeUtils.getPlanId(groupId, amount, currency);
+
+  let plan = await getExistPlan(planId);
+  if (!plan) {
+    plan = await getStripe().plans.create({
+      id: planId,
+      amount: amount,
+      interval: "month",
+      product: productId,
+      currency: currency,
+      metadata: {
+        groupId: groupId,
+      },
+    }, {
+      stripe_account: accoundId
+    });
+  }
+  return plan;
+};
+
+export const createProduct2 = async (name, description, groupId, accountId) => {
+  const productId = stripeUtils.getProductId(groupId);
+  let product = await getExistProduct(productId);
+  
+  if (!product) {
+    product = await getStripe().products.create({
+      id: productId,
+      name: name,
+      type: 'service',
+      metadata: {
+        groupId: groupId,
+      },
+      statement_descriptor: description
+    }, {
+      stripe_account: accountId
+    });
+  }
+  return product;
+  
+}
+
 export const createCustomer = async (token, userId) => {
   const newToken = await getStripe().tokens.retrieve(token);
   if (!newToken || !newToken.card) {
@@ -106,6 +149,26 @@ export const createCustomer = async (token, userId) => {
   
 }
 
+export const createSharedCustomer = async(groupId, userId, source, accountId) => {
+  const customerId = stripeUtils.getSharedCustomerId(groupId, userId);
+  const customer = await getStripe().customers.create({
+    id: customerId,
+    description: "Shared customer",
+    source: source
+  }, {
+    stripe_account: accountId,
+  });
+  return customer;
+}
+
+export const createCustomerToken = async (customerId, accountId) => {
+  const token = await getStripe().tokens.create({
+    customer: customerId,
+  }, {
+    stripe_account: accountId,
+  });
+  return token;
+}
 
 export const deleteCustomer = async (userId) => {
   const customerId = stripeUtils.getCustomerId(userId);
@@ -139,6 +202,31 @@ export const createSubscription = async (userId, groupId, plan) => {
   }
 }
 
+export const createSubscription2 = async (userId, customerId, groupId, plan, accoundId) => {
+  const idempotency_key = ["sub", customerId, plan].join("_")
+  try {
+    const subscription = await getStripe().subscriptions.create({
+      customer: customerId,
+      items: [{ plan: plan }],
+      // todo tax_rate
+      // default_tax_rates: ["txr_1EpqXRJRcJsJLSj692uXxIcK"],
+      // default_source: tokenId,
+      metadata: {
+        userId,
+        groupId,
+      },
+      application_fee_percent: 10,
+    }, {
+      idempotency_key: idempotency_key,
+      stripe_account: accoundId
+    })
+    return subscription;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
 export const cancelSubscription = async (subscriptionId, cancel=true) => {
   try {
     const subscription = await getStripe().subscriptions.update(subscriptionId, {
@@ -150,7 +238,21 @@ export const cancelSubscription = async (subscriptionId, cancel=true) => {
     return false;
   }
 }
-     
+
+export const cancelSubscription2 = async (subscriptionId, accountId, cancel=true) => {
+  try {
+    const subscription = await getStripe().subscriptions.update(subscriptionId, {
+      cancel_at_period_end: cancel,
+    }, {
+      stripe_account: accountId,
+    })
+    return  subscription;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
 export const retrieveSubscription = async (subscriptionId) => {
   try {
     const subscription = await getStripe().subscriptions.retrieve(subscriptionId)
@@ -160,8 +262,20 @@ export const retrieveSubscription = async (subscriptionId) => {
     return false;
   }
 }
+
+export const retrieveSubscription2 = async (subscriptionId, accountId) => {
+  try {
+    const subscription = await getStripe().subscriptions.retrieve(subscriptionId, {
+      stripe_account: accountId,
+    })
+    return  subscription;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
      
-export const createCustomAccount = async (groupId, country="JP", business_type=null) => {
+export const createCustomAccount = async (groupId, country="JP", business_type="") => {
   const options: any = {
     type: "custom",
     country,
@@ -169,7 +283,7 @@ export const createCustomAccount = async (groupId, country="JP", business_type=n
       groupId,
     },
   };
-  if (business_type) {
+  if (business_type && business_type !== "") {
     options.business_type = business_type;
   }
   if (country === "US") {

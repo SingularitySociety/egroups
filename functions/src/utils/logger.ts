@@ -31,6 +31,7 @@ export enum ErrorTypes {
   InviteNoDate,
   InviteExipred,
   OnetimeKey,
+  NoAccountPrivate,
 }
 
 export const error_messages = {
@@ -58,6 +59,7 @@ export const error_messages = {
   [ErrorTypes.InviteNoDate]: "Missing invite date",
   [ErrorTypes.InviteExipred]: "Expired invite",
   [ErrorTypes.OnetimeKey]: "No one time key",
+  [ErrorTypes.NoAccountPrivate]: "No Account Private",
 }
 export const response_error_type = {
   [ErrorTypes.OnetimeKey]: ErrorTypes[ErrorTypes.OnetimeKey]

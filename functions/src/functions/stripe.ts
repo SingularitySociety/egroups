@@ -22,6 +22,23 @@ const updateSubscriptionData = async (db, groupId, userId, subscription, period)
   }, {merge:true});
 }
 
+const getSharedCustomer = async (db, userId, groupId, accountId) => {
+  const ref = db.doc(`/groups/${groupId}/members/${userId}/readonly/sharedcustomer`);
+  const sharedCustomerData = (await ref.get()).data();
+
+  if (sharedCustomerData) {
+    return sharedCustomerData.customer;
+  }
+  const customerId = stripeUtils.getCustomerId(userId);
+
+  const customerToken = await stripeApi.createCustomerToken(customerId, accountId);
+  const sharedCustomer = await stripeApi.createSharedCustomer(groupId, userId, customerToken.id, accountId);
+  await ref.set({
+    customer: sharedCustomer,
+  });
+  return sharedCustomer;
+}
+
 export const createCustomer = async (db, data, context) => {
   const error_handler = logger.error_response_handler({func: "createCustomer", message: "invalid request"});
 
@@ -114,9 +131,14 @@ export const createSubscription = async (db, data, context) => {
     return error_handler({error_type: logger.ErrorTypes.AlreadyMember});
   }
 
+  const AccontPrivate = await db.doc(`groups/${groupId}/private/account`).get();
+
+  const accountId = AccontPrivate.data().account.id;
+
+  const sharedCustomer = await getSharedCustomer(db, userId, groupId, accountId);
   // everything ok
   const planId = stripeUtils.getPlanId(groupId, price, currency);
-  const subscription = await stripeApi.createSubscription(userId, groupId, planId);
+  const subscription = await stripeApi.createSubscription2(userId, sharedCustomer.id, groupId, planId, accountId);
 
   if (!subscription) {
     return error_handler({error_type: logger.ErrorTypes.StripeSubscriptionCreation});
@@ -152,45 +174,52 @@ export const groupDidUpdate = async (db, change, context) => {
   const error_handler = logger.error_response_handler({func: "groupDidUpdate", message: "invalid request"});
 
   if (after.subscription) {
-    const userId = after.owner;
-    const stripeRef = db.doc(`/groups/${groupId}/secret/stripe`);
-    const stripeData = (await stripeRef.get()).data();
-    if (!stripeData || !stripeData.production) {
-      const production = await stripeApi.createProduct(after.groupName, after.groupName, groupId);
-      if (!production) {
-        return error_handler({error_type: logger.ErrorTypes.StripeApi});
-      }
-      await stripeRef.set({production: production}, {merge:true});
-      await stripeUtils.stripeLog(db, userId, {production}, stripeUtils.stripeActions.productCreated);
-    }
     
-    if (after.plans) {
-      const existPlans = (stripeData && stripeData.plans) || {};
-      const newPlans = {};
-      await utils.asyncForEach(after.plans, async(plan) => {
-        // todo validate plan
-        const price = plan.price;
-        const currency = plan.currency || "jpy";
-        const key = [String(price), currency].join("_")
-        if (!stripeData || !stripeData.plans || !stripeData.plans[key]) {
-          const stripePlan = await stripeApi.createPlan(groupId, price, currency);
-          if (!stripePlan) {
-            return error_handler({error_type: logger.ErrorTypes.StripeApi});
-          }
-          newPlans[key] = stripePlan;
-          await stripeUtils.stripeLog(db, userId, {plan}, stripeUtils.stripeActions.planCreated);
+    const AccontPrivate = (await db.doc(`groups/${groupId}/private/account`).get()).data();
+    if (AccontPrivate && AccontPrivate.account) {
+      const accountId = AccontPrivate.account.id;
+    
+      const userId = after.owner;
+      const stripeRef = db.doc(`/groups/${groupId}/secret/stripe`);
+      const stripeData = (await stripeRef.get()).data();
+      if (!stripeData || !stripeData.production) {
+        const production = await stripeApi.createProduct2(after.groupName, after.groupName, groupId, accountId);
+        if (!production) {
+          return error_handler({error_type: logger.ErrorTypes.StripeApi});
         }
-        return true
-      });
-      if (Object.keys(newPlans).length > 0) {
-        const updatedPlan = merge(existPlans, newPlans);
-        await stripeRef.set({plans: updatedPlan}, {merge:true});
+        await stripeRef.set({production: production}, {merge:true});
+        await stripeUtils.stripeLog(db, userId, {production}, stripeUtils.stripeActions.productCreated);
       }
-    }
-    const secretData = await stripeRef.get();
-    if (secretData.exists) {
-      const privateData = stripeUtils.convProductData(secretData.data());
-      await db.doc(`/groups/${groupId}/private/stripe`).set(privateData, {merge:true});
+      
+      if (after.plans) {
+        const existPlans = (stripeData && stripeData.plans) || {};
+        const newPlans = {};
+        await utils.asyncForEach(after.plans, async(plan) => {
+          // todo validate plan
+          const price = plan.price;
+          const currency = plan.currency || "jpy";
+          const key = [String(price), currency].join("_")
+          if (!stripeData || !stripeData.plans || !stripeData.plans[key]) {
+            const stripePlan = await stripeApi.createPlan2(groupId, price, currency, accountId);
+            if (!stripePlan) {
+              return error_handler({error_type: logger.ErrorTypes.StripeApi});
+            }
+            newPlans[key] = stripePlan;
+            await stripeUtils.stripeLog(db, userId, {plan}, stripeUtils.stripeActions.planCreated);
+          }
+          return true
+        });
+        if (Object.keys(newPlans).length > 0) {
+          const updatedPlan = merge(existPlans, newPlans);
+          await stripeRef.set({plans: updatedPlan}, {merge:true});
+        }
+      }
+
+      const secretData = await stripeRef.get();
+      if (secretData.exists) {
+        const privateData = stripeUtils.convProductData(secretData.data());
+        await db.doc(`/groups/${groupId}/private/stripe`).set(privateData, {merge:true});
+      }
     }
     // const value = snapshot.data();
   }
@@ -217,8 +246,14 @@ export const cancelSubscription = async (db, data, context) => {
   }
   const subscriptionId = secret.subscription.id;
   const cancel = data.cancel === undefined ? true : data.cancel;
+
+  const AccontPrivate = (await db.doc(`groups/${groupId}/private/account`).get()).data();
+  if (!AccontPrivate || !AccontPrivate.account) {
+    return error_handler({error_type: logger.ErrorTypes.NoAccountPrivate});
+  }
+  const accountId = AccontPrivate.account.id;
   
-  const subscription = await stripeApi.cancelSubscription(subscriptionId, cancel);
+  const subscription = await stripeApi.cancelSubscription2(subscriptionId, accountId, cancel);
 
   if (!subscription) {
     return error_handler({error_type: logger.ErrorTypes.StripeApi});
@@ -381,7 +416,6 @@ export const updateCustomAccount = async (db, data, context) => {
     
     if (business_type === "company" && personal_data) {
       const list = await stripeApi.listPersons(accountId);
-      console.log("list.data=", list.data);
       const personData = await (async ()=>{
         if (list.data.length > 0) {
           const personId = list.data[0].id;

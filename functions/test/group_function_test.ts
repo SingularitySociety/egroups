@@ -1,5 +1,6 @@
 import * as functions_test_helper from "./functions_test_helper";
 import * as stripeUtils from "../src/utils/stripe"
+import * as stripeTestUtils from "./stripe_utils"
 
 import { should } from 'chai';
 import * as UUID from "uuid-v4";
@@ -18,6 +19,11 @@ describe('Group function test', () => {
     const uuid = UUID();
     const aliceUserId = "test_customer_" + uuid;
 
+    const account = await stripeTestUtils.createCustomAccount(groupId);
+    await admin_db.doc(`groups/${groupId}/private/account`).set({
+      account: account,
+    });
+    
     const wrapped = test.wrap(index.groupDidUpdate);
     
     const beforeGroupDataSnap = test.firestore.makeDocumentSnapshot({
