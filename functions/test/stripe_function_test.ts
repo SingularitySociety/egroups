@@ -63,12 +63,12 @@ const createDataForSubscription = async (userId, groupId, price, currency, ) => 
   const visa_source = await functions_test_helper.createVisaCard();
   const visa_token = visa_source.id;
   
-  const customer = await stripeApi.createCustomer(visa_token, userId);
+  await stripeApi.createCustomer(visa_token, userId);
 
-  const customerToken = await stripeApi.createCustomerToken(customer.id, accountId);
-  const sharedCustomer = await stripeApi.createSharedCustomer(groupId, userId, customerToken.id, accountId);
+  // const customerToken = await stripeApi.createCustomerToken(customer.id, accountId);
+  // const sharedCustomer = await stripeApi.createSharedCustomer(groupId, userId, customerToken.id, accountId);
 
-  return [accountId, sharedCustomer.id];
+  return accountId;
 }
 
 const createOnetime = async (userId) => {
@@ -238,11 +238,16 @@ describe('function test', () => {
     const price = 5000;
     const currency = "jpy";
 
-    const [accountId, sharedCustomerId] = await createDataForSubscription(aliceUserId, groupId, price, currency);
+    const accountId = await createDataForSubscription(aliceUserId, groupId, price, currency);
+
+    // create sharedCustomer
+    const customerId = stripeUtils.getCustomerId(aliceUserId)
+    const customerToken = await stripeApi.createCustomerToken(customerId, accountId);
+    const sharedCustomer = await stripeApi.createSharedCustomer(groupId, aliceUserId, customerToken.id, accountId);
 
     const planId = stripeUtils.getPlanId(groupId, price, currency);
-    const subscription = await stripeApi.createSubscription2(aliceUserId, sharedCustomerId, groupId, planId, accountId);
-
+    const subscription = await stripeApi.createSubscription2(aliceUserId, sharedCustomer.id, groupId, planId, accountId);
+    
     await admin_db.doc(`/groups/${groupId}/members/${aliceUserId}/secret/stripe`).set({
       subscription: subscription
     });
