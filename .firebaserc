@@ -1,6 +1,7 @@
 {
   "projects": {
     "default": "e-groups",
-    "staging": "e-groups-staging"
+    "staging": "e-groups-staging",
+    "jp": "e-group-jp"
   }
 }

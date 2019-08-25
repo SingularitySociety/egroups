@@ -15,9 +15,26 @@ This is yet another collaboration software.
 9. Replace the word "skelton-us" in .firebaserc file with your Firebase project name.
 10. Open the firebase console, and create a Cloud Firestore (make it "secure" for now). 
 
+## Memo
+
+Enable IAM (https://console.cloud.google.com/apis/library/iam.googleapis.com?project=???)
+https://stackoverflow.com/questions/56616399/firebase-admin-auth-createcustomtoken-letting-the-admin-sdk-discover-a-servic
+
 ## Available Scripts
 
 In the project directory, you can run:
+
+### `npm run use_default'
+
+Use "e-groups" project
+
+### `npm run use_jp'
+
+Use "e-group-jp" project
+
+### `npm run use_staging'
+
+Use "e-groups-staging" project
 
 ### `npm start`
 
