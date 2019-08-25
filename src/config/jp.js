@@ -9,7 +9,7 @@ const firebaseConfig = {
   storageBucket: "e-group-jp.appspot.com",
   messagingSenderId: "703654481766",
   appId: "1:703654481766:web:3ef561dce0de363f",
-  messageKey: "BCrvhfMDgC5kuQaNsD1pL1uB_s-LdPsxilBoknX-Vs4u8ULzYCbOw9LBjo9jSLWnK6xgzvhZKFMFz8ymkujEn4I",
+  messageKey: "BKW71gXeSoznuvLPy7A1taqkAY4QAa6xDF94GWlE7rmXI7q1tFKVbHKzhHO87O8F9_NSQ9XdmwDv-jm5-gZnmGo",
 };
 
 export const appConfig = {
