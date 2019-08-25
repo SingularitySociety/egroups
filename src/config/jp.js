@@ -6,7 +6,7 @@ const firebaseConfig = {
   authDomain: "e-group-jp.firebaseapp.com",
   databaseURL: "https://e-group-jp.firebaseio.com",
   projectId: "e-group-jp",
-  storageBucket: "",
+  storageBucket: "e-group-jp.appspot.com",
   messagingSenderId: "703654481766",
   appId: "1:703654481766:web:3ef561dce0de363f",
   messageKey: "BCrvhfMDgC5kuQaNsD1pL1uB_s-LdPsxilBoknX-Vs4u8ULzYCbOw9LBjo9jSLWnK6xgzvhZKFMFz8ymkujEn4I",
