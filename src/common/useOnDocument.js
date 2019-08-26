@@ -8,7 +8,7 @@ function useOnDocument(db, path) {
   const [error, setError] = useState(null);
 
   useEffect(()=>{
-    let detacher = null;
+    let detacher = undefined;
     if (path) {
       try {
         const ref = db.doc(path);
