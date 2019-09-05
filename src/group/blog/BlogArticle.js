@@ -28,7 +28,7 @@ const styles = theme => ({
     },
   },
   userFrame: {
-    marginBottom: theme.spacing(1),
+    marginBottom: theme.spacing(2),
   },
   userName: {
     //color: "#606060",

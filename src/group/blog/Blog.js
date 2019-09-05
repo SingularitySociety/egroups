@@ -12,7 +12,6 @@ function Blog(props) {
   const { match:{params:{articleId}}, callbacks, arp, user, db, group } = props;
   const { privilege, profiles } = props;
   const pathArticle = `groups/${group.groupId}/${arp.collection}/${articleId}`;
-  const pathHistory = `groups/${group.groupId}/members/${user.uid}/private/history`;
   const [ article, err ] = useDocument(db, pathArticle);
   const setTabbar = callbacks.setTabbar;
 
@@ -24,11 +23,12 @@ function Blog(props) {
     if (user) {
       const articles = {};
       articles[articleId] = { l:new Date() }; // NOT firebase.firestore.FieldValue.serverTimestamp()
+      const pathHistory = `groups/${group.groupId}/members/${user.uid}/private/history`;
       db.doc(pathHistory).set({
         articles
       }, {merge:true})
     }
-  },[db, articleId, pathHistory, user]);
+  },[db, articleId, user, group]);
 
   if (err) {
     return <AccessDenied error={err} />
