@@ -173,6 +173,9 @@ function CustomAccount(props) {
     setProcessing(true);
     const account_copy = smartCopy(account_data);
     //console.log(account_data, account_copy);
+    // BUGBUG: Remove "verification" to work-around "unknown parameters: details, details_code" error.    
+    // This is a new behavior, and I am not sure what.
+    delete account_copy.verification;
 
     const context = { groupId, business_type, account_data:account_copy };
     if (page==="bank" && bank_data) {
