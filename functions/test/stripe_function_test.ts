@@ -542,22 +542,15 @@ describe('function test', () => {
                    business_type: "company",
                    business_profile: stripeCustomAccountData.postDataUS["business_profile"],
                    personal_data: stripeCustomAccountData.postDataUS["person"],
-                   account_data: stripeCustomAccountData.postDataUS["company"]};
+                   account_data: stripeCustomAccountData.postDataUS["company"],
+                   external_account: stripeCustomAccountData.bank_us};
     const wrapped21 = test.wrap(index.updateCustomAccount);
     const res21 = await wrapped21(req21, context);
 
     res21.result.should.equal(true)
     res21.account.payouts_enabled.should.equal(false);
-    // set bank
-    const req22 = {groupId: groupId,
-                   acceptance: true,
-                   business_type: "company",
-                   external_account: stripeCustomAccountData.bank_us};
-    const res22 = await wrapped21(req22, context);
-    res22.result.should.equal(true)
-    res22.account.external_accounts.total_count.should.equal(1)
 
-    const accountID = res22.id;
+    const accountID = res21.id;
 
     const accountData = await stripeApi.getCustomAccount(accountID);
     accountData.payouts_enabled.should.equal(true)
