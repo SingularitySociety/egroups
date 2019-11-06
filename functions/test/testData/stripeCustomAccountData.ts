@@ -214,7 +214,7 @@ export const bank_jp = {
   account_holder_name: "ヤマダハナコ",
   account_holder_type: "individual",
   routing_number: "1100000", // bank code and branch code
-  account_number: "00012345",
+  account_number: "0001234",
 };
 
 
@@ -224,6 +224,6 @@ export const bank_us = {
   currency: "usd",
   account_holder_name: "axel rose",
   account_holder_type: "individual",
-  routing_number: "111000000", // bank code and branch code
+  routing_number: "110000000", // bank code and branch code
   account_number: "000123456789",
 };
