@@ -23,6 +23,8 @@ export const writeFile = (name, json) => {
   JSON.stringify(name, undefined, 1);
 }
 
+const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
+
 const checkCancel = async (db, groupId, userId, cancel) => {
   const subscriptionRaw = (await db.doc(`/groups/${groupId}/members/${userId}/secret/stripe`).get()).data()
   subscriptionRaw.subscription.cancel_at_period_end.should.equal(cancel);
@@ -464,9 +466,13 @@ describe('function test', () => {
     secret.account.object.should.equal('account')
     secret.account.type.should.equal('custom' )
 
+    await sleep(2000);
+    
     // can't create again
     const res1 = await wrapped(req, context);
     res1.result.should.equal(false)
+
+    await sleep(2000);
     
     // set personal data
     const req2 = {groupId,
@@ -477,6 +483,8 @@ describe('function test', () => {
     const res2 = await wrapped2(req2, context);
     res2.result.should.equal(true)
     writeFile("individual-us-update", res2.account);
+
+    await sleep(2000);
     
     // just update personal data
     const req3 = {groupId,
@@ -484,6 +492,8 @@ describe('function test', () => {
                   account_data: stripeCustomAccountData.postDataUS["individual"]};
     const res3 = await wrapped2(req3, context);
     res3.result.should.equal(true)
+
+    await sleep(2000);
 
     // set bank
     const req4 = {groupId,
@@ -494,6 +504,8 @@ describe('function test', () => {
     res4.result.should.equal(true)
     res4.account.external_accounts.total_count.should.equal(1)
 
+    await sleep(2000);
+
     const accountID = res4.id;
 
     const req11 = {groupId,
@@ -502,10 +514,14 @@ describe('function test', () => {
     const res11 = await wrapped2(req11, context);
     res11.result.should.equal(false)
     
+    await sleep(2000);
+
     const req12 = {groupId,
                   account_data: stripeCustomAccountData.postDataUS["individual"]};
     const res12 = await wrapped2(req12, context);
     res12.result.should.equal(false)
+
+    await sleep(2000);
 
     // upload file
     const filePath = `groups/${groupId}/owner/verification/front`;
@@ -521,6 +537,7 @@ describe('function test', () => {
 
   it ('stripe create and update customer in US company test', async function() {
     this.timeout(60000);
+
     const aliceUserId = "test_user_" + UUID();
     const groupId = "group_" + UUID();
     const country = "US";
@@ -532,11 +549,15 @@ describe('function test', () => {
     
     const context = {auth: {uid: aliceUserId}};
     const wrapped = test.wrap(index.createCustomAccount);
-  
+
+    await sleep(2000);
+    
     const req20 = {groupId: groupId, country};
     const res20 = await wrapped(req20, context);
     res20.result.should.equal(true)
 
+    await sleep(2000);
+    
     const req21 = {groupId: groupId,
                    acceptance: true,
                    business_type: "company",
