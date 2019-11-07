@@ -202,15 +202,13 @@ export const createSubscription = async (userId, groupId, plan) => {
   }
 }
 
-export const createSubscription2 = async (userId, customerId, groupId, plan, accoundId) => {
+export const createSubscription2 = async (userId, customerId, groupId, plan, accoundId, taxId) => {
   const idempotency_key = ["sub", customerId, plan].join("_")
   try {
     const subscription = await getStripe().subscriptions.create({
       customer: customerId,
       items: [{ plan: plan }],
-      // todo tax_rate
-      // default_tax_rates: ["txr_1EpqXRJRcJsJLSj692uXxIcK"],
-      // default_source: tokenId,
+      default_tax_rates: [taxId],
       metadata: {
         userId,
         groupId,
@@ -317,4 +315,17 @@ export const updatePerson = async (accoundId, personId, data) => {
 export const listPersons =  async (accoundId) => {
   const lists = await getStripe().accounts.listPersons(accoundId);
   return lists;
+}
+
+export const createTex = async (accoundId) => {
+  const tax = await getStripe().taxRates.create({
+    display_name: '消費税',
+    description: '消費税',
+    jurisdiction: 'JA',
+    percentage: 10.0,
+    inclusive: false,
+  }, {
+    stripe_account: accoundId
+  });
+  return tax;
 }

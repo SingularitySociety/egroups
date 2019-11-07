@@ -29,7 +29,7 @@ describe('Stripe test', () => {
 
     const account = await stripeTestUtils.createCustomAccount(groupId);
     const accountId = account.id;
-    
+
     const product = await stripeApi.createProduct2("unit_test", "hello", groupId, accountId);
     product.id.should.equal(stripeUtils.getProductId(groupId));
     
@@ -135,13 +135,15 @@ describe('Stripe test', () => {
     const account = await stripeTestUtils.createCustomAccount(SharedGroupId);
     const accountId = account.id;
 
+    const tax = await stripeApi.createTex(accountId);
+    
     const customerToken = await stripeApi.createCustomerToken(customer.id, accountId);
     const sharedCustomer = await stripeApi.createSharedCustomer(SharedGroupId, userId, customerToken.id, accountId);
     
     await stripeApi.createProduct2("unit_test", "hello", SharedGroupId, accountId);
     const plan = await stripeApi.createPlan2(SharedGroupId, 5000, "jpy", accountId);
 
-    const subscription = await stripeApi.createSubscription2(userId, sharedCustomer.id, SharedGroupId, plan.id, accountId);
+    const subscription = await stripeApi.createSubscription2(userId, sharedCustomer.id, SharedGroupId, plan.id, accountId, tax.id);
     subscription.object.should.equal('subscription');
     subscription.customer.should.equal(sharedCustomer.id)
 
@@ -181,7 +183,7 @@ describe('Stripe test', () => {
     
     subscription.items.data[0].quantity.should.equal(1);
 
-    const subscription2 = await stripeApi.createSubscription2(userId, sharedCustomer.id, SharedGroupId, plan.id, accountId);
+    const subscription2 = await stripeApi.createSubscription2(userId, sharedCustomer.id, SharedGroupId, plan.id, accountId, tax.id);
     subscription2.id.should.equal(subscription2.id);
     
   });
@@ -206,7 +208,8 @@ describe('Stripe test', () => {
     const customerToken = await stripeApi.createCustomerToken(customer.id, accountId);
     const sharedCustomer = await stripeApi.createSharedCustomer(SharedGroupId, userId, customerToken.id, accountId);
 
-    const subscription = await stripeApi.createSubscription2(userId, sharedCustomer.id,  SharedGroupId, plan.id, accountId);
+    const tax = await stripeApi.createTex(accountId);
+    const subscription = await stripeApi.createSubscription2(userId, sharedCustomer.id,  SharedGroupId, plan.id, accountId, tax.id);
     subscription.object.should.equal('subscription');
 
     const cancelResponse = await stripeApi.cancelSubscription2(subscription.id, accountId); 

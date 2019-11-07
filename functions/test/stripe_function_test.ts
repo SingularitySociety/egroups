@@ -248,7 +248,10 @@ describe('function test', () => {
     const sharedCustomer = await stripeApi.createSharedCustomer(groupId, aliceUserId, customerToken.id, accountId);
 
     const planId = stripeUtils.getPlanId(groupId, price, currency);
-    const subscription = await stripeApi.createSubscription2(aliceUserId, sharedCustomer.id, groupId, planId, accountId);
+
+    const newTaxData = await stripeApi.createTex(accountId);
+
+    const subscription = await stripeApi.createSubscription2(aliceUserId, sharedCustomer.id, groupId, planId, accountId, newTaxData.id);
     
     await admin_db.doc(`/groups/${groupId}/members/${aliceUserId}/secret/stripe`).set({
       subscription: subscription
@@ -327,6 +330,9 @@ describe('function test', () => {
     secret.account.object.should.equal('account')
     secret.account.type.should.equal('custom' )
 
+    const privateData = (await admin_db.doc(`groups/${groupId}/private/account`).get()).data();
+    privateData.tax.object.should.equal('tax_rate');
+    
     const res1 = await wrappedCreate(req, context);
     res1.result.should.equal(false)
     

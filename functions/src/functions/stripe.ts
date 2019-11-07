@@ -136,9 +136,20 @@ export const createSubscription = async (db, data, context) => {
   const accountId = AccontPrivate.data().account.id;
 
   const sharedCustomer = await getSharedCustomer(db, userId, groupId, accountId);
+
+  let taxData = AccontPrivate.data().tax;
+
+  // if no taxrate, then create
+  if (!taxData) {
+    const newTaxData = await stripeApi.createTex(accountId);
+    await db.doc(`groups/${groupId}/private/account`).update({tax: newTaxData});
+    taxData = newTaxData;
+  }
+  const taxId = taxData.id;
+
   // everything ok
   const planId = stripeUtils.getPlanId(groupId, price, currency);
-  const subscription = await stripeApi.createSubscription2(userId, sharedCustomer.id, groupId, planId, accountId);
+  const subscription = await stripeApi.createSubscription2(userId, sharedCustomer.id, groupId, planId, accountId, taxId);
 
   if (!subscription) {
     return error_handler({error_type: logger.ErrorTypes.StripeSubscriptionCreation});
@@ -333,9 +344,13 @@ export const createCustomAccount = async (db, data, context) => {
   try {
     const account = await db.runTransaction(async (tr)=>{
       const account_data = await stripeApi.createCustomAccount(groupId, country, business_type);
+      const accountId = account_data.id;
+      const tax_data = await stripeApi.createTex(accountId);
+      
       tr.set(refAccont, {account: account_data})
       tr.set(refAccontPrivate, {
-        account: stripeUtils.convCustomAccountData(account_data)
+        account: stripeUtils.convCustomAccountData(account_data),
+        tax: tax_data,
       })
       return account_data;
     });
