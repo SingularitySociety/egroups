@@ -3,7 +3,8 @@
     [
       "@babel/preset-env", {
         "targets": {
-          "node": "current"
+          "node": "current",
+          corejs: 3
         }
       }
     ]
