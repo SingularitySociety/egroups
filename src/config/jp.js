@@ -22,4 +22,8 @@ export const appConfig = {
   //rootGroup: "betatest",
 }
 
+export const stripeConfig = {
+  apiKey:"pk_live_o4Ry3hAY3m5G7vbaFzanADd900U3ebJPG4",
+};
+
 export default firebaseConfig;
