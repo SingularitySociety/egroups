@@ -20,6 +20,10 @@ export const appConfig = {
     //firebase.auth.TwitterAuthProvider.PROVIDER_ID,
   ],
   //rootGroup: "betatest",
-}
+};
+
+export const stripeConfig = {
+  apiKey:"pk_test_iVo1YToPedpru7AJDpAj43cF00ftQJpoj8",
+};
 
 export default firebaseConfig;
