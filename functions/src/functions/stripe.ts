@@ -55,25 +55,34 @@ export const createCustomer = async (db, data, context) => {
   if (!user.exists) {
     return error_handler({error_type: logger.ErrorTypes.NoUser});
   }
-  const customer = await stripeApi.createCustomer(token, userId);
-  if (!customer) {
-    return error_handler({error_type: logger.ErrorTypes.StripeApi});
+  try {
+    const customer = await stripeApi.createCustomer(token, userId);
+    if (!customer) {
+      return error_handler({error_type: logger.ErrorTypes.StripeApi});
+    }
+    
+    (await db.doc(`users/${userId}/secret/stripe`).set({
+      customer: customer,
+    }, {merge:true}));
+    
+    (await db.doc(`users/${userId}/private/stripe`).set({
+      customer: stripeUtils.convCustomerData(customer),
+    }, {merge:true}));
+    
+    await stripeUtils.stripeLog(db, userId, {customer}, stripeUtils.stripeActions.customerCreated);
+  
+    return {
+      customer: customer,
+      result: true,
+    };
+  } catch (e) {
+    // console.log(e);
+    if (e && e.raw && e.raw.code && e.raw.code === "expired_card") {
+      return error_handler({error_type: logger.ErrorTypes.StripeApiExpireCard});
+    } else {
+      return error_handler({error_type: logger.ErrorTypes.StripeApi});
+    }
   }
-  
-  (await db.doc(`users/${userId}/secret/stripe`).set({
-    customer: customer,
-  }, {merge:true}));
-
-  (await db.doc(`users/${userId}/private/stripe`).set({
-    customer: stripeUtils.convCustomerData(customer),
-  }, {merge:true}));
-
-  await stripeUtils.stripeLog(db, userId, {customer}, stripeUtils.stripeActions.customerCreated);
-  
-  return {
-    customer: customer,
-    result: true,
-  };
 }
 
 export const createSubscription = async (db, data, context) => {

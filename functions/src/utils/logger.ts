@@ -32,6 +32,8 @@ export enum ErrorTypes {
   InviteExipred,
   OnetimeKey,
   NoAccountPrivate,
+  StripeApiExpireCard,
+
 }
 
 export const error_messages = {
@@ -45,6 +47,7 @@ export const error_messages = {
   [ErrorTypes.AlreadyMember]: "already member",
   [ErrorTypes.StripeSubscriptionCreation]: "subscription creation failed",
   [ErrorTypes.StripeApi]: "Stripe API error",
+  [ErrorTypes.StripeApiExpireCard]: "Stripe API error. expired card",
   [ErrorTypes.NoPhoneNumber]: "No phone number",
   [ErrorTypes.InvalidPhoneNumber]: "Invalid phone number",
   [ErrorTypes.AWSSMSPublish]: "AWS SMS Publish Error",

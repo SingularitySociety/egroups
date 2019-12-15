@@ -617,4 +617,29 @@ describe('function test', () => {
 
   });
 
+ 
+  it ('stripe expired card test', async function() {
+    this.timeout(10000);
+    const uuid = UUID();
+    const aliceUserId = "test_customer_" + uuid;
+
+    await admin_db.doc(`users/${aliceUserId}`).set({
+      uid: aliceUserId,
+    })
+
+    const visa_source = await functions_test_helper.createExpiredCard();
+    const visa_token = visa_source.id;
+    
+    const req = {token: visa_token};
+    const context = {auth: {uid: aliceUserId}};
+    const wrapped = test.wrap(index.createCustomer);
+
+    const error_response = await wrapped(req, context);
+
+    error_response.result.should.equal(false)
+    console.log(error_response);
+    error_response.error.type.should.equal("Error");
+
+  });
+ 
 })
