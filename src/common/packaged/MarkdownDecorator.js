@@ -1,6 +1,5 @@
 import React from 'react';
 import MUILink from '@material-ui/core/Link';
-import { Link } from 'react-router-dom';
 import { CompositeDecorator } from 'draft-js';
 
 const linkStrategy = (contentBlock, callback, contentState) => {

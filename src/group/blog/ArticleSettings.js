@@ -8,12 +8,13 @@ import { FormattedMessage } from 'react-intl';
 import { Redirect } from 'react-router-dom';
 import LockedArea from '../../common/LockedArea';
 import useOnDocument from '../../common/useOnDocument';
+import AccessDenied from '../../common/AccessDenied';
 
 const styles = theme => ({
 });
 
 function ArticleSettings(props) {
-  const { db, group, arp, match:{params:{articleId}}, callbacks } = props;
+  const { db, group, arp, user, match:{params:{articleId}}, callbacks } = props;
   const path = `groups/${group.groupId}/${arp.collection}/${articleId}`;
   const [entity] = useOnDocument(db, path);
   const setTabbar = callbacks.setTabbar;
@@ -34,6 +35,11 @@ function ArticleSettings(props) {
       return <Redirect to={`/g/${group.groupName}/blog`} />
     }
     return "";
+  }
+
+  const canEdit = (user && entity.owner === user.uid);
+  if (!canEdit) {
+    return <AccessDenied />
   }
 
   const isGroupHomepage = group.homepageId === articleId 
