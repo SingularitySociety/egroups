@@ -32,7 +32,7 @@ function ArticleSettings(props) {
 
   if (!entity) {
     if (entity === null) {
-      return <Redirect to={`/g/${group.groupName}/blog`} />
+      return <Redirect to={`/g/${group.groupName}/${arp.root}`} />
     }
     return "";
   }
