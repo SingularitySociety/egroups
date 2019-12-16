@@ -113,7 +113,7 @@ function ImageViewer(props) {
   const imageStyle = url ? { backgroundImage:`url("${url}")` } : {};
   const imageElement = (displayMode === "wide") ? (
       <Grid item xs={readOnly ? 12 : 11} className={ classes.wideFrame }>
-        <img src={url} className={classes[displayMode]} alt="place holder" />
+        {url ? <img src={url} className={classes[displayMode]} alt="place holder" /> : ""}
       </Grid>
     ) : <Grid item className={classes[displayMode || "thumbLarge"]} style={imageStyle} />;
   if (inline) {
