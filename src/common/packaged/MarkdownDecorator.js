@@ -20,7 +20,7 @@ const linkComponent = (props) => {
   const { contentState, entityKey } = props;
   const { url } = contentState.getEntity(entityKey).getData();
   return (
-    <MUILink component={Link} to={url}>
+    <MUILink href={url}>
       {props.children}
     </MUILink>
   );

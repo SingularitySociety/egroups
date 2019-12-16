@@ -4,9 +4,9 @@ import { IconButton, Grid } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import PhotoIcon from '@material-ui/icons/AddPhotoAlternate';
 import EditIcon from '@material-ui/icons/Edit';
-import { MarkdownEditor, MarkdownViewer } from 'draft-material.ui-editor';
-// import MarkdownViewer from '../../common/MarkdownViewer';
-// import MarkdownEditor from '../../common/MarkdownEditor';
+// import { MarkdownEditor, MarkdownViewer } from 'draft-material.ui-editor';
+import MarkdownViewer from '../../common/packaged/MarkdownViewer';
+import MarkdownEditor from '../../common/packaged/MarkdownEditor';
 import ImageUploader from '../../common/ImageUploader';
 
 function BlogSection(props) {
