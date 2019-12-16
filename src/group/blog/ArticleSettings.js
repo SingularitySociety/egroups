@@ -39,7 +39,7 @@ function ArticleSettings(props) {
 
   const canEdit = (user && entity.owner === user.uid);
   if (!canEdit) {
-    return <AccessDenied />
+    return <AccessDenied />;
   }
 
   const isGroupHomepage = group.homepageId === articleId 

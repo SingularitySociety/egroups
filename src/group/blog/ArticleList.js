@@ -32,19 +32,19 @@ function ArticleList(props) {
     return detacher;
   }, [db, groupId, arp, limit]);
 
-  const context = { group, history, arp }
+  const context = { group, history, arp };
   if (error) {
-    return <AccessDenied error={error} />
+    return <AccessDenied error={error} />;
   }
   return <div>
-    <div>
-      {
-        list.map((article)=>{
-          return <ArticleItem key={article.articleId} article={article} {...context} />
-        })
-      }
-    </div>
-  </div>
+           <div>
+             {
+               list.map((article)=>{
+                 return <ArticleItem key={article.articleId} article={article} {...context} />;
+               })
+             }
+           </div>
+         </div>;
 }
 
 ArticleList.propTypes = {

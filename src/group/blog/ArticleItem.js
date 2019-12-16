@@ -55,7 +55,7 @@ function ArticleItem(props) {
         </Grid>
       </MUILink>
     </Paper>
-  )
+  );
 }
 
 ArticleItem.propTypes = {
