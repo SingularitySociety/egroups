@@ -119,10 +119,10 @@ class MyAppBar extends React.Component {
         break;
 
       case "pages":
-        crams = [this.cramHomePage, this.cramPages];
+        crams = [this.cramHome, this.cramPages];
         break;
       case "page":
-        crams = [this.cramHomePage, this.cramPages, this.breadCram(pageInfo.tabId, pageInfo.path)];
+        crams = [this.cramHome, this.cramPages, this.breadCram(pageInfo.tabId, pageInfo.path)];
         break;
       case "page.settings":
         crams = [this.cramHome, this.cramPages, this.breadCram("page", pageInfo.path),
@@ -164,7 +164,7 @@ class MyAppBar extends React.Component {
           crams = [this.cramHomePage, this.cramSubscribe];
           break;
       case "invite":
-        crams = [this.cramHomePage, this.cramInvite];
+        crams = [this.cramHome, this.cramInvite];
         break;
       case "invited":
         crams = [];
