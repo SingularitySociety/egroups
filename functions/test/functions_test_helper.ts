@@ -27,6 +27,18 @@ export const createMasterCard = async () => {
   return master_source;
 }
 
+export const createExpiredCard = async () => {
+  const stripeInstance = stripe.getStripe()
+  const master_source = await stripeInstance.tokens.create({
+    card: {
+      number: '4000000000000069',
+      exp_month: 8,
+      exp_year: 2025,
+    },
+  });
+  return master_source;
+}
+
 export const initFunctionsTest = () => {
   const admin_db = test_helper.adminDB();
   index.updateDb(admin_db);
