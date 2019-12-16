@@ -122,7 +122,7 @@ class GroupRouter extends React.Component {
     const member = (await refMember.get()).data();
     if (member) {
       profiles[user.uid] = member;
-      await refMember.set({lastAccessed:firebase.firestore.FieldValue.serverTimestamp()}, {merge:true})
+      await refMember.set({lastAccessed:firebase.firestore.FieldValue.serverTimestamp()}, {merge:true});
       if (!this.detatcher) {
         this.detacher = db.doc(`groups/${group.groupId}/members/${user.uid}/private/history`).onSnapshot((doc)=>{
           const history = doc.data();
@@ -131,14 +131,14 @@ class GroupRouter extends React.Component {
         });
       }
     }
-    this.setState({member, profiles})
+    this.setState({member, profiles});
   }
   userDidMount = () => {
     this.memberDidUpdate();
   }
   userWillUnmount = () => {
     console.log("userWillUnmount");
-    this.setState({member:null, history:null})
+    this.setState({member:null, history:null});
   }
   setTabbar = (tabId, path) => {
     console.log("setTabbar:", tabId); // NOTE: Keep this code to detect infinit useEffect bug
@@ -164,7 +164,7 @@ class GroupRouter extends React.Component {
     const privilege = (privileges && group && privileges[group.groupId]) || Privileges.guest;
 
     if (error) {
-      return <ErrorPage error={error} />
+      return <ErrorPage error={error} />;
     }
 
     if (groupName.length < 3) {

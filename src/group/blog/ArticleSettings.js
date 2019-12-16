@@ -24,14 +24,14 @@ function ArticleSettings(props) {
 
   const onSave = name => async value => {
     await db.doc(path).set({[name]:value}, {merge:true});
-  }
+  };
   const onDelete = async () => {
     await db.doc(path).delete();
-  }
+  };
 
   if (!entity) {
     if (entity === null) {
-      return <Redirect to={`/g/${group.groupName}/blog`} />
+      return <Redirect to={`/g/${group.groupName}/blog`} />;
     }
     return "";
   }
@@ -56,7 +56,7 @@ function ArticleSettings(props) {
           </LockedArea>
       }
     </div>
-  )
+  );
 }
 
 ArticleSettings.propTypes = {

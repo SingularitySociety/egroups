@@ -27,10 +27,10 @@ function Chat(props) {
       userId: user.uid,
       userName: member.displayName
     });
-  }
+  };
 
   if (err) {
-    return <AccessDenied error={err} />
+    return <AccessDenied error={err} />;
   }
   if (!channel) {
     return "";
@@ -41,10 +41,11 @@ function Chat(props) {
   const canWrite = privilege >= channel.write;
   const canEdit = userId === channel.owner || privilege >= Privileges.admin;  
   if (!canRead) {
-    return <AccessDenied />
+    return <AccessDenied />;
   }
   const context = { group, profiles, callbacks, channel, user, db };
-  return (<div>
+  return (
+    <div>
       <Grid container>
         <Grid item xs={canEdit ? 11 : 12}>
           <Typography component="h1" variant="h1" gutterBottom>
@@ -53,23 +54,23 @@ function Chat(props) {
         </Grid>
         {
           canEdit && 
-          <Grid item xs={1}>
+            <Grid item xs={1}>
             <IconButton size="small" component={Link} to={window.location.pathname+"/settings"}>
               <SettingsIcon />
             </IconButton>
-          </Grid>
+            </Grid>
         }
       </Grid>
-    <div>
-      <Messages {...context} />
-    { canWrite && <CreateNew createNew={ postMessgae } creating={true}
+      <div>
+        <Messages {...context} />
+        { canWrite && <CreateNew createNew={ postMessgae } creating={true}
         action={<FormattedMessage id="post" />} label={<FormattedMessage id="chat.message" />} multiline={true} /> }
-    </div>
-  </div>)
+      </div>
+    </div>);
 }
 
 Chat.propTypes = {
-    group: PropTypes.object.isRequired,
-  };
+  group: PropTypes.object.isRequired,
+};
   
 export default Chat;

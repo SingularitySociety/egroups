@@ -24,18 +24,18 @@ function Members(props) {
 
   console.log(list.length);
   if (error) {
-    return <AccessDenied error={error} />    
+    return <AccessDenied error={error} />;
   }
   return <div>
     {
       list.map((item)=>{
         const context = { group, user, item };
         return <div key={item.userId} className={classes.member}>
-          <MemberItem {...context} />
-        </div>
+                 <MemberItem {...context} />
+               </div>;
       })
     }
-  </div>
+         </div>;
 }
 
 Members.propTypes = {

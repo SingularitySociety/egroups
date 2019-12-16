@@ -88,7 +88,7 @@ function SettingsBilling(props) {
     return "";
   }
   if (!account) {
-    return <CountrySetting group={group} account={account}/>
+    return <CountrySetting group={group} account={account}/>;
   }
   return (
     <div>
@@ -114,7 +114,7 @@ function SettingsBilling(props) {
                 onChange={(e)=>onChange(parseInt(e.target.value) || "", "price", index)} />
             </Grid>
             <Grid item xs={1}>
-              <IconButton onClick={()=>{deletePlan(index)}}>
+              <IconButton onClick={()=>{deletePlan(index);}}>
                 <DeleteIcon />
               </IconButton>
             </Grid>

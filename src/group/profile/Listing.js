@@ -11,7 +11,7 @@ function Listing(props) {
   }, [setTabbar]);
 
   const context = { user, group, db, history, privilege };
-  return <Members {...context} />
+  return <Members {...context} />;
 }
 
 Listing.propTypes = {
