@@ -32,7 +32,7 @@ function AccountAccept(props) {
     return () => {
       setAcceptance(false);
     };
-  }, [setAcceptance])
+  }, [setAcceptance]);
 
   //console.log(requirements);
   if (!requirements["tos_acceptance.ip"]) {
@@ -43,13 +43,13 @@ function AccountAccept(props) {
         </Typography> 
         <ul>
           <li>
-            <Link to="https://stripe.com/ja-us/connect-account/legal">
+            <Link href="https://stripe.com/ja-us/connect-account/legal">
               <FormattedMessage id="stripe.agreement" />
             </Link>
           </li>        
         </ul>
       </React.Fragment>
-  );
+    );
   }
 
   return (<React.Fragment>
@@ -58,7 +58,7 @@ function AccountAccept(props) {
       </Typography>
       <ul>
         <li>
-          <Link to="https://stripe.com/ja-us/connect-account/legal">
+          <Link href="https://stripe.com/ja-us/connect-account/legal">
             <FormattedMessage id="stripe.agreement" />
           </Link>
         </li>        
@@ -68,7 +68,7 @@ function AccountAccept(props) {
         control={
           <Switch
             checked={acceptance}
-            onChange={(e)=>{setAcceptance(e.target.checked)}}
+            onChange={(e)=>{setAcceptance(e.target.checked);}}
             color="primary"
           />
         }
