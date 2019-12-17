@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import AccessDenied from '../../common/AccessDenied';
 import useOnCollection from '../../common/useOnCollection';
 import * as moment from 'moment';
@@ -26,8 +26,6 @@ function PaymentLog(props) {
   const { db, group, paymentQueryFilter} = props;
 
   const [paymentlogs, error] = useOnCollection(db, `stripelog`, paymentQueryFilter);
-
-  const [memberQueryFilter, setMemberQueryFilter] = useState({empty: true});
   const [members, error2] = useOnCollection(db, `groups/${group.groupId}/members`);
 
   if (error || error2) {
