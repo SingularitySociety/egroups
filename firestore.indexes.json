@@ -31,7 +31,21 @@
           "order": "ASCENDING"
         }
       ]
-    }
+    },
+    {
+      "collectionGroup": "stripelog",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "data.groupId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "created",
+          "order": "DESCENDING"
+        }
+      ]
+    },
   ],
   "fieldOverrides": [
     {

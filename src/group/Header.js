@@ -60,6 +60,7 @@ class MyAppBar extends React.Component {
     this.cramSettingsBilling = this.breadCram("settings.billing", "settings/billing");
     this.cramSettingsBank = this.breadCram("settings.bank", "settings/bank");
     this.cramListing = this.breadCram("listing");
+    this.cramPayment = this.breadCram("payment");
     this.cramJoin = this.breadCram("join", null, "application");
     this.cramSubscribe = this.breadCram("subscribe");
     this.cramInvite = this.breadCram("invite");
@@ -174,6 +175,12 @@ class MyAppBar extends React.Component {
         break;
       case "profile":
         crams = [this.cramHome, this.cramListing, this.breadCram(pageInfo.tabId, pageInfo.path)];
+        break;
+      case "payment":
+        crams = [this.cramHome, this.cramPayment];
+        break;
+      case "payment.log":
+        crams = [this.cramHome, this.cramPayment, this.breadCram(pageInfo.tabId, pageInfo.path)];
         break;
       default:
         console.log("### unknown tabId", pageInfo.tabId);
