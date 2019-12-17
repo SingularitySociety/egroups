@@ -228,6 +228,26 @@
   
     "payment": "payment",
     "payment.log": "決済ログ",
+
+  "red": "赤",
+  "pink": "ピンク",
+  "purple": "紫",
+  "deepPurple": "ディープ・パープル",
+  "indigo": "インディゴ",
+  "blue": "青",
+  "lightBlue": "ライトブルー",
+  "cyan": "シアン",
+  "teal": "ティール",
+  "green": "緑",
   
+  "lightGreen": "ライトグリーン",
+  "lime": "ライム",
+  "yellow": "黄",
+  "amber": "アンバー",
+  "orange": "オレンジ",
+  "deepOrange": "深オレンジ",
+  "brown": "茶",
+  "grey": "グレー",
+  "blueGrey": "ブルー・グレー",
     "dummy":"dummy"
 }
