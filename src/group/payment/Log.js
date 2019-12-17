@@ -20,16 +20,23 @@ const styles = theme => ({
 
 const useStyles = makeStyles(styles);
 
+const cache = {};
+
+function getQueryFilter(group) {
+  if (cache[group.groupId]) {
+    return cache[group.groupId];
+  }
+  return cache[group.groupId] = (query) => {
+    return query.where("data.groupId", "==", group.groupId ).orderBy("created", "desc").limit(100);
+  };
+}
+
 function PaymentLog(props) {
   const classes = useStyles();
 
   const { db, group, callbacks } = props;
 
-  function queryFilter(query) {
-    return query.where("data.groupId", "==", group.groupId ).orderBy("created", "desc").limit(100);
-  }
-
-  const [paymentlogs, error] = useOnCollection(db, `stripelog`, queryFilter);
+  const [paymentlogs, error] = useOnCollection(db, `stripelog`, getQueryFilter(group));
   const [members, error2] = useOnCollection(db, `groups/${group.groupId}/members`);
   
   const setTabbar = callbacks.setTabbar;
