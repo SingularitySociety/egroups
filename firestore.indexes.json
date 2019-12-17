@@ -45,6 +45,20 @@
           "order": "DESCENDING"
         }
       ]
+    },
+    {
+      "collectionGroup": "stripelog",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "data.userId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "created",
+          "order": "DESCENDING"
+        }
+      ]
     }
   ],
   "fieldOverrides": [
