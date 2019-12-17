@@ -225,6 +225,9 @@
     "please.agree":"課金サービスを利用するには、以下の利用規約に同意していただく必要があります。",
     "stripe.agreement":"Stripe Connected Account Agreement",
     "country.code":"国コード",
-
+  
+    "payment": "payment",
+    "payment.log": "決済ログ",
+  
     "dummy":"dummy"
 }

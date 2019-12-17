@@ -179,5 +179,8 @@
     "invalid.digit6":"Number Mismatch",
     "registered.phone":"Registerd Phone Number: {phone}",
 
+    "payment": "payment",
+    "payment.log": "Payment log",
+  
     "dummy":"dummy"
 }

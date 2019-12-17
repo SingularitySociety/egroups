@@ -34,6 +34,7 @@ import Subscribe from './join/Subscribe';
 import Privileges from '../const/Privileges';
 import Invite from './join/Invite';
 import Invited from './join/Invited';
+import PaymentLog from './payment/Log';
 import {themeOptions} from '../theme.js';
 import CustomAccount from './join/CustomAccount';
 
@@ -206,6 +207,7 @@ class GroupRouter extends React.Component {
               <Route exact path={`/g/${group.groupName}/subscribe`} render={(props) => <Subscribe {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/invite`} render={(props) => <Invite {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/invite/:inviteId/:inviteKey`} render={(props) => <Invited {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/payment/log`} render={(props) => <PaymentLog {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/account`} 
                 render={(props) => <Account {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/settings`} 
