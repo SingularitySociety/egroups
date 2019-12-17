@@ -23,6 +23,10 @@ const styles = theme => ({
   billing: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
+  },
+  button: {
+    marginRight: theme.spacing(1),
+    marginBottom: theme.spacing(1),
   }
 });
 
@@ -120,10 +124,15 @@ function Settings(props) {
       </FormGroup>
 
       <FormGroup row className={classes.billing}>
-        { subscription && 
-          <Button variant="contained" color="primary" component={Link} to={`/g/${group.groupName}/settings/billing`}>
-            <FormattedMessage id="settings.billing" />
-          </Button>
+        { subscription &&
+          <div>
+            <Button className={classes.button} variant="contained" color="primary" component={Link} to={`/g/${group.groupName}/settings/billing`}>
+              <FormattedMessage id="settings.billing" />
+            </Button>
+            <Button className={classes.button} variant="contained" component={Link} to={`/g/${group.groupName}/payment/log`}>
+              <FormattedMessage id="payment.log" />
+            </Button>
+          </div>
         }
       </FormGroup>
 
