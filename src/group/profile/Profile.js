@@ -6,15 +6,22 @@ import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import useDocument from '../../common/useDocument';
 import AccessDenied from '../../common/AccessDenied';
+import ImageUploader from '../../common/ImageUploader';
 
 const styles = theme => ({
   textField: {
     width: "90%",
     marginBottom: theme.spacing(1),
+    margin: "auto",
   },
   textColor: {
     color: "#333333",
-  }
+  },
+  image: {
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginBottom: "10px",
+  },
 });
 
 function Profile(props) {
@@ -35,7 +42,12 @@ function Profile(props) {
   if (!member) {
       return "";
   }
+  const imagePath = `groups/${group.groupId}/members/${member.userId}/images/profile`; 
+  const thumbnails = member.profile && member.profile.thumbnails;
+
   return <div>
+           <ImageUploader imagePath={imagePath} loadImage={member.hasImage} imageThumbnails={thumbnails}
+                          readOnly={true} displayMode={"thumbMiddleCenter"} inline={true} />
     <FormGroup row>
       <TextField label={<FormattedMessage id="member.displayName"/>} variant="outlined"
           value={member.displayName} disabled={true} className={classes.textField}
