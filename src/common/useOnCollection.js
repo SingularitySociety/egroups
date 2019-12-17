@@ -5,22 +5,30 @@ import { useState, useEffect } from 'react';
 // It returns undefined if the path is null or undefined.
 // WARNING: queryFilter must be a static function, not a callback function. 
 // Otherwise, it will be called infinitly.
-function useOnCollection(db, path, queryFilter) {
+function useOnCollection(db, path, option) {
   const [collection, setCollection] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(()=>{
     let detacher = null;
-    if (path) {
+    if (option && option.empty) {
+      setCollection([]);
+    } else if (path) {
       try {
         let ref = db.collection(path);
-        if (queryFilter) {
-          ref = queryFilter(ref); // optional query filters
+        if (option && option.queryFilter) {
+          ref = option.queryFilter(ref); // optional query filters
         }
         detacher = ref.onSnapshot((snapshot)=>{
           const list = [];
           snapshot.forEach((doc)=>{
-            list.push(doc.data());
+            const data = doc.data();
+            data.id = doc.id;
+            if (option && option.responseFilter) {
+              list.push(option.responseFilter(data));
+            } else {
+              list.push(data);
+            }
           });
           setCollection(list);
         }, (err) => {
@@ -36,7 +44,7 @@ function useOnCollection(db, path, queryFilter) {
       setCollection([]);
     }
     return detacher;
-  }, [db, path, queryFilter]);
+  }, [db, path, option]);
 
   return [collection, error];
 }
