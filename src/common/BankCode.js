@@ -14,7 +14,7 @@ const styles = theme => ({
 });
 
 function BankCode(props) {
-  const { db, classes, setRoutingNumber, routingNumber } = props;
+  const { db, classes, setRoutingNumber, routingNumber, valid } = props;
   const [zengin] = useDocument(db, 'static/zengin');
   const [allKeys, setAllKeys] = useState([]);
   const [bankFilter, setBankFilter] = useState("");
@@ -93,7 +93,8 @@ function BankCode(props) {
       </FormControl>
       <FormControl className={classes.formControl}>
         <InputLabel><FormattedMessage id="bank.name" /></InputLabel>
-        <Select native 
+        <Select native
+                error={!valid}
                 value={bankCode} 
                 onChange={onBankCodeChange} >
           {
@@ -111,7 +112,8 @@ function BankCode(props) {
       </FormControl>
       <FormControl className={classes.formControl}>
         <InputLabel><FormattedMessage id="branch.name" /></InputLabel>
-        <Select native 
+        <Select native
+                error={!valid}
                 value={branchCode} 
                 onChange={onBranchCodeChange} >
           <option key="not selected" value=""></option>
