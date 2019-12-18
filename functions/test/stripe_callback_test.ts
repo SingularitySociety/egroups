@@ -44,6 +44,9 @@ describe('Hello function', () => {
   it('should valid api callback', async () => { 
     const userId = "test_customer_ac003e4f-f263-457a-8d4b-27586af24f3f";
     const groupId = "unit_test_plan";
+    await admin_db.doc(`/groups/${groupId}/members/${userId}`).set({
+      displayName: "---",
+    });
     await admin_db.doc(`/groups/${groupId}/members/${userId}/private/stripe`).set({
       subscription: {},
       period: {
@@ -63,6 +66,10 @@ describe('Hello function', () => {
     const period = (await admin_db.doc(`/groups/${groupId}/members/${userId}/private/stripe`).get()).data();
     period.period.end.should.equal(1562364002);
     
+    const period2 = (await admin_db.doc(`/groups/${groupId}/members/${userId}`).get()).data();
+    period2.period.end.should.equal(1562364002);
+    period2.displayName.should.equal("---");
+
     const res = await admin_db.collection("/stripelog").orderBy("created", "desc").limit(2).get();
     res.forEach(async doc => {
       console.log(await doc.data());

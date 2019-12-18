@@ -69,14 +69,17 @@ export const invoice_payment_succeeded = async (event) => {
     invoiceUrl: object.invoice_pdf,
     created: object.created,
   });
-  
+
+  const period = {
+    end: object.period_end,
+  };
   // update period in group
   await db.doc(`/groups/${groupId}/members/${userId}/private/stripe`).set({
-    period: {
-      end: object.period_end,
-    }
+    period,
   }, {merge:true});
-  
+  await db.doc(`/groups/${groupId}/members/${userId}`).set({
+    period,
+  }, {merge:true});
   
   await stripeUtils.callbackLog(db, userId, groupId, stripeUtils.stripeActions.subscriptionInvoiceByApi, event);
 }

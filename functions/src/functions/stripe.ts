@@ -20,6 +20,9 @@ const updateSubscriptionData = async (db, groupId, userId, subscription, period)
       [groupId]: stripeUtils.convSubscriptionData(subscription),
     }
   }, {merge:true});
+  await db.doc(`/groups/${groupId}/members/${userId}`).set({
+    period: period,
+  }, {merge:true});
 }
 
 const getSharedCustomer = async (db, userId, groupId, accountId) => {
@@ -180,6 +183,7 @@ export const createSubscription = async (db, data, context) => {
     displayName: displayName || "---",
     userId: userId,
     groupId: groupId,
+    period,
   });
   
   await stripeUtils.billingLog(db, userId, groupId, subscription, stripeUtils.stripeActions.subscriptionCreated);

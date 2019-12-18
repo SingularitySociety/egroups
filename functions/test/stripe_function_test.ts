@@ -183,7 +183,7 @@ describe('function test', () => {
     error_response2.error.type.should.equal("OnetimeKey");
     // run test
     const req = {groupId, plan: {price, currency}, onetimetoken};
-    await wrapped(req, context);
+    await wrapped(req, context); //success subscription
 
     const subscriptionRaw = (await admin_db.doc(`/groups/${groupId}/members/${aliceUserId}/secret/stripe`).get()).data()
     subscriptionRaw.subscription.billing.should.equal('charge_automatically');
