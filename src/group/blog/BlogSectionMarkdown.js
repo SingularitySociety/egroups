@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { IconButton, Grid } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 import MarkdownViewer from '../../common/packaged/MarkdownViewer';
 import MarkdownEditor from '../../common/packaged/MarkdownEditor';
 
@@ -31,6 +32,9 @@ function BlogSectionMarkdown(props) {
              <Grid item xs={1}>
                <IconButton size="small" variant="contained" onClick={(e) => {setEditing(true);}}>
                  <EditIcon />
+               </IconButton><br/>
+               <IconButton size="small" variant="contained" onClick={(e) => {onDelete();}}>
+                 <DeleteIcon />
                </IconButton>
              </Grid> 
            }
