@@ -59,7 +59,7 @@ function AccountCompanyJP(props) {
         <TextField error={requirements[ckey]} label={<FormattedMessage id={ckey} />} 
               value={value} disabled={disabled}
               onChange={(e)=>setAccountValue(key, null, e.target.value)} />
-      </FormControl>
+               </FormControl>;
       })      
     }
     {
@@ -72,7 +72,7 @@ function AccountCompanyJP(props) {
           <TextField error={requirements[ckey]} label={<FormattedMessage id={"address_kanji."+subkey} />} 
               value={(account_data["address_kanji"]||{})[subkey] || ""} 
               onChange={(e)=>setAccountValue("address_kanji", subkey, e.target.value)} />
-        </FormControl>
+        </FormControl>;
       })      
     }
     {
@@ -82,7 +82,7 @@ function AccountCompanyJP(props) {
           <TextField error={requirements[ckey]} label={<FormattedMessage id={"address_kana."+subkey} />} 
               value={(account_data["address_kana"]||{})[subkey] || ""} 
               onChange={(e)=>setAccountValue("address_kana", subkey, e.target.value)} />
-        </FormControl>
+        </FormControl>;
       })      
     }
     <PhoneNumber setPhoneNumber={(value)=>setAccountValue("phone", null, value)} 
@@ -97,7 +97,7 @@ function AccountCompanyJP(props) {
     </FormControl>
       */
     }
-  </React.Fragment>)
+          </React.Fragment>);
 }
 
 AccountCompanyJP.propTypes = {

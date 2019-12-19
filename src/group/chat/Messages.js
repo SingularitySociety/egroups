@@ -15,7 +15,7 @@ function Messages(props) {
         const message = doc.data();
         message.messageId = doc.id;
         messages.push(message);
-      })
+      });
       setMessages(messages);
 
       if (user) {
@@ -23,7 +23,7 @@ function Messages(props) {
         channels[channel.channelId] = { l:new Date() }; // NOT firebase.firestore.FieldValue.serverTimestamp()
         db.doc(`groups/${group.groupId}/members/${user.uid}/private/history`).set({
           channels
-        }, {merge:true})
+        }, {merge:true});
       }
     });
     return detacher;
@@ -32,8 +32,8 @@ function Messages(props) {
   const context = { callbacks, profiles }; 
   return (
     <div>
-    { messages.map((message)=>{
-        return <Message key={message.messageId} message={message} {...context} />
+      { messages.map((message)=>{
+        return <Message key={message.messageId} message={message} {...context} />;
       }) }
     </div>
   );

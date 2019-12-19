@@ -58,7 +58,7 @@ function GroupHome(props) {
     }
   }, [db, group, privilege, user, messages, groupDidUpdate]);
 
-  const context = { group, user, db, article, arp, callbacks, privilege, profiles, history }
+  const context = { group, user, db, article, arp, callbacks, privilege, profiles, history };
   //const context = { user, group, db, member, history };
   return (
     <div>
@@ -68,7 +68,7 @@ function GroupHome(props) {
       </Typography>
       <ArticleList {...context}/>
     </div>
-  )
+  );
 }
 
 GroupHome.propTypes = {

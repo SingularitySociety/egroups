@@ -27,20 +27,20 @@ function ChannelList(props) {
       setList(list);
     }, (e) => {
       setError(e);
-    })
+    });
     return detacher;
   }, [db, group, limit]);
 
   if (error) {
-    return <AccessDenied error={error} />
+    return <AccessDenied error={error} />;
   }
   return <div>
     {
       list.map((channel)=>{
-        return <ChannelItem key={channel.channelId} channel={channel} group={group} history={history} />
+        return <ChannelItem key={channel.channelId} channel={channel} group={group} history={history} />;
       })
     }
-  </div>
+         </div>;
 }
 
 ChannelList.propTypes = {

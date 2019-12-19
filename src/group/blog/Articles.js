@@ -33,10 +33,10 @@ function Articles(props) {
       sections: [], // ordered list of sectionIds
     });
     setRedirect(`/g/${group.groupName}/${arp.leaf}/${doc.id}`);
-  }
+  };
 
   if (redirect) {
-    return <Redirect to={redirect} />
+    return <Redirect to={redirect} />;
   }
   const context = { user, group, db, history, arp };
   const canCreateNew = privilege 
@@ -51,7 +51,7 @@ function Articles(props) {
         <ArticleList {...context} />
       </Grid>
     </Grid>
-  )
+  );
 }
 
 Articles.propTypes = {

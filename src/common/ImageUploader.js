@@ -64,7 +64,7 @@ const styles = theme => ({
 
 function ImageUploader(props) {
   const { imagePath, loadImage, imageUrl, imageThumbnails, displayMode, onImageUpload } = props;
-  const { classes, readOnly, inline, deleteImage } = props;
+  const { classes, readOnly, inline, onDelete } = props;
   const [ url, setUrl ] = useState(null);
   const [ processing, setProcessing ] = useState(false);
 
@@ -143,8 +143,8 @@ function ImageUploader(props) {
               <input type="file" accept="image/*" style={{ display: "none" }} onChange={onFileInput} />
           </IconButton>
           {
-            deleteImage && 
-            <IconButton size="small" onClick={deleteImage}><DeleteIcon /></IconButton>
+            onDelete && 
+              <IconButton size="small" onClick={onDelete}><DeleteIcon /></IconButton>
         }
       </Grid>
 
@@ -153,8 +153,8 @@ function ImageUploader(props) {
 }
 
 ImageUploader.propTypes = {
-    classes: PropTypes.object.isRequired,
-    imagePath: PropTypes.string.isRequired,
-  };
+  classes: PropTypes.object.isRequired,
+  imagePath: PropTypes.string.isRequired,
+};
   
 export default withStyles(styles)(ImageUploader);

@@ -21,6 +21,7 @@ function BlogSection(props) {
     props.onVideoUpload(sectionId, videoUrl);
   }
 
+  const params = {onDelete, setEditing, displayMode: "wide"};
   if (resource.type==="image") {
     if (readOnly && !resource.hasImage) {
       return "";
@@ -29,18 +30,15 @@ function BlogSection(props) {
     const thumbnails = (resource[sectionId] && resource[sectionId].thumbnails) || resource.thumbnails;
     return (
       <ImageUploader imagePath={imagePath} loadImage={resource.hasImage} imageUrl={resource.imageUrl}
-                     imageThumbnails={thumbnails}
-                     readOnly={readOnly} displayMode="wide" onImageUpload={onImageUpload} deleteImage={onDelete} />
+                     imageThumbnails={thumbnails} onImageUpload={onImageUpload} {...params} />
     );
   }
   if (resource.type==="video") {
     return (
-      <VideoEditor videoUrl={resource.videoUrl} {...props}
-                   setEditing={setEditing} displayMode="wide" onVideoUpload={onVideoUpload} deleteVideo={onDelete} />
+      <VideoEditor videoUrl={resource.videoUrl} onVideoUpload={onVideoUpload} {...props} {...params} />
     );
   }
   if (resource.type==="markdown") {
-    const params = {onDelete, setEditing};
     return <BlogSectionMarkdown {...props} {...params}/>;
   }
   return <div/>;
