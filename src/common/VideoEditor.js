@@ -81,8 +81,8 @@ function validVideo(data) {
 
 function VideoEditor(props) {
   const { videoUrl, displayMode, onVideoUpload } = props;
-  const { classes, readOnly, inline, deleteVideo, sectionId } = props;
-  const [editing, setEditing] = useState(false);
+  const { classes, readOnly, inline, onDelete, sectionId } = props;
+  const { editing, setEditing } = props;
   const [videoUrlForm, setVideoUrlForm] = useState(videoUrl);
   
   const data = urlParser.parse(videoUrl);
@@ -145,7 +145,7 @@ function VideoEditor(props) {
         </IconButton>
         <br/>
         {
-          deleteVideo && <IconButton size="small" onClick={deleteVideo}>
+          onDelete && <IconButton size="small" onClick={onDelete}>
                            <DeleteIcon />
                          </IconButton>
                      }
@@ -161,8 +161,8 @@ function VideoEditor(props) {
            <EditIcon />
          </IconButton>
          {
-           deleteVideo && 
-             <IconButton size="small" onClick={deleteVideo}><DeleteIcon /></IconButton>
+           onDelete && 
+             <IconButton size="small" onClick={onDelete}><DeleteIcon /></IconButton>
          }
        </Grid>}
     </React.Fragment>);
