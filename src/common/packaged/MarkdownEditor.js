@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 //import theme from '../theme';
 import { IconButton, Grid } from '@material-ui/core';
 import TrashIcon from '@material-ui/icons/Delete';
-import SaveIcon from '@material-ui/icons/Save';
+import SaveIcon from '@material-ui/icons/SaveAlt';
 import CancelIcon from '@material-ui/icons/Cancel';
 import LinkIcon from '@material-ui/icons/Link';
 import { FormatBold, FormatItalic, FormatUnderlined, FormatQuote, MoreHoriz } from '@material-ui/icons';
