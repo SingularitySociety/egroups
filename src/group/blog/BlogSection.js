@@ -12,9 +12,9 @@ import VideoEditor from '../../common/VideoEditor';
 
 function BlogSection(props) {
   const { sectionId, index, resource, readOnly, pathArticle } = props;
-  const { editingFlags, updateEditingFlag } = props;
-  function onMarkdownSave(markdown, raw) {
-    props.saveSection(sectionId, index, markdown, raw);
+  const { editing, updateEditingFlag } = props;
+  function onSaveMarkdown(markdown, raw) {
+    props.saveMarkdown(sectionId, index, markdown, raw);
     updateEditingFlag(sectionId, false);
   }
   function onCancel() {
@@ -32,8 +32,7 @@ function BlogSection(props) {
   function onVideoUpload(videoUrl) {
     props.onVideoUpload(sectionId, videoUrl);
   }
-  const editing = (editingFlags||{})[sectionId];
-  
+
   if (resource.type==="image") {
     if (readOnly && !resource.hasImage) {
       return "";
@@ -56,7 +55,7 @@ function BlogSection(props) {
   if (resource.type==="markdown") {
     if (editing) {
       return (
-        <MarkdownEditor resource={resource} onSave={onMarkdownSave} onCancel={onCancel}
+        <MarkdownEditor resource={resource} onSave={onSaveMarkdown} onCancel={onCancel}
                         onDelete={props.deleteSection && onDelete} />
       );
     }

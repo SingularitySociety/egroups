@@ -96,7 +96,7 @@ function BlogArticle(props) {
     updateEditingFlag(doc.id, true);
     spliceSections(index, 0, doc.id);
   };
-  const updateSection = async (sectionId, index, markdown, raw) => {
+  const saveMarkdown = async (sectionId, index, markdown, raw) => {
     await refArticle.collection("sections").doc(sectionId).set({
       markdown, 
       raw
@@ -167,6 +167,8 @@ function BlogArticle(props) {
   const userName = (her && her.displayName) || "...";
   const thumbnails = her && her.profile && her.profile.thumbnails;
 
+  const creatorParams = {insertImage, insertMarkdown, insertVideo};
+  
   return (
     <div className={frameClass}>
       <Grid container>
@@ -202,25 +204,19 @@ function BlogArticle(props) {
         </Grid>
       }
       { editMode && 
-        <BlogSectionCreator index={ 0 } resource={{}}
-                            insertImage={insertImage}
-                            insertMarkdown={insertMarkdown}
-                            insertVideo={insertVideo} {...context} /> }
+        <BlogSectionCreator index={ 0 } {...creatorParams} {...context} /> }
       {
         article.sections.map((sectionId, index)=>{
           if (resources[sectionId]) {
+            const editing = (editingFlags||{})[sectionId];
+            const props = {
+              index, sectionId, deleteSection, editing, updateEditingFlag,
+              resource: resources[sectionId], readOnly: !editMode,
+              saveMarkdown, onImageUpload, onVideoUpload
+            };
             return <div key={sectionId}>
-                     <BlogSection index={ index } sectionId={sectionId} resource={ resources[sectionId] } 
-                                  saveSection={updateSection} deleteSection={deleteSection} 
-                                  editingFlags={editingFlags} updateEditingFlag={updateEditingFlag}
-                                  insertMarkdown={insertMarkdown}
-                                  insertImage={insertImage} onImageUpload={onImageUpload}
-                                  insertVideo={insertVideo} onVideoUpload={onVideoUpload}
-                                  readOnly={!editMode} {...context} />
-                     { editMode && <BlogSectionCreator index={ index+1 } resource={{}}
-                                                       insertMarkdown={insertMarkdown}
-                                                       insertVideo={insertVideo}
-                                                       insertImage={insertImage} {...context} /> }
+                     <BlogSection {...props} {...context} />
+                     { editMode && <BlogSectionCreator index={ index+1 } {...creatorParams} {...context} /> }
             </div>;
           } else {
             return <div key={sectionId}/>;
@@ -228,7 +224,7 @@ function BlogArticle(props) {
         })
       }
     </div>
-  )
+  );
 }
 
 BlogArticle.propTypes = {
