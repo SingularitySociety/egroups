@@ -9,7 +9,7 @@ import urlParser from "js-video-url-parser";
 import EditIcon from '@material-ui/icons/Edit';
 import VideoIcon from '@material-ui/icons/VideoLibrary';
 
-import { FormGroup, TextField } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 
 const styles = theme => ({
   root: {
@@ -131,6 +131,7 @@ function VideoEditor(props) {
     <React.Fragment>
       <Grid item xs={11} >
         <TextField onChange={(e) => {setVideoUrlForm(e.target.value);}}
+                   defaultValue={videoUrl}
                    placeholder="yourube, vimeo Video Url."
                    className={classes.textField} />
       </Grid>
