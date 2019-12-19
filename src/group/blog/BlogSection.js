@@ -15,10 +15,11 @@ function BlogSection(props) {
     updateEditingFlag(sectionId, flag);
   }
   function onImageUpload(imageUrl) {
-    props.onImageUpload(sectionId, imageUrl);
+    props.onImageUploadSection(sectionId, imageUrl);
   }
   function onVideoUpload(videoUrl) {
-    props.onVideoUpload(sectionId, videoUrl);
+    console.log("onVideoUpload", sectionId, videoUrl);
+    props.onVideoUploadSection(sectionId, videoUrl);
   }
 
   const params = {onDelete, setEditing, displayMode: "wide"};
