@@ -11,6 +11,8 @@ import ImageUploader from '../../common/ImageUploader';
 import Privileges from '../../const/Privileges';
 import { FormattedDate } from 'react-intl';
 
+import useOnCollection from '../../common/useOnCollection';
+
 const styles = theme => ({
   readerFrame: {
     marginLeft: theme.spacing(1),
@@ -41,30 +43,28 @@ function BlogArticle(props) {
   //state = {article:null, sections:[], resouces:null, readOnly:true};
   const [ article, setArticle ] = useState(props.article);
   const [ resources, setResources ] = useState(null);
+  const [ resourceArray, error ] = useOnCollection(db, pathArticle ? pathArticle + "/sections" : null);
   const [ readOnly, setReadOnly ] = useState(true);
   const her = profiles[article.owner];
   const hitProfile = callbacks.hitProfile;
   const refArticle = db.doc(pathArticle);
 
   useEffect(() => {
+    if (db && resourceArray) {
+      const newData = resourceArray.reduce((ret, current) => {
+        ret[current.id] = current;
+        return ret;
+      }, {});
+      setResources(newData);
+    }
+  }, [db, resourceArray]);
+  
+  useEffect(() => {
     if (!her && privilege >= Privileges.member) {
       console.log('hitProfile', article.owner);
       hitProfile(article.owner);
     }    
   }, [her, privilege, hitProfile, article.owner]);
-  useEffect(() => {
-    // Note: We can refArticle. Otherwise, useEffect will called for each render.
-    const refArticle = db.doc(pathArticle);
-    const detatcher = refArticle.collection("sections").onSnapshot((snapshot)=>{
-      const newResources = {};
-      snapshot.forEach((doc)=>{
-        newResources[doc.id] = doc.data();
-      });
-      //console.log("BlogArticle.cdm", article.sections && article.sections.length, Object.keys(resources).length)
-      setResources(newResources);
-    });
-    return detatcher;
-  }, [db, pathArticle]);
 
   async function spliceSections(index, size, sectionId) {
     const newArticle = Object.assign({}, article);
@@ -181,14 +181,18 @@ function BlogArticle(props) {
         <BlogSection index={ 0 } resource={{}} saveSection={insertSection} insertImage={insertImage} {...context} /> }
       {
         article.sections.map((sectionId, index)=>{
-          return <div key={sectionId}>
-            <BlogSection index={ index } sectionId={sectionId} resource={ resources[sectionId] } 
-                saveSection={updateSection} deleteSection={deleteSection} 
-                insertImage={insertImage} onImageUpload={onImageUpload} 
-                readOnly={!editMode} {...context} />
-            { editMode && <BlogSection index={ index+1 } resource={{}}
-                insertImage={insertImage} saveSection={insertSection} {...context} /> }
-          </div>
+          if (resources[sectionId]) {
+            return <div key={sectionId}>
+                     <BlogSection index={ index } sectionId={sectionId} resource={ resources[sectionId] } 
+                                  saveSection={updateSection} deleteSection={deleteSection} 
+                                  insertImage={insertImage} onImageUpload={onImageUpload} 
+                                  readOnly={!editMode} {...context} />
+                     { editMode && <BlogSection index={ index+1 } resource={{}}
+                                                insertImage={insertImage} saveSection={insertSection} {...context} /> }
+            </div>;
+          } else {
+            return <div/>;
+          }
         })
       }
     </div>
