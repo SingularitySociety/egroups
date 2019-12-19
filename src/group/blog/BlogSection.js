@@ -41,7 +41,6 @@ function BlogSection(props) {
     props.onVideoUpload(sectionId, videoUrl);
   }
 
-  console.log(editing);
   if (editing) {
     return (
       <MarkdownEditor resource={resource} onSave={onSave} onCancel={onCancel} onDelete={props.deleteSection && onDelete} />

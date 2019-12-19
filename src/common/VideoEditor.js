@@ -7,6 +7,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 import urlParser from "js-video-url-parser";
 import EditIcon from '@material-ui/icons/Edit';
+import VideoIcon from '@material-ui/icons/VideoLibrary';
 
 import { FormGroup, TextField } from '@material-ui/core';
 
@@ -96,20 +97,22 @@ function VideoEditor(props) {
   if (readOnly && !validVideo(data)) {
     return "";
   }
+
   
   const embedVideoUrl = urlParser.create({
     videoInfo: data,
     format: "embed",
   });
 
-  const videoIframe = <iframe title={sectionId}
-                              width={readOnly ? 720 : 660}
-                              height={readOnly ? 405 : 371}
-                              src={embedVideoUrl}
-                              frameBorder="0"
-                              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                              allowFullScreen>
-                      </iframe>;
+  const videoIframe = validVideo(data) ?
+        (<iframe title={sectionId}
+                 width={readOnly ? 720 : 660}
+                 height={readOnly ? 405 : 371}
+                 src={embedVideoUrl}
+                 frameBorder="0"
+                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                 allowFullScreen>
+         </iframe>) : <span><VideoIcon /></span>;
   const videoElement = (displayMode === "wide") ? (
     <Grid item xs={readOnly ? 12 : 11} className={ classes.wideFrame }>
       {videoIframe}
@@ -126,8 +129,9 @@ function VideoEditor(props) {
   }
   const videoEditElement = (
     <React.Fragment>
-      <Grid item xs="11" >
-        <TextField value={videoUrlForm} onChange={(e) => {setVideoUrlForm(e.target.value);}}
+      <Grid item xs={11} >
+        <TextField onChange={(e) => {setVideoUrlForm(e.target.value);}}
+                   placeholder="yourube, vimeo Video Url."
                    className={classes.textField} />
       </Grid>
       <Grid item xs={1}>
