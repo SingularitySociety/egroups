@@ -35,9 +35,8 @@ function BlogSection(props) {
   }
   if (resource.type==="video") {
     return (
-      <VideoEditor videoUrl={resource.videoUrl} readOnly={readOnly} sectionId={sectionId}
-                   editing={editing} setEditing={setEditing}
-                   displayMode="wide" onVideoUpload={onVideoUpload} deleteVideo={onDelete} />
+      <VideoEditor videoUrl={resource.videoUrl} {...props}
+                   setEditing={setEditing} displayMode="wide" onVideoUpload={onVideoUpload} deleteVideo={onDelete} />
     );
   }
   if (resource.type==="markdown") {
