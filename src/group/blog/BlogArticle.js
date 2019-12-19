@@ -123,7 +123,7 @@ function BlogArticle(props) {
     updateEditingFlag(doc.id, true);
     spliceSections(index, 0, doc.id);
   };
-  const onImageUpload = async (sectionId, imageUrl) => {
+  const onImageUploadSection = async (sectionId, imageUrl) => {
     //console.log("onImageUpload", sectionId, imageUrl);
     await refArticle.collection("sections").doc(sectionId).set({
       hasImage: true, imageUrl
@@ -139,8 +139,8 @@ function BlogArticle(props) {
     updateEditingFlag(doc.id, true);
     spliceSections(index, 0, doc.id);
   };
-  const onVideoUpload = async (sectionId, videoUrl) => {
-    //console.log("onImageUpload", sectionId, imageUrl);
+  const onVideoUploadSection = async (sectionId, videoUrl) => {
+    // console.log("onVideoUploadSection", sectionId, videoUrl);
     await refArticle.collection("sections").doc(sectionId).set({
       hasVideo: true, videoUrl
     }, {merge:true});
@@ -212,7 +212,7 @@ function BlogArticle(props) {
             const props = {
               index, sectionId, deleteSection, editing, updateEditingFlag,
               resource: resources[sectionId], readOnly: !editMode,
-              saveMarkdown, onImageUpload, onVideoUpload
+              saveMarkdown, onImageUploadSection, onVideoUploadSection
             };
             return <div key={sectionId}>
                      <BlogSection {...props} {...context} />

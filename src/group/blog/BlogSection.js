@@ -6,7 +6,7 @@ import BlogSectionMarkdown from './BlogSectionMarkdown';
 
 function BlogSection(props) {
   const { sectionId, index, resource, readOnly, pathArticle } = props;
-  const { editing, updateEditingFlag } = props;
+  const { updateEditingFlag } = props;
 
   function onDelete() {
     props.deleteSection(sectionId, index);
@@ -15,10 +15,11 @@ function BlogSection(props) {
     updateEditingFlag(sectionId, flag);
   }
   function onImageUpload(imageUrl) {
-    props.onImageUpload(sectionId, imageUrl);
+    props.onImageUploadSection(sectionId, imageUrl);
   }
   function onVideoUpload(videoUrl) {
-    props.onVideoUpload(sectionId, videoUrl);
+    // console.log("onVideoUpload", sectionId, videoUrl);
+    props.onVideoUploadSection(sectionId, videoUrl);
   }
 
   const params = {onDelete, setEditing, displayMode: "wide"};
