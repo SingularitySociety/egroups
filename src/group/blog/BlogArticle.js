@@ -6,6 +6,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import EditIcon from '@material-ui/icons/Edit';
 import AccessDenied from '../../common/AccessDenied';
 import BlogSection from './BlogSection';
+import BlogSectionCreator from './BlogSectionCreator';
 import { Link } from 'react-router-dom';
 import ImageUploader from '../../common/ImageUploader';
 import Privileges from '../../const/Privileges';
@@ -45,6 +46,7 @@ function BlogArticle(props) {
   const [ resources, setResources ] = useState(null);
   const [ resourceArray, error ] = useOnCollection(db, pathArticle ? pathArticle + "/sections" : null);
   const [ readOnly, setReadOnly ] = useState(true);
+  const [ editingFlags, setEditingFlags ] = useState({});
   const her = profiles[article.owner];
   const hitProfile = callbacks.hitProfile;
   const refArticle = db.doc(pathArticle);
@@ -79,32 +81,37 @@ function BlogArticle(props) {
     setArticle(newArticle);
     await refArticle.set(newArticle, {merge:true});
   }
-  const insertSection = async (resourceId, index, markdown, raw) => {
+  const updateEditingFlag = (sectionId, mode) => {
+    const editingFlagsClone = {...editingFlags};
+    editingFlagsClone[sectionId] = mode;
+    setEditingFlags(editingFlagsClone);
+  };
+  const insertMarkdown = async (index) => {
     const doc = await refArticle.collection("sections").add({
       type: "markdown",
-      markdown,
-      raw,
+      markdown: "",
       created: new Date(),
       author: user.uid,
     });
+    updateEditingFlag(doc.id, true);
     spliceSections(index, 0, doc.id);
   };
-  const updateSection = async (resourceId, index, markdown, raw) => {
-    await refArticle.collection("sections").doc(resourceId).set({
+  const saveMarkdown = async (sectionId, index, markdown, raw) => {
+    await refArticle.collection("sections").doc(sectionId).set({
       markdown, 
       raw
     }, {merge:true});
-
+    
     const newArticle = Object.assign({}, article);
     newArticle.updated = new Date();
     setArticle(newArticle);
     await refArticle.set(newArticle, {merge:true});
 
   };
-  const deleteSection = async (resourceId, index) => {
-    console.log("deleteSection", resourceId);
+  const deleteSection = async (sectionId, index) => {
+    console.log("deleteSection", sectionId);
     await spliceSections(index, 1);
-    await refArticle.collection("sections").doc(resourceId).delete();
+    await refArticle.collection("sections").doc(sectionId).delete();
   };
   const insertImage = async (index) => {
     console.log("insertImage", index);
@@ -113,11 +120,12 @@ function BlogArticle(props) {
       created: new Date(),
       author: user.uid,
     });
+    updateEditingFlag(doc.id, true);
     spliceSections(index, 0, doc.id);
   };
-  const onImageUpload = async (resourceId, imageUrl) => {
-    //console.log("onImageUpload", resourceId, imageUrl);
-    await refArticle.collection("sections").doc(resourceId).set({
+  const onImageUpload = async (sectionId, imageUrl) => {
+    //console.log("onImageUpload", sectionId, imageUrl);
+    await refArticle.collection("sections").doc(sectionId).set({
       hasImage: true, imageUrl
     }, {merge:true});
   };
@@ -128,11 +136,12 @@ function BlogArticle(props) {
       created: new Date(),
       author: user.uid,
     });
+    updateEditingFlag(doc.id, true);
     spliceSections(index, 0, doc.id);
   };
-  const onVideoUpload = async (resourceId, videoUrl) => {
-    //console.log("onImageUpload", resourceId, imageUrl);
-    await refArticle.collection("sections").doc(resourceId).set({
+  const onVideoUpload = async (sectionId, videoUrl) => {
+    //console.log("onImageUpload", sectionId, imageUrl);
+    await refArticle.collection("sections").doc(sectionId).set({
       hasVideo: true, videoUrl
     }, {merge:true});
   };
@@ -158,6 +167,8 @@ function BlogArticle(props) {
   const userName = (her && her.displayName) || "...";
   const thumbnails = her && her.profile && her.profile.thumbnails;
 
+  const creatorParams = {insertImage, insertMarkdown, insertVideo};
+  
   return (
     <div className={frameClass}>
       <Grid container>
@@ -193,20 +204,19 @@ function BlogArticle(props) {
         </Grid>
       }
       { editMode && 
-        <BlogSection index={ 0 } resource={{}} saveSection={insertSection} insertImage={insertImage}
-                     insertVideo={insertVideo} onVideoUpload={onVideoUpload} {...context} /> }
+        <BlogSectionCreator index={ 0 } {...creatorParams} {...context} /> }
       {
         article.sections.map((sectionId, index)=>{
           if (resources[sectionId]) {
+            const editing = (editingFlags||{})[sectionId];
+            const props = {
+              index, sectionId, deleteSection, editing, updateEditingFlag,
+              resource: resources[sectionId], readOnly: !editMode,
+              saveMarkdown, onImageUpload, onVideoUpload
+            };
             return <div key={sectionId}>
-                     <BlogSection index={ index } sectionId={sectionId} resource={ resources[sectionId] } 
-                                  saveSection={updateSection} deleteSection={deleteSection} 
-                                  insertImage={insertImage} onImageUpload={onImageUpload}
-                                  insertVideo={insertVideo} onVideoUpload={onVideoUpload}
-                                  readOnly={!editMode} {...context} />
-                     { editMode && <BlogSection index={ index+1 } resource={{}}
-                                                insertVideo={insertVideo}
-                                                insertImage={insertImage} saveSection={insertSection} {...context} /> }
+                     <BlogSection {...props} {...context} />
+                     { editMode && <BlogSectionCreator index={ index+1 } {...creatorParams} {...context} /> }
             </div>;
           } else {
             return <div key={sectionId}/>;
@@ -214,7 +224,7 @@ function BlogArticle(props) {
         })
       }
     </div>
-  )
+  );
 }
 
 BlogArticle.propTypes = {

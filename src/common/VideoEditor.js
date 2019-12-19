@@ -82,7 +82,7 @@ function validVideo(data) {
 function VideoEditor(props) {
   const { videoUrl, displayMode, onVideoUpload } = props;
   const { classes, readOnly, inline, deleteVideo, sectionId } = props;
-  const [editing, setEditing] = useState(false);
+  const { editing, setEditing } = props;
   const [videoUrlForm, setVideoUrlForm] = useState(videoUrl);
   
   const data = urlParser.parse(videoUrl);
