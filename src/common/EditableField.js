@@ -28,7 +28,7 @@ function EditableField(props) {
     setValue(e.target.value);
     setEditing(e.target.value !== props.value);
     setIgnoreBlur(false);
-  }
+  };
   const onSubmit = async (e) => {
     e.preventDefault();
     setIgnoreBlur(true);
@@ -36,16 +36,16 @@ function EditableField(props) {
     await props.onSave(value);
     setEditing(false);
     refTextField.current.blur();
-  }
+  };
   const onBlur = (e) => {
     if (!ignoreBlur) {
       setValue(props.value);
       setEditing(false);
     }
-  }
+  };
   const onMouseDown = (e) => {
     setIgnoreBlur(true);
-  }
+  };
 
   const { label, multiline, disabled } = props;
   return (
@@ -62,7 +62,7 @@ function EditableField(props) {
         </React.Fragment>
       }
     </form>
-  )
+  );
 }
 
 EditableField.propTypes = {

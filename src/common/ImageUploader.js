@@ -121,7 +121,7 @@ function ImageViewer(props) {
     
       }, file.type);
     }, { canvas:true, maxWidth:1024, maxHeight:1024, orientation:true });
-  }    
+  };
 
   const imageStyle = url ? { backgroundImage:`url("${url}")` } : {};
   const imageElement = (displayMode === "wide") ? (

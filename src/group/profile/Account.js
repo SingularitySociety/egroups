@@ -20,24 +20,24 @@ function Account(props) {
 
   useEffect(()=>{
     setTabbar("account");
-  }, [setTabbar])
+  }, [setTabbar]);
 
   const onSave = name => async value => {
     //console.log(name, value);
     const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
     await refMember.set({[name]:value}, {merge:true});
     callbacks.memberDidUpdate();
-  }
+  };
 
   const onImageUpload = async (imageUrl) => {
     console.log("onImageUpload", imageUrl);
     const refMember = db.doc(`groups/${group.groupId}/members/${user.uid}`);
     await refMember.set({hasImage:true, profile:{thumbnails:firebase.firestore.FieldValue.delete()}}, {merge:true});
     callbacks.memberDidUpdate();
-  }
+  };
     
   if (!user) {
-    return <Redirect to={`/g/${group.groupName}`} />
+    return <Redirect to={`/g/${group.groupName}`} />;
   }
   if (!member) {
     return "";
@@ -72,7 +72,7 @@ function Account(props) {
           value={member.github || ""} onSave={onSave('github')}/>
     </FormGroup>
     <LeaveAccount {...context} />
-  </div>
+  </div>;
 }
 
 Account.propTypes = {

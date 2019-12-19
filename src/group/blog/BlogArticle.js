@@ -88,24 +88,24 @@ function BlogArticle(props) {
       author: user.uid,
     });
     spliceSections(index, 0, doc.id);
-  }
+  };
   const updateSection = async (resourceId, index, markdown, raw) => {
     await refArticle.collection("sections").doc(resourceId).set({
       markdown, 
       raw
-    }, {merge:true})
+    }, {merge:true});
 
     const newArticle = Object.assign({}, article);
     newArticle.updated = new Date();
     setArticle(newArticle);
     await refArticle.set(newArticle, {merge:true});
 
-  }
+  };
   const deleteSection = async (resourceId, index) => {
     console.log("deleteSection", resourceId);
     await spliceSections(index, 1);
     await refArticle.collection("sections").doc(resourceId).delete();
-  }
+  };
   const insertImage = async (index) => {
     console.log("insertImage", index);
     const doc = await refArticle.collection("sections").add({
@@ -114,16 +114,31 @@ function BlogArticle(props) {
       author: user.uid,
     });
     spliceSections(index, 0, doc.id);
-  }
+  };
   const onImageUpload = async (resourceId, imageUrl) => {
     //console.log("onImageUpload", resourceId, imageUrl);
     await refArticle.collection("sections").doc(resourceId).set({
       hasImage: true, imageUrl
-    }, {merge:true})
-  }
+    }, {merge:true});
+  };
+  const insertVideo = async (index) => {
+    console.log("insertVideo", index);
+    const doc = await refArticle.collection("sections").add({
+      type: "video",
+      created: new Date(),
+      author: user.uid,
+    });
+    spliceSections(index, 0, doc.id);
+  };
+  const onVideoUpload = async (resourceId, videoUrl) => {
+    //console.log("onImageUpload", resourceId, imageUrl);
+    await refArticle.collection("sections").doc(resourceId).set({
+      hasVideo: true, videoUrl
+    }, {merge:true});
+  };
   const toggleReadOnly = () => {
     setReadOnly(!readOnly);
-  }
+  };
 
   const context = { pathArticle:refArticle.path };
   if (!article) {
@@ -132,7 +147,7 @@ function BlogArticle(props) {
   const canEdit = (user && article.owner === user.uid);
   const canRead = privilege >= article.read;
   if (!canRead) {
-    return <AccessDenied />
+    return <AccessDenied />;
   }
   if (!resources) {
     return "";
@@ -168,7 +183,7 @@ function BlogArticle(props) {
         <Grid container className={classes.userFrame}>
           <Grid item>
             <ImageUploader key={ thumbnails ? 1 : 2 } imagePath={""} imageThumbnails={thumbnails}
-                  readOnly={true} displayMode="thumbSmall" inline={true} />
+                           readOnly={true} displayMode="thumbSmall" inline={true} />
           </Grid>
           <Grid item className={classes.userName}>
             <Typography variant="caption" gutterBottom>
@@ -178,7 +193,7 @@ function BlogArticle(props) {
         </Grid>
       }
       { editMode && 
-        <BlogSection index={ 0 } resource={{}} saveSection={insertSection} insertImage={insertImage} {...context} /> }
+        <BlogSection index={ 0 } resource={{}} saveSection={insertSection} insertImage={insertImage} insertVideo={insertVideo} {...context} /> }
       {
         article.sections.map((sectionId, index)=>{
           if (resources[sectionId]) {
