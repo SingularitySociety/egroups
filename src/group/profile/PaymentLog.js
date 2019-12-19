@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import useOnCollection from '../../common/useOnCollection';
+import React, { useEffect } from 'react';
 
 import LogCommon from '../payment/LogCommon';
 
@@ -16,16 +15,14 @@ function getQueryFilter(group, user) {
 function PaymentLog(props) {
 
   const { group, user, callbacks } = props;
-
-  const [paymentQueryFilter, setPaymentQueryFilter] = useState(getQueryFilter(group, user));
-  const params = {paymentQueryFilter};
-
   const setTabbar = callbacks.setTabbar;
 
   useEffect(()=> {
     setTabbar("payment.log", "payment/log");
   }, [setTabbar]);
   
+  const params = {paymentQueryFilter:getQueryFilter(group, user)};
+
   return <LogCommon {...props}  {...params} />;
 }
 export default PaymentLog;
