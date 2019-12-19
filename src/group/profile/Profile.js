@@ -34,10 +34,10 @@ function Profile(props) {
   }, [setTabbar, userId]);
 
   if (!user) {
-      return <Redirect to={`/g/${group.groupName}`} />
+    return <Redirect to={`/g/${group.groupName}`} />;
   }
   if (err) {
-    return <AccessDenied />
+    return <AccessDenied />;
   }
   if (!member) {
       return "";
@@ -74,11 +74,11 @@ function Profile(props) {
           value={member.github || ""} disabled={true} className={classes.textField}
           InputProps={{classes:{input:classes.textColor}}}/>
     </FormGroup>
-  </div>
+  </div>;
 }
 
 Profile.propTypes = {
-    classes: PropTypes.object.isRequired,
-  };
+  classes: PropTypes.object.isRequired,
+};
   
 export default withStyles(styles)(Profile);

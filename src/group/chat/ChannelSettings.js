@@ -24,14 +24,14 @@ function ChannelSettings(props) {
 
   const onSave = name => async value => {
     await db.doc(path).set({[name]:value}, {merge:true});
-  }
+  };
   const onDelete = async () => {
     await db.doc(path).delete();
-  }
+  };
 
   if (!entity) {
     if (entity === null) {
-      return <Redirect to={`/g/${group.groupName}/channels`} />
+      return <Redirect to={`/g/${group.groupName}/channels`} />;
     }
     return "";
   }
@@ -48,11 +48,11 @@ function ChannelSettings(props) {
         </Button>
       </LockedArea>
     </div>
-  )
+  );
 }
 
 ChannelSettings.propTypes = {
-    classes: PropTypes.object.isRequired,
-  };
+  classes: PropTypes.object.isRequired,
+};
   
 export default withStyles(styles)(ChannelSettings);

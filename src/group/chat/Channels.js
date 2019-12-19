@@ -24,7 +24,7 @@ function Channels(props) {
   }, [setTabbar]);
 
   const createChannel = async (title) => {
-    console.log("createChannel", title)
+    console.log("createChannel", title);
     db.collection(`groups/${group.groupId}/channels`).add({
       title,
       created: firebase.firestore.FieldValue.serverTimestamp(),
@@ -32,7 +32,7 @@ function Channels(props) {
       read: group.privileges.channel.read || Privileges.member, 
       write: group.privileges.channel.write || Privileges.member, 
     });
-  }
+  };
 
   const context = { user, group, db, member, history };
   const canCreateNew = privilege 
@@ -50,7 +50,7 @@ function Channels(props) {
         <ChannelList {...context}/>
       </Grid>
     </Grid>
-  )
+  );
 }
 
 Channels.propTypes = {

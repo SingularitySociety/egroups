@@ -57,7 +57,7 @@ function Message(props) {
         </Typography>
       </div>
     </div>
-  )
+  );
 }
 
 Message.propTypes = {

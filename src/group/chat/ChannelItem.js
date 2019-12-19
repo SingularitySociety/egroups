@@ -43,7 +43,7 @@ function ChannelItem(props) {
         </Grid>
       </MUILink>
     </Paper>
-  )
+  );
 }
 
 ChannelItem.propTypes = {

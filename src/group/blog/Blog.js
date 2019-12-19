@@ -26,12 +26,12 @@ function Blog(props) {
       const pathHistory = `groups/${group.groupId}/members/${user.uid}/private/history`;
       db.doc(pathHistory).set({
         articles
-      }, {merge:true})
+      }, {merge:true});
     }
   },[db, articleId, user, group]);
 
   if (err) {
-    return <AccessDenied error={err} />
+    return <AccessDenied error={err} />;
   }
   
   if (!article) {
