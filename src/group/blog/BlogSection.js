@@ -4,10 +4,12 @@ import { IconButton, Grid } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import PhotoIcon from '@material-ui/icons/AddPhotoAlternate';
 import EditIcon from '@material-ui/icons/Edit';
+import VideoIcon from '@material-ui/icons/VideoLibrary';
 // import { MarkdownEditor, MarkdownViewer } from 'draft-material.ui-editor';
 import MarkdownViewer from '../../common/packaged/MarkdownViewer';
 import MarkdownEditor from '../../common/packaged/MarkdownEditor';
 import ImageUploader from '../../common/ImageUploader';
+import VideoEditor from '../../common/VideoEditor';
 
 function BlogSection(props) {
   const [editing, setEditing] = useState(false);
@@ -32,11 +34,18 @@ function BlogSection(props) {
   function onImageUpload(imageUrl) {
     props.onImageUpload(sectionId, imageUrl);
   }
+  function insertVideo() {
+    props.insertVideo(index);
+  }
+  function onVideoUpload(videoUrl) {
+    props.onVideoUpload(sectionId, videoUrl);
+  }
 
+  console.log(editing);
   if (editing) {
     return (
       <MarkdownEditor resource={resource} onSave={onSave} onCancel={onCancel} onDelete={props.deleteSection && onDelete} />
-    )
+    );
   }
 
   if (sectionId) {
@@ -45,11 +54,17 @@ function BlogSection(props) {
         return "";
       }
       const imagePath = `${pathArticle}/${sectionId}`;
-      const thumbnails = (resource[sectionId] && resource[sectionId].thumbnails) || resource.thumbnails
+      const thumbnails = (resource[sectionId] && resource[sectionId].thumbnails) || resource.thumbnails;
       return (
           <ImageUploader imagePath={imagePath} loadImage={resource.hasImage} imageUrl={resource.imageUrl}
             imageThumbnails={thumbnails} 
             readOnly={readOnly} displayMode="wide" onImageUpload={onImageUpload} deleteImage={onDelete} />
+      );
+    }
+    if (resource.type==="video") {
+      return (
+        <VideoEditor videoUrl={resource.videoUrl} readOnly={readOnly} sectionId={sectionId}
+                     displayMode="wide" onVideoUpload={onVideoUpload} deleteVideo={onDelete} />
       );
     }
     const textWidth = readOnly ? 12 : 11;
@@ -64,7 +79,7 @@ function BlogSection(props) {
           </IconButton>
         </Grid> 
       }
-    </Grid>
+    </Grid>;
   }
 
   return <Grid container justify="center">
@@ -78,7 +93,12 @@ function BlogSection(props) {
         <PhotoIcon />
       </IconButton>
     </Grid> 
-  </Grid>
+    <Grid item>
+      <IconButton  size="small" variant="contained" onClick={insertVideo}>
+        <VideoIcon />
+      </IconButton>
+    </Grid> 
+  </Grid>;
 }
 
 BlogSection.propTypes = {

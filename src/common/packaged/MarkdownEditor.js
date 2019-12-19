@@ -47,11 +47,11 @@ function MarkdownEditor(props) {
     const raw = convertToRaw(contentState);
     console.log(raw);
     props.onSave(markdown, raw);
-  }
+  };
 
   const onCancel = (e) => {
     props.onCancel();
-  }
+  };
 
   const handleKeyCommand = (command, state) => {
     const newState = RichUtils.handleKeyCommand(state, command);
@@ -60,7 +60,7 @@ function MarkdownEditor(props) {
       return 'handled';
     }
     return 'not-handled';
-  }
+  };
   const handleReturn = (e, state) => {
     if (e.shiftKey) {
       const newState = RichUtils.insertSoftNewline(state);
@@ -70,31 +70,31 @@ function MarkdownEditor(props) {
       }
     }
     return 'not-handled';
-  }
+  };
 
   const toggleStyle = (style) => {
     onChange(RichUtils.toggleInlineStyle(editorState, style));    
-  }
+  };
   const toggleBlockType = (type) => {
     onChange(RichUtils.toggleBlockType(editorState, type));
     setAnchorEl(null);
-  }
+  };
   const onMouseDown = e => {
     e.preventDefault(); // don't steal focus
-  }
+  };
   const undo = () => {
     onChange(EditorState.undo(editorState));
-  }
+  };
   const redo = () => {
     onChange(EditorState.redo(editorState));
-  }
+  };
   function handleMore(e) {
     console.log("handleMore", e);
     setAnchorEl(e.currentTarget);
-  }
+  };
   function closeMore() {
     setAnchorEl();
-  }
+  };
   // https://bitwiser.in/2017/05/11/creating-rte-part-3-entities-and-decorators.html
   const editLink = () => {
     const selection = editorState.getSelection();
