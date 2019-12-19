@@ -146,7 +146,7 @@ function BlogArticle(props) {
   }
   const canEdit = (user && article.owner === user.uid);
   const canRead = privilege >= article.read;
-  if (!canRead) {
+  if (!canRead || error) {
     return <AccessDenied />;
   }
   if (!resources) {
@@ -193,20 +193,22 @@ function BlogArticle(props) {
         </Grid>
       }
       { editMode && 
-        <BlogSection index={ 0 } resource={{}} saveSection={insertSection} insertImage={insertImage} insertVideo={insertVideo} {...context} /> }
+        <BlogSection index={ 0 } resource={{}} saveSection={insertSection} insertImage={insertImage}
+                     insertVideo={insertVideo} onVideoUpload={onVideoUpload} {...context} /> }
       {
         article.sections.map((sectionId, index)=>{
           if (resources[sectionId]) {
             return <div key={sectionId}>
                      <BlogSection index={ index } sectionId={sectionId} resource={ resources[sectionId] } 
                                   saveSection={updateSection} deleteSection={deleteSection} 
-                                  insertImage={insertImage} onImageUpload={onImageUpload} 
+                                  insertImage={insertImage} onImageUpload={onImageUpload}
+                                  insertVideo={insertVideo} onVideoUpload={onVideoUpload}
                                   readOnly={!editMode} {...context} />
                      { editMode && <BlogSection index={ index+1 } resource={{}}
                                                 insertImage={insertImage} saveSection={insertSection} {...context} /> }
             </div>;
           } else {
-            return <div/>;
+            return <div key={sectionId}/>;
           }
         })
       }
