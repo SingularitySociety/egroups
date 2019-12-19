@@ -205,6 +205,7 @@ function BlogArticle(props) {
                                   insertVideo={insertVideo} onVideoUpload={onVideoUpload}
                                   readOnly={!editMode} {...context} />
                      { editMode && <BlogSection index={ index+1 } resource={{}}
+                                                insertVideo={insertVideo}
                                                 insertImage={insertImage} saveSection={insertSection} {...context} /> }
             </div>;
           } else {
