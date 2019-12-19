@@ -6,7 +6,7 @@ import BlogSectionMarkdown from './BlogSectionMarkdown';
 
 function BlogSection(props) {
   const { sectionId, index, resource, readOnly, pathArticle } = props;
-  const { editing, updateEditingFlag } = props;
+  const { updateEditingFlag } = props;
 
   function onDelete() {
     props.deleteSection(sectionId, index);
@@ -18,7 +18,7 @@ function BlogSection(props) {
     props.onImageUploadSection(sectionId, imageUrl);
   }
   function onVideoUpload(videoUrl) {
-    console.log("onVideoUpload", sectionId, videoUrl);
+    // console.log("onVideoUpload", sectionId, videoUrl);
     props.onVideoUploadSection(sectionId, videoUrl);
   }
 

@@ -140,7 +140,7 @@ function BlogArticle(props) {
     spliceSections(index, 0, doc.id);
   };
   const onVideoUploadSection = async (sectionId, videoUrl) => {
-    console.log("onVideoUploadSection", sectionId, videoUrl);
+    // console.log("onVideoUploadSection", sectionId, videoUrl);
     await refArticle.collection("sections").doc(sectionId).set({
       hasVideo: true, videoUrl
     }, {merge:true});

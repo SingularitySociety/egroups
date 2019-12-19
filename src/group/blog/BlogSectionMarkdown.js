@@ -7,8 +7,7 @@ import MarkdownEditor from '../../common/packaged/MarkdownEditor';
 
 function BlogSectionMarkdown(props) {
   const { sectionId, index, resource, readOnly } = props;
-  const { editing, updateEditingFlag } = props;
-  const { onDelete, setEditing } = props;
+  const { editing, onDelete, setEditing } = props;
   function onCancel() {
     setEditing(false);
   }
