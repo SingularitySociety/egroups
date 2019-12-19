@@ -15,7 +15,7 @@ function Processing(props) {
   return (
     active && 
     <CircularProgress size={28} className={ classes.progress } />
-  )
+  );
 }
 
 Processing.propTypes = {

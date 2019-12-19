@@ -29,15 +29,15 @@ function CreateNew(props) {
   const setCreatingFlag = (flag) => {
     setCreating(flag);
     setValue("")
-  }
+  };
   const onChange = (e) => {
     setValue(e.target.value);
-  }
+  };
   const onSubmit = (e) => {
     e.preventDefault();
     setCreatingFlag(initialStatus);
     props.createNew(value);
-  }
+  };
   const catchReturn = (e) => {
     if (e.key==='Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -45,10 +45,10 @@ function CreateNew(props) {
         onSubmit(e);
       }
     }
-  }
+  };
   
   const { multiline, label, action, minLength } = props;
-  const disabled = value.length < (minLength || 1)
+  const disabled = value.length < (minLength || 1);
   if (creating) {
     if (multiline) {
       return (

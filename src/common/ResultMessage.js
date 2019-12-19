@@ -24,7 +24,7 @@ function ResultMessage(props) {
         { message }
       </Typography>
     }
-  </React.Fragment>
+  </React.Fragment>;
 }
 
 ResultMessage.propTypes = {

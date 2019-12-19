@@ -62,7 +62,7 @@ const styles = theme => ({
   },
 });
 
-function ImageViewer(props) {
+function ImageUploader(props) {
   const { imagePath, loadImage, imageUrl, imageThumbnails, displayMode, onImageUpload } = props;
   const { classes, readOnly, inline, deleteImage } = props;
   const [ url, setUrl ] = useState(null);
@@ -149,12 +149,12 @@ function ImageViewer(props) {
       </Grid>
 
       }
-    </Grid>)
+    </Grid>);
 }
 
-ImageViewer.propTypes = {
+ImageUploader.propTypes = {
     classes: PropTypes.object.isRequired,
     imagePath: PropTypes.string.isRequired,
   };
   
-export default withStyles(styles)(ImageViewer);
+export default withStyles(styles)(ImageUploader);

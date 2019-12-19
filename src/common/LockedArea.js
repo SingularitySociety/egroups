@@ -24,7 +24,7 @@ export default function LockedArea(props) {
 
   return (
     <div>
-      <IconButton onClick={()=>{setLocked(!locked)}} className={classes.button}>
+      <IconButton onClick={()=>{setLocked(!locked);}} className={classes.button}>
         { locked ? <LockIcon/> : <LockOpenIcon/> }
       </IconButton>
         { label }
@@ -32,6 +32,6 @@ export default function LockedArea(props) {
         { children }
       </div>
     </div>
-  )
+  );
 }
 

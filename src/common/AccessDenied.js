@@ -20,7 +20,7 @@ function AccessDenied(props) {
     <Typography component="h1" variant="h1" gutterBottom　className={ classes.errorMessage} >
       <FormattedMessage id="warning.access.denied" />
     </Typography>
-  )
+  );
 }
 
 AccessDenied.propTypes = {
