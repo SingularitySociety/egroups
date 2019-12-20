@@ -180,15 +180,14 @@ function ImageUploader(props) {
       )}
     </Grid>
   ) : (url || readOnly ? <Grid item className={classes[displayMode || "thumbLarge"]} style={imageStyle} /> :
-       <Grid item className={classes[displayMode || "thumbLarge"]} style={imageStyle}>
-         <Grid
-           onDragOver={onDragOver}
-           onDrop={onDrop}
-           onDragEnter={onDragEnter}
-           onDragLeave={onDragLeave}
-           className={[classes.uploadArea, onDrag ? classes.uploadAreaOn : classes.uploadAreaOff ].join(" ")}
+       <Grid item style={imageStyle}
+             onDragOver={onDragOver}
+             onDrop={onDrop}
+             onDragEnter={onDragEnter}
+             onDragLeave={onDragLeave}
+             className={[classes[displayMode || "thumbLarge"], onDrag ? classes.uploadAreaOn : classes.uploadAreaOff ].join(" ")}
          />
-       </Grid>);
+      );
   if (inline) {
     return imageElement;
   }
