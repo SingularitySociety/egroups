@@ -103,7 +103,7 @@ class NewGroup extends React.Component {
     const { classes, user, privileges, match:{params:{groupId}} } = this.props;
     const { redirect, title, path, invalid, conflict, processing, groupType } = this.state;
     if (redirect) {
-      return <Redirect to={ redirect } />
+      return <Redirect to={ redirect } />;
     }
     const privilege = privileges && privileges[groupId];
     const isOwner = privilege === Privileges.owner; // becomes true when we got JWT

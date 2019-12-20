@@ -39,13 +39,12 @@ async function getExistTokens(uid) {
 async function updatePushToken(uid, newToken, oldToken=null) {
   let exist_tokens = await getExistTokens(uid);
   if (!exist_tokens.includes(newToken)) {
-    exist_tokens.push(newToken)
+    exist_tokens.push(newToken);
   }
   if (oldToken && exist_tokens.includes(oldToken)) {
     exist_tokens = exist_tokens.filter((elem) => elem !== oldToken);
   }
   await updateToken(uid, exist_tokens);
-  console.log({exist_tokens:exist_tokens})
 }
 async function updateToken(uid, tokens) {
   db.doc(`users/${uid}/private/tokens`).set({tokens: tokens});
@@ -58,7 +57,6 @@ function getPushToken(user) {
     const exist_token = localStorage.getItem("pushToken");
     messaging.requestPermission().then(async () => {
       if (exist_token) {
-        console.log("exist_token")
         messaging.getToken().then(function(refreshedToken) {
           updatePushToken(user.uid, refreshedToken, localStorage.getItem("pushToken"));
           localStorage.setItem("pushToken", refreshedToken);
@@ -84,10 +82,9 @@ function getPushToken(user) {
         // firebase.functions().httpsCallable('updateTopicSubscription');
       } else {
         // new token
-        console.log("new_token")
         messaging.getToken().then((token) => {
           updatePushToken(user.uid, token);
-        })
+        });
       }
     }).catch((err) => {
       console.log('Unable to get permission to notify.', err);
@@ -135,7 +132,7 @@ function App() {
           newValue.displayName = user.displayName;
         }
         await refUser.set(newValue, { merge: true });
-        console.log("### calling getPushToken")
+        console.log("### calling getPushToken");
         getPushToken(user);
       }
       updateUser();
@@ -144,7 +141,6 @@ function App() {
   }, [user]);
 
   const params = { user, db, privileges, rootGroup:appConfig.rootGroup };
-  //console.log("App:", window.location.pathname);
   const language = navigator.language.split(/[-_]/)[0];  // language without region code
   return (
     <IntlProvider locale={language} messages={messages[language]}>
