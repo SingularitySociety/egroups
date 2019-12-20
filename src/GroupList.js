@@ -21,7 +21,7 @@ const styles = theme => ({
 
 function GroupList(props) {
   const [groups, setGroups] = useState([]);
-  const { db, classes, filter, groupIds } = props;
+  const { db, classes, filter, groupIds, user } = props;
   useEffect(()=>{
     async function query() {
       const ref = db.collection("groups").where("groupName", ">", "").where("open", "==", true);
@@ -58,24 +58,26 @@ function GroupList(props) {
   return <Grid container justify="center" className={classes.root}>
     { 
       groups.map((group)=> {
-        const imageThumbnails = group.profile && group.profile.thumbnails;
-        return (
-          <Grid item key={group.groupId} xs={12}>
-            <MUILink component={Link} className={classes.link}
-              to={"/g/" + (group.groupName || group.groupId)}>
-              <Paper className={classes.paper}>
-                <Grid container spacing={1}>
-                  <ImageUploader imagePath={`/groups/${group.groupId}/images/profile`}
-                    imageThumbnails={imageThumbnails}
-                    loadImage={group.hasImage}
-                    readOnly={true} displayMode={"thumbSmall"} inline={true} />
-                  <Grid item>
-                    {group.title}
-                  </Grid>
-                </Grid> 
-              </Paper>
-            </MUILink>
-          </Grid>);
+        if (group.groupName || (user && (group.owner == user.uid) )) {
+          const imageThumbnails = group.profile && group.profile.thumbnails;
+          return (
+            <Grid item key={group.groupId} xs={12}>
+              <MUILink component={Link} className={classes.link}
+                       to={group.groupName ? "/g/" + (group.groupName ) : "/a/new/" + group.groupId}>
+                <Paper className={classes.paper}>
+                  <Grid container spacing={1}>
+                    <ImageUploader imagePath={`/groups/${group.groupId}/images/profile`}
+                                   imageThumbnails={imageThumbnails}
+                                   loadImage={group.hasImage}
+                                   readOnly={true} displayMode={"thumbSmall"} inline={true} />
+                    <Grid item>
+                      {group.title} {!group.groupName ? "/ creating..." : "" }
+                    </Grid>
+                  </Grid> 
+                </Paper>
+              </MUILink>
+            </Grid>);
+        }
       })
     }
   </Grid>
