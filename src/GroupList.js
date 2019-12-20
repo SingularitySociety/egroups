@@ -58,7 +58,7 @@ function GroupList(props) {
   return <Grid container justify="center" className={classes.root}>
     { 
       groups.map((group)=> {
-        if (group.groupName || (user && (group.owner == user.uid) )) {
+        if (group.groupName || (user && (group.owner === user.uid) )) {
           const imageThumbnails = group.profile && group.profile.thumbnails;
           return (
             <Grid item key={group.groupId} xs={12}>
@@ -77,6 +77,8 @@ function GroupList(props) {
                 </Paper>
               </MUILink>
             </Grid>);
+        } else {
+          return "";
         }
       })
     }
