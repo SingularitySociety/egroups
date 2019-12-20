@@ -60,11 +60,15 @@ const styles = theme => ({
     border: "1px lightgray solid",
     borderRadius: "1.5em",
   },
-  uploadArea: {
+  uploadAreaWide: {
     height: "100px",
     textAlign: "center",
     fontSize: "36px",
     border: "6px dotted #000000",
+  },   
+  uploadArea: {
+    height: "100%",
+    width: "100%",
   },  
   uploadAreaOn: {
     backgroundColor: "#aaa",
@@ -162,28 +166,35 @@ function ImageUploader(props) {
 
   const imageStyle = url ? { backgroundImage:`url("${url}")` } : {};
   const imageElement = (displayMode === "wide") ? (
-      <Grid item xs={readOnly ? 12 : 11} className={ classes.wideFrame }>
-        {url ? <img src={url} className={classes[displayMode]} alt="place holder" /> : ""}
-      </Grid>
-    ) : <Grid item className={classes[displayMode || "thumbLarge"]} style={imageStyle} />;
+    <Grid item xs={readOnly ? 12 : 11} className={ classes.wideFrame }>
+      {url || readOnly ? <img src={url} className={classes[displayMode]} alt="place holder" /> : (
+        <Grid
+          onDragOver={onDragOver}
+          onDrop={onDrop}
+          onDragEnter={onDragEnter}
+          onDragLeave={onDragLeave}
+          className={[classes.uploadAreaWide, onDrag ? classes.uploadAreaOn : classes.uploadAreaOff ].join(" ")}
+        >
+            Drop upload file here.
+        </Grid>
+      )}
+    </Grid>
+  ) : (url || readOnly ? <Grid item className={classes[displayMode || "thumbLarge"]} style={imageStyle} /> :
+       <Grid item className={classes[displayMode || "thumbLarge"]} style={imageStyle}>
+         <Grid
+           onDragOver={onDragOver}
+           onDrop={onDrop}
+           onDragEnter={onDragEnter}
+           onDragLeave={onDragLeave}
+           className={[classes.uploadArea, onDrag ? classes.uploadAreaOn : classes.uploadAreaOff ].join(" ")}
+         />
+       </Grid>);
   if (inline) {
     return imageElement;
   }
   return (<Grid container className={classes.root} spacing={1} justify="center">
       { processing && <CircularProgress style={{position:"absolute", zIndex:1 }}/> }
-            { url ? imageElement :
-              <Grid item xs={11} className={ classes.wideFrame }>
-                <Grid
-                  onDragOver={onDragOver}
-                  onDrop={onDrop}
-                  onDragEnter={onDragEnter}
-                  onDragLeave={onDragLeave}
-                  className={[classes.uploadArea, onDrag ? classes.uploadAreaOn : classes.uploadAreaOff ].join(" ")}
-                >
-                  Drop upload file here.
-                </Grid>
-              </Grid>
-            }
+            { imageElement }
       {
         !readOnly && onImageUpload &&
           <Grid item xs={1}>
