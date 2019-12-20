@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Typography, Grid, IconButton } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import EditIcon from '@material-ui/icons/Edit';
+import SaveIcon from '@material-ui/icons/SaveAlt';
 import AccessDenied from '../../common/AccessDenied';
 import BlogSection from './BlogSection';
 import BlogSectionCreator from './BlogSectionCreator';
@@ -179,7 +180,7 @@ function BlogArticle(props) {
           canEdit && 
           <Grid item xs={2}>
             <IconButton size="small" onClick={toggleReadOnly}>
-              <EditIcon />
+              {readOnly ? <EditIcon /> : <SaveIcon/> }
             </IconButton>
             <IconButton size="small" component={Link} to={`/g/${group.groupName}/${arp.leaf}/${article.articleId}/settings`}>
               <SettingsIcon />
