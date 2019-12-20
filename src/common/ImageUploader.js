@@ -60,6 +60,18 @@ const styles = theme => ({
     border: "1px lightgray solid",
     borderRadius: "1.5em",
   },
+  uploadArea: {
+    height: "100px",
+    textAlign: "center",
+    fontSize: "36px",
+    border: "6px dotted #000000",
+  },  
+  uploadAreaOn: {
+    backgroundColor: "#aaa",
+  },
+  uploadAreaOff: {
+    // backgroundColor: "blue",
+  }
 });
 
 function ImageUploader(props) {
@@ -67,7 +79,8 @@ function ImageUploader(props) {
   const { classes, readOnly, inline, onDelete } = props;
   const [ url, setUrl ] = useState(null);
   const [ processing, setProcessing ] = useState(false);
-
+  const [ onDrag, setOnDrag] = useState(false);
+  
   useEffect(() => {
     //console.log(imageUrl, imagePath, imageThumbnails);
     const storagRef = firebase.storage().ref();
@@ -94,8 +107,7 @@ function ImageUploader(props) {
     }
   }, [imagePath, displayMode, imageThumbnails, imageUrl, loadImage]);
 
-  const onFileInput = (e) => {
-    const file = e.target.files[0];
+  const upload = (file) => {
     blueimpLoadImage(file, (canvas) => {
       console.log(canvas);
       canvas.toBlob((blob)=>{
@@ -122,6 +134,31 @@ function ImageUploader(props) {
       }, file.type);
     }, { canvas:true, maxWidth:1024, maxHeight:1024, orientation:true });
   };
+  
+  const onDrop = (e) => {
+    console.log("onDrop");
+    e.preventDefault();
+
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.indexOf('image/') >= 0) {
+      upload(file);
+    }
+  };
+
+  const onDragEnter = (e) => {
+    setOnDrag(true);
+  };
+  const onDragLeave = (e) => {
+    setOnDrag(false);
+  };
+  const onDragOver = (e) => {
+    e.preventDefault();
+  };
+  
+  const onFileInput = (e) => {
+    const file = e.target.files[0];
+    upload(file);
+  };
 
   const imageStyle = url ? { backgroundImage:`url("${url}")` } : {};
   const imageElement = (displayMode === "wide") ? (
@@ -134,7 +171,19 @@ function ImageUploader(props) {
   }
   return (<Grid container className={classes.root} spacing={1} justify="center">
       { processing && <CircularProgress style={{position:"absolute", zIndex:1 }}/> }
-      { imageElement }
+            { url ? imageElement :
+              <Grid item xs={11} className={ classes.wideFrame }>
+                <Grid
+                  onDragOver={onDragOver}
+                  onDrop={onDrop}
+                  onDragEnter={onDragEnter}
+                  onDragLeave={onDragLeave}
+                  className={[classes.uploadArea, onDrag ? classes.uploadAreaOn : classes.uploadAreaOff ].join(" ")}
+                >
+                  Drop upload file here.
+                </Grid>
+              </Grid>
+            }
       {
         !readOnly && onImageUpload &&
           <Grid item xs={1}>
