@@ -43,9 +43,21 @@ class NewGroup extends React.Component {
     console.log(window.location);
     const { db, match:{params:{groupId}} } = this.props;
     const doc = (await db.doc(`groups/${groupId}`).get()).data();
-    if (doc) {
-      this.setState({title:doc.title});
+    if (!doc) {
+      this.setState({error: "noGroup"});
+      return ;
     }
+    const groupNames = await db.collection(`groupNames`).where("groupId", "==", groupId).get();
+    if(!groupNames.empty) {
+      const groupName = groupNames.docs[0].id;
+      this.setState({
+        error: "existGroup",
+        groupName,
+      });
+      return ;
+    }
+    this.setState({title:doc.title});
+
   }
 
   onSubmit = async (e) => {
@@ -102,6 +114,15 @@ class NewGroup extends React.Component {
   render() {
     const { classes, user, privileges, match:{params:{groupId}} } = this.props;
     const { redirect, title, path, invalid, conflict, processing, groupType } = this.state;
+    const { error, groupName } = this.state;
+    if (error) {
+      if (error === "noGroup") {
+        return <Redirect to={"/"} />;
+      }
+      if (error === "existGroup") {
+        return <Redirect to={"/g/" + groupName } />;
+      }
+    }
     if (redirect) {
       return <Redirect to={ redirect } />;
     }
