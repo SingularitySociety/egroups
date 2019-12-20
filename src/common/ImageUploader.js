@@ -179,7 +179,7 @@ function ImageUploader(props) {
         </Grid>
       )}
     </Grid>
-  ) : (url || readOnly ? <Grid item className={classes[displayMode || "thumbLarge"]} style={imageStyle} /> :
+  ) : (readOnly ? <Grid item className={classes[displayMode || "thumbLarge"]} style={imageStyle} /> :
        <Grid item style={imageStyle}
              onDragOver={onDragOver}
              onDrop={onDrop}
