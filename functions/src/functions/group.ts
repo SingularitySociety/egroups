@@ -36,6 +36,7 @@ export const createGroup = async (db:FirebaseFirestore.Firestore, data, context)
     displayName:ownerName,
     userId: userId,
     groupId: groupId,
+    privilege: Privileges.owner
   });
 
   return {
@@ -262,6 +263,7 @@ export const processInvite = async (db:FirebaseFirestore.Firestore, admin, data,
       displayName: displayName || "",
       email: email || "",
       groupId: groupId,
+      privilege: invite.privilege,
       invitedBy: invite.invitedBy,
     });
 
