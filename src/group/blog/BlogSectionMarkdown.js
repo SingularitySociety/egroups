@@ -8,17 +8,19 @@ import MarkdownEditor from '../../common/packaged/MarkdownEditor';
 function BlogSectionMarkdown(props) {
   const { sectionId, index, resource, readOnly } = props;
   const { editing, onDelete, setEditing } = props;
+  const { saveMarkdown } = props;
+
   function onCancel() {
     setEditing(false);
   }
   function onSaveMarkdown(markdown, raw) {
-    props.saveMarkdown(sectionId, index, markdown, raw);
+    saveMarkdown(sectionId, index, markdown, raw);
     setEditing(false);
   }
   if (editing) {
     return (
       <MarkdownEditor resource={resource} onSave={onSaveMarkdown} onCancel={onCancel}
-                      onDelete={props.deleteSection && onDelete} />
+                      onDelete={onDelete} />
     );
   }
   

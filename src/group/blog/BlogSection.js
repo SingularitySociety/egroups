@@ -6,8 +6,9 @@ import BlogSectionMarkdown from './BlogSectionMarkdown';
 
 function BlogSection(props) {
   const { sectionId, index, resource, readOnly, pathArticle } = props;
-  const { updateEditingFlag } = props;
-
+  const { editing, updateEditingFlag } = props;
+  const { saveMarkdown } = props;
+  
   function onDelete() {
     props.deleteSection(sectionId, index);
   }
@@ -18,11 +19,9 @@ function BlogSection(props) {
     props.onImageUploadSection(sectionId, imageUrl);
   }
   function onVideoUpload(videoUrl) {
-    // console.log("onVideoUpload", sectionId, videoUrl);
     props.onVideoUploadSection(sectionId, videoUrl);
   }
 
-  const params = {onDelete, setEditing, displayMode: "wide"};
   if (resource.type==="image") {
     if (readOnly && !resource.hasImage) {
       return "";
@@ -31,16 +30,21 @@ function BlogSection(props) {
     const thumbnails = (resource[sectionId] && resource[sectionId].thumbnails) || resource.thumbnails;
     return (
       <ImageUploader imagePath={imagePath} loadImage={resource.hasImage} imageUrl={resource.imageUrl}
-                     imageThumbnails={thumbnails} onImageUpload={onImageUpload} {...params} />
+                     imageThumbnails={thumbnails} onImageUpload={onImageUpload}
+                     readOnly={readOnly} onDelete={onDelete} displayMode="wide" />
     );
   }
   if (resource.type==="video") {
     return (
-      <VideoEditor videoUrl={resource.videoUrl} onVideoUpload={onVideoUpload} {...props} {...params} />
+      <VideoEditor videoUrl={resource.videoUrl} displayMode="wide" onVideoUpload={onVideoUpload}
+                   readOnly={readOnly} onDelete={onDelete} sectionId={sectionId}
+                   editing={editing} setEditing={setEditing} />
     );
   }
   if (resource.type==="markdown") {
-    return <BlogSectionMarkdown {...props} {...params}/>;
+    return <BlogSectionMarkdown sectionId={sectionId} index={index} resource={resource} readOnly={readOnly}
+                                editing={editing} onDelete={onDelete} setEditing={setEditing}
+                                saveMarkdown={saveMarkdown} />;
   }
   return <div/>;
 }

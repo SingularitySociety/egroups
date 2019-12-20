@@ -167,8 +167,6 @@ function BlogArticle(props) {
   const userName = (her && her.displayName) || "...";
   const thumbnails = her && her.profile && her.profile.thumbnails;
 
-  const creatorParams = {insertImage, insertMarkdown, insertVideo};
-  
   return (
     <div className={frameClass}>
       <Grid container>
@@ -204,19 +202,24 @@ function BlogArticle(props) {
         </Grid>
       }
       { editMode && 
-        <BlogSectionCreator index={ 0 } {...creatorParams} {...context} /> }
+        <BlogSectionCreator index={ 0 } {...context}
+                            insertImage={insertImage} insertMarkdown={insertMarkdown} insertVideo={insertVideo} />
+      }
       {
         article.sections.map((sectionId, index)=>{
           if (resources[sectionId]) {
             const editing = (editingFlags||{})[sectionId];
-            const props = {
-              index, sectionId, deleteSection, editing, updateEditingFlag,
-              resource: resources[sectionId], readOnly: !editMode,
-              saveMarkdown, onImageUploadSection, onVideoUploadSection
-            };
             return <div key={sectionId}>
-                     <BlogSection {...props} {...context} />
-                     { editMode && <BlogSectionCreator index={ index+1 } {...creatorParams} {...context} /> }
+                     <BlogSection {...props}
+                                  index={index} sectionId={sectionId} deleteSection={deleteSection}
+                                  editing={editing} updateEditingFlag={updateEditingFlag}
+                                  resource={resources[sectionId]} readOnly={!editMode} saveMarkdown={saveMarkdown}
+                                  onImageUploadSection={onImageUploadSection} onVideoUploadSection={onVideoUploadSection}
+                                  {...context} />
+                     { editMode && <BlogSectionCreator
+                                     index={ index+1 } {...context}
+                                     insertImage={insertImage} insertMarkdown={insertMarkdown} insertVideo={insertVideo}
+                                   /> }
             </div>;
           } else {
             return <div key={sectionId}/>;
