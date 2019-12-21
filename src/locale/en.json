@@ -181,6 +181,18 @@
 
     "payment": "payment",
     "payment.log": "Payment log",
+    "payment.user": "User name",
+    "payment.created_date": "Created",
+    "payment.start_date": "Start date",
+    "payment.end_date": "End date",
+    "payment.amount": "Amount",
+
+    "payout.log": "Payout log",
+  "payout.arrival_date": "Arrival Date",
+  "payout.amount": "Amount",
+  "payout.type": "type",
+  "payout.status": "status",
+  "payout.failure_message": "failure message",
   
     "dummy":"dummy"
 }

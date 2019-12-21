@@ -178,6 +178,9 @@ class MyAppBar extends React.Component {
       case "payment.log":
         crams = [this.cramHome, this.cramSettings, this.breadCram(pageInfo.tabId, pageInfo.path)];
         break;
+      case "payout.log":
+        crams = [this.cramHome, this.cramSettings, this.breadCram(pageInfo.tabId, pageInfo.path)];
+        break;
       default:
         console.log("### unknown tabId", pageInfo.tabId);
         break;

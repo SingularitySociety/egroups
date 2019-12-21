@@ -228,7 +228,19 @@
   
     "payment": "payment",
     "payment.log": "決済ログ",
+    "payment.user": "ユーザ",
+    "payment.created_date": "決済日",
+    "payment.start_date": "期間開始",
+    "payment.end_date": "期間終了",
+    "payment.amount": "金額",
 
+  "payout.log": "支払いログ",
+  "payout.arrival_date": "入金日",
+  "payout.amount": "金額",
+  "payout.type": "タイプ",
+  "payout.status": "状況",
+  "payout.failure_message": "失敗理由",
+  
   "red": "赤",
   "pink": "ピンク",
   "purple": "紫",

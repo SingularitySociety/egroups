@@ -36,6 +36,8 @@ import Invite from './join/Invite';
 import Invited from './join/Invited';
 import PaymentLog from './payment/Log';
 import AccountPaymentLog from './profile/PaymentLog';
+import PaymentIntents from './payment/PaymentIntents';
+import PayoutLog from './payment/PayoutLog';
 import {themeOptions} from '../theme.js';
 import CustomAccount from './join/CustomAccount';
 
@@ -222,6 +224,8 @@ class GroupRouter extends React.Component {
               <Route exact path={`/g/${group.groupName}/invite`} render={(props) => <Invite {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/invite/:inviteId/:inviteKey`} render={(props) => <Invited {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/payment/log`} render={(props) => <PaymentLog {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/payment/paymentintents`} render={(props) => <PaymentIntents {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/payment/payout`} render={(props) => <PayoutLog {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/account`} 
                 render={(props) => <Account {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/account/payment/log`} 

@@ -84,6 +84,12 @@ export const createGroup = functions.https.onCall(async (data, context) => {
 export const createGroupName = functions.https.onCall(async (data, context) => {
   return await groupFunctions.createGroupName(db, data, context);
 });
+export const getPaymentIntentsLog = functions.https.onCall(async (data, context) => {
+  return await groupFunctions.getPaymentIntentsLog(db, data, context);
+});
+export const getPayoutLog = functions.https.onCall(async (data, context) => {
+  return await groupFunctions.getPayoutLog(db, data, context);
+});
 
 export const groupDidDelete = functions.firestore.document('groups/{groupId}').onDelete(async (snapshot, context)=>{
   await groupFunctions.groupDidDelete(db, admin, snapshot, context);
