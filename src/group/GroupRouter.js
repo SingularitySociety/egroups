@@ -188,7 +188,20 @@ class GroupRouter extends React.Component {
       groupDidUpdate:this.groupDidUpdate,
       hitProfile:this.hitProfile,
     };
-    const context = { user, group, db, member, history, rootGroup, profiles, callbacks, privilege };
+    const accessControll = (requirePemission, privilege) => {
+      if (requirePemission === undefined) {
+        // no permission required
+        return true;
+      }
+      if (privilege === undefined) {
+        return false;
+      }
+      if (privilege >= requirePemission) {
+        return true;
+      }
+      return false;
+    };
+    const context = { user, group, db, member, history, rootGroup, profiles, callbacks, privilege, accessControll };
     
     return (
       <MuiThemeProvider theme={theme}>
@@ -214,7 +227,7 @@ class GroupRouter extends React.Component {
               <Route exact path={`/g/${group.groupName}/account/payment/log`} 
                 render={(props) => <AccountPaymentLog {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/settings`} 
-                render={(props) => <Settings {...props} {...context} />} />
+                     render={(props) => <Settings {...props} {...context} requirePemission={Privileges.admin} />} />
               <Route exact path={`/g/${group.groupName}/settings/billing`} 
                 render={(props) => <SettingsBilling {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/settings/bank`} 
