@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { FormattedMessage } from 'react-intl';
 import * as firebase from "firebase/app";
 import "firebase/functions";
 
@@ -22,7 +21,7 @@ function PaymentIntents(props) {
         setPaymentLogs(response.data);
       }
     })();
-  }, []);
+  }, [group.groupId]);
 
   // WIP 
   return <div>

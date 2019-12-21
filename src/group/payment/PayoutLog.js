@@ -23,7 +23,7 @@ function PayoutLog(props) {
         setPaymentLogs(response.data);
       }
     })();
-  }, []);
+  }, [group.groupId]);
 
   return <div>
            <table>
