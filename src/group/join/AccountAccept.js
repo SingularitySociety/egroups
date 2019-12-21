@@ -43,7 +43,7 @@ function AccountAccept(props) {
         </Typography> 
         <ul>
           <li>
-            <Link href="https://stripe.com/ja-us/connect-account/legal">
+            <Link href="https://stripe.com/ja-us/connect-account/legal" rel="noopener" target="_blank">
               <FormattedMessage id="stripe.agreement" />
             </Link>
           </li>        
@@ -58,7 +58,7 @@ function AccountAccept(props) {
       </Typography>
       <ul>
         <li>
-          <Link href="https://stripe.com/ja-us/connect-account/legal">
+          <Link href="https://stripe.com/ja-us/connect-account/legal" rel="noopener" target="_blank">
             <FormattedMessage id="stripe.agreement" />
           </Link>
         </li>        
