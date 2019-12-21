@@ -37,6 +37,8 @@ import Invited from './join/Invited';
 import PaymentLog from './payment/Log';
 import Youtube from './profile/Youtube';
 import AccountPaymentLog from './profile/PaymentLog';
+import PaymentIntents from './payment/PaymentIntents';
+import PayoutLog from './payment/PayoutLog';
 import {themeOptions} from '../theme.js';
 import CustomAccount from './join/CustomAccount';
 
@@ -189,7 +191,20 @@ class GroupRouter extends React.Component {
       groupDidUpdate:this.groupDidUpdate,
       hitProfile:this.hitProfile,
     };
-    const context = { user, group, db, member, history, rootGroup, profiles, callbacks, privilege };
+    const accessControll = (requirePemission, privilege) => {
+      if (requirePemission === undefined) {
+        // no permission required
+        return true;
+      }
+      if (privilege === undefined) {
+        return false;
+      }
+      if (privilege >= requirePemission) {
+        return true;
+      }
+      return false;
+    };
+    const context = { user, group, db, member, history, rootGroup, profiles, callbacks, privilege, accessControll };
     
     return (
       <MuiThemeProvider theme={theme}>
@@ -210,12 +225,14 @@ class GroupRouter extends React.Component {
               <Route exact path={`/g/${group.groupName}/invite`} render={(props) => <Invite {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/invite/:inviteId/:inviteKey`} render={(props) => <Invited {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/payment/log`} render={(props) => <PaymentLog {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/payment/paymentintents`} render={(props) => <PaymentIntents {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/payment/payout`} render={(props) => <PayoutLog {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/account`} 
                 render={(props) => <Account {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/account/payment/log`} 
                 render={(props) => <AccountPaymentLog {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/settings`} 
-                render={(props) => <Settings {...props} {...context} />} />
+                     render={(props) => <Settings {...props} {...context} requirePemission={Privileges.admin} />} />
               <Route exact path={`/g/${group.groupName}/settings/billing`} 
                 render={(props) => <SettingsBilling {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/settings/bank`} 

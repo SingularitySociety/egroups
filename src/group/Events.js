@@ -10,15 +10,15 @@ function Events(props) {
   const { callbacks } = props;
   const setTabbar = callbacks.setTabbar;
 
-  useEffect(()=>{
-    setTabbar("events")
-  }, [setTabbar])
+  useEffect(() => {
+    setTabbar("events");
+  }, [setTabbar]);
 
   return (
     <Typography>
       "Under Construction"
     </Typography>
-  )
+  );
 }
 
 Events.propTypes = {

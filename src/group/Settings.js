@@ -11,6 +11,7 @@ import EditableField from '../common/EditableField';
 import ImageUploader from '../common/ImageUploader';
 import ColorOptions from '../options/ColorOptions';
 import LockedArea from '../common/LockedArea';
+import AccessDenied from '../common/AccessDenied';
 import { Redirect, Link } from 'react-router-dom';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
@@ -32,13 +33,18 @@ const styles = theme => ({
 
 function Settings(props) {
   const { group, db, callbacks, classes, privilege } = props;
+  const { requirePemission, accessControll } = props;
   const setTabbar = callbacks.setTabbar;
   const [redirect, setRedirect] = useState(null);
 
   useEffect(()=>{
     setTabbar("settings");
-  }, [setTabbar])
+  }, [setTabbar]);
 
+  if (!accessControll(requirePemission, privilege)) {
+    return <AccessDenied />;
+  }
+  
   /*
   const handleCheck = name => async event => {
     const refGroup = db.doc(`groups/${group.groupId}`);
@@ -81,22 +87,22 @@ function Settings(props) {
     const refGroup = db.doc(`groups/${group.groupId}`);
     await refGroup.set({[name]:value}, {merge:true});
     callbacks.groupDidUpdate();
-  }
+  };
   const onImageUpload = async (imageUrl) => {
     console.log("onImageUpload", imageUrl);
     const refGroup = db.doc(`groups/${group.groupId}`);
     await refGroup.set({hasImage:true, profile:{thumbnails:firebase.firestore.FieldValue.delete()}}, {merge:true});
     callbacks.groupDidUpdate();
-  }
+  };
   const onDelete = async () => {
     console.log("onDelete");
     const refGroup = db.doc(`groups/${group.groupId}`);
     await refGroup.delete();
     setRedirect("/");
-  }
+  };
 
   if (redirect) {
-    return <Redirect to={redirect} />
+    return <Redirect to={redirect} />;
   }
 
   const subscription = group.subscription || false;
@@ -131,6 +137,9 @@ function Settings(props) {
             </Button>
             <Button className={classes.button} variant="contained" component={Link} to={`/g/${group.groupName}/payment/log`}>
               <FormattedMessage id="payment.log" />
+            </Button>
+            <Button className={classes.button} variant="contained" component={Link} to={`/g/${group.groupName}/payment/payout`}>
+              <FormattedMessage id="payout.log" />
             </Button>
           </div>
         }
@@ -187,7 +196,7 @@ function Settings(props) {
         </LockedArea>
       }
     </div>
-  )
+  );
 }
 
 Settings.propTypes = {

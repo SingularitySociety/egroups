@@ -237,4 +237,12 @@ describe('Stripe test', () => {
     customAccountResponse.type.should.equal('custom');
   });  
 
+  it('listPaymentIntents', async function() {
+    this.timeout(10000);
+
+    const account = await stripeTestUtils.createCustomAccount(groupId);
+    const accountId = account.id;
+    const res = await stripeApi.listPaymentIntents(accountId);
+    res.data.length.should.equal(0);
+  });
 })
