@@ -17,7 +17,6 @@ const styles = theme => ({
     paddingTop: "56.25%",
     position: "relative",
     width: "100%",
-    paddingTop: "0",
   },
   youtubeMovieContent: {
     '& > iframe': {
@@ -37,6 +36,7 @@ function Youtube(props) {
 
   useEffect(()=>{
     (async() => {
+      let player = null;
       const YT = await (new Promise((resolve) => {
         const tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
@@ -52,15 +52,13 @@ function Youtube(props) {
       
       function onPlayerStateChange(e) {
         const ytStatus = e.target.getPlayerState();
-        if (ytStatus == YT.PlayerState.ENDED) {
-          YT.playVideo();
-          YT.mute();
+        if (ytStatus === YT.PlayerState.ENDED) {
+          player.playVideo();
+          player.mute();
         }
+        console.log(ytStatus);
       }
-      function stopVideo() {
-        player.stopVideo();
-      }
-      const player = new YT.Player('player', {
+      player = new YT.Player('player', {
         height: '400',
         width: '640',
         videoId: 'ZDaTBnnfpKM',
@@ -78,7 +76,7 @@ function Youtube(props) {
     })();
   }, []);
   
-  return <Grid className={classes.youtubeMovie} xs={12}>
+  return <Grid className={classes.youtubeMovie} item xs={12}>
            <div className={classes.youtubeMovieContent}>
              <div id="player" className={classes.youtubePlayer} />
            </div>
