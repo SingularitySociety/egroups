@@ -22,11 +22,11 @@ const styles = theme => ({
     '& > iframe': {
       opacity: "80%",
       zIndex: -1,
-      height: "100% !important",
+      minHeight: "100% !important",
       left: "0",
       position: "absolute",
       top: "0",
-      width: "100% !important"
+      minWidth: "100% !important"
     },
   }
 });
@@ -46,15 +46,19 @@ function Youtube(props) {
       }));
       
       function onPlayerReady(event) {
-        event.target.playVideo();
         event.target.mute();
+        event.target.playVideo();
       }
       
       function onPlayerStateChange(e) {
         const ytStatus = e.target.getPlayerState();
         if (ytStatus === YT.PlayerState.ENDED) {
-          player.playVideo();
           player.mute();
+          player.playVideo();
+        }
+        if (ytStatus === -1) {
+          player.mute();
+          player.playVideo();
         }
         console.log(ytStatus);
       }
@@ -63,6 +67,7 @@ function Youtube(props) {
         width: '640',
         videoId: 'ZDaTBnnfpKM',
         playerVars: {
+          playsinline: 1,
           controls: 0,
           autoplay: 1,
           showinfo: 0,
