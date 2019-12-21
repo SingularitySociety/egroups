@@ -132,6 +132,9 @@ function Settings(props) {
             <Button className={classes.button} variant="contained" component={Link} to={`/g/${group.groupName}/payment/log`}>
               <FormattedMessage id="payment.log" />
             </Button>
+            <Button className={classes.button} variant="contained" component={Link} to={`/g/${group.groupName}/payment/payout`}>
+              <FormattedMessage id="payout.log" />
+            </Button>
           </div>
         }
       </FormGroup>

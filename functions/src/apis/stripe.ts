@@ -333,3 +333,20 @@ export const createTex = async (accoundId) => {
   });
   return tax;
 }
+
+export const listPaymentIntents = async (accountId) => {
+  const transfers = await getStripe().paymentIntents.list({
+  }, {
+    stripe_account: accountId
+  });
+  return transfers;
+}
+
+export const listPayouts = async (accountId) => {
+  const transfers = await getStripe().payouts.list({
+  }, {
+    stripe_account: accountId
+  });
+  return transfers;
+}
+

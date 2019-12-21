@@ -3,7 +3,8 @@ import * as messaging from '../utils/messaging';
 import * as firebase_utils from '../utils/firebase_utils';
 // import * as stripeUtils from '../utils/stripe';
 import * as logger from '../utils/logger';
-// import * as stripeApi from '../apis/stripe';
+
+import * as stripeApi from '../apis/stripe';
 
 
 export const createGroup = async (db:FirebaseFirestore.Firestore, data, context) => {
@@ -80,7 +81,7 @@ export const memberDidDelete  = async (db, admin, snapshot, context) => {
   await messaging.subscribe_new_group(userId, groupId, db, messaging.unsubscribe_topic);
 
   // We need to use transaction because there is no way to remove a section of a document atomically.
-  await admin.firestore().runTransaction(async (tr) => {
+   await admin.firestore().runTransaction(async (tr) => {
     const doc = await tr.get(ref);
     const data = doc.data();
     if (data) {
@@ -266,4 +267,61 @@ export const processInvite = async (db:FirebaseFirestore.Firestore, admin, data,
     });
 
   return { result:true, validating };
+}
+
+const validateAndGetAccountId = async (db, data, context) => {
+  const { groupId } = data;
+  if (!groupId ) {
+    return false;
+  }
+
+  const docGroup = await db.doc(`groups/${groupId}`).get();
+  const dataGroup = docGroup.data();
+  if (!dataGroup || context.auth.token.privileges < Privileges.admin) {
+    return false;
+  }
+
+  const AccountPrivate = await db.doc(`groups/${groupId}/private/account`).get();
+  const AccountData = AccountPrivate.data();
+  if (!AccountData || !AccountData.account) {
+    return false;
+  }
+  const accountId = AccountData.account.id;
+  return accountId;
+}
+
+export const getPaymentIntentsLog = async (db:FirebaseFirestore.Firestore, data, context) => {
+  const error_handler = logger.error_response_handler({func: "getPaymentIntentsLog", message: "invalid request"});
+
+  if (!context.auth || !context.auth.uid || !context.auth.token || !context.auth.token.privileges) {
+    return error_handler({error_type: logger.ErrorTypes.NoUid});
+  }
+  const accountId = await validateAndGetAccountId(db, data, context);
+  if (accountId === false) {
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+  }
+  const res = await stripeApi.listPaymentIntents(accountId);
+  if (res && res.data) {
+    return {result: true, data: res.data, has_more: res.has_more};
+  } else {
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+  }
+}
+
+export const getPayoutLog = async (db:FirebaseFirestore.Firestore, data, context) => {
+  const error_handler = logger.error_response_handler({func: "getPayoutLog", message: "invalid request"});
+
+  if (!context.auth || !context.auth.uid || !context.auth.token || !context.auth.token.privileges) {
+    return error_handler({error_type: logger.ErrorTypes.NoUid});
+  }
+  const accountId = await validateAndGetAccountId(db, data, context);
+  if (accountId === false) {
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+  }
+  const res = await stripeApi.listPayouts(accountId);
+  if (res && res.data) {
+    return {result: true, data: res.data, has_more: res.has_more};
+  } else {
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+  }
 }

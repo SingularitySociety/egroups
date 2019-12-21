@@ -1,15 +1,12 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import AccessDenied from '../../common/AccessDenied';
 import useOnCollection from '../../common/useOnCollection';
-import * as moment from 'moment';
+import * as utils from '../../common/utils';
 
 import { makeStyles } from '@material-ui/core/styles';
 import MUILink from '@material-ui/core/link';
 import { Link } from 'react-router-dom';
-
-const convDateFormmat = (date) => {
-  return moment.unix(date).format("YYYY/MM/DD HH:mm:ss");
-};
 
 const styles = theme => ({
   member: {
@@ -42,12 +39,12 @@ function PaymentLog(props) {
            <table>
              <thead>
                <tr>
-                 <th>ユーザ</th>
-                 <th>決済日</th>
-                 <th>期間開始</th>
+                 <th><FormattedMessage id="payment.user"/></th>
+                 <th><FormattedMessage id="payment.created_date"/></th>
+                 <th><FormattedMessage id="payment.start_date"/></th>
                  <th></th>
-                 <th>期間終了</th>
-                 <th>金額</th>
+                 <th><FormattedMessage id="payment.end_date"/></th>
+                 <th><FormattedMessage id="payment.amount"/></th>
                </tr>
              </thead>
              <tbody>
@@ -61,10 +58,10 @@ function PaymentLog(props) {
                               {memberObj[paymentlog.data.userId] ? memberObj[paymentlog.data.userId].displayName : paymentlog.data.userId}
                             </MUILink>
                           </td>
-                          <td>{convDateFormmat(paymentlog.created.seconds)}</td>
-                          <td>{convDateFormmat(subscription.current_period_start)}</td>
+                          <td>{utils.convDateTimeFormmat(paymentlog.created.seconds)}</td>
+                          <td>{utils.convDateTimeFormmat(subscription.current_period_start)}</td>
                           <td>-</td>
-                          <td>{convDateFormmat(subscription.current_period_end)}</td>
+                          <td>{utils.convDateTimeFormmat(subscription.current_period_end)}</td>
                           <td>{subscription.plan.amount} {subscription.plan.currency}</td>
                         </tr>;
                })}
