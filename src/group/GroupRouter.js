@@ -35,6 +35,7 @@ import Privileges from '../const/Privileges';
 import Invite from './join/Invite';
 import Invited from './join/Invited';
 import PaymentLog from './payment/Log';
+import Youtube from './profile/Youtube';
 import AccountPaymentLog from './profile/PaymentLog';
 import PaymentIntents from './payment/PaymentIntents';
 import PayoutLog from './payment/PayoutLog';
@@ -236,6 +237,8 @@ class GroupRouter extends React.Component {
                 render={(props) => <SettingsBilling {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/settings/bank`} 
                 render={(props) => <CustomAccount {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/youtube`} 
+                render={(props) => <Youtube {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/channels`} render={(props) => <Channels {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/ch/:channelId`} render={(props) => <Chat {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/ch/:channelId/settings`} render={(props) => <ChannelSettings {...props} {...context} />} />
