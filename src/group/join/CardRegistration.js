@@ -58,6 +58,11 @@ function CardRegistration(props) {
       console.log(result);
       if (result.result && result.customer) {
         didUpdate(result.customer);
+        setUpdating(false);
+      } else if (!result.result) {
+        if (result.error && result.error.error_message) {
+          setError(result.error.error_message);
+        }
       }
     } else if (error) {
       setError(error.message);
@@ -65,7 +70,6 @@ function CardRegistration(props) {
       console.log("### unexpected ###");
     }
     setProcessing(false);
-    setUpdating(false);
   }
 
   function handleNameChange(e) {
@@ -110,7 +114,7 @@ function CardRegistration(props) {
           <FormattedMessage id="card.update" />
         </Button>
       </form>
-    )    
+    );
   }
 
   return (
@@ -152,7 +156,7 @@ function CardRegistration(props) {
           <Typography color="error">{error}</Typography>
       }
     </form>
-  )
+  );
 }
 
 CardRegistration.propTypes = {
