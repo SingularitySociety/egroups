@@ -20,7 +20,7 @@ const styles = theme => ({
   },
   youtubeMovieContent: {
     '& > iframe': {
-      opacity: "80%",
+      opacity: 0.8,
       zIndex: -1,
       minHeight: "100% !important",
       left: "0",
