@@ -73,11 +73,11 @@ function CheckoutForm(props) {
   }
 
   if (planLength === 0) {
-    return <Typography color="error"><FormattedMessage id="plan.empty" /></Typography>
+    return <Typography color="error"><FormattedMessage id="plan.empty" /></Typography>;
   }
   if (privilege > 0) {
     if (justSubscribed) {
-      return <Redirect to={`/g/${group.groupName}/member`} />
+      return <Redirect to={`/g/${group.groupName}/member`} />;
     }
   }
   return <div>
