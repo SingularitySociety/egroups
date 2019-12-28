@@ -9,6 +9,7 @@ import InjectedCheckoutForm from './CheckoutForm';
 import RegisterSMS from '../../auth/RegisterSMS';
 import useOnDocument from '../../common/useOnDocument';
 import { stripeConfig } from '../../config.js';
+import { Redirect } from 'react-router-dom';
 
 /*
 const styles = theme => ({
@@ -33,6 +34,10 @@ function Subscribe(props) {
 
   if (!user) {
     return <PleaseLogin />
+  }
+
+  if (privilege) {
+    return <Redirect to={`/g/${group.groupName}/member`} />;
   }
 
   // Test card numbers
