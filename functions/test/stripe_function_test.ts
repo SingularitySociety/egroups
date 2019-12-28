@@ -245,7 +245,7 @@ describe('function test', () => {
     // create sharedCustomer
     const customerId = stripeUtils.getCustomerId(aliceUserId)
     const customerToken = await stripeApi.createCustomerToken(customerId, accountId);
-    const sharedCustomer = await stripeApi.createSharedCustomer(groupId, aliceUserId, customerToken.id, accountId);
+    const sharedCustomer = await stripeApi.createSharedCustomer("test customer", groupId, aliceUserId, customerToken.id, accountId);
 
     const planId = stripeUtils.getPlanId(groupId, price, currency);
 

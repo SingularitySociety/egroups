@@ -138,7 +138,7 @@ describe('Stripe test', () => {
     const tax = await stripeApi.createTex(accountId);
     
     const customerToken = await stripeApi.createCustomerToken(customer.id, accountId);
-    const sharedCustomer = await stripeApi.createSharedCustomer(SharedGroupId, userId, customerToken.id, accountId);
+    const sharedCustomer = await stripeApi.createSharedCustomer("test subscription", SharedGroupId, userId, customerToken.id, accountId);
     
     await stripeApi.createProduct2("unit_test", "hello", SharedGroupId, accountId);
     const plan = await stripeApi.createPlan2(SharedGroupId, 5000, "jpy", accountId);
@@ -206,7 +206,7 @@ describe('Stripe test', () => {
     const plan = await stripeApi.createPlan2(SharedGroupId, 5000, "jpy", accountId);
 
     const customerToken = await stripeApi.createCustomerToken(customer.id, accountId);
-    const sharedCustomer = await stripeApi.createSharedCustomer(SharedGroupId, userId, customerToken.id, accountId);
+    const sharedCustomer = await stripeApi.createSharedCustomer("test cancel subscription", SharedGroupId, userId, customerToken.id, accountId);
 
     const tax = await stripeApi.createTex(accountId);
     const subscription = await stripeApi.createSubscription2(userId, sharedCustomer.id,  SharedGroupId, plan.id, accountId, tax.id);
