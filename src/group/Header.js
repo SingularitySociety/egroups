@@ -221,7 +221,7 @@ class MyAppBar extends React.Component {
             <MenuItem key="listing" onClick={this.closeMe} component={Link} to={`/g/${group.groupName}/listing`}><FormattedMessage id="listing" /></MenuItem>
           }
           {
-            privilege && [
+            privilege !== 0 && [
             <MenuItem key="account" onClick={this.closeMe} component={Link} to={`/g/${group.groupName}/account`}><FormattedMessage id="account" /></MenuItem>,
             <MenuItem key="pages" onClick={this.closeMe} component={Link} to={`/g/${group.groupName}/pages`}><FormattedMessage id="pages" /></MenuItem>
             ]
