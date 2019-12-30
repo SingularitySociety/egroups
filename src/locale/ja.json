@@ -71,6 +71,7 @@
     "next.billing":"次回の課金日: {date}",
     "expire.billing":"会員終了日時: {date}",
     "name.on.card":"カードの所有者名",
+    "card.registration.failed":"カード情報が正しくありません。",
 
     "red":"red",
     "pink":"pink",

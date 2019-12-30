@@ -71,6 +71,7 @@
     "next.billing":"Next Billing: {date}",
     "expire.billing":"Subscriptin Expires at: {date}",
     "name.on.card":"Name on card",
+    "card.registration.failed":"Invalid Card. ",
 
     "red":"red",
     "pink":"pink",
