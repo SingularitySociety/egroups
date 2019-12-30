@@ -127,7 +127,7 @@ function CardRegistration(props) {
       }
       <TextField
         id="standard-name"
-        label=<FormattedMessage id="name.on.card" />
+        label={<FormattedMessage id="name.on.card" />}
         className={classes.textField}
         value={name}
         onChange={handleNameChange}
@@ -153,7 +153,7 @@ function CardRegistration(props) {
       }
       {
         error &&
-          <Typography color="error">{error}</Typography>
+          <Typography color="error"><FormattedMessage id="card.registration.failed" />{error}</Typography>
       }
     </form>
   );
