@@ -5,6 +5,7 @@ import { Paper, Grid } from '@material-ui/core';
 import MUILink from '@material-ui/core/Link';
 import { Link } from 'react-router-dom';
 import ImageUploader from './common/ImageUploader';
+import { FormattedMessage } from 'react-intl';
 
 const styles = theme => ({
   root: {
@@ -71,7 +72,7 @@ function GroupList(props) {
                                    loadImage={group.hasImage}
                                    readOnly={true} displayMode={"thumbSmall"} inline={true} />
                     <Grid item>
-                      {group.title} {!group.groupName ? "/ creating..." : "" }
+                      {group.title} {!group.groupName ? <FormattedMessage id="creating" /> : "" }
                     </Grid>
                   </Grid> 
                 </Paper>
