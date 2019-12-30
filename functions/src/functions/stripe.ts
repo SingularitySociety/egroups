@@ -25,7 +25,7 @@ const updateSubscriptionData = async (db, groupId, userId, subscription, period)
   }, {merge:true});
 }
 
-const getSharedCustomer = async (db, userId, groupId, accountId) => {
+const getSharedCustomer = async (db, displayName, userId, groupId, accountId) => {
   const ref = db.doc(`/groups/${groupId}/members/${userId}/readonly/sharedcustomer`);
   const sharedCustomerData = (await ref.get()).data();
 
@@ -35,7 +35,7 @@ const getSharedCustomer = async (db, userId, groupId, accountId) => {
   const customerId = stripeUtils.getCustomerId(userId);
 
   const customerToken = await stripeApi.createCustomerToken(customerId, accountId);
-  const sharedCustomer = await stripeApi.createSharedCustomer(groupId, userId, customerToken.id, accountId);
+  const sharedCustomer = await stripeApi.createSharedCustomer(displayName, groupId, userId, customerToken.id, accountId);
   await ref.set({
     customer: sharedCustomer,
   });
@@ -147,7 +147,7 @@ export const createSubscription = async (db, data, context) => {
 
   const accountId = AccontPrivate.data().account.id;
 
-  const sharedCustomer = await getSharedCustomer(db, userId, groupId, accountId);
+  const sharedCustomer = await getSharedCustomer(db, displayName, userId, groupId, accountId);
 
   let taxData = AccontPrivate.data().tax;
 
