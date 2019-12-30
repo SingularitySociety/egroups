@@ -121,7 +121,7 @@
     "error.invalid.groupname":"グループ名が存在しません",
     "error.invalid.articleId":"この記事は存在しません",
     "warning.access.denied":"アクセスが拒否されました",
-    "warning.dangerous":"破壊的な操作",
+    "warning.dangerous":"消去",
     
     "destroy.channel":"チャンネルの完全消去（やり直しが出来ません）",
     "destroy.article":"記事の完全消去（やり直しが出来ません）",
