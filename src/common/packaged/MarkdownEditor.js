@@ -7,14 +7,12 @@ import TrashIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/SaveAlt';
 import CancelIcon from '@material-ui/icons/Cancel';
 import LinkIcon from '@material-ui/icons/Link';
-import { FormatBold, FormatItalic, FormatUnderlined, FormatQuote, MoreHoriz } from '@material-ui/icons';
+import { FormatBold, FormatItalic, FormatUnderlined, FormatQuote } from '@material-ui/icons';
 import { Code } from '@material-ui/icons';
 import { FormatListBulleted, FormatListNumbered, Undo, Redo } from '@material-ui/icons';
 import { Editor, RichUtils, EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import MarkdownDecorator from './MarkdownDecorator';
 import MarkdownStyles, { blockStyleFn } from './MarkdownStyles';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 
 import { stateToMarkdown } from 'draft-js-export-markdown';
 import { stateFromMarkdown } from 'draft-js-import-markdown';
@@ -34,7 +32,6 @@ function MarkdownEditor(props) {
     return EditorState.createWithContent(contentState, decorator);
   }
   const [editorState, setEditorState] = useState(initialEditorState());
-  const [anchorEl, setAnchorEl] = useState(null);
 
   const onChange = (state) => {
     setEditorState(state);
@@ -77,7 +74,6 @@ function MarkdownEditor(props) {
   };
   const toggleBlockType = (type) => {
     onChange(RichUtils.toggleBlockType(editorState, type));
-    setAnchorEl(null);
   };
   const onMouseDown = e => {
     e.preventDefault(); // don't steal focus
@@ -87,13 +83,6 @@ function MarkdownEditor(props) {
   };
   const redo = () => {
     onChange(EditorState.redo(editorState));
-  };
-  function handleMore(e) {
-    console.log("handleMore", e);
-    setAnchorEl(e.currentTarget);
-  };
-  function closeMore() {
-    setAnchorEl();
   };
   // https://bitwiser.in/2017/05/11/creating-rte-part-3-entities-and-decorators.html
   const editLink = () => {
@@ -183,17 +172,31 @@ function MarkdownEditor(props) {
           </IconButton>
         </Grid>
         <Grid item>
-          <IconButton size="small" onClick={handleMore} onMouseDown={onMouseDown}>
-            <MoreHoriz/>
+          <IconButton size="small" onClick={()=>{toggleBlockType("code-block")}} onMouseDown={onMouseDown}>
+          <Code/>
           </IconButton>
         </Grid>
-        <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={closeMore}>
-          <MenuItem onClick={()=>{toggleBlockType("code-block")}}><Code/></MenuItem>
-          <MenuItem onClick={()=>{toggleBlockType("blockquote")}}><FormatQuote/></MenuItem>
-          <MenuItem onClick={()=>{toggleBlockType("header-one")}}>H1</MenuItem>
-          <MenuItem onClick={()=>{toggleBlockType("header-two")}}>H2</MenuItem>
-          <MenuItem onClick={()=>{toggleBlockType("header-three")}}>H3</MenuItem>
-        </Menu>
+        <Grid item>
+          <IconButton size="small" onClick={()=>{toggleBlockType("blockquote")}} onMouseDown={onMouseDown}>
+          <FormatQuote/>
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton size="small" onClick={()=>{toggleBlockType("header-one")}} onMouseDown={onMouseDown}>
+            H1
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton size="small" onClick={()=>{toggleBlockType("header-two")}} onMouseDown={onMouseDown}>
+            H2
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton size="small" onClick={()=>{toggleBlockType("header-three")}} onMouseDown={onMouseDown}>
+            H3
+          </IconButton>
+        </Grid>
+
       </Grid>
       <Grid container>
         <Grid item xs={11} className={classes.editorFrame}>
