@@ -7,6 +7,7 @@ import * as firebase_utils from './utils/firebase_utils';
 import * as stripeFunctions from './functions/stripe';
 import * as imageFunctions from './functions/image';
 import * as groupFunctions from './functions/group';
+import * as ogpFunctions from './functions/ogp';
 import * as onetimesmsFunctions from './functions/onetimesms';
 import * as emailFunctions from './functions/email';
 
@@ -118,9 +119,15 @@ export const channelDidDelete = functions.firestore.document('groups/{groupId}/c
     return firebase_utils.deleteSubcollection(snapshot, "messages");
   });
 
-export const sectionDidDelete = functions.firestore.document('groups/{groupId}/{articles}/{articleId}/sections/{sectionId}').onDelete(async (snapshot, context) => {
-  await imageFunctions.deleteImage(snapshot, context);
-});
+export const sectionDidDelete = functions.firestore.document('groups/{groupId}/{articles}/{articleId}/sections/{sectionId}')
+  .onDelete(async (snapshot, context) => {
+    await imageFunctions.deleteImage(snapshot, context);
+  });
+
+export const sectionDidWrite = functions.firestore.document('groups/{groupId}/{articles}/{articleId}/sections/{sectionId}')
+  .onWrite(async (change, context) => {
+    await ogpFunctions.opg_update(change, context);
+  });
 
 export const memberDidDelete = functions.firestore.document('groups/{groupId}/members/{userId}').onDelete(async (snapshot, context) => {
   await groupFunctions.memberDidDelete(db, admin, snapshot, context);
@@ -163,3 +170,4 @@ export const imageProcessing = functions.storage.object().onFinalize(async (obje
 export const sendMail = functions.https.onCall(async (data, context) => {
   return await emailFunctions.sendMail(db, data, context);
 });
+
