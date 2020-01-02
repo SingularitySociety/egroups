@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Grid, IconButton } from '@material-ui/core';
@@ -82,8 +81,8 @@ function validUrl(url) {
 }
 
 function OGPEditor(props) {
-  const { url, displayMode, onUpdateUrlSection, resource } = props;
-  const { classes, readOnly, inline, onDelete, sectionId } = props;
+  const { url, onUpdateUrlSection, resource } = props;
+  const { classes, readOnly, onDelete } = props;
   const { editing, setEditing } = props;
   const [urlForm, setUrlForm] = useState(url);
 
@@ -101,14 +100,14 @@ function OGPEditor(props) {
     return "";
   }
   
-  
+  // Note: https://mathiasbynens.github.io/rel-noopener/
   const ogpElement = (
     <Grid item xs={readOnly ? 12 : 11} className={ classes.wideFrame }>
       {resource.hasData ?
        <React.Fragment>
-         <h3><a href={url} target="_blank">{resource.title}</a></h3>
+         <h3><a href={url} target="_blank" rel="noopener noreferrer">{resource.title}</a></h3>
          {resource.description}<br/>
-       { resource.image ? <React.Fragment><img src={resource.image} className={ classes.wide }/><br/></React.Fragment> : ""}
+       { resource.image ? <React.Fragment><img src={resource.image} alt="(ogp)" className={ classes.wide }/><br/></React.Fragment> : ""}
        </React.Fragment>
        : <LinkIcon />}
     </Grid>
