@@ -16,6 +16,7 @@
     "mocha5": "NODE_ENV=test mocha  -r ts-node/register --recursive test/group_function_test.ts",
     "mocha6": "NODE_ENV=test mocha  -r ts-node/register --recursive test/stripe_shared_customer_test.ts",
     "mocha7": "NODE_ENV=test mocha  -r ts-node/register --recursive test/stripe_callback_test.ts",
+    "mocha10": "NODE_ENV=test mocha  -r ts-node/register --recursive test/ogp_test.ts",
     "watch:mocha": "NODE_ENV=test mocha -w -watch-extensions ts -r ts-node/register --recursive test/*_test.ts"
   },
   "engines": {
@@ -33,6 +34,7 @@
     "firebase-functions": "^3.0.1",
     "libphonenumber-js": "^1.7.20",
     "nodemailer": "^6.3.0",
+    "ogp-parser": "^0.4.4",
     "sharp": "^0.22.1",
     "stripe": "^7.3.0",
     "uuid-v4": "^0.1.0"

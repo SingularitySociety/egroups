@@ -146,6 +146,23 @@ function BlogArticle(props) {
       hasVideo: true, videoUrl
     }, {merge:true});
   };
+  const insertUrl = async (index) => {
+    console.log("insertUrl", index);
+    const doc = await refArticle.collection("sections").add({
+      type: "url",
+      created: new Date(),
+      author: user.uid,
+    });
+    updateEditingFlag(doc.id, true);
+    spliceSections(index, 0, doc.id);
+  };
+  const onUpdateUrlSection = async (sectionId, url) => {
+    await refArticle.collection("sections").doc(sectionId).set({
+      hasUrl: true, url,
+      isNew: true,
+      hasData: false,
+    }, {merge:true});
+  };
   const toggleReadOnly = () => {
     setReadOnly(!readOnly);
   };
@@ -204,7 +221,8 @@ function BlogArticle(props) {
       }
       { editMode && 
         <BlogSectionCreator index={ 0 } {...context}
-                            insertImage={insertImage} insertMarkdown={insertMarkdown} insertVideo={insertVideo} />
+                            insertImage={insertImage} insertMarkdown={insertMarkdown}
+                            insertVideo={insertVideo} insertUrl={insertUrl} />
       }
       {
         article.sections.map((sectionId, index)=>{
@@ -216,10 +234,12 @@ function BlogArticle(props) {
                                   editing={editing} updateEditingFlag={updateEditingFlag}
                                   resource={resources[sectionId]} readOnly={!editMode} saveMarkdown={saveMarkdown}
                                   onImageUploadSection={onImageUploadSection} onVideoUploadSection={onVideoUploadSection}
+                                  onUpdateUrlSection={onUpdateUrlSection}
                                   {...context} />
                      { editMode && <BlogSectionCreator
                                      index={ index+1 } {...context}
-                                     insertImage={insertImage} insertMarkdown={insertMarkdown} insertVideo={insertVideo}
+                                     insertImage={insertImage} insertMarkdown={insertMarkdown}
+                                     insertVideo={insertVideo} insertUrl={insertUrl}
                                    /> }
             </div>;
           } else {

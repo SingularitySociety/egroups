@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ImageUploader from '../../common/ImageUploader';
 import VideoEditor from '../../common/VideoEditor';
+import OGPViewer  from '../../common/OGPViewer';
 import BlogSectionMarkdown from './BlogSectionMarkdown';
 
 function BlogSection(props) {
@@ -21,7 +22,10 @@ function BlogSection(props) {
   function onVideoUpload(videoUrl) {
     props.onVideoUploadSection(sectionId, videoUrl);
   }
-
+  function onUpdateUrlSection(url) {
+    props.onUpdateUrlSection(sectionId, url);
+  }
+  
   if (resource.type==="image") {
     if (readOnly && !resource.hasImage) {
       return "";
@@ -45,6 +49,11 @@ function BlogSection(props) {
     return <BlogSectionMarkdown sectionId={sectionId} index={index} resource={resource} readOnly={readOnly}
                                 editing={editing} onDelete={onDelete} setEditing={setEditing}
                                 saveMarkdown={saveMarkdown} />;
+  }
+  if (resource.type==="url") {
+    return <OGPViewer url={resource.url} resource={resource}
+             readOnly={readOnly} onDelete={onDelete} sectionId={sectionId} onUpdateUrlSection={onUpdateUrlSection}
+             editing={editing} setEditing={setEditing} />;
   }
   return <div/>;
 }
