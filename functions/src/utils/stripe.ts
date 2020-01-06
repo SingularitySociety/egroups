@@ -134,16 +134,16 @@ const storeLog = async (db, userId, payload) => {
 }
 
 export const stripeLog = async (db, userId, data, action) => {
-  const payload = { data: merge(data, {userId}), action }
+  const payload = { data: merge(data, {userId}), action, type: "stripe" }
   await storeLog(db, userId, payload);
 }
 export const billingLog = async (db, userId, groupId, subscription, action) => {
-  const payload = { data: {userId, groupId, subscription} };
+  const payload = { data: {userId, groupId, subscription}, type: "billing" };
   await storeLog(db, userId, payload);
 }
 
 export const callbackLog = async (db, userId, groupId, action, log) => {
-  const payload = { data: {log, userId, groupId}, action };
+  const payload = { data: {log, userId, groupId}, action, type: "callback" };
   await storeLog(db, userId, payload);
   // console.log(JSON.stringify(log, undefined, 1));
 }
