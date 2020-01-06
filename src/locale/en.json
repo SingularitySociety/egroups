@@ -234,7 +234,14 @@
     "payment.start_date": "Start date",
     "payment.end_date": "End date",
     "payment.amount": "Amount",
+    "payment.subtotal": "Subtotal",
+    "payment.tax": "Tax",
 
+  "payment.log_type": "Log Type",
+  "payment.payment": "Payment",
+  "payment.subscription": "Subscription",
+  "payment.invoice": "Invoice",
+  
   "payout.log": "Payout log",
   "payout.arrival_date": "Arrival Date",
   "payout.amount": "Amount",

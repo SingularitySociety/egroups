@@ -233,8 +233,15 @@
     "payment.created_date": "決済日",
     "payment.start_date": "期間開始",
     "payment.end_date": "期間終了",
-    "payment.amount": "金額",
+    "payment.amount": "支払い",
+    "payment.subtotal": "合計",
+    "payment.tax": "税",
 
+  "payment.log_type": "タイプ",
+  "payment.payment": "支払い",
+  "payment.subscription": "課金開始",
+  "payment.invoice": "領収書",
+  
   "payout.log": "支払いログ",
   "payout.arrival_date": "入金日",
   "payout.amount": "金額",
