@@ -63,8 +63,8 @@ export const requestOnetimeSMS = async (db, data, context) => {
         "StringValue": "eGroup",
       },
     },
-    Subject: "From eGroup",
-    Message: 'eGroup code: ' + token,
+    Subject: "From GluePass",
+    Message: 'GluePass code: ' + token,
     PhoneNumber: formatedNumber,
   };
   if (aws_key) {
