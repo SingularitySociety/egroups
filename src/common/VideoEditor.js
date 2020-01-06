@@ -67,6 +67,18 @@ const styles = theme => ({
     border: "1px lightgray solid",
     borderRadius: "1.5em",
   },
+  video: {
+    position: "relative",
+    width: "100%",
+    paddingTop: "56.25%",
+    '& > iframe': {
+      position: "absolute",
+      top: "0",
+      right: "0",
+      width: "100%",
+      height: "100%",
+    }
+  }
 });
 
 function validVideo(data) {
@@ -105,14 +117,16 @@ function VideoEditor(props) {
   });
 
   const videoIframe = validVideo(data) ?
-        (<iframe title={sectionId}
-                 width={readOnly ? 720 : 660}
-                 height={readOnly ? 405 : 371}
-                 src={embedVideoUrl}
-                 frameBorder="0"
-                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                 allowFullScreen>
-         </iframe>) : <span><VideoIcon /></span>;
+        (<div className={ classes.video } >
+           <iframe title={sectionId}
+                   width={"100%"}
+                   height={"100%"}
+                   src={embedVideoUrl}
+                   frameBorder="0"
+                   allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                   allowFullScreen>
+           </iframe>
+         </div>) : <span><VideoIcon /></span>;
   const videoElement = (displayMode === "wide") ? (
     <Grid item xs={readOnly ? 12 : 11} className={ classes.wideFrame }>
       {videoIframe}
