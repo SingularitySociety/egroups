@@ -18,7 +18,7 @@ const styles = theme => ({
   }
 });
 
-const regex = /^[0-9\-()]*/    
+const regex = /^[0-9\-()]*/;
 
 function RegisterSMS(props) {
   const { classes, phone, marioToken, setMarioToken } = props;
@@ -73,7 +73,7 @@ function RegisterSMS(props) {
   }
 
   if (confirming) {
-    const label=<FormattedMessage id="sms.type.digit6" />
+    const label=<FormattedMessage id="sms.type.digit6" />;
     return <form>
       <div className={classes.row}>
         <Typography>
@@ -146,7 +146,7 @@ function RegisterSMS(props) {
       <Processing active={processing} />
       <ResultMessage error={error} />
       </div>
-  </form>
+  </form>;
 }
 
 RegisterSMS.propTypes = {

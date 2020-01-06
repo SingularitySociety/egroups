@@ -33,7 +33,7 @@ function Subscribe(props) {
   }, [setTabbar]);
 
   if (!user) {
-    return <PleaseLogin />
+    return <PleaseLogin />;
   }
 
   if (privilege) {
@@ -46,7 +46,7 @@ function Subscribe(props) {
   const smsContext = { phone, marioToken, setMarioToken };
 
   if (!marioToken) {
-    return <RegisterSMS {...smsContext} />
+    return <RegisterSMS {...smsContext} />;
   }
 
   return (
@@ -58,7 +58,7 @@ function Subscribe(props) {
         </Elements>
       </StripeProvider>
     </div>
-  )
+  );
 }
 
 Subscribe.propTypes = {
