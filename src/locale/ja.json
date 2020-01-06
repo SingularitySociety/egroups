@@ -73,6 +73,9 @@
     "name.on.card":"カードの所有者名",
     "card.registration.failed":"カード情報が正しくありません。",
 
+    "terms_and_conditions.agree": "利用規約に同意する",
+    "terms_and_conditions.file_name": "terms_ja.html",
+
     "red": "赤",
     "pink": "ピンク",
     "purple": "紫",
