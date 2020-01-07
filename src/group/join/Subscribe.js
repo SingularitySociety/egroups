@@ -52,7 +52,7 @@ function Subscribe(props) {
   return (
     <div>
       <RegisterSMS {...smsContext} />
-      <StripeProvider apiKey={ stripeConfig.apiKey }>
+      <StripeProvider apiKey={ stripeConfig.apiKey } hidePostalCode={true}>
         <Elements>
           <InjectedCheckoutForm {...context} />
         </Elements>
