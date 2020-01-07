@@ -140,9 +140,8 @@ function App() {
     }
   }, [user]);
 
-  const language = navigator.language.split(/[-_]/)[0];  // language without region code
-
   const params = { user, db, privileges, rootGroup:appConfig.rootGroup };
+  const language = navigator.language.split(/[-_]/)[0];  // language without region code
   
   return (
     <IntlProvider locale={language} messages={messages[language]}>

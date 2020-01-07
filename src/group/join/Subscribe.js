@@ -47,7 +47,7 @@ function Subscribe(props) {
   const terms_file = "/" + (intl.formatMessage({id: "terms_and_conditions.file_name"}) || "terms_en.html");
   const agreeTermElement = <div className={classes.terms}>
                              <FormattedMessage id="terms_and_conditions.header" values={{title: group.title}} />
-                             <iframe src={terms_file}/><br/>
+                             <iframe src={terms_file} title="term" /><br/>
                              <Checkbox value={agreeTerm} onChange={(e) => {setAgreeTerm(e.target.checked);}}/>
                              <FormattedMessage id="terms_and_conditions.agree" />
                            </div>;
