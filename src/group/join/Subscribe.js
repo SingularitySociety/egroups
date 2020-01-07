@@ -46,7 +46,7 @@ function Subscribe(props) {
   // todo: make localize iframe link localize
   const terms_file = "/" + (intl.formatMessage({id: "terms_and_conditions.file_name"}) || "terms_en.html");
   const agreeTermElement = <div className={classes.terms}>
-                             "{group.title}" に参加するにはGluePassの規約に同意する必要があります。<br/>
+                             <FormattedMessage id="terms_and_conditions.header" values={{title: group.title}} />
                              <iframe src={terms_file}/><br/>
                              <Checkbox value={agreeTerm} onChange={(e) => {setAgreeTerm(e.target.checked);}}/>
                              <FormattedMessage id="terms_and_conditions.agree" />
