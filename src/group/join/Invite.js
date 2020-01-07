@@ -72,6 +72,7 @@ function Invite(props) {
       console.log("sendMail:", result);
       if (result.result) {
         setMessage(<FormattedMessage id="success.mail.sent" />);
+        setEmail("");
       } else {
         setError(<FormattedMessage id="error.failed" values={{error:result.message}}/>); 
       }
@@ -110,7 +111,7 @@ function Invite(props) {
     </Button>
     <Processing active={processing} />
     <ResultMessage error={error} message={message} />
-  </form>
+  </form>;
 }
 
 Invite.propTypes = {
