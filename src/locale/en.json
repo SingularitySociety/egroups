@@ -73,6 +73,10 @@
     "name.on.card":"Name on card",
     "card.registration.failed":"Invalid Card. ",
 
+    "terms_and_conditions.agree": "Agree to Terms and Conditions",
+    "terms_and_conditions.file_name": "terms_en.html",
+    "terms_and_conditions.header": "You have to agree to GluePass terms to join in {title}. ",
+
     "red":"red",
     "pink":"pink",
     "purple":"purple",
