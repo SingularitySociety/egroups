@@ -24,7 +24,7 @@ const useStyles = makeStyles(styles);
 
 function Subscribe(props) {
   const classes = useStyles();
-  const { callbacks, user, group, db, privilege } = props;
+  const { callbacks, user, group, db, privilege, intl } = props;
   const setTabbar = callbacks.setTabbar;
   const [sms] = useOnDocument(db, user && `users/${user.uid}/readonly/sms`);
   const [marioToken, setMarioToken] = useState(null);
@@ -44,7 +44,7 @@ function Subscribe(props) {
   }
 
   // todo: make localize iframe link localize
-  const terms_file = "/terms_ja.html";
+  const terms_file = "/" + (intl.formatMessage({id: "terms_and_conditions.file_name"}) || "terms_en.html");
   const agreeTermElement = <div className={classes.terms}>
                              "{group.title}" に参加するにはGluePassの規約に同意する必要があります。<br/>
                              <iframe src={terms_file}/><br/>

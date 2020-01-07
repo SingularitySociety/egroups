@@ -162,7 +162,7 @@ class GroupRouter extends React.Component {
   }
 
   render() {
-    const { classes, user, db, match:{params:{gp}}, rootGroup, privileges } = this.props;
+    const { classes, user, db, match:{params:{gp}}, rootGroup, privileges, intl } = this.props;
     const groupName = gp || rootGroup;
     const { group, member, history, error, pageInfo, profiles } = this.state;
     const privilege = (privileges && group && privileges[group.groupId]) || Privileges.guest;
@@ -203,7 +203,7 @@ class GroupRouter extends React.Component {
       }
       return false;
     };
-    const context = { user, group, db, member, history, rootGroup, profiles, callbacks, privilege, accessControll };
+    const context = { user, group, db, member, history, rootGroup, profiles, callbacks, privilege, accessControll, intl };
     
     return (
       <MuiThemeProvider theme={theme}>
