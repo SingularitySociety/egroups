@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Checkbox } from '@material-ui/core';
-//import { FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import PleaseLogin from './PleaseLogin';
 import { StripeProvider, Elements } from 'react-stripe-elements';
 import InjectedCheckoutForm from './CheckoutForm';
@@ -80,4 +80,5 @@ Subscribe.propTypes = {
   group: PropTypes.object.isRequired,
 };
   
-export default Subscribe;
+export default injectIntl(Subscribe);
+
