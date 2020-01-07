@@ -84,6 +84,7 @@ function Invite(props) {
   }
 
   function handleEmailChange(e) {
+    setMessage(null);
     setEmail(e.currentTarget.value);
     setValidated(validator.isEmail(e.currentTarget.value));
   }
