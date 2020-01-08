@@ -1,7 +1,7 @@
 import { should } from 'chai';
 // import * as Test from 'firebase-functions-test';
 
-import * as ogp from "../src/utils/ogp"
+// import * as ogp from "../src/utils/ogp"
 // import * as ogpFunctions from "../src/functions/ogp";
 
 should()
