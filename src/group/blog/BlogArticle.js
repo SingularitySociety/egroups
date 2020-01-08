@@ -171,7 +171,7 @@ function BlogArticle(props) {
   if (!article) {
     return "";
   }
-  const canEdit = (user && article.owner === user.uid);
+  const canEdit = (user && article.owner === user.uid) || (privilege >= (group.privileges.article.update || Privileges.admin));
   const canRead = privilege >= article.read;
   if (!canRead || error) {
     return <AccessDenied />;
