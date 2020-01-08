@@ -152,6 +152,14 @@ service cloud.firestore {
       // add "allow update/delete" for the author
     }
 
+    match /stripelog/{logId} {
+      allow read: if request.auth.uid != null
+        && isUserAdmin(resource.data.data.groupId, request.auth.uid);
+      allow read: if request.auth.uid != null
+        && request.auth.uid == resource.data.data.userId
+        && isUserMember(resource.data.data.groupId, request.auth.uid);
+    }
+    
     match /{document=**} {
       allow read, write: if false;
     }
