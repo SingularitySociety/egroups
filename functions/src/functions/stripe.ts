@@ -25,7 +25,7 @@ const updateSubscriptionData = async (db, groupId, userId, subscription, period)
   }, {merge:true});
 }
 
-const getSharedCustomer = async (db, displayName, userId, groupId, accountId) => {
+const getSharedCustomer = async (db, displayName, userId, groupId, email, accountId) => {
   const ref = db.doc(`/groups/${groupId}/members/${userId}/readonly/sharedcustomer`);
   const sharedCustomerData = (await ref.get()).data();
 
@@ -35,7 +35,7 @@ const getSharedCustomer = async (db, displayName, userId, groupId, accountId) =>
   const customerId = stripeUtils.getCustomerId(userId);
 
   const customerToken = await stripeApi.createCustomerToken(customerId, accountId);
-  const sharedCustomer = await stripeApi.createSharedCustomer(displayName, groupId, userId, customerToken.id, accountId);
+  const sharedCustomer = await stripeApi.createSharedCustomer(displayName, groupId, userId, email, customerToken.id, accountId);
   await ref.set({
     customer: sharedCustomer,
   });
@@ -92,7 +92,7 @@ export const createSubscription = async (db, data, context) => {
   // plan = {price, currency}
   const error_handler = logger.error_response_handler({func: "createSubscription", message: "invalid request"});
   
-  if (!context.auth || !context.auth.uid) {
+  if (!context.auth || !context.auth.uid || !context.auth.token) {
     return error_handler({error_type: logger.ErrorTypes.NoUid});
   }
   if (!data || !data.groupId || !data.plan || !data.plan.price || !data.plan.currency || !data.onetimetoken) {
@@ -100,6 +100,7 @@ export const createSubscription = async (db, data, context) => {
   }
 
   const userId = context.auth.uid;
+  const email = context.auth.token.email || "";
   
   const onetime = (await db.doc(`/users/${userId}/secret/onetime`).get()).data()
 
@@ -113,7 +114,7 @@ export const createSubscription = async (db, data, context) => {
   const {groupId, plan, displayName} = data;
   const {price, currency} = plan;
   const plan_key = [String(price), currency].join("_")
-  
+
   const user = (await db.doc(`users/${userId}`).get());
   if (!user.exists) {
     return error_handler({error_type: logger.ErrorTypes.NoUser});
@@ -147,7 +148,7 @@ export const createSubscription = async (db, data, context) => {
 
   const accountId = AccontPrivate.data().account.id;
 
-  const sharedCustomer = await getSharedCustomer(db, displayName, userId, groupId, accountId);
+  const sharedCustomer = await getSharedCustomer(db, displayName, userId, groupId, email, accountId);
 
   let taxData = AccontPrivate.data().tax;
 
@@ -181,6 +182,7 @@ export const createSubscription = async (db, data, context) => {
   await db.doc(`/groups/${groupId}/members/${userId}`).set({
     created,
     displayName: displayName || "---",
+    email: email || "",
     userId: userId,
     groupId: groupId,
     period,
