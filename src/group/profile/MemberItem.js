@@ -4,8 +4,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import MUILink from '@material-ui/core/link';
 import { Grid, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 import ImageUploader from '../../common/ImageUploader';
-
+import { privilegeText } from '../../common/utils';
 
 const styles = theme => ({
   member: {
@@ -15,6 +16,12 @@ const styles = theme => ({
   name: {
     marginLeft: theme.spacing(1),
     paddingTop: "1.5em",
+  },
+  privilege: {
+    paddingTop: "1.5em",
+    marginLeft: "auto",
+    marginBottom: theme.spacing(1),
+    marginRight: theme.spacing(1),
   }
 });
 
@@ -35,6 +42,9 @@ function MemberItem(props) {
           <Grid item className={classes.name}>
             <Typography color={ isMe ? "primary" : "inherit"}>{item.displayName}</Typography>
           </Grid>
+        <Grid item className={classes.privilege}>
+          <Typography color={"secondary"}><FormattedMessage id={privilegeText(item.privilege)} /></Typography>
+        </Grid>
       </Grid>
     </MUILink>
   )
