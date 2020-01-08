@@ -45,7 +45,7 @@ function Join(props) {
       setError(<FormattedMessage id="error.cannot.join" values={{error:e}}/>); 
     }
     setProcessing(false);
-  }
+  };
 
   const title = <Typography component="h2" variant="h6" gutterBottom>
                   <FormattedMessage id="application" />
@@ -55,7 +55,7 @@ function Join(props) {
   }
   if (privilege) {
     console.log("Become a member or already a member. Redireting to the group home.");
-    return <Redirect to={`/g/${group.groupName}`} />
+    return <Redirect to={`/g/${group.groupName}`} />;
   }
   if (!(group && group.open)) {
     return <div>
@@ -66,7 +66,7 @@ function Join(props) {
         <Button variant="contained" onClick={handleJoin} className={classes.button}>Try to Join</Button>
         <Processing active={processing} />
         <ResultMessage error={error} />
-    </div>
+    </div>;
   }
   return <div>
       {title}
@@ -76,7 +76,7 @@ function Join(props) {
       <Button variant="contained" color="primary" onClick={handleJoin} className={classes.button}><FormattedMessage id="join" /></Button>
       <Processing active={processing} />
       <ResultMessage error={error} />
-  </div>
+  </div>;
 }
 
 Join.propTypes = {
