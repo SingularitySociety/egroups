@@ -239,14 +239,15 @@ describe('function test', () => {
     const groupId = "shared_sub_test";
     const price = 5000;
     const currency = "jpy";
-
+    const email = "hoge@example.com";
+    
     const accountId = await createDataForSubscription(aliceUserId, groupId, price, currency);
 
     // create sharedCustomer
     const customerId = stripeUtils.getCustomerId(aliceUserId)
     const customerToken = await stripeApi.createCustomerToken(customerId, accountId);
-    const sharedCustomer = await stripeApi.createSharedCustomer("test customer", groupId, aliceUserId, customerToken.id, accountId);
-
+    const sharedCustomer = await stripeApi.createSharedCustomer("test customer", groupId, aliceUserId, email, customerToken.id, accountId);
+    
     const planId = stripeUtils.getPlanId(groupId, price, currency);
 
     const newTaxData = await stripeApi.createTex(accountId);

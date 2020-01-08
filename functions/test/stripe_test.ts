@@ -126,19 +126,20 @@ describe('Stripe test', () => {
     this.timeout(50000);
     const uuid = UUID();
     const userId =  "test_customer_" + uuid;
-
+    const email = "hoge@example.com";
+    
     const visa_source = await functions_test_helper.createVisaCard();
     const visa_token = visa_source.id;
 
     const customer = await stripeApi.createCustomer(visa_token, userId);
-    
+
     const account = await stripeTestUtils.createCustomAccount(SharedGroupId);
     const accountId = account.id;
 
     const tax = await stripeApi.createTex(accountId);
     
     const customerToken = await stripeApi.createCustomerToken(customer.id, accountId);
-    const sharedCustomer = await stripeApi.createSharedCustomer("test subscription", SharedGroupId, userId, customerToken.id, accountId);
+    const sharedCustomer = await stripeApi.createSharedCustomer("test subscription", SharedGroupId, userId, email, customerToken.id, accountId);
     
     await stripeApi.createProduct2("unit_test", "hello", SharedGroupId, accountId);
     const plan = await stripeApi.createPlan2(SharedGroupId, 5000, "jpy", accountId);
@@ -193,6 +194,7 @@ describe('Stripe test', () => {
     this.timeout(20000);
     const uuid = UUID();
     const userId =  "test_customer_" + uuid;
+    const email = "hoge@example.com";
 
     const visa_source = await functions_test_helper.createVisaCard();
     const visa_token = visa_source.id;
@@ -206,7 +208,7 @@ describe('Stripe test', () => {
     const plan = await stripeApi.createPlan2(SharedGroupId, 5000, "jpy", accountId);
 
     const customerToken = await stripeApi.createCustomerToken(customer.id, accountId);
-    const sharedCustomer = await stripeApi.createSharedCustomer("test cancel subscription", SharedGroupId, userId, customerToken.id, accountId);
+    const sharedCustomer = await stripeApi.createSharedCustomer("test cancel subscription", SharedGroupId, userId, email, customerToken.id, accountId);
 
     const tax = await stripeApi.createTex(accountId);
     const subscription = await stripeApi.createSubscription2(userId, sharedCustomer.id,  SharedGroupId, plan.id, accountId, tax.id);
