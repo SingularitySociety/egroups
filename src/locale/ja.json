@@ -252,6 +252,14 @@
   "payout.type": "タイプ",
   "payout.status": "状況",
   "payout.failure_message": "失敗理由",
+
+  "privilege.owner": "オーナー",
+  "privilege.admin": "管理人",
+  "privilege.mentor": "メンター",
+  "privilege.subscriber": "会員",
+  "privilege.member": "会員",
+  "privilege.guest": "ゲスト",
+  "privilege.na": "--",
   
   "dummy":"dummy"
 }

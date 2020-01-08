@@ -252,6 +252,14 @@
   "payout.type": "type",
   "payout.status": "status",
   "payout.failure_message": "failure message",
+
+  "privilege.owner": "Owner",
+  "privilege.admin": "Admin",
+  "privilege.mentor": "Mentor",
+  "privilege.subscriber": "Member",
+  "privilege.member": "Member",
+  "privilege.guest": "Guest",
+  "privilege.na": "--",
   
   "dummy":"dummy"
 }
