@@ -18,6 +18,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
+import AccountIcon from '@material-ui/icons/AccountCircle';
 import { FormattedMessage } from 'react-intl';
 
 const styles = {
@@ -80,6 +81,11 @@ render() {
               <ListItemIcon><InfoIcon /></ListItemIcon>
               <ListItemText primary="About" />
             </ListItem>
+            {user ?
+             <ListItem button to="/a/account" component={Link}>
+               <ListItemIcon><AccountIcon /></ListItemIcon>
+               <ListItemText primary="Account" />
+             </ListItem> : ""}
           </List>
         </Drawer>
       </div>

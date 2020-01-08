@@ -6,6 +6,7 @@ import theme from './theme';
 import Home from './Home';
 import GroupRouter from './group/GroupRouter';
 import About from './About';
+import Account from './Account';
 import Login from './Login';
 import Decoder from './Decoder';
 import * as firebase from "firebase/app";
@@ -156,6 +157,7 @@ function App() {
           <Route path="/g/:gp" render={(props) => <GroupRouter {...props} {...params} />} />
           <Route exact path="/a/about" render={(props) => <About {...props} {...params} />} />
           <Route exact path="/a/admin" render={(props) => <Admin {...props} {...params} />} />
+          <Route exact path="/a/account" render={(props) => <Account {...props} {...params} />} />
           <Route exact path="/a/new/:groupId" render={(props) => <NewGroup {...props} {...params} />} />
           <Route exact path="/a/login" render={(props) => <Login {...props} {...params} />} />
           <Route exact path="/a/login/cmd/:encoded" render={(props) => <Login {...props} {...params} />} />
