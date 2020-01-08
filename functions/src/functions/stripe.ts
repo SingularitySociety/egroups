@@ -183,6 +183,7 @@ export const createSubscription = async (db, data, context) => {
     created,
     displayName: displayName || "---",
     email: email || "",
+    privilege: Privileges.subscriber,
     userId: userId,
     groupId: groupId,
     period,

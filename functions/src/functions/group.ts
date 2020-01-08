@@ -60,6 +60,8 @@ export const memberDidCreate = async (db, snapshot, context) => {
   await messaging.subscribe_new_group(userId, groupId, db, messaging.unsubscribe_topic);
 
   const refMember = db.doc(`groups/${groupId}/members/${userId}`);
+  refMember.update({privilege: privilege});
+
   await refMember.collection("private").doc("history").set({
     // empty object
   });

@@ -16,6 +16,7 @@
     "mocha5": "NODE_ENV=test mocha  -r ts-node/register --recursive test/group_function_test.ts",
     "mocha6": "NODE_ENV=test mocha  -r ts-node/register --recursive test/stripe_shared_customer_test.ts",
     "mocha7": "NODE_ENV=test mocha  -r ts-node/register --recursive test/stripe_callback_test.ts",
+    "mocha8": "NODE_ENV=test mocha  -r ts-node/register --recursive test/member_function_test.ts",
     "mocha10": "NODE_ENV=test mocha  -r ts-node/register --recursive test/ogp_test.ts",
     "watch:mocha": "NODE_ENV=test mocha -w -watch-extensions ts -r ts-node/register --recursive test/*_test.ts"
   },
