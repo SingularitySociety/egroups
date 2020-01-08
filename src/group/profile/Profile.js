@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { FormGroup, TextField } from '@material-ui/core';
-import { Redirect } from 'react-router-dom';
+import { useHistory, Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import useDocument from '../../common/useDocument';
 import AccessDenied from '../../common/AccessDenied';
@@ -28,6 +28,8 @@ function Profile(props) {
   const { db, group, user, callbacks, match:{params:{userId}}, classes  } = props;
   const setTabbar = callbacks.setTabbar;
   const [member, err] = useDocument(db, `groups/${group.groupId}/members/${userId}`);
+
+  const history = useHistory();
 
   useEffect(()=>{
     setTabbar("profile", `pr/${userId}`);
@@ -66,14 +68,18 @@ function Profile(props) {
     </FormGroup>
     <FormGroup row>
       <TextField label={<FormattedMessage id="member.twitter"/>} variant="outlined"
-          value={member.twitter || ""} disabled={true} className={classes.textField}
-          InputProps={{classes:{input:classes.textColor}}}/>
+                 value={member.twitter || ""} disabled={true} className={classes.textField}
+                 InputProps={{classes:{input:classes.textColor}}}
+                 onClick={() => { if (member.twitter) { window.location = `https://twitter.com/${member.twitter}`;}}}
+      />
     </FormGroup>
     <FormGroup row>
       <TextField label={<FormattedMessage id="member.github"/>} variant="outlined"
-          value={member.github || ""} disabled={true} className={classes.textField}
-          InputProps={{classes:{input:classes.textColor}}}/>
-    </FormGroup>
+                 value={member.github || ""} disabled={true} className={classes.textField}
+                 InputProps={{classes:{input:classes.textColor}}}
+                 onClick={() => { if (member.github) { window.location = `https://github.com/${member.github}`;}}}
+      />
+  </FormGroup>
   </div>;
 }
 
