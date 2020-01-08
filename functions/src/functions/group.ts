@@ -10,10 +10,11 @@ import * as stripeApi from '../apis/stripe';
 export const createGroup = async (db:FirebaseFirestore.Firestore, data, context) => {
   const error_handler = logger.error_response_handler({func: "createGroup", message: "invalid request"});
 
-  if (!context.auth || !context.auth.uid) {
+  if (!context.auth || !context.auth.uid || !context.auth.token) {
     return error_handler({error_type: logger.ErrorTypes.NoUid});
   }
   const userId = context.auth.uid;
+  const email = context.auth.token.email || "";
   if (!data || !data.title || !data.ownerName) {
     return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
   }
@@ -37,6 +38,7 @@ export const createGroup = async (db:FirebaseFirestore.Firestore, data, context)
     displayName:ownerName,
     userId: userId,
     groupId: groupId,
+    email: email,
     privilege: Privileges.owner
   });
 
