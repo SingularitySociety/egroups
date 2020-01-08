@@ -18,7 +18,7 @@ describe('Onetime SMS function', () => {
     
     // run test
     const req = {phone: "+81-90-8712-3456"};
-    const context = {auth: {uid: aliceUserId}};
+    const context = {auth: {uid: aliceUserId, token: {}}};
     const wrapped = test.wrap(index.requestOnetimeSMS);
 
     const response = await wrapped(req, context);
@@ -65,7 +65,7 @@ describe('Onetime SMS function', () => {
     
     // run test
     const req = {phone: "+81-90-8712-3456"};
-    const context = {auth: {uid: aliceUserId}};
+    const context = {auth: {uid: aliceUserId, token: {}}};
     const wrapped = test.wrap(index.requestOnetimeSMS);
 
     const response = await wrapped(req, context);
@@ -108,7 +108,7 @@ describe('Onetime SMS function', () => {
     
     // run test
     const req = {phone: "+81-90-8712-3456"};
-    const context = {auth: {uid: aliceUserId}};
+    const context = {auth: {uid: aliceUserId, token: {}}};
     const wrapped = test.wrap(index.requestOnetimeSMS);
 
     const response = await wrapped(req, context);

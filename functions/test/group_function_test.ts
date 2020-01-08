@@ -55,7 +55,8 @@ describe('Group function test', () => {
       },
       auth: {
         uid: aliceUserId,
-      }
+        token: {},
+      }, 
     };
     await wrapped(change, context);
 

@@ -8,13 +8,13 @@ should()
 
 describe('OGP test', () => {
   
+  /*
   it ('1 test', async () => {
     const url = "https://note.com/singsoc/n/n60a8080fb6cd";
     const res = await ogp.parseUrl(url);
     console.log(res);
   });
 
-  /*
   it ('2 test', async () => {
     const url = "https://note.com/singsoc/n/n60a8080fb6cd";
 

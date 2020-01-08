@@ -117,7 +117,7 @@ describe('function test', () => {
     const visa_token = visa_source.id;
     
     const req = {token: visa_token};
-    const context = {auth: {uid: aliceUserId}};
+    const context = {auth: {uid: aliceUserId, token:{}}};
     const wrapped = test.wrap(index.createCustomer);
 
     await wrapped(req, context);
@@ -171,7 +171,7 @@ describe('function test', () => {
 
     // run test
     const req_error = {groupId, plan: {price, currency}};
-    const context = {auth: {uid: aliceUserId}};
+    const context = {auth: {uid: aliceUserId, token:{}}};
     const wrapped = test.wrap(index.createSubscription);
     const error_response = await wrapped(req_error, context);
     error_response.result.should.equal(false)
@@ -263,7 +263,7 @@ describe('function test', () => {
     const subscriptionId = subscription.id;
     
     const req = {groupId};
-    const context = {auth: {uid: aliceUserId}};
+    const context = {auth: {uid: aliceUserId, token:{}}};
     const wrapped = test.wrap(index.cancelSubscription);
 
     await wrapped(req, context);
@@ -297,7 +297,7 @@ describe('function test', () => {
     })
     
     const req = {groupId, country, business_type};
-    const context = {auth: {uid: aliceUserId}};
+    const context = {auth: {uid: aliceUserId, token:{}}};
     const wrappedCreate = test.wrap(index.createCustomAccount);
 
     const res = await wrappedCreate(req, context);
@@ -317,7 +317,7 @@ describe('function test', () => {
     })
     
     const req = {groupId, country, business_type};
-    const context = {auth: {uid: aliceUserId}};
+    const context = {auth: {uid: aliceUserId, token:{}}};
     const wrappedCreate = test.wrap(index.createCustomAccount);
 
     const res = await wrappedCreate(req, context);
@@ -396,7 +396,7 @@ describe('function test', () => {
       subscription: true,
     })
     
-    const context = {auth: {uid: aliceUserId}};
+    const context = {auth: {uid: aliceUserId, token:{}}};
     const wrappedCreate = test.wrap(index.createCustomAccount);
 
     await admin_db.doc(`groups/${groupId}`).set({
@@ -458,7 +458,7 @@ describe('function test', () => {
     })
     
     const req = {groupId, country};
-    const context = {auth: {uid: aliceUserId}};
+    const context = {auth: {uid: aliceUserId, token:{}}};
     const wrapped = test.wrap(index.createCustomAccount);
 
     // just create
@@ -554,7 +554,7 @@ describe('function test', () => {
       subscription: true,
     })
     
-    const context = {auth: {uid: aliceUserId}};
+    const context = {auth: {uid: aliceUserId, token:{}}};
     const wrapped = test.wrap(index.createCustomAccount);
 
     await sleep(2000);
@@ -597,7 +597,7 @@ describe('function test', () => {
     })
     
     const req = {groupId, country};
-    const context = {auth: {uid: aliceUserId}};
+    const context = {auth: {uid: aliceUserId, token:{}}};
     const wrapped = test.wrap(index.createCustomAccount);
 
     await wrapped(req, context);
@@ -632,7 +632,7 @@ describe('function test', () => {
     const visa_token = visa_source.id;
     
     const req = {token: visa_token};
-    const context = {auth: {uid: aliceUserId}};
+    const context = {auth: {uid: aliceUserId, token:{}}};
     const wrapped = test.wrap(index.createCustomer);
 
     const error_response = await wrapped(req, context);
