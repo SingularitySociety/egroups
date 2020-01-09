@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography, Grid, IconButton } from '@material-ui/core';
+import { Typography, Grid, IconButton, Checkbox } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/SaveAlt';
@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import ImageUploader from '../../common/ImageUploader';
 import Privileges from '../../const/Privileges';
 import { FormattedDate } from 'react-intl';
+import { isPublished } from '../../common/utils';
 
 import useOnCollection from '../../common/useOnCollection';
 
@@ -166,7 +167,13 @@ function BlogArticle(props) {
   const toggleReadOnly = () => {
     setReadOnly(!readOnly);
   };
-
+  const updatePublished = (e) => {
+    if (!readOnly) {
+      const newArticle = Object.assign({}, article);
+      newArticle.published = e.target.checked;
+      setArticle(newArticle);
+    }
+  };
   const context = { pathArticle:refArticle.path };
   if (!article) {
     return "";
@@ -184,25 +191,28 @@ function BlogArticle(props) {
   const editMode = canEdit && !readOnly;
   const userName = (her && her.displayName) || "...";
   const thumbnails = her && her.profile && her.profile.thumbnails;
-
+  const published = isPublished(article);
+  
   return (
     <div className={frameClass}>
       <Grid container>
-        <Grid item xs={canEdit ? 10 : 12}>
+        <Grid item xs={canEdit ? 9 : 12}>
             <Typography component="h1" variant="h1" gutterBottom className={classes.title}>
             {article.title}
           </Typography>
         </Grid>
         {
           canEdit && 
-          <Grid item xs={2}>
-            <IconButton size="small" onClick={toggleReadOnly}>
-              {readOnly ? <EditIcon /> : <SaveIcon/> }
-            </IconButton>
-            <IconButton size="small" component={Link} to={`/g/${group.groupName}/${arp.leaf}/${article.articleId}/settings`}>
-              <SettingsIcon />
-            </IconButton>
-          </Grid>
+            <Grid item xs={3}>
+              <IconButton size="small" onClick={toggleReadOnly}>
+                {readOnly ? <EditIcon /> : <SaveIcon/> }
+              </IconButton>
+              <IconButton size="small" component={Link} to={`/g/${group.groupName}/${arp.leaf}/${article.articleId}/settings`}>
+                <SettingsIcon />
+              </IconButton>
+              <Checkbox checked={published} onChange={(e) => {updatePublished(e);}}/>
+              Published
+            </Grid>
         }
       </Grid>
       {

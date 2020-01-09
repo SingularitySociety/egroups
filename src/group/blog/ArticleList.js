@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ArticleItem from './ArticleItem';
 import AccessDenied from '../../common/AccessDenied';
+import { isPublished } from '../../common/utils';
 
 const styles = theme => ({
 });
@@ -36,10 +37,14 @@ function ArticleList(props) {
   if (error) {
     return <AccessDenied error={error} />;
   }
+  const canEdit = false;
   return <div>
            <div>
              {
-               list.map((article)=>{
+               list.filter((article) => {
+                 return true;
+                 // return isPublished(article) || canEdit;
+               }).map((article)=>{
                  return <ArticleItem key={article.articleId} article={article} {...context} />;
                })
              }

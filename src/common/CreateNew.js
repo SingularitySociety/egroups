@@ -28,7 +28,7 @@ function CreateNew(props) {
 
   const setCreatingFlag = (flag) => {
     setCreating(flag);
-    setValue("")
+    setValue("");
   };
   const onChange = (e) => {
     setValue(e.target.value);

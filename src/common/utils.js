@@ -22,3 +22,7 @@ export const privilegeText = (privilege) => {
   }
   return "privilege.na";
 };
+export const isPublished = (article) => {
+  const published = article.published === undefined ? true : article.published;
+  return published;
+};
