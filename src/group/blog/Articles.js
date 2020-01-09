@@ -31,6 +31,7 @@ function Articles(props) {
       read: group.privileges[arp.tabLeaf].read, 
       comment: group.privileges[arp.tabLeaf].comment, 
       sections: [], // ordered list of sectionIds
+      published: false,
     });
     setRedirect(`/g/${group.groupName}/${arp.leaf}/${doc.id}`);
   };
