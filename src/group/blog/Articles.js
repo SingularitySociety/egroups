@@ -39,7 +39,7 @@ function Articles(props) {
   if (redirect) {
     return <Redirect to={redirect} />;
   }
-  const context = { user, group, db, history, arp };
+  const context = { user, group, db, history, arp, privilege };
   const canCreateNew = privilege 
         >= ((group.privileges && group.privileges[arp.tabLeaf] && group.privileges[arp.tabLeaf].create) || Privileges.member);
   return (

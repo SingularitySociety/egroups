@@ -1,5 +1,7 @@
 import * as moment from 'moment';
 
+import Privileges from '../const/Privileges';
+
 export const convDateFormmat = (date) => {
   return moment.unix(date).format("YYYY/MM/DD");
 };
@@ -25,4 +27,7 @@ export const privilegeText = (privilege) => {
 export const isPublished = (article) => {
   const published = article.published === undefined ? true : article.published;
   return published;
+};
+export const canEditArticle = (user, article, privilege, group) => {
+  return (user && article.owner === user.uid) || (privilege >= (group.privileges.article.update || Privileges.admin));
 };

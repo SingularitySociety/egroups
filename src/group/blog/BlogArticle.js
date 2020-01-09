@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 import ImageUploader from '../../common/ImageUploader';
 import Privileges from '../../const/Privileges';
 import { FormattedDate } from 'react-intl';
-import { isPublished } from '../../common/utils';
+import { canEditArticle, isPublished } from '../../common/utils';
 
 import useOnCollection from '../../common/useOnCollection';
 
@@ -178,7 +178,7 @@ function BlogArticle(props) {
   if (!article) {
     return "";
   }
-  const canEdit = (user && article.owner === user.uid) || (privilege >= (group.privileges.article.update || Privileges.admin));
+  const canEdit = canEditArticle(user, article, privilege, group);
   const canRead = privilege >= article.read;
   if (!canRead || error) {
     return <AccessDenied />;
