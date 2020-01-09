@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import ImageUploader from '../../common/ImageUploader';
 import Privileges from '../../const/Privileges';
 import { FormattedDate } from 'react-intl';
+import { isPublished } from '../../common/utils';
 
 import useOnCollection from '../../common/useOnCollection';
 
@@ -190,7 +191,7 @@ function BlogArticle(props) {
   const editMode = canEdit && !readOnly;
   const userName = (her && her.displayName) || "...";
   const thumbnails = her && her.profile && her.profile.thumbnails;
-  const published = article.published === undefined ? true : article.published;
+  const published = isPublished(article);
   
   return (
     <div className={frameClass}>
