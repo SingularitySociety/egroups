@@ -103,9 +103,8 @@ function PaymentLog(props) {
                               </td>
                             </tr>;
                    }
-                 } else {
-                   return null;
                  }
+                 return null;
                })
                }
              </tbody>
