@@ -9,12 +9,13 @@ import { Redirect } from 'react-router-dom';
 import LockedArea from '../../common/LockedArea';
 import useOnDocument from '../../common/useOnDocument';
 import AccessDenied from '../../common/AccessDenied';
+import { canEditArticle } from '../../common/utils';
 
 const styles = theme => ({
 });
 
 function ArticleSettings(props) {
-  const { db, group, arp, user, match:{params:{articleId}}, callbacks } = props;
+  const { db, group, arp, user, match:{params:{articleId}}, callbacks, privilege } = props;
   const path = `groups/${group.groupId}/${arp.collection}/${articleId}`;
   const [entity] = useOnDocument(db, path);
   const setTabbar = callbacks.setTabbar;
@@ -36,8 +37,7 @@ function ArticleSettings(props) {
     }
     return "";
   }
-
-  const canEdit = (user && entity.owner === user.uid);
+  const canEdit = canEditArticle(user, entity, privilege, group);
   if (!canEdit) {
     return <AccessDenied />;
   }
