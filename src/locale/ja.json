@@ -112,6 +112,10 @@
     "settings.event.create":"イベントを新規作成する権限",
     "settings.member.read":"名簿を見る権利",
 
+    "settings.article.update": "他人が作ったブログ記事を更新する権限",
+    "settings.page.update": "他人が作ったページを更新する権限",
+    "settings.event.update": "他人が作ったイベントを更新する権限",
+
     "join.open":"このグループはオープン・コミュニティで、誰でも参加が可能です。",
     "join.closed":"このグループは招待状をもらった人しか参加できません。",
 

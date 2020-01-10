@@ -473,13 +473,13 @@ describe('function test', () => {
     secret.account.object.should.equal('account')
     secret.account.type.should.equal('custom' )
 
-    await sleep(2000);
+    await sleep(3000);
     
     // can't create again
     const res1 = await wrapped(req, context);
     res1.result.should.equal(false)
 
-    await sleep(2000);
+    await sleep(3000);
     
     // set personal data
     const req2 = {groupId,
@@ -491,7 +491,7 @@ describe('function test', () => {
     res2.result.should.equal(true)
     writeFile("individual-us-update", res2.account);
 
-    await sleep(2000);
+    await sleep(3000);
     
     // just update personal data
     const req3 = {groupId,
@@ -500,7 +500,7 @@ describe('function test', () => {
     const res3 = await wrapped2(req3, context);
     res3.result.should.equal(true)
 
-    await sleep(2000);
+    await sleep(3000);
 
     // set bank
     const req4 = {groupId,
@@ -511,7 +511,7 @@ describe('function test', () => {
     res4.result.should.equal(true)
     res4.account.external_accounts.total_count.should.equal(1)
 
-    await sleep(2000);
+    await sleep(3000);
 
     const accountID = res4.id;
 
@@ -521,14 +521,14 @@ describe('function test', () => {
     const res11 = await wrapped2(req11, context);
     res11.result.should.equal(false)
     
-    await sleep(2000);
+    await sleep(3000);
 
     const req12 = {groupId,
                   account_data: stripeCustomAccountData.postDataUS["individual"]};
     const res12 = await wrapped2(req12, context);
     res12.result.should.equal(false)
 
-    await sleep(2000);
+    await sleep(3000);
 
     // upload file
     const filePath = `groups/${groupId}/owner/verification/front`;

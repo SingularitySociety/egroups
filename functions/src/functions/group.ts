@@ -151,9 +151,9 @@ export const createGroupName = async (db:FirebaseFirestore.Firestore, data, cont
       title,
       privileges: {
         channel: { read:Privileges.member, write:Privileges.member, create:Privileges.member },
-        article: { read:Privileges.member, create:Privileges.member, comment:Privileges.member },
-        page: { read:Privileges.guest, create:Privileges.admin, comment:Privileges.admin },
-        event: { read:Privileges.member, create:Privileges.member, attend:Privileges.member },
+        article: { read:Privileges.member, create:Privileges.member, update:Privileges.admin, comment:Privileges.member },
+        page: { read:Privileges.guest, create:Privileges.admin, update:Privileges.admin, comment:Privileges.admin },
+        event: { read:Privileges.member, create:Privileges.member, update:Privileges.admin, attend:Privileges.member },
         member: { read:Privileges.member, write:Privileges.admin },
         invitation: { create:Privileges.admin },
       },

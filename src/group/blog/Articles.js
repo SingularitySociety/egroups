@@ -31,6 +31,7 @@ function Articles(props) {
       read: group.privileges[arp.tabLeaf].read, 
       comment: group.privileges[arp.tabLeaf].comment, 
       sections: [], // ordered list of sectionIds
+      published: false,
     });
     setRedirect(`/g/${group.groupName}/${arp.leaf}/${doc.id}`);
   };
@@ -38,7 +39,7 @@ function Articles(props) {
   if (redirect) {
     return <Redirect to={redirect} />;
   }
-  const context = { user, group, db, history, arp };
+  const context = { user, group, db, history, arp, privilege };
   const canCreateNew = privilege 
         >= ((group.privileges && group.privileges[arp.tabLeaf] && group.privileges[arp.tabLeaf].create) || Privileges.member);
   return (

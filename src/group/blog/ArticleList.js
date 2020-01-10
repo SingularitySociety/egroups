@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ArticleItem from './ArticleItem';
 import AccessDenied from '../../common/AccessDenied';
+import { canEditArticle, isPublished } from '../../common/utils';
 
 const styles = theme => ({
 });
 
 function ArticleList(props) {
-  const { db, group, limit, arp, history } = props;
+  const { db, group, limit, arp, history, user, privilege } = props;
   const groupId = group.groupId;
   const [list, setList] = useState([]);
   const [error, setError] = useState(null);
@@ -39,7 +40,9 @@ function ArticleList(props) {
   return <div>
            <div>
              {
-               list.map((article)=>{
+               list.filter((article) => {
+                 return isPublished(article) || canEditArticle(user, article, privilege, group);
+               }).map((article)=>{
                  return <ArticleItem key={article.articleId} article={article} {...context} />;
                })
              }

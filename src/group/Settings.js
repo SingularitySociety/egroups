@@ -63,8 +63,14 @@ function Settings(props) {
     case "articleCreate":
       await refGroup.set({privileges:{article:{create:parseInt(event.target.value)}}}, {merge:true});
       break;
+    case "articleUpdate":
+      await refGroup.set({privileges:{article:{update:parseInt(event.target.value)}}}, {merge:true});
+      break;
     case "pageCreate":
         await refGroup.set({privileges:{page:{create:parseInt(event.target.value)}}}, {merge:true});
+        break;
+    case "pageUpdate":
+        await refGroup.set({privileges:{page:{update:parseInt(event.target.value)}}}, {merge:true});
         break;
     case "eventCreate":
       await refGroup.set({privileges:{event:{create:parseInt(event.target.value)}}}, {merge:true});
@@ -108,7 +114,9 @@ function Settings(props) {
   const subscription = group.subscription || false;
   const channelCreate = group.privileges.channel.create || Privileges.member;
   const articleCreate = group.privileges.article.create || Privileges.member;
+  const articleUpdate = group.privileges.article.update || Privileges.admin;
   const pageCreate = group.privileges.page.create || Privileges.admin;
+  const pageUpdate = group.privileges.page.update || Privileges.admin;
   const eventCreate = group.privileges.event.create || Privileges.member;
   const memberRead = (group.privileges.member && group.privileges.member.read) || Privileges.member;
   const imageThumbnails = group.profile && group.profile.thumbnails;
@@ -183,6 +191,20 @@ function Settings(props) {
       <FormControl className={classes.formControl}>
         <InputLabel><FormattedMessage id="settings.event.create" /></InputLabel>
         <Select　native　value={eventCreate}　onChange={handleChange('eventCreate')}>
+          <PrivilegeOptions />
+        </Select>
+      </FormControl>
+      <br/>
+      <FormControl className={classes.formControl}>
+        <InputLabel><FormattedMessage id="settings.article.update" /></InputLabel>
+        <Select　native　value={articleUpdate}　onChange={handleChange('articleUpdate')}>
+          <PrivilegeOptions />
+        </Select>
+      </FormControl>
+      <br/>
+      <FormControl className={classes.formControl}>
+        <InputLabel><FormattedMessage id="settings.page.update" /></InputLabel>
+        <Select　native　value={pageUpdate}　onChange={handleChange('pageUpdate')}>
           <PrivilegeOptions />
         </Select>
       </FormControl>

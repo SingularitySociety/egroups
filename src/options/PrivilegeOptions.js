@@ -6,11 +6,11 @@ const PrivilegeOptions = (props)=>{
   const { noSubscriber } = props; 
   const { messages } = props.intl;
   const list = noSubscriber ? 
-          ["member", "mentor", "admin"] : ["member", "subscriber", "mentor", "admin"]
+        ["member", "mentor", "admin"] : ["member", "subscriber", "mentor", "admin"];
   return (<React.Fragment>
     { 
       list.map((item) => {
-        return <option key={item} value={Privileges[item]}>{messages[item]}</option>
+        return <option key={item} value={Privileges[item]}>{messages[item]}</option>;
       })
     }
   </React.Fragment>);
