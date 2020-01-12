@@ -121,6 +121,7 @@ function BlogArticle(props) {
       type: "image",
       created: new Date(),
       author: user.uid,
+      imageSize: 6,
     });
     updateEditingFlag(doc.id, true);
     spliceSections(index, 0, doc.id);
@@ -129,6 +130,12 @@ function BlogArticle(props) {
     //console.log("onImageUpload", sectionId, imageUrl);
     await refArticle.collection("sections").doc(sectionId).set({
       hasImage: true, imageUrl
+    }, {merge:true});
+  };
+  const onImageSizeChange = async (sectionId, size) => {
+    //console.log("onImageUpload", sectionId, imageUrl);
+    await refArticle.collection("sections").doc(sectionId).set({
+      imageSize: size
     }, {merge:true});
   };
   const insertVideo = async (index) => {
@@ -244,6 +251,7 @@ function BlogArticle(props) {
                                   editing={editing} updateEditingFlag={updateEditingFlag}
                                   resource={resources[sectionId]} readOnly={!editMode} saveMarkdown={saveMarkdown}
                                   onImageUploadSection={onImageUploadSection} onVideoUploadSection={onVideoUploadSection}
+                                  onImageSizeChange={onImageSizeChange}
                                   onUpdateUrlSection={onUpdateUrlSection}
                                   {...context} />
                      { editMode && <BlogSectionCreator
