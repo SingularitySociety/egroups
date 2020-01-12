@@ -101,7 +101,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [privileges, setPrivileges] = useState(null);
 
-  useEffect(()=>{
+  useEffect(() => {
     const unregisterAuthObserver = firebase.auth().onAuthStateChanged(
       async (user) => {
         setUser(user);
@@ -110,9 +110,10 @@ function App() {
     return unregisterAuthObserver;
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (user) {
       const detachPrivilegesObserver = db.doc(`privileges/${user.uid}`).onSnapshot(async (snapshot) => {
+        setPrivileges(snapshot.data());
         const getJWT = firebase.functions().httpsCallable('getJWT');
         const token = (await getJWT()).data; 
         //console.log("token", token);
@@ -121,7 +122,7 @@ function App() {
         } catch(e) {
           console.log(e);
         }
-        console.log({privileges:token.privileges});
+        // console.log({privileges:token.privileges});
         setPrivileges(token.privileges);
       });
 
@@ -138,6 +139,9 @@ function App() {
       }
       updateUser();
       return detachPrivilegesObserver;
+    } else {
+      // console.log("LOGOUT");
+      setPrivileges(null);
     }
   }, [user]);
 
