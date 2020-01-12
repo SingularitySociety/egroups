@@ -30,7 +30,6 @@ function Invite(props) {
   const { callbacks, classes, db, group, user, member } = props;
   const { privilege, requirePemission, accessControll } = props;
   const setTabbar = callbacks.setTabbar;
-  const { privilege } = props;
   const [level, setLevel] = useState(Privileges.member);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState(null);
