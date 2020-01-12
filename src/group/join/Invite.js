@@ -9,6 +9,7 @@ import Privileges from '../../const/Privileges';
 import PrivilegeOptions from '../../options/PrivilegeOptions';
 import Processing from '../../common/Processing';
 import ResultMessage from '../../common/ResultMessage';
+import AccessDenied from '../../common/AccessDenied';
 import validator from 'validator';
 
 const styles = theme => ({
@@ -27,6 +28,7 @@ function uuidv4() {
 
 function Invite(props) {
   const { callbacks, classes, db, group, user, member } = props;
+  const { privilege, requirePemission, accessControll } = props;
   const setTabbar = callbacks.setTabbar;
   const [level, setLevel] = useState(Privileges.member);
   const [processing, setProcessing] = useState(false);
@@ -39,6 +41,10 @@ function Invite(props) {
     setTabbar("invite");
   }, [setTabbar]);
 
+  if (!accessControll(requirePemission, privilege)) {
+    return <AccessDenied />;
+  }
+  
   function handleLevel(e) {
     setLevel(parseInt(e.target.value));
   }

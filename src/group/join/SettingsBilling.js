@@ -9,6 +9,7 @@ import CountrySetting from './CountrySetting';
 import useOnDocument from '../../common/useOnDocument';
 import { Link } from 'react-router-dom';
 import Processing from '../../common/Processing';
+import AccessDenied from '../../common/AccessDenied';
 
 const styles = theme => ({
   subsciption: {
@@ -38,6 +39,7 @@ const useStyles = makeStyles(styles);
 function SettingsBilling(props) {
   const classes = useStyles();
   const { group, db, callbacks } = props;
+  const { requirePemission, accessControll, privilege } = props;
   const groupId = group.groupId;
   const subscription = group.subscription;
   const [plans, setPlans] = useState(group.plans || []);
@@ -82,6 +84,9 @@ function SettingsBilling(props) {
     props.callbacks.groupDidUpdate();
     setModified(false);
     setProcessing(false);
+  }
+  if (!accessControll(requirePemission, privilege)) {
+    return <AccessDenied />;
   }
   let isValid = true;
   if (!subscription) {
