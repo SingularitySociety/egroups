@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import ImageUploader from '../../common/ImageUploader';
 import VideoEditor from '../../common/VideoEditor';
@@ -9,7 +9,9 @@ function BlogSection(props) {
   const { sectionId, index, resource, readOnly, pathArticle } = props;
   const { editing, updateEditingFlag } = props;
   const { saveMarkdown } = props;
-  
+
+  const [imageSize, setImageSize] = useState(resource.imageSize || 6);
+
   function onDelete() {
     props.deleteSection(sectionId, index);
   }
@@ -18,6 +20,9 @@ function BlogSection(props) {
   }
   function onImageUpload(imageUrl) {
     props.onImageUploadSection(sectionId, imageUrl);
+  }
+  function onImageSizeChange(size) {
+    props.onImageSizeChange(sectionId, size);
   }
   function onVideoUpload(videoUrl) {
     props.onVideoUploadSection(sectionId, videoUrl);
@@ -34,7 +39,9 @@ function BlogSection(props) {
     const thumbnails = (resource[sectionId] && resource[sectionId].thumbnails) || resource.thumbnails;
     return (
       <ImageUploader imagePath={imagePath} loadImage={resource.hasImage} imageUrl={resource.imageUrl}
+                     imageSize={imageSize} setImageSize={setImageSize}
                      imageThumbnails={thumbnails} onImageUpload={onImageUpload}
+                     onImageSizeChange={onImageSizeChange}
                      readOnly={readOnly} onDelete={onDelete} displayMode="wide" />
     );
   }

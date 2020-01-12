@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Grid, IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import UploadButton from '@material-ui/icons/CloudUpload';
 import * as firebase from "firebase/app";
 import "firebase/storage";
@@ -80,6 +81,7 @@ const styles = theme => ({
 
 function ImageUploader(props) {
   const { imagePath, loadImage, imageUrl, imageThumbnails, displayMode, onImageUpload } = props;
+  const { imageSize, setImageSize } = props;
   const { classes, readOnly, inline, onDelete } = props;
   const [ url, setUrl ] = useState(null);
   const [ processing, setProcessing ] = useState(false);
@@ -164,9 +166,30 @@ function ImageUploader(props) {
     upload(file);
   };
 
+  // image size
+  // 6,  5,  4, 3, 2, 1      ( n )
+
+  // edit mode
+  // 0,  1 , 2, 3, 4, 5 left (6 - n ) spacer
+  // 11, 10, 8, 6, 4, 2 center ( 2 * n  : 11 )
+  // 0,  0,  1, 2, 3, 4 right  ( 5 - n  : 0 ) write_spacer
+  // 1,  1,  1, 1, 1, 1
+ 
+  // normal mode
+  // 0,  1 , 2, 3, 4, 5 spacer
+  // 12, 10, 8, 6, 4, 2 (2 * n )
+  // 0,  1 , 2, 3, 4, 5 spacer 
+
+  // const imageSize = 2; // 6, 5, 4, 3, 2, 1 then
+  const size = imageSize || 6;
+  const spacer = 6 - size;
+  const center = (!readOnly && size === 6) ? 11 : 2 * size;
+  const write_spacer = size > 4 ? 0 : 5 - size;
+  
   const imageStyle = url ? { backgroundImage:`url("${url}")` } : {};
   const imageElement = (displayMode === "wide") ? (
-    <Grid item xs={readOnly ? 12 : 11} className={ classes.wideFrame }>
+    <Grid item xs={center} className={ classes.wideFrame }>
+
       {url || readOnly ? <img src={url} className={classes[displayMode]} alt="place holder" /> : (
         <Grid
           onDragOver={onDragOver}
@@ -192,22 +215,38 @@ function ImageUploader(props) {
     return imageElement;
   }
   return (<Grid container className={classes.root} spacing={1} justify="center">
-      { processing && <CircularProgress style={{position:"absolute", zIndex:1 }}/> }
+            { processing && <CircularProgress style={{position:"absolute", zIndex:1 }}/> }
+            { (spacer > 0 ) && <Grid item xs={spacer} /> }
             { imageElement }
-      {
-        !readOnly && onImageUpload &&
-          <Grid item xs={1}>
-          <IconButton size="small" variant="contained" component="label">
-              <UploadButton />
-              <input type="file" accept="image/*" style={{ display: "none" }} onChange={onFileInput} />
-          </IconButton>
-          {
-            onDelete && 
-              <IconButton size="small" onClick={onDelete}><DeleteIcon /></IconButton>
-        }
-      </Grid>
-
-      }
+            { !readOnly && onImageUpload ? ((write_spacer > 0) && <Grid item xs={write_spacer}/>) : ( (spacer > 0) && <Grid item xs={spacer}/>)  }
+            {
+              !readOnly && onImageUpload &&
+                <Grid item xs={1}>
+                  <IconButton size="small" variant="contained" component="label">
+                    <UploadButton />
+                    <input type="file" accept="image/*" style={{ display: "none" }} onChange={onFileInput} />
+                  </IconButton>
+                  {props.onImageSizeChange &&
+                   <React.Fragment>
+                     <ExpandLess onClick={(e) => {
+                       const newSize = size + 1;
+                       setImageSize(newSize > 6 ? 6 : newSize);
+                       props.onImageSizeChange(newSize);
+                     }}/><br/>
+                     <ExpandMore onClick={(e) => {
+                       const newSize = size - 1;
+                       setImageSize(newSize < 1 ? 1 : newSize );
+                       props.onImageSizeChange(newSize);
+                     }}/><br/>
+                   </React.Fragment>}
+                  {
+                    onDelete && 
+                      <IconButton size="small" onClick={onDelete}><DeleteIcon /></IconButton>
+                  }
+                  
+                </Grid>
+            
+            }
     </Grid>);
 }
 
