@@ -28,6 +28,7 @@ function uuidv4() {
 function Invite(props) {
   const { callbacks, classes, db, group, user, member } = props;
   const setTabbar = callbacks.setTabbar;
+  const { privilege } = props;
   const [level, setLevel] = useState(Privileges.member);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState(null);
@@ -48,33 +49,37 @@ function Invite(props) {
     const key = uuidv4();
     setProcessing(true);
     try {
-      const doc = await db.collection(`groups/${group.groupId}/invites`).add({
-        key,
-        count:1,
-        created: firebase.firestore.FieldValue.serverTimestamp(),
-        duration: 60*60*1000 * 24 * 2, // one hour * 24 * 2 = 2 days
-        privilege: level,
-        invitedBy: user.uid,
-        accepted:{},
-      });
-      const path = `${window.location.href}/${doc.id}/${key}`;
-      console.log(path);
-
-      const language = navigator.language.split(/[-_]/)[0];  // language without region code
-      const payload = { template:"invite", locale:language, 
-                        email: email,
-                        values: {
-                          path, 
-                          groupName:group.title, 
-                          invitedBy: member.displayName } };
-      const sendMail = firebase.functions().httpsCallable('sendMail');
-      const result = (await sendMail(payload)).data;
-      console.log("sendMail:", result);
-      if (result.result) {
-        setMessage(<FormattedMessage id="success.mail.sent" />);
-        setEmail("");
+      if (level >= privilege) {
+        setError(<FormattedMessage id="error.failed" values={{error: "invalid operation"}}/>);
       } else {
-        setError(<FormattedMessage id="error.failed" values={{error:result.message}}/>); 
+        const doc = await db.collection(`groups/${group.groupId}/invites`).add({
+          key,
+          count:1,
+          created: firebase.firestore.FieldValue.serverTimestamp(),
+          duration: 60*60*1000 * 24 * 2, // one hour * 24 * 2 = 2 days
+          privilege: level,
+          invitedBy: user.uid,
+          accepted:{},
+        });
+        const path = `${window.location.href}/${doc.id}/${key}`;
+        console.log(path);
+
+        const language = navigator.language.split(/[-_]/)[0];  // language without region code
+        const payload = { template:"invite", locale:language, 
+                          email: email,
+                          values: {
+                            path, 
+                            groupName:group.title, 
+                            invitedBy: member.displayName } };
+        const sendMail = firebase.functions().httpsCallable('sendMail');
+        const result = (await sendMail(payload)).data;
+        console.log("sendMail:", result);
+        if (result.result) {
+          setMessage(<FormattedMessage id="success.mail.sent" />);
+          setEmail("");
+        } else {
+          setError(<FormattedMessage id="error.failed" values={{error:result.message}}/>); 
+        }
       }
     } catch(e) {
       console.log(e);
@@ -93,7 +98,7 @@ function Invite(props) {
     <FormControl className={classes.formControl}>
       <InputLabel><FormattedMessage id="invitation.privilege" /></InputLabel>
       <Select　native　value={level}　onChange={handleLevel}>
-        <PrivilegeOptions noSubscriber={true} />
+        <PrivilegeOptions noSubscriber={true} privilege={privilege}/>
       </Select>
     </FormControl>
     <br/>
