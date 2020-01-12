@@ -216,26 +216,21 @@ class GroupRouter extends React.Component {
                   <Route exact path={`/`} render={(props) => <GroupHome {...props} {...context} />} />
               }
               <Route exact path={`/g/${group.groupName}`} render={(props) => <GroupHome {...props} {...context} arp={arps.pages} />} />
-              <Route exact path={`/g/${group.groupName}/member`} render={(props) => <MemberHome {...props} {...context} arps={arps} />} />
+              <Route exact path={`/g/${group.groupName}/member`} render={(props) => <MemberHome {...props} {...context} arps={arps} requirePemission={Privileges.admin} />} />
               <Route exact path={`/g/${group.groupName}/events`} render={(props) => <Events {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/listing`} render={(props) => <Listing {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/join`} render={(props) => <Join {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/subscribe`} render={(props) => <Subscribe {...props} {...context} />} />
-              <Route exact path={`/g/${group.groupName}/invite`} render={(props) => <Invite {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/invite`} render={(props) => <Invite {...props} {...context}  requirePemission={Privileges.member} />} />
               <Route exact path={`/g/${group.groupName}/invite/:inviteId/:inviteKey`} render={(props) => <Invited {...props} {...context} />} />
-              <Route exact path={`/g/${group.groupName}/payment/log`} render={(props) => <PaymentLog {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/payment/log`} render={(props) => <PaymentLog {...props} {...context} requirePemission={Privileges.admin} />} />
               <Route exact path={`/g/${group.groupName}/payment/paymentintents`} render={(props) => <PaymentIntents {...props} {...context} />} />
-              <Route exact path={`/g/${group.groupName}/payment/payout`} render={(props) => <PayoutLog {...props} {...context} />} />
-              <Route exact path={`/g/${group.groupName}/account`} 
-                render={(props) => <Account {...props} {...context} />} />
-              <Route exact path={`/g/${group.groupName}/account/payment/log`} 
-                render={(props) => <AccountPaymentLog {...props} {...context} />} />
-              <Route exact path={`/g/${group.groupName}/settings`} 
-                     render={(props) => <Settings {...props} {...context} requirePemission={Privileges.admin} />} />
-              <Route exact path={`/g/${group.groupName}/settings/billing`} 
-                render={(props) => <SettingsBilling {...props} {...context} />} />
-              <Route exact path={`/g/${group.groupName}/settings/bank`} 
-                render={(props) => <CustomAccount {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/payment/payout`} render={(props) => <PayoutLog {...props} {...context} requirePemission={Privileges.admin} />} />
+              <Route exact path={`/g/${group.groupName}/account`} render={(props) => <Account {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/account/payment/log`} render={(props) => <AccountPaymentLog {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/settings`} render={(props) => <Settings {...props} {...context} requirePemission={Privileges.admin} />} />
+              <Route exact path={`/g/${group.groupName}/settings/billing`} render={(props) => <SettingsBilling {...props} {...context} requirePemission={Privileges.admin} />} />
+              <Route exact path={`/g/${group.groupName}/settings/bank`}  render={(props) => <CustomAccount {...props} {...context} requirePemission={Privileges.admin} />} />
               <Route exact path={`/g/${group.groupName}/channels`} render={(props) => <Channels {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/ch/:channelId`} render={(props) => <Chat {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/ch/:channelId/settings`} render={(props) => <ChannelSettings {...props} {...context} />} />

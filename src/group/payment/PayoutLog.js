@@ -4,9 +4,11 @@ import * as firebase from "firebase/app";
 import "firebase/functions";
 
 import * as utils from '../../common/utils';
+import AccessDenied from '../../common/AccessDenied';
 
 function PayoutLog(props) {
   const { group, callbacks } = props;
+  const { requirePemission, accessControll, privilege } = props;
   const setTabbar = callbacks.setTabbar;
 
   const [paymentLogs, setPaymentLogs] = useState([]);
@@ -25,6 +27,10 @@ function PayoutLog(props) {
     })();
   }, [group.groupId]);
 
+  if (!accessControll(requirePemission, privilege)) {
+    return <AccessDenied />;
+  }
+  
   return <div>
            <table>
              <thead>

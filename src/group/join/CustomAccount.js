@@ -13,6 +13,7 @@ import AccountCompanyPersonJP, {extract_personal_dataJP, person_data_required} f
 //import AccountIndividualJP from './AccountIndividualJP';
 import AccountBankJP, {extract_bank_data, bank_data_required} from './AccountBankJP';
 import AccountAccept, {accept_data_required} from './AccountAccept';
+import AccessDenied from '../../common/AccessDenied';
 
 const styles = theme => ({
   paper: {
@@ -43,6 +44,7 @@ function arrayToFlags(array) {
 
 function CustomAccount(props) {
   const { db, group, callbacks, classes } = props;
+  const { requirePemission, accessControll, privilege } = props;
   const groupId = group.groupId;
   const setTabbar = callbacks.setTabbar;
   const [error, setError] = useState(null);
@@ -209,7 +211,11 @@ function CustomAccount(props) {
   function handleTabChange(e, newValue) {
     setTabValue(newValue);
   }
- 
+
+  if (!accessControll(requirePemission, privilege)) {
+    return <AccessDenied />;
+  }
+  
   return <form>
     {
       (business_type === "company") ?
