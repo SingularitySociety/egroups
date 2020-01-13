@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { FormGroup, TextField } from '@material-ui/core';
-import { useHistory, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import useDocument from '../../common/useDocument';
 import AccessDenied from '../../common/AccessDenied';
@@ -28,8 +28,6 @@ function Profile(props) {
   const { db, group, user, callbacks, match:{params:{userId}}, classes  } = props;
   const setTabbar = callbacks.setTabbar;
   const [member, err] = useDocument(db, `groups/${group.groupId}/members/${userId}`);
-
-  const history = useHistory();
 
   useEffect(()=>{
     setTabbar("profile", `pr/${userId}`);
