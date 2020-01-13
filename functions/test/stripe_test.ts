@@ -140,6 +140,16 @@ describe('Stripe test', () => {
     
     const customerToken = await stripeApi.createCustomerToken(customer.id, accountId);
     const sharedCustomer = await stripeApi.createSharedCustomer("test subscription", SharedGroupId, userId, email, customerToken.id, accountId);
+
+    const sharedCustomer2 = await stripeApi.getSharedCustomer(SharedGroupId, userId, accountId);
+    sharedCustomer.id.should.equal(sharedCustomer2.id);
+
+    try {
+      await stripeApi.getSharedCustomer(SharedGroupId, "aaa", accountId);
+    } catch (e) {
+      console.log(e.statusCode);
+      // console.log(e);
+    }
     
     await stripeApi.createProduct2("unit_test", "hello", SharedGroupId, accountId);
     const plan = await stripeApi.createPlan2(SharedGroupId, 5000, "jpy", accountId);
