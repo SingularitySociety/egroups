@@ -216,7 +216,7 @@ class GroupRouter extends React.Component {
                   <Route exact path={`/`} render={(props) => <GroupHome {...props} {...context} />} />
               }
               <Route exact path={`/g/${group.groupName}`} render={(props) => <GroupHome {...props} {...context} arp={arps.pages} />} />
-              <Route exact path={`/g/${group.groupName}/member`} render={(props) => <MemberHome {...props} {...context} arps={arps} requirePemission={Privileges.admin} />} />
+              <Route exact path={`/g/${group.groupName}/member`} render={(props) => <MemberHome {...props} {...context} arps={arps} requirePemission={Privileges.member} />} />
               <Route exact path={`/g/${group.groupName}/events`} render={(props) => <Events {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/listing`} render={(props) => <Listing {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/join`} render={(props) => <Join {...props} {...context} />} />
