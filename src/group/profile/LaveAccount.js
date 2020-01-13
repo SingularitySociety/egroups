@@ -40,13 +40,13 @@ function LeaveAccount(props) {
     await refMember.delete();
     callbacks.memberDidUpdate();
     window.location.pathname = "/"; 
-  }
+  };
 
   // cancel:true means we are unsubscribing
   // cancel:false means we are re-subscribing
   async function handleUnsubscribe(cancel) {
     const cancelSubscription = firebase.functions().httpsCallable('cancelSubscription');
-    const context = { groupId:group.groupId, cancel }
+    const context = { groupId:group.groupId, cancel };
     setProcessing(true);
     try {
       const result = (await cancelSubscription(context)).data;
@@ -61,7 +61,7 @@ function LeaveAccount(props) {
 
   const role = roleMap(privilege);
   const roleId = `account.${role}`;
-  const joinedDate = <FormattedDate value={member.created.toDate()} />
+  const joinedDate = <FormattedDate value={member.created.toDate()} />;
   if (privilege === Privileges.owner) {
     return <div>
       <Typography>
@@ -84,11 +84,11 @@ function LeaveAccount(props) {
         if (item.price === plan.amount && item.currency === plan.currency) {
           planName = item.name;
         }
-      })
+      });
       price = <FormattedMessage id={`monthly.fee.${plan.currency}`} 
-            values={{price:plan.amount}} />
-      const date = <FormattedDate value={new Date(end * 1000)} />
-      billing =  <FormattedMessage id={cancelled ? "expire.billing" : "next.billing"} values={{ date }}/>
+                                values={{price:plan.amount}} />;
+      const date = <FormattedDate value={new Date(end * 1000)} />;
+      billing =  <FormattedMessage id={cancelled ? "expire.billing" : "next.billing"} values={{ date }}/>;
     }
     return <React.Fragment>
       <div>
@@ -107,7 +107,7 @@ function LeaveAccount(props) {
       {
         cancelled ? <div>
           <Button variant="contained" className={classes.button} 
-            onClick={()=>{handleUnsubscribe(false)}}>
+                  onClick={()=>{handleUnsubscribe(false);}}>
             <FormattedMessage id={ cancelled ? "resubscribe" : "unsubscribe" } />
           </Button>
           {
@@ -118,7 +118,7 @@ function LeaveAccount(props) {
         :
         <LockedArea label={<FormattedMessage id="warning.dangerous" />}>
           <Button variant="contained" className={classes.button} 
-            onClick={()=>{handleUnsubscribe(true)}}>
+                  onClick={()=>{handleUnsubscribe(true);}}>
             <FormattedMessage id={ cancelled ? "resubscribe" : "unsubscribe" } />
           </Button>
           {
@@ -128,7 +128,7 @@ function LeaveAccount(props) {
         </LockedArea>
       }
     </div>
-    </React.Fragment>
+    </React.Fragment>;
   }
 
   return <React.Fragment>
@@ -147,7 +147,7 @@ function LeaveAccount(props) {
         </Button>
       </LockedArea>
     </div>
-  </React.Fragment>
+  </React.Fragment>;
 }
 
 LeaveAccount.propTypes = {
