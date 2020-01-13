@@ -216,9 +216,9 @@ function MarkdownEditor(props) {
           </IconButton>
           <br/>
           {
-          onDelete && <IconButton size="small" onClick={onDelete}>
+          onDelete && <React.Fragment><br /><br /><IconButton size="small" onClick={onDelete}>
             <TrashIcon />
-          </IconButton>
+          </IconButton></React.Fragment>
           }
         </Grid>
       </Grid>

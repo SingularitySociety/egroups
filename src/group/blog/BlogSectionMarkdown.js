@@ -35,6 +35,7 @@ function BlogSectionMarkdown(props) {
                <IconButton size="small" variant="contained" onClick={(e) => {setEditing(true);}}>
                  <EditIcon />
                </IconButton><br/>
+               <br/><br/>
                <IconButton size="small" variant="contained" onClick={(e) => {onDelete();}}>
                  <DeleteIcon />
                </IconButton>
