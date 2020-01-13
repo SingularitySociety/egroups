@@ -174,8 +174,9 @@ function BlogArticle(props) {
   const toggleReadOnly = () => {
     setReadOnly(!readOnly);
   };
-  const updatePublished = (e) => {
+  const updatePublished = async (e) => {
     if (!readOnly) {
+      await refArticle.set({published: !!e.target.checked}, {merge:true});
       const newArticle = Object.assign({}, article);
       newArticle.published = e.target.checked;
       setArticle(newArticle);
