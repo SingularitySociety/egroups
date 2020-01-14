@@ -25,11 +25,8 @@ export const hello_response = async (req, res) =>{
   res.json({message: "hello"});
 };
 
-export const customer_subscription_deleted = async (event) => {
-  const {data:{object}} = event;
-  const {userId, groupId } = object.metadata;
-  // console.log(userId, groupId);
- 
+
+const delete_subscriber = async (groupId, userId) => {
   // then all subcollection and privilege will remove by trigger
   await db.doc(`/groups/${groupId}/members/${userId}`).delete();
 
@@ -42,10 +39,31 @@ export const customer_subscription_deleted = async (event) => {
       await db.doc(`/users/${userId}/private/stripe`).set(privateData);
     }
   }
-  
+}
+
+// check update cancel
+export const customer_subscription_updated = async (event) => {
+  const {data:{object}} = event;
+  const {userId, groupId } = object.metadata;
+  console.log(userId, groupId);
+  if (object.status === "incomplete_expired") {
+    await delete_subscriber(groupId, userId);
+  } else if (object.status === "canceled") {
+    await delete_subscriber(groupId, userId);
+  }
+
+  await stripeUtils.callbackLog(db, userId, groupId, stripeUtils.stripeActions.subscriptionDeletedByApi, event);
+}
+export const customer_subscription_deleted = async (event) => {
+  const {data:{object}} = event;
+  const {userId, groupId } = object.metadata;
+  // console.log(userId, groupId);
+ 
+  await delete_subscriber(groupId, userId);
   // log
   await stripeUtils.callbackLog(db, userId, groupId, stripeUtils.stripeActions.subscriptionDeletedByApi, event);
 }
+  
 
 // nothing infomation
 export const charge_succeeded = async (event) => {
@@ -99,6 +117,11 @@ export const stripe_parser = async (req, res) => {
     
     if (event.type === "customer.subscription.deleted") {
       await customer_subscription_deleted(event)
+    } else if (event.type === "customer.subscription.updated") {
+      await customer_subscription_updated(event);
+    } else if (event.type === "customer.subscription.created") {
+      // check update cancel
+      console.log("subscription created");
     } else if (event.type === "charge.succeeded") {
       await charge_succeeded(event);
     } else if (event.type === "invoice.payment_succeeded") {
