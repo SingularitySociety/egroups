@@ -394,5 +394,151 @@ export const stripeData = {
       "idempotency_key": "sub_cus_test_customer_ac003e4f-f263-457a-8d4b-27586af24f3f_plan_unit_test_plan_5000_jpy"
     },
     "type": "invoice.payment_succeeded"
-  }
+  },
+  customer_subscription_update_cancel: {
+    "id": "evt_1EsyxzJRcJsJLSj6WJJccdWc",
+    "object": "event",
+    "api_version": "2019-05-16",
+    "created": 1562362155,
+    "data": {
+      "object": {
+        "id": "sub_GXXpSdgUiG500t",
+        "object": "subscription",
+        "application_fee_percent": 10,
+        "billing_cycle_anchor": 1578921251,
+        "billing_thresholds": null,
+        "cancel_at": null,
+        "cancel_at_period_end": false,
+        "canceled_at": 1579004082,
+        "collection_method": "charge_automatically",
+        "created": 1578921251,
+        "current_period_end": 1581599651,
+        "current_period_start": 1578921251,
+        "customer": "shared_cus_cYdiq4JKmsfcvNe4ElwU_7DQPrN3GdxbIJlPkvZHUNaGf4Nq2",
+        "days_until_due": null,
+        "default_payment_method": null,
+        "default_source": null,
+        "default_tax_rates": [
+          {
+            "id": "txr_1FtyTMBIRIpVv7vsqUG2f4mn",
+            "object": "tax_rate",
+            "active": true,
+            "created": 1577374920,
+            "description": "消費税",
+            "display_name": "消費税",
+            "inclusive": false,
+            "jurisdiction": "JA",
+            "livemode": false,
+            "metadata": {
+            },
+            "percentage": 10
+          }
+        ],
+        "discount": null,
+        "ended_at": 1579004082,
+        "items": {
+          "object": "list",
+          "data": [
+            {
+              "id": "si_GXXpdgZY7ai8K1",
+              "object": "subscription_item",
+              "billing_thresholds": null,
+              "created": 1578921252,
+              "metadata": {
+              },
+              "plan": {
+                "id": "plan_cYdiq4JKmsfcvNe4ElwU_300_jpy",
+                "object": "plan",
+                "active": true,
+                "aggregate_usage": null,
+                "amount": 300,
+                "amount_decimal": "300",
+                "billing_scheme": "per_unit",
+                "created": 1575929628,
+                "currency": "jpy",
+                "interval": "month",
+                "interval_count": 1,
+                "livemode": false,
+                "metadata": {
+                  "groupId": "cYdiq4JKmsfcvNe4ElwU"
+                },
+                "nickname": null,
+                "product": "prod_cYdiq4JKmsfcvNe4ElwU",
+                "tiers": null,
+                "tiers_mode": null,
+                "transform_usage": null,
+                "trial_period_days": null,
+                "usage_type": "licensed"
+              },
+              "quantity": 1,
+              "subscription": "sub_GXXpSdgUiG500t",
+              "tax_rates": [
+              ]
+            }
+          ],
+          "has_more": false,
+          "total_count": 1,
+          "url": "/v1/subscription_items?subscription=sub_GXXpSdgUiG500t"
+        },
+        "latest_invoice": "in_1G0SkBBIRIpVv7vsQmvfr0zV",
+        "livemode": false,
+        "metadata": {
+          "userId": "7DQPrN3GdxbIJlPkvZHUNaGf4Nq2",
+          "groupId": "cYdiq4JKmsfcvNe4ElwU"
+        },
+        "next_pending_invoice_item_invoice": null,
+        "pending_invoice_item_interval": null,
+        "pending_setup_intent": null,
+        "plan": {
+          "id": "plan_cYdiq4JKmsfcvNe4ElwU_300_jpy",
+          "object": "plan",
+          "active": true,
+          "aggregate_usage": null,
+          "amount": 300,
+          "amount_decimal": "300",
+          "billing_scheme": "per_unit",
+          "created": 1575929628,
+          "currency": "jpy",
+          "interval": "month",
+          "interval_count": 1,
+          "livemode": false,
+          "metadata": {
+            "groupId": "cYdiq4JKmsfcvNe4ElwU"
+          },
+          "nickname": null,
+          "product": "prod_cYdiq4JKmsfcvNe4ElwU",
+          "tiers": null,
+          "tiers_mode": null,
+          "transform_usage": null,
+          "trial_period_days": null,
+          "usage_type": "licensed"
+        },
+        "quantity": 1,
+        "schedule": null,
+        "start_date": 1578921251,
+        "status": "incomplete_expired",
+        "tax_percent": 10,
+        "trial_end": null,
+        "trial_start": null,
+        "billing": "charge_automatically",
+        "invoice_customer_balance_settings": {
+          "consume_applied_balance_on_void": true
+        },
+        "start": 1578921251
+      },
+      "previous_attributes": {
+        "canceled_at": null,
+        "ended_at": null,
+        "status": "incomplete"
+      }
+    },
+    "livemode": false,
+    "pending_webhooks": 1,
+    "request": {
+      "id": "req_0ztt9oXsddBT9g",
+      "idempotency_key": "sub_cus_test_customer_ac003e4f-f263-457a-8d4b-27586af24f3f_plan_unit_test_plan_5000_jpy"
+    },
+    "type": "customer.subscription.updated"
+  },
+  
 }

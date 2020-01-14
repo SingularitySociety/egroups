@@ -76,4 +76,9 @@ describe('Hello function', () => {
     });
   });
 
+
+  it('should valid api callback', async () => {
+    await express.customer_subscription_updated(stripeWebHookData.stripeData.customer_subscription_update_cancel);
+  });
+  
 });
