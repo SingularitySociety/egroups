@@ -176,10 +176,11 @@ function BlogArticle(props) {
   };
   const updatePublished = async (e) => {
     if (!readOnly) {
-      await refArticle.set({published: !!e.target.checked}, {merge:true});
+      const checked = !!e.target.checked;
       const newArticle = Object.assign({}, article);
-      newArticle.published = e.target.checked;
+      newArticle.published = checked;
       setArticle(newArticle);
+      await refArticle.set({published: checked}, {merge:true});
     }
   };
   const context = { pathArticle:refArticle.path };
@@ -218,7 +219,7 @@ function BlogArticle(props) {
               <IconButton size="small" component={Link} to={`/g/${group.groupName}/${arp.leaf}/${article.articleId}/settings`}>
                 <SettingsIcon />
               </IconButton>
-              <Checkbox checked={published} onChange={(e) => {updatePublished(e);}}/>
+              <Checkbox checked={published} onChange={(e) => {updatePublished(e);}} disabled={readOnly}/>
               Published
             </Grid>
         }
