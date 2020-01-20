@@ -72,7 +72,8 @@ function PaymentLog(props) {
                             <td>{subscription.plan.amount} {subscription.plan.currency}</td>
                           </tr>;
                  } else if ( paymentlog.type === "callback") {
-                   if (paymentlog.data && paymentlog.data.log && paymentlog.data.log.data && paymentlog.data.log.data.object) {
+                   if (paymentlog.data && paymentlog.data.log && paymentlog.data.log.data && paymentlog.data.log.data.object &&
+                       paymentlog.data.log.data.object.object === "invoice") {
                      const dataObject = paymentlog.data.log.data.object;
                      return <tr key={key}>
                               <td>
