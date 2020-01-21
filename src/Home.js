@@ -30,6 +30,7 @@ function Home(props) {
       <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
         <Grid item className={classes.main}>
           <Typography color="error" style={{marginBottom:"5%"}}>
+            <img src="/gluepasslogo.png" style={{width: "100%"}}/><br/>
             <FormattedMessage id="underconstruction.service" />
           </Typography>
           {
