@@ -1,4 +1,6 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
+
 import { withStyles } from '@material-ui/core/styles';
 import Header from './Header';
 import Grid from '@material-ui/core/Grid';
@@ -17,7 +19,7 @@ const Account = props => {
   const { classes, user } = props;
 
   if (!user) {
-    return null;
+    return <Redirect to={"/"} />;
   }
   const  createRow = (name, value) => { return {name, value} };
   const rows = [
