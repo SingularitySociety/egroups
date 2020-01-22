@@ -165,7 +165,7 @@ function App() {
           <Route exact path="/a/new/:groupId" render={(props) => <NewGroup {...props} {...params} />} />
           <Route exact path="/a/login" render={(props) => <Login {...props} {...params} />} />
           <Route exact path="/a/login/cmd/:encoded" render={(props) => <Login {...props} {...params} />} />
-          <Route exact path="/a/login/target/:target" render={(props) => <Login {...props} {...params} />} />
+          <Route exact path="/a/login/target/*" render={(props) => <Login {...props} {...params} />} />
           { // We need to mount the Decoder component only after the user info became available.
             (user) ?
               <Route exact path="/a/decode/:encoded" render={(props) => <Decoder {...props} {...params} />} />

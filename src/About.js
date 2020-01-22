@@ -25,7 +25,7 @@ const About = props => {
   const { classes, user } = props;
   return (
     <React.Fragment>
-      <Header user={user} login="/Login/target/about" />
+      <Header user={user} login="/a/Login/target/a/about" />
       <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
           <Grid className={classes.main}>
           <LegalInfo />

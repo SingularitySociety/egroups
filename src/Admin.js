@@ -22,7 +22,7 @@ const Admin = props => {
 
   return (
     <React.Fragment>
-      <Header user={user} login="/Login/target/admin" />
+      <Header user={user} login="/a/Login/target/a/admin" />
       <Grid container justify="center" alignItems="center" direction="row" className={classes.root}>
           <Grid className={classes.caption}>
           <Typography component="h1" variant="h1" gutterBottom>

@@ -35,22 +35,24 @@ const uiConfig = {
 
 function Login(props)  {
   const { classes, user, match } = props;
-  const { target, encoded } = match.params;
+  const { encoded } = match.params;
 
+  const target = (match && match.params) ? match.params[0] : null;
+  
   if (!user) {
     return <React.Fragment>
-      <Header />
-      <div className={classes.root}>
-        <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()}/>
-      </div>
-    </React.Fragment>
+             <Header />
+             <div className={classes.root}>
+               <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()}/>
+             </div>
+           </React.Fragment>;
   }
   if (encoded) {
-    return <Redirect to={"/a/decode/"+encoded} />
+    return <Redirect to={"/a/decode/"+encoded} />;
   } else if (target) {
-    return <Redirect to={"/"+target} />
+    return <Redirect to={"/"+target} />;
   }
-  return <Redirect to={"/"} />
+  return <Redirect to={"/"} />;
 }
 
 Login.propTypes = {
