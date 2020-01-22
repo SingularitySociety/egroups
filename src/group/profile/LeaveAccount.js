@@ -9,6 +9,7 @@ import useOnDocument from '../../common/useOnDocument';
 import * as firebase from "firebase/app";
 import "firebase/functions";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
   button: {
@@ -101,6 +102,11 @@ function LeaveAccount(props) {
           <FormattedMessage id={roleId} values={{ joinedDate }}/> <br/>
           { price } <br/>
           { billing }
+        </Typography>
+        <Typography>
+          <Button className={classes.button} variant="contained" component={Link} to={`/g/${group.groupName}/account/payment/log`}>
+            <FormattedMessage id="payment.log" />
+          </Button>
         </Typography>
       </div>
       <div>
