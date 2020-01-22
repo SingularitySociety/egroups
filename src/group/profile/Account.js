@@ -6,7 +6,7 @@ import { Redirect } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import EditableField from '../../common/EditableField';
 import ImageUploader from '../../common/ImageUploader';
-import LeaveAccount from './LaveAccount';
+import LeaveAccount from './LeaveAccount';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 
