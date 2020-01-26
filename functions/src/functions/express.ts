@@ -77,6 +77,7 @@ export const charge_succeeded = async (event) => {
 export const invoice_payment_succeeded = async (event) => {
   const {data:{object}} = event;
   const {userId, groupId } = object.lines.data[0].metadata;
+  const { end } = object.lines.data[0].period;
   // console.log(userId, groupId, object);
 
   // store invoice in  user
@@ -89,7 +90,7 @@ export const invoice_payment_succeeded = async (event) => {
   });
 
   const period = {
-    end: object.period_end,
+    end: end,
   };
   // update period in group
   await db.doc(`/groups/${groupId}/members/${userId}/private/stripe`).set({

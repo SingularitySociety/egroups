@@ -75,6 +75,7 @@ function PaymentLog(props) {
                    if (paymentlog.data && paymentlog.data.log && paymentlog.data.log.data && paymentlog.data.log.data.object &&
                        paymentlog.data.log.data.object.object === "invoice") {
                      const dataObject = paymentlog.data.log.data.object;
+                     const period = dataObject.lines.data[0].period;
                      return <tr key={key}>
                               <td>
                                 <FormattedMessage id="payment.payment"/>
@@ -85,9 +86,9 @@ function PaymentLog(props) {
                                 </MUILink>
                               </td>
                               <td>{utils.convDateTimeFormmat(paymentlog.created.seconds)}</td>
-                              <td>{utils.convDateFormmat(dataObject.period_start)}</td>
+                              <td>{utils.convDateFormmat(period.start)}</td>
                               <td>-</td>
-                              <td>{utils.convDateFormmat(dataObject.period_end)}</td>
+                              <td>{utils.convDateFormmat(period.end)}</td>
                               <td>
                                 {dataObject.subtotal} {dataObject.currency}
                               </td>
