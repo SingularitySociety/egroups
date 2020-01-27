@@ -67,7 +67,7 @@ describe('Hello function', () => {
     period.period.end.should.equal(1565042402);
     
     const period2 = (await admin_db.doc(`/groups/${groupId}/members/${userId}`).get()).data();
-    period2.period.end.should.equal(1562364002);
+    period2.period.end.should.equal(1565042402);
     period2.displayName.should.equal("---");
 
     const res = await admin_db.collection("/stripelog").orderBy("created", "desc").limit(2).get();
