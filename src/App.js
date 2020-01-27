@@ -113,7 +113,7 @@ function App() {
   useEffect(() => {
     if (user) {
       const detachPrivilegesObserver = db.doc(`privileges/${user.uid}`).onSnapshot(async (snapshot) => {
-        setPrivileges(snapshot.data());
+        // setPrivileges(snapshot.data());
         const getJWT = firebase.functions().httpsCallable('getJWT');
         const token = (await getJWT()).data; 
         //console.log("token", token);
