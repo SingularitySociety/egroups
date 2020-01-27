@@ -64,7 +64,7 @@ describe('Hello function', () => {
     invoice.invoiceUrl.should.equal('https://pay.stripe.com/invoice/invst_bdxqbrKhnuEjJu7oIi0UouxE3x/pdf')
     
     const period = (await admin_db.doc(`/groups/${groupId}/members/${userId}/private/stripe`).get()).data();
-    period.period.end.should.equal(1562364002);
+    period.period.end.should.equal(1565042402);
     
     const period2 = (await admin_db.doc(`/groups/${groupId}/members/${userId}`).get()).data();
     period2.period.end.should.equal(1562364002);
