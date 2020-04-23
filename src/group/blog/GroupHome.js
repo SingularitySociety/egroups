@@ -10,15 +10,51 @@ import ArticleList from './ArticleList';
 import { Typography } from '@material-ui/core';
 import useDocument from '../../common/useDocument';
 
+import MUILink from '@material-ui/core/link';
+import { Link } from 'react-router-dom';
+
 const styles = theme => ({
   welcome: {
     marginTop: theme.spacing(0),
-  }
+  },
+  footerMenu: {
+    position: "fixed",
+    bottom: "10px",
+    width: "100%",
+    left: 0,
+    "z-index": 10,
+  },
+  footerFrame: {
+    border: "1px solid #ccc",
+    "background-color": "#fff",
+    width: "80%",
+    margin: "auto",
+  },
+  footerInner: {
+    margin: "10px",
+    overflow: "hidden",
+  },
+  footerButton: {
+    width: "50%",
+    float: "left",
+  },
+  footerEnrollment: {
+    borderRadius: "10px",
+    textAlign: "center",
+    fontSize: "2rem",
+    color: "#fff",
+    backgroundColor: "#2196f3",
+    padding: "20px"
+  },
+  footerPrice: {
+    textAlign: "center",
+    fontSize: "1.5rem",
+  },
 });
 
 function GroupHome(props) {
   const { group, db, user, callbacks, intl:{messages} } = props;
-  const { arp, privilege, profiles, history } = props;
+  const { arp, privilege, profiles, history, classes } = props;
   const setTabbar = callbacks.setTabbar;
   const pathArticle = group.homepageId && `groups/${group.groupId}/pages/${group.homepageId}`;
   const [ article ] = useDocument(db, pathArticle);
@@ -60,14 +96,43 @@ function GroupHome(props) {
 
   const context = { group, user, db, article, arp, callbacks, privilege, profiles, history };
   //const context = { user, group, db, member, history };
+
+  // todo 会員じゃない場合に表示 && 金額表示
+  const path = `/g/${group.groupName}/` 
+        + (group.subscription ? "subscribe" : "join");
+
   return (
-    <div>
-      { article && <BlogArticle {...context} pathArticle={pathArticle} />}
-      <Typography component="h3" variant="h3">
-        <FormattedMessage id="pages" />
-      </Typography>
-      <ArticleList {...context}/>
-    </div>
+    <React.Fragment>
+      <div>
+        { article && <BlogArticle {...context} pathArticle={pathArticle} />}
+        <Typography component="h3" variant="h3">
+          <FormattedMessage id="pages" />
+        </Typography>
+        <ArticleList {...context}/>
+      </div>
+      <div className={classes.footerMenu}>
+        <div className={classes.footerFrame}>
+          <div className={classes.footerInner}>
+            <div className={classes.footerButton}>
+              <div className={classes.footerPrice}>
+                月額1000円<br/>
+                （税別)
+              </div>
+            </div>
+            <div className={classes.footerButton}>
+              <MUILink component={Link}
+                       to={path}
+              >
+                
+                <div className={classes.footerEnrollment}>
+                  <FormattedMessage id="join" />
+                </div>
+              </MUILink>
+            </div>
+          </div>
+        </div>
+      </div>
+    </React.Fragment>
   );
 }
 
