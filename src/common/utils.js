@@ -8,6 +8,7 @@ export const convDateFormmat = (date) => {
 export const convDateTimeFormmat = (date) => {
   return moment.unix(date).format("YYYY/MM/DD HH:mm:ss");
 };
+// todo use const/Privileges.js
 export const privilegeText = (privilege) => {
   if (privilege === 0x2000000) {
     return "privilege.owner";

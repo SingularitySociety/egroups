@@ -203,7 +203,7 @@ class GroupRouter extends React.Component {
       }
       return false;
     };
-    const context = { user, group, db, member, history, rootGroup, profiles, callbacks, privilege, accessControll };
+    const context = { user, group, db, member, history, rootGroup, pageInfo, profiles, callbacks, privilege, accessControll };
     
     return (
       <MuiThemeProvider theme={theme}>

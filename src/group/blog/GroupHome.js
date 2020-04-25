@@ -10,9 +10,6 @@ import ArticleList from './ArticleList';
 import { Typography } from '@material-ui/core';
 import useDocument from '../../common/useDocument';
 
-import MUILink from '@material-ui/core/link';
-import { Link } from 'react-router-dom';
-
 const styles = theme => ({
   welcome: {
     marginTop: theme.spacing(0),
@@ -54,12 +51,12 @@ const styles = theme => ({
 
 function GroupHome(props) {
   const { group, db, user, callbacks, intl:{messages} } = props;
-  const { arp, privilege, profiles, history, classes } = props;
+  const { arp, privilege, profiles, history, classes, pageInfo } = props;
   const setTabbar = callbacks.setTabbar;
   const pathArticle = group.homepageId && `groups/${group.groupId}/pages/${group.homepageId}`;
   const [ article ] = useDocument(db, pathArticle);
   const groupDidUpdate = callbacks.groupDidUpdate;
-
+  console.log(pageInfo);
   useEffect(()=>{
     setTabbar("home");
   }, [setTabbar]);
@@ -94,45 +91,17 @@ function GroupHome(props) {
     }
   }, [db, group, privilege, user, messages, groupDidUpdate]);
 
-  const context = { group, user, db, article, arp, callbacks, privilege, profiles, history };
+  const context = { group, user, db, article, arp, callbacks, privilege, profiles, history, pageInfo };
   //const context = { user, group, db, member, history };
 
-  // todo 会員じゃない場合に表示 && 金額表示
-  const path = `/g/${group.groupName}/` 
-        + (group.subscription ? "subscribe" : "join");
-
   return (
-    <React.Fragment>
-      <div>
-        { article && <BlogArticle {...context} pathArticle={pathArticle} />}
-        <Typography component="h3" variant="h3">
-          <FormattedMessage id="pages" />
-        </Typography>
-        <ArticleList {...context}/>
-      </div>
-      <div className={classes.footerMenu}>
-        <div className={classes.footerFrame}>
-          <div className={classes.footerInner}>
-            <div className={classes.footerButton}>
-              <div className={classes.footerPrice}>
-                月額1000円<br/>
-                （税別)
-              </div>
-            </div>
-            <div className={classes.footerButton}>
-              <MUILink component={Link}
-                       to={path}
-              >
-                
-                <div className={classes.footerEnrollment}>
-                  <FormattedMessage id="join" />
-                </div>
-              </MUILink>
-            </div>
-          </div>
-        </div>
-      </div>
-    </React.Fragment>
+    <div>
+      { article && <BlogArticle {...context} pathArticle={pathArticle} />}
+      <Typography component="h3" variant="h3">
+        <FormattedMessage id="pages" />
+      </Typography>
+      <ArticleList {...context}/>
+    </div>
   );
 }
 

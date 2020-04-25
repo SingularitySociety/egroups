@@ -14,6 +14,9 @@ import Privileges from '../../const/Privileges';
 import { FormattedDate } from 'react-intl';
 import { canEditArticle, isPublished } from '../../common/utils';
 
+import MUILink from '@material-ui/core/link';
+import { FormattedMessage } from 'react-intl';
+
 import useOnCollection from '../../common/useOnCollection';
 
 const styles = theme => ({
@@ -39,10 +42,43 @@ const styles = theme => ({
     //color: "#606060",
     marginLeft: theme.spacing(1),
   },
+  footerMenu: {
+    position: "fixed",
+    bottom: "10px",
+    width: "100%",
+    left: 0,
+    "z-index": 10,
+  },
+  footerFrame: {
+    border: "1px solid #ccc",
+    "background-color": "#fff",
+    width: "80%",
+    margin: "auto",
+  },
+  footerInner: {
+    margin: "10px",
+    overflow: "hidden",
+  },
+  footerButton: {
+    width: "50%",
+    float: "left",
+  },
+  footerEnrollment: {
+    borderRadius: "10px",
+    textAlign: "center",
+    fontSize: "2rem",
+    color: "#fff",
+    backgroundColor: "#2196f3",
+    padding: "20px"
+  },
+  footerPrice: {
+    textAlign: "center",
+    fontSize: "1.5rem",
+  },
 });
 
 function BlogArticle(props) {
-  const { group, arp, user, pathArticle, privilege, classes, db, profiles, callbacks } = props;
+  const { group, arp, user, pathArticle, privilege, classes, db, profiles, callbacks, pageInfo } = props;
   //state = {article:null, sections:[], resouces:null, readOnly:true};
   const [ article, setArticle ] = useState(props.article);
   const [ resources, setResources ] = useState(null);
@@ -201,73 +237,125 @@ function BlogArticle(props) {
   const userName = (her && her.displayName) || "...";
   const thumbnails = her && her.profile && her.profile.thumbnails;
   const published = isPublished(article);
+
+  // todo 会員じゃない場合に表示 && 金額表示
+  console.log(group);
+  console.log(pageInfo);
+  const enableFooter = pageInfo && (pageInfo.tabId !== "invited") && (privilege === Privileges.guest);
+  const joinPath = `/g/${group.groupName}/` + (group.subscription ? "subscribe" : "join");
+
+
   
   return (
-    <div className={frameClass}>
-      <Grid container>
-        <Grid item xs={canEdit ? 9 : 12}>
+    <React.Fragment>
+      <div className={frameClass}>
+        <Grid container>
+          <Grid item xs={canEdit ? 9 : 12}>
             <Typography component="h1" variant="h1" gutterBottom className={classes.title}>
-            {article.title}
-          </Typography>
-        </Grid>
-        {
-          canEdit && 
-            <Grid item xs={3}>
-              <IconButton size="small" onClick={toggleReadOnly}>
-                {readOnly ? <EditIcon /> : <SaveIcon/> }
-              </IconButton>
-              <IconButton size="small" component={Link} to={`/g/${group.groupName}/${arp.leaf}/${article.articleId}/settings`}>
-                <SettingsIcon />
-              </IconButton>
-              <Checkbox checked={published} onChange={(e) => {updatePublished(e);}} disabled={readOnly}/>
-              Published
-            </Grid>
-        }
-      </Grid>
-      {
-        privilege >= Privileges.member &&
-        <Grid container className={classes.userFrame}>
-          <Grid item>
-            <ImageUploader key={ thumbnails ? 1 : 2 } imagePath={""} imageThumbnails={thumbnails}
-                           readOnly={true} displayMode="thumbSmall" inline={true} />
-          </Grid>
-          <Grid item className={classes.userName}>
-            <Typography variant="caption" gutterBottom>
-              { userName }<br/><FormattedDate value={ article.created.toDate() } />
+              {article.title}
             </Typography>
           </Grid>
-        </Grid>
-      }
-      { editMode && 
-        <BlogSectionCreator index={ 0 } {...context}
-                            insertImage={insertImage} insertMarkdown={insertMarkdown}
-                            insertVideo={insertVideo} insertUrl={insertUrl} />
-      }
-      {
-        article.sections.map((sectionId, index)=>{
-          if (resources[sectionId]) {
-            const editing = (editingFlags||{})[sectionId];
-            return <div key={sectionId}>
-                     <BlogSection {...props}
-                                  index={index} sectionId={sectionId} deleteSection={deleteSection}
-                                  editing={editing} updateEditingFlag={updateEditingFlag}
-                                  resource={resources[sectionId]} readOnly={!editMode} saveMarkdown={saveMarkdown}
-                                  onImageUploadSection={onImageUploadSection} onVideoUploadSection={onVideoUploadSection}
-                                  onImageSizeChange={onImageSizeChange}
-                                  onUpdateUrlSection={onUpdateUrlSection}
-                                  {...context} />
-                     { editMode && <BlogSectionCreator
-                                     index={ index+1 } {...context}
-                                     insertImage={insertImage} insertMarkdown={insertMarkdown}
-                                     insertVideo={insertVideo} insertUrl={insertUrl}
-                                   /> }
-            </div>;
-          } else {
-            return <div key={sectionId}/>;
+          {
+            canEdit && 
+              <Grid item xs={3}>
+                <IconButton size="small" onClick={toggleReadOnly}>
+                  {readOnly ? <EditIcon /> : <SaveIcon/> }
+                </IconButton>
+                <IconButton size="small" component={Link} to={`/g/${group.groupName}/${arp.leaf}/${article.articleId}/settings`}>
+                  <SettingsIcon />
+                </IconButton>
+                <Checkbox checked={published} onChange={(e) => {updatePublished(e);}} disabled={readOnly}/>
+                Published
+              </Grid>
           }
-        })
+        </Grid>
+        {
+          privilege >= Privileges.member &&
+            <Grid container className={classes.userFrame}>
+              <Grid item>
+                <ImageUploader key={ thumbnails ? 1 : 2 } imagePath={""} imageThumbnails={thumbnails}
+                               readOnly={true} displayMode="thumbSmall" inline={true} />
+              </Grid>
+              <Grid item className={classes.userName}>
+                <Typography variant="caption" gutterBottom>
+                  { userName }<br/><FormattedDate value={ article.created.toDate() } />
+                </Typography>
+              </Grid>
+            </Grid>
+        }
+        { editMode && 
+          <BlogSectionCreator index={ 0 } {...context}
+                              insertImage={insertImage} insertMarkdown={insertMarkdown}
+                              insertVideo={insertVideo} insertUrl={insertUrl} />
+        }
+        {
+          article.sections.map((sectionId, index)=>{
+            if (resources[sectionId]) {
+              const editing = (editingFlags||{})[sectionId];
+              return <div key={sectionId}>
+              <BlogSection {...props}
+                           index={index} sectionId={sectionId} deleteSection={deleteSection}
+                           editing={editing} updateEditingFlag={updateEditingFlag}
+                           resource={resources[sectionId]} readOnly={!editMode} saveMarkdown={saveMarkdown}
+                           onImageUploadSection={onImageUploadSection} onVideoUploadSection={onVideoUploadSection}
+                           onImageSizeChange={onImageSizeChange}
+                           onUpdateUrlSection={onUpdateUrlSection}
+                           {...context} />
+              { editMode && <BlogSectionCreator
+              index={ index+1 } {...context}
+              insertImage={insertImage} insertMarkdown={insertMarkdown}
+              insertVideo={insertVideo} insertUrl={insertUrl}
+                        /> }
+            </div>;
+            } else {
+              return <div key={sectionId}/>;
+            }
+          })
+        }
+      </div>
+      {
+        (enableFooter) && 
+          <div className={classes.footerMenu}>
+            <div className={classes.footerFrame}>
+              {group.subscription ? 
+               <div className={classes.footerInner}>
+                 <div className={classes.footerButton}>
+                   <div className={classes.footerPrice}>
+                     {group.plans ?group.plans.map((plan) => {
+                       return <span>月額{plan.price}円<br/></span>;
+                     }) : "No Plan" }
+                     （税別)
+                   </div>
+                 </div>
+                 <div className={classes.footerButton}>
+                 <MUILink component={Link}
+                          to={joinPath}
+                 >
+                   
+                   <div className={classes.footerEnrollment}>
+                     <FormattedMessage id="join" />
+                   </div>
+                 </MUILink>
+                 </div>
+               </div> :
+               <div className={classes.footerInner}>
+                 <div>
+                   <MUILink component={Link}
+                            to={joinPath}
+                   >
+                     
+                     <div className={classes.footerEnrollment}>
+                       <FormattedMessage id="join" />
+                     </div>
+                   </MUILink>
+                 </div>
+               </div>
+
+              }
+            </div>
+          </div>
       }
-    </div>
+    </React.Fragment>
   );
 }
 

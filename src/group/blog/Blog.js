@@ -10,7 +10,7 @@ const styles = theme => ({
 
 function Blog(props) {
   const { match:{params:{articleId}}, callbacks, arp, user, db, group } = props;
-  const { privilege, profiles } = props;
+  const { privilege, profiles, pageInfo } = props;
   const pathArticle = `groups/${group.groupId}/${arp.collection}/${articleId}`;
   const [ article, err ] = useDocument(db, pathArticle);
   const setTabbar = callbacks.setTabbar;
@@ -38,7 +38,7 @@ function Blog(props) {
     return "";
   }
   article.articleId = articleId;
-  const context = { user, article, arp, group, privilege, db, profiles, callbacks };
+  const context = { user, article, arp, group, privilege, db, profiles, callbacks, pageInfo };
   return <BlogArticle {...context} pathArticle={pathArticle}/>;
 }
 
