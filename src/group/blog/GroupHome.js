@@ -13,17 +13,50 @@ import useDocument from '../../common/useDocument';
 const styles = theme => ({
   welcome: {
     marginTop: theme.spacing(0),
-  }
+  },
+  footerMenu: {
+    position: "fixed",
+    bottom: "10px",
+    width: "100%",
+    left: 0,
+    "z-index": 10,
+  },
+  footerFrame: {
+    border: "1px solid #ccc",
+    "background-color": "#fff",
+    width: "80%",
+    margin: "auto",
+  },
+  footerInner: {
+    margin: "10px",
+    overflow: "hidden",
+  },
+  footerButton: {
+    width: "50%",
+    float: "left",
+  },
+  footerEnrollment: {
+    borderRadius: "10px",
+    textAlign: "center",
+    fontSize: "2rem",
+    color: "#fff",
+    backgroundColor: "#2196f3",
+    padding: "20px"
+  },
+  footerPrice: {
+    textAlign: "center",
+    fontSize: "1.5rem",
+  },
 });
 
 function GroupHome(props) {
   const { group, db, user, callbacks, intl:{messages} } = props;
-  const { arp, privilege, profiles, history } = props;
+  const { arp, privilege, profiles, history, classes, pageInfo } = props;
   const setTabbar = callbacks.setTabbar;
   const pathArticle = group.homepageId && `groups/${group.groupId}/pages/${group.homepageId}`;
   const [ article ] = useDocument(db, pathArticle);
   const groupDidUpdate = callbacks.groupDidUpdate;
-
+  console.log(pageInfo);
   useEffect(()=>{
     setTabbar("home");
   }, [setTabbar]);
@@ -58,8 +91,9 @@ function GroupHome(props) {
     }
   }, [db, group, privilege, user, messages, groupDidUpdate]);
 
-  const context = { group, user, db, article, arp, callbacks, privilege, profiles, history };
+  const context = { group, user, db, article, arp, callbacks, privilege, profiles, history, pageInfo };
   //const context = { user, group, db, member, history };
+
   return (
     <div>
       { article && <BlogArticle {...context} pathArticle={pathArticle} />}

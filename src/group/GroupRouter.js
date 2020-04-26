@@ -59,6 +59,11 @@ const styles = theme => ({
       paddingRight: theme.spacing(5),
       maxWidth: "50rem",
     },
+  },
+  footerSpace: {
+    width: "100%",
+    position: "relative",
+    height: "200px",
   }
 });
 // To share code between Blog Articles and Pages 
@@ -203,7 +208,7 @@ class GroupRouter extends React.Component {
       }
       return false;
     };
-    const context = { user, group, db, member, history, rootGroup, profiles, callbacks, privilege, accessControll };
+    const context = { user, group, db, member, history, rootGroup, pageInfo, profiles, callbacks, privilege, accessControll };
     
     return (
       <MuiThemeProvider theme={theme}>
@@ -242,6 +247,8 @@ class GroupRouter extends React.Component {
               <Route exact path={`/g/${group.groupName}/pg/:articleId`} render={(props) => <Blog {...props} {...context} arp={arps.pages} />} />
               <Route exact path={`/g/${group.groupName}/pg/:articleId/settings`} render={(props) => <ArticleSettings {...props} {...context} arp={arps.pages} />} />
             </Grid>
+        </Grid>
+        <Grid className={classes.footerSpace}>
         </Grid>
       </MuiThemeProvider>
     );
