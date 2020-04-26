@@ -51,7 +51,7 @@ function Join(props) {
                   <FormattedMessage id="application" />
                 </Typography>;
   if (!user) {
-    return <PleaseLogin />;
+    return <PleaseLogin group={group}/>;
   }
   if (privilege) {
     console.log("Become a member or already a member. Redireting to the group home.");
