@@ -148,6 +148,9 @@ class MyAppBar extends React.Component {
       case "account":
         crams = [this.cramHome, this.cramAccount];
         break;
+      case "user.payment.log":
+        crams = [this.cramHome, this.cramAccount, this.breadCram(pageInfo.tabId, pageInfo.path)];
+        break;
       case "settings":
         crams = [this.cramHome, this.cramSettings];
         break;
