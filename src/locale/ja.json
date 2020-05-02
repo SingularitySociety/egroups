@@ -237,6 +237,7 @@
   
     "payment": "payment",
     "payment.log": "決済ログ",
+    "user.payment.log": "決済ログ",
     "payment.user": "ユーザ",
     "payment.created_date": "決済日",
     "payment.start_date": "期間開始",

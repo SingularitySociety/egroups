@@ -18,7 +18,7 @@ function PaymentLog(props) {
   const setTabbar = callbacks.setTabbar;
 
   useEffect(()=> {
-    setTabbar("payment.log", "payment/log");
+    setTabbar("user.payment.log", "payment/log");
   }, [setTabbar]);
   
   const params = {paymentQueryFilter:getQueryFilter(group, user)};
