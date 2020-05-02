@@ -74,7 +74,7 @@ class MyAppBar extends React.Component {
           </MUILink>;
   }
   openMe = e => {
-    this.setState({anchorEl:e.currentTarget})
+    this.setState({anchorEl:e.currentTarget});
   }
   closeMe = () => {
     this.setState({anchorEl:null});

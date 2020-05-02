@@ -99,7 +99,8 @@ function CheckoutForm(props) {
           </FormControl>
           <br/>
           <div>
-            <Button variant="contained" color="primary" onClick={subscribe} className={classes.button}>
+            <Button variant="contained" color="primary" onClick={subscribe} className={classes.button}
+                    disabled={processing} >
               <FormattedMessage id="do.subscribe" />
             </Button>
             {
