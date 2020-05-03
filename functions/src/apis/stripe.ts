@@ -120,6 +120,14 @@ export const createProduct2 = async (name, description, groupId, accountId) => {
   return product;
   
 }
+export const updateCustomer = async (token, userId) => {
+  const customerId = stripeUtils.getCustomerId(userId);
+  const res = await getStripe().customers.update(customerId, {
+    source: token
+  });
+  return res;
+};
+
 export const createCustomer = async (token, userId) => {
   const newToken = await getStripe().tokens.retrieve(token);
   if (!newToken || !newToken.card) {

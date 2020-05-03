@@ -58,8 +58,8 @@ const getSharedCustomer = async (db, displayName, userId, groupId, email, accoun
   return sharedCustomer;
 }
 
-export const createCustomer = async (db, data, context) => {
-  const error_handler = logger.error_response_handler({func: "createCustomer", message: "invalid request"});
+export const createOrUpdateCustomer = async (db, data, context, funcName, func, funcId) => {
+  const error_handler = logger.error_response_handler({func: funcName, message: "invalid request"});
 
   if (!context.auth || !context.auth.uid) {
     return error_handler({error_type: logger.ErrorTypes.NoUid});
@@ -75,11 +75,11 @@ export const createCustomer = async (db, data, context) => {
     return error_handler({error_type: logger.ErrorTypes.NoUser});
   }
   try {
-    const customer = await stripeApi.createCustomer(token, userId);
+    const customer = await func(token, userId);
     if (!customer) {
       return error_handler({error_type: logger.ErrorTypes.StripeApi});
     }
-    
+
     (await db.doc(`users/${userId}/secret/stripe`).set({
       customer: customer,
     }, {merge:true}));
@@ -88,7 +88,7 @@ export const createCustomer = async (db, data, context) => {
       customer: stripeUtils.convCustomerData(customer),
     }, {merge:true}));
     
-    await stripeUtils.stripeLog(db, userId, {customer}, stripeUtils.stripeActions.customerCreated);
+    await stripeUtils.stripeLog(db, userId, {customer}, funcId);
   
     return {
       customer: customer,
@@ -102,6 +102,19 @@ export const createCustomer = async (db, data, context) => {
       return error_handler({error_type: logger.ErrorTypes.StripeApi});
     }
   }
+}
+
+export const createCustomer = async (db, data, context) => {
+  return await createOrUpdateCustomer(db, data, context,
+                                      "createCustomer",
+                                      stripeApi.createCustomer,
+                                      stripeUtils.stripeActions.customerCreated);
+}  
+export const updateCustomer = async (db, data, context) => {
+  return await createOrUpdateCustomer(db, data, context,
+                                      "updateCustomer",
+                                      stripeApi.updateCustomer,
+                                      stripeUtils.stripeActions.customerUpdated);
 }
 
 export const updateCustomerCardExpire = async (db, data, context) => {
@@ -120,7 +133,6 @@ export const updateCustomerCardExpire = async (db, data, context) => {
     return error_handler({error_type: logger.ErrorTypes.NoUser});
   }
   try {
-    // todo get card
     const stripe_secret = (await db.doc(`users/${userId}/secret/stripe`).get());
     if (!stripe_secret) {
       return error_handler({error_type: logger.ErrorTypes.ParameterMissing});

@@ -112,6 +112,7 @@ export const convPersonData = (personData) => {
 // stripe log
 export const stripeActions = {
   customerCreated: 1,
+  customerUpdated: 2,
   updateCustomerCardExpire: 10,
   productCreated: 100,
   planCreated: 200,
