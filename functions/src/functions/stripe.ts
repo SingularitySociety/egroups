@@ -128,7 +128,7 @@ export const updateCustomerCardExpire = async (db, data, context) => {
     const stripe_secret_data = stripe_secret.data();
     if (!stripe_secret_data || !stripe_secret_data.customer ||
         !stripe_secret_data.customer.sources || !stripe_secret_data.customer.sources.data ||
-        stripe_secret_data.customer.sources.data.length == 0) {
+        stripe_secret_data.customer.sources.data.length === 0) {
       return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
     }
     const customerId = stripe_secret_data.customer.id;
