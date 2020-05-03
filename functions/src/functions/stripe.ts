@@ -104,6 +104,65 @@ export const createCustomer = async (db, data, context) => {
   }
 }
 
+export const updateCustomerCardExpire = async (db, data, context) => {
+  const error_handler = logger.error_response_handler({func: "updateCustomer", message: "invalid request"});
+  if (!context.auth || !context.auth.uid) {
+    return error_handler({error_type: logger.ErrorTypes.NoUid});
+  }
+  if (!data || !data.exp_month || !data.exp_year) {
+    return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+  }
+  const userId = context.auth.uid;
+  const {exp_year, exp_month} = data;
+
+  const user = (await db.doc(`users/${userId}`).get());
+  if (!user.exists) {
+    return error_handler({error_type: logger.ErrorTypes.NoUser});
+  }
+  try {
+    // todo get card
+    const stripe_secret = (await db.doc(`users/${userId}/secret/stripe`).get());
+    if (!stripe_secret) {
+      return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+    }
+    const stripe_secret_data = stripe_secret.data();
+    if (!stripe_secret_data || !stripe_secret_data.customer ||
+        !stripe_secret_data.customer.sources || !stripe_secret_data.customer.sources.data ||
+        stripe_secret_data.customer.sources.data.length === 0) {
+      return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+    }
+    const customerId = stripe_secret_data.customer.id;
+    const cardId = stripe_secret_data.customer.sources.data[0].id;
+    const updateCardRes = await stripeApi.updateCard(customerId, cardId, exp_year, exp_month);
+    if (!updateCardRes) {
+      return error_handler({error_type: logger.ErrorTypes.ParameterMissing});
+    }
+    const newCustomer = await stripeApi.getCustomer(userId);
+
+    (await db.doc(`users/${userId}/secret/stripe`).set({
+      customer: newCustomer,
+    }, {merge:true}));
+    
+    (await db.doc(`users/${userId}/private/stripe`).set({
+      customer: stripeUtils.convCustomerData(newCustomer),
+    }, {merge:true}));
+    
+    await stripeUtils.stripeLog(db, userId, {customer: newCustomer}, stripeUtils.stripeActions.customerCreated);
+
+    return {
+      customer: newCustomer,
+      result: true,
+    };
+  } catch (e) {
+    // console.log(e);
+    if (e && e.raw && e.raw.code && e.raw.code === "expired_card") {
+      return error_handler({error_type: logger.ErrorTypes.StripeApiExpireCard});
+    } else {
+      return error_handler({error_type: logger.ErrorTypes.StripeApi});
+    }
+  }
+}
+
 export const createSubscription = async (db, data, context) => {
   // plan = {price, currency}
   const error_handler = logger.error_response_handler({func: "createSubscription", message: "invalid request"});

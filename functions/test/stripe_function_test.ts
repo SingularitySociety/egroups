@@ -154,7 +154,39 @@ describe('function test', () => {
     await stripeApi.deleteCustomer(aliceUserId);
   });
 
+  it ('stripe update card expire test', async function() {
+    this.timeout(30000);
+    const uuid = UUID();
+    const aliceUserId = "test_customer_" + uuid;
 
+    await admin_db.doc(`users/${aliceUserId}`).set({
+      uid: aliceUserId,
+    })
+
+    const visa_source = await functions_test_helper.createVisaCard();
+    const visa_token = visa_source.id;
+    
+    const req = {token: visa_token};
+    const context = {auth: {uid: aliceUserId, token:{}}};
+    const wrapped = test.wrap(index.createCustomer);
+
+    await wrapped(req, context);
+
+    // todo
+    const exp_month = 11;
+    const exp_year = 25;
+    const req2 = {exp_month, exp_year};
+    const context2 = {auth: {uid: aliceUserId, token:{}}};
+    const wrapped2 = test.wrap(index.updateCustomerCardExpire);
+
+    const res = await wrapped2(req2, context2);
+    res.result.should.equal(true);
+
+    const updateCustomer = (await admin_db.doc(`users/${aliceUserId}/private/stripe`).get()).data();
+    updateCustomer.customer[0].exp_month.should.equal(exp_month);
+    updateCustomer.customer[0].exp_year.should.equal(exp_year + 2000);
+  });
+  
   it ('stripe create subscription test', async function() {
     this.timeout(30000);
     const uuid = UUID();
