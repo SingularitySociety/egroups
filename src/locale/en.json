@@ -238,6 +238,7 @@
     "payment": "payment",
     "payment.log": "Payment log",
     "user.payment.log": "Payment log",
+    "payment.update": "Payment update",
     "payment.user": "User name",
     "payment.created_date": "Created",
     "payment.start_date": "Start date",
