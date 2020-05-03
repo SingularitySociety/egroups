@@ -172,7 +172,6 @@ describe('function test', () => {
 
     await wrapped(req, context);
 
-    // todo
     const exp_month = 11;
     const exp_year = 25;
     const req2 = {exp_month, exp_year};
@@ -185,6 +184,41 @@ describe('function test', () => {
     const updateCustomer = (await admin_db.doc(`users/${aliceUserId}/private/stripe`).get()).data();
     updateCustomer.customer[0].exp_month.should.equal(exp_month);
     updateCustomer.customer[0].exp_year.should.equal(exp_year + 2000);
+  });
+
+  it ('stripe update card', async function() {
+    this.timeout(30000);
+    const uuid = UUID();
+    const aliceUserId = "test_customer_" + uuid;
+
+    await admin_db.doc(`users/${aliceUserId}`).set({
+      uid: aliceUserId,
+    })
+
+    const visa_source = await functions_test_helper.createVisaCard();
+    const visa_token = visa_source.id;
+    
+    const req = {token: visa_token};
+    const context = {auth: {uid: aliceUserId, token:{}}};
+    const wrapped = test.wrap(index.createCustomer);
+
+    await wrapped(req, context);
+
+    const master_source = await functions_test_helper.createMasterCard();
+    const master_token = master_source.id;
+
+    const req2 = {token: master_token};
+    const context2 = {auth: {uid: aliceUserId, token:{}}};
+    const wrapped2 = test.wrap(index.updateCustomer);
+
+    const res = await wrapped2(req2, context2);
+    res.result.should.equal(true);
+
+    const updateCustomer = (await admin_db.doc(`users/${aliceUserId}/private/stripe`).get()).data();
+    updateCustomer.customer[0].brand.should.equal('MasterCard');
+    const supdateCustomer = (await admin_db.doc(`users/${aliceUserId}/secret/stripe`).get()).data();
+    supdateCustomer.customer.sources.data[0].brand.should.equal("MasterCard");
+    supdateCustomer.customer.sources.data.length.should.equal(1);
   });
   
   it ('stripe create subscription test', async function() {
