@@ -120,7 +120,6 @@ export const createProduct2 = async (name, description, groupId, accountId) => {
   return product;
   
 }
-
 export const createCustomer = async (token, userId) => {
   const newToken = await getStripe().tokens.retrieve(token);
   if (!newToken || !newToken.card) {
@@ -148,6 +147,17 @@ export const createCustomer = async (token, userId) => {
   return customer;
   
 }
+export const getCustomer = async (userId) => {
+  const customerId = stripeUtils.getCustomerId(userId);
+  return await getExistCustomer(customerId)
+};
+export const updateCard = async (customerId, cardId, exp_year, exp_month) => {
+  const res = await getStripe().customers.updateSource(customerId, cardId, {
+    exp_year, exp_month
+  });
+  return res;
+}
+
 export const getSharedCustomer = async(groupId, userId, accountId) => {
   const customerId = stripeUtils.getSharedCustomerId(groupId, userId);
   const customer = await getStripe().customers.retrieve(customerId, {

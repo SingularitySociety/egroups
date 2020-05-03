@@ -117,6 +117,8 @@ service cloud.firestore {
           && groupInfo(groupId).privileges.article.create <= userPrivilege(groupId, request.auth.uid);
       allow update, delete: if resource.data.owner == request.auth.uid;
       allow update, delete: if isUserAdmin(groupId, request.auth.uid);
+      allow update: if request.auth.uid != null
+        && (groupInfo(groupId).privileges.article.update || 16777216)  <= userPrivilege(groupId, request.auth.uid);
     }
 		match /groups/{groupId}/articles/{articleId}/sections/{sectionId} {
       allow read: if request.auth.uid != null 
@@ -125,6 +127,8 @@ service cloud.firestore {
           && articleInfo(groupId, articleId).owner == request.auth.uid;
       allow read: if isOpenToPublic(articleInfo(groupId, articleId).read);
       allow write: if isUserAdmin(groupId, request.auth.uid);
+      allow write: if request.auth.uid != null
+        && (groupInfo(groupId).privileges.article.update || 16777216)  <= userPrivilege(groupId, request.auth.uid);
     }
 		match /groups/{groupId}/pages/{pageId} {
     	allow read;
@@ -132,12 +136,16 @@ service cloud.firestore {
           && groupInfo(groupId).privileges.page.create <= userPrivilege(groupId, request.auth.uid);
       allow update, delete: if resource.data.owner == request.auth.uid;
       allow update, delete: if isUserAdmin(groupId, request.auth.uid);
+      allow update: if request.auth.uid != null
+        && (groupInfo(groupId).privileges.page.update || 16777216)  <= userPrivilege(groupId, request.auth.uid);
     }
 		match /groups/{groupId}/pages/{pageId}/sections/{sectionId} {
     	allow read;
       allow write: if request.auth.uid != null 
           && pageInfo(groupId, pageId).owner == request.auth.uid;
       allow write: if isUserAdmin(groupId, request.auth.uid);
+      allow write: if request.auth.uid != null
+        && (groupInfo(groupId).privileges.page.update || 16777216)  <= userPrivilege(groupId, request.auth.uid);
     }
 		match /groups/{groupId}/events/{eventId} {
     	allow read;

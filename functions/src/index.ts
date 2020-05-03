@@ -65,6 +65,9 @@ export const updateCustomAccount = functions.https.onCall(async (data, context) 
 export const createCustomer = functions.https.onCall(async (data, context) => {
   return await stripeFunctions.createCustomer(db, data, context);
 });
+export const updateCustomerCardExpire = functions.https.onCall(async (data, context) => {
+  return await stripeFunctions.updateCustomerCardExpire(db, data, context);
+});
 
 export const createSubscription = functions.https.onCall(async (data, context) => {
   return await stripeFunctions.createSubscription(db, data, context);
