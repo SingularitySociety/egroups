@@ -151,6 +151,9 @@ class MyAppBar extends React.Component {
       case "user.payment.log":
         crams = [this.cramHome, this.cramAccount, this.breadCram(pageInfo.tabId, pageInfo.path)];
         break;
+      case "payment.update":
+        crams = [this.cramHome, this.cramAccount, this.breadCram(pageInfo.tabId, pageInfo.path)];
+        break;
       case "settings":
         crams = [this.cramHome, this.cramSettings];
         break;
@@ -179,7 +182,7 @@ class MyAppBar extends React.Component {
         crams = [this.cramHome, this.cramListing, this.breadCram(pageInfo.tabId, pageInfo.path)];
         break;
       case "payment.log":
-        crams = [this.cramHome, this.cramSettings, this.breadCram(pageInfo.tabId, pageInfo.path)];
+        crams = [this.cramHome, this.cramAccount, this.breadCram(pageInfo.tabId, pageInfo.path)];
         break;
       case "payout.log":
         crams = [this.cramHome, this.cramSettings, this.breadCram(pageInfo.tabId, pageInfo.path)];
