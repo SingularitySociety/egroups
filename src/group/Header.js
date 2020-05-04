@@ -89,7 +89,7 @@ class MyAppBar extends React.Component {
     const { classes, user, group, rootGroup, pageInfo, privilege } = this.props;
     const { anchorEl } = this.state;
     const cmd = { cmd:"redirect", path:window.location.pathname };
-    const loginUrl = "/a/login/cmd/"+encodeURIComponent(JSON.stringify(cmd));
+    const loginUrl = `/g/${group.groupName}/login/cmd/` +encodeURIComponent(JSON.stringify(cmd));
 
     let tabs = []; 
     let crams = [];

@@ -38,10 +38,10 @@ function Login(props)  {
   const { encoded } = match.params;
 
   const target = (match && match.params) ? match.params[0] : null;
-  
+  const enableHeader = !props.disableHeader;
   if (!user) {
     return <React.Fragment>
-             <Header />
+             {enableHeader && <Header />}
              <div className={classes.root}>
                <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()}/>
              </div>
