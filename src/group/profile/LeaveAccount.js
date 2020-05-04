@@ -107,6 +107,9 @@ function LeaveAccount(props) {
           <Button className={classes.button} variant="contained" component={Link} to={`/g/${group.groupName}/account/payment/log`}>
             <FormattedMessage id="payment.log" />
           </Button>
+          <Button className={classes.button} variant="contained" component={Link} to={`/g/${group.groupName}/account/payment/update`}>
+            <FormattedMessage id="payment.update" />
+          </Button>
         </Typography>
       </div>
       <div>

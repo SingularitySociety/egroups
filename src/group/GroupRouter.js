@@ -38,6 +38,7 @@ import PaymentLog from './payment/Log';
 import AccountPaymentLog from './profile/PaymentLog';
 import PaymentIntents from './payment/PaymentIntents';
 import PayoutLog from './payment/PayoutLog';
+import PaymentUpdate from './payment/Update';
 import {themeOptions} from '../theme.js';
 import CustomAccount from './join/CustomAccount';
 
@@ -233,6 +234,7 @@ class GroupRouter extends React.Component {
               <Route exact path={`/g/${group.groupName}/payment/payout`} render={(props) => <PayoutLog {...props} {...context} requirePemission={Privileges.admin} />} />
               <Route exact path={`/g/${group.groupName}/account`} render={(props) => <Account {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/account/payment/log`} render={(props) => <AccountPaymentLog {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/account/payment/update`} render={(props) => <PaymentUpdate {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/settings`} render={(props) => <Settings {...props} {...context} requirePemission={Privileges.admin} />} />
               <Route exact path={`/g/${group.groupName}/settings/billing`} render={(props) => <SettingsBilling {...props} {...context} requirePemission={Privileges.admin} />} />
               <Route exact path={`/g/${group.groupName}/settings/bank`}  render={(props) => <CustomAccount {...props} {...context} requirePemission={Privileges.admin} />} />
