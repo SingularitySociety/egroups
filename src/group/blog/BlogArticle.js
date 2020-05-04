@@ -14,7 +14,7 @@ import Privileges from '../../const/Privileges';
 import { FormattedDate } from 'react-intl';
 import { canEditArticle, isPublished } from '../../common/utils';
 
-import MUILink from '@material-ui/core/link';
+import { Button } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 
 import useOnCollection from '../../common/useOnCollection';
@@ -67,8 +67,7 @@ const styles = theme => ({
     borderRadius: "10px",
     textAlign: "center",
     fontSize: "2rem",
-    color: "#fff",
-    backgroundColor: "#2196f3",
+    width: "100%",
     padding: "20px"
   },
   footerPrice: {
@@ -327,27 +326,23 @@ function BlogArticle(props) {
                      （税別)
                    </div>
                  </div>
-                 <div className={classes.footerButton}>
-                 <MUILink component={Link}
-                          to={joinPath}
+                 <div className={classes.footerButton}
+                      color="primary"
                  >
-                   
-                   <div className={classes.footerEnrollment}>
+                   <Button variant="contained" color="primary" component={Link} to={joinPath}
+                           className={classes.footerEnrollment}
+                   >
                      <FormattedMessage id="join" />
-                   </div>
-                 </MUILink>
+                   </Button>
                  </div>
                </div> :
                <div className={classes.footerInner}>
                  <div>
-                   <MUILink component={Link}
-                            to={joinPath}
+                   <Button variant="contained" color="primary" component={Link} to={joinPath}
+                           className={classes.footerEnrollment}
                    >
-                     
-                     <div className={classes.footerEnrollment}>
-                       <FormattedMessage id="join" />
-                     </div>
-                   </MUILink>
+                     <FormattedMessage id="join" />
+                   </Button>
                  </div>
                </div>
 

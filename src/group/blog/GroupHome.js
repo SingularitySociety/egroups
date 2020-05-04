@@ -51,7 +51,7 @@ const styles = theme => ({
 
 function GroupHome(props) {
   const { group, db, user, callbacks, intl:{messages} } = props;
-  const { arp, privilege, profiles, history, classes, pageInfo } = props;
+  const { arp, privilege, profiles, history, pageInfo } = props;
   const setTabbar = callbacks.setTabbar;
   const pathArticle = group.homepageId && `groups/${group.groupId}/pages/${group.homepageId}`;
   const [ article ] = useDocument(db, pathArticle);
