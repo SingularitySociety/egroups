@@ -38,7 +38,7 @@ const useStyles = makeStyles(styles);
 
 function CardRegistration(props) {
   const classes = useStyles();
-  const { stripe, customer, didUpdate } = props;
+  const { stripe, customer, didUpdate, isUpdate } = props;
   const [ name, setName ] = useState("");
   const [ error, setError ] = useState(null);
   const [ processing, setProcessing ] = useState(false);
@@ -53,8 +53,8 @@ function CardRegistration(props) {
     const {error, token} = await stripe.createToken({type: 'card', name: name});
     if (token) {
       console.log(token);
-      const createCustomer = firebase.functions().httpsCallable('createCustomer');
-      const result = (await createCustomer({token:token.id})).data; 
+      const createOrUpdateCustomer = firebase.functions().httpsCallable(isUpdate ? 'createCustomer' : 'updateCustomer');
+      const result = (await createOrUpdateCustomer({token:token.id})).data; 
       console.log(result);
       if (result.result && result.customer) {
         didUpdate(result.customer);

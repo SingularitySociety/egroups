@@ -26,14 +26,14 @@ function PaymentUpdate(props) {
   },[db, group, user]);
 
   function customerDidUpdate(customer) {
-    console.log("customerDidUpdate");
+    console.log("customerDidUpdate 2", customer);
     setCustomer(customer);
   }
   
   return (
     <StripeProvider apiKey={ stripeConfig.apiKey }>
       <Elements hidePostalCode={true}>
-      <CardRegistration customer={customer} didUpdate={customerDidUpdate} />
+      <CardRegistration customer={customer} didUpdate={customerDidUpdate} isUpdate={true} />
       </Elements>
     </StripeProvider>);
 }
