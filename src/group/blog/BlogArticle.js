@@ -17,6 +17,8 @@ import { canEditArticle, isPublished } from '../../common/utils';
 import { Button } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 
+import FooterMenu from './FooterMenu';
+
 import useOnCollection from '../../common/useOnCollection';
 
 const styles = theme => ({
@@ -41,38 +43,6 @@ const styles = theme => ({
   userName: {
     //color: "#606060",
     marginLeft: theme.spacing(1),
-  },
-  footerMenu: {
-    position: "fixed",
-    bottom: "10px",
-    width: "100%",
-    left: 0,
-    "z-index": 10,
-  },
-  footerFrame: {
-    border: "1px solid #ccc",
-    "background-color": "#fff",
-    width: "80%",
-    margin: "auto",
-  },
-  footerInner: {
-    margin: "10px",
-    overflow: "hidden",
-  },
-  footerButton: {
-    width: "50%",
-    float: "left",
-  },
-  footerEnrollment: {
-    borderRadius: "10px",
-    textAlign: "center",
-    fontSize: "2rem",
-    width: "100%",
-    padding: "20px"
-  },
-  footerPrice: {
-    textAlign: "center",
-    fontSize: "1.5rem",
   },
 });
 
@@ -238,13 +208,8 @@ function BlogArticle(props) {
   const published = isPublished(article);
 
   // todo 会員じゃない場合に表示 && 金額表示
-  console.log(group);
-  console.log(pageInfo);
   const enableFooter = pageInfo && (pageInfo.tabId !== "invited") && (privilege === Privileges.guest);
-  const joinPath = `/g/${group.groupName}/` + (group.subscription ? "subscribe" : "join");
 
-
-  
   return (
     <React.Fragment>
       <div className={frameClass}>
@@ -313,42 +278,7 @@ function BlogArticle(props) {
         }
       </div>
       {
-        (enableFooter) && 
-          <div className={classes.footerMenu}>
-            <div className={classes.footerFrame}>
-              {group.subscription ? 
-               <div className={classes.footerInner}>
-                 <div className={classes.footerButton}>
-                   <div className={classes.footerPrice}>
-                     {group.plans ?group.plans.map((plan) => {
-                       return <span>月額{plan.price}円<br/></span>;
-                     }) : "No Plan" }
-                     （税別)
-                   </div>
-                 </div>
-                 <div className={classes.footerButton}
-                      color="primary"
-                 >
-                   <Button variant="contained" color="primary" component={Link} to={joinPath}
-                           className={classes.footerEnrollment}
-                   >
-                     <FormattedMessage id="join" />
-                   </Button>
-                 </div>
-               </div> :
-               <div className={classes.footerInner}>
-                 <div>
-                   <Button variant="contained" color="primary" component={Link} to={joinPath}
-                           className={classes.footerEnrollment}
-                   >
-                     <FormattedMessage id="join" />
-                   </Button>
-                 </div>
-               </div>
-
-              }
-            </div>
-          </div>
+        (enableFooter) && <FooterMenu group={group} classes={classes} />
       }
     </React.Fragment>
   );
