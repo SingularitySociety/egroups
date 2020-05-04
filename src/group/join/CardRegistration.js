@@ -53,7 +53,7 @@ function CardRegistration(props) {
     const {error, token} = await stripe.createToken({type: 'card', name: name});
     if (token) {
       console.log(token);
-      const createOrUpdateCustomer = firebase.functions().httpsCallable(isUpdate ? 'createCustomer' : 'updateCustomer');
+      const createOrUpdateCustomer = firebase.functions().httpsCallable(isUpdate ? 'updateCustomer' : 'createCustomer');
       const result = (await createOrUpdateCustomer({token:token.id})).data; 
       console.log(result);
       if (result.result && result.customer) {
