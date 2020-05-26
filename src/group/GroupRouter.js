@@ -19,6 +19,7 @@ import Chat from './chat/Chat';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 import Settings from './Settings';
+import Login from '../Login';
 import Blog from './blog/Blog';
 import Articles from './blog/Articles';
 import Channels from './chat/Channels';
@@ -248,6 +249,7 @@ class GroupRouter extends React.Component {
               <Route exact path={`/g/${group.groupName}/pages`} render={(props) => <Articles {...props} {...context} arp={arps.pages} />} />
               <Route exact path={`/g/${group.groupName}/pg/:articleId`} render={(props) => <Blog {...props} {...context} arp={arps.pages} />} />
               <Route exact path={`/g/${group.groupName}/pg/:articleId/settings`} render={(props) => <ArticleSettings {...props} {...context} arp={arps.pages} />} />
+              <Route exact path={`/g/${group.groupName}/login/cmd/:encoded`} render={(props) => <Login {...props} disableHeader={true}/>} />
             </Grid>
         </Grid>
         <Grid className={classes.footerSpace}>
