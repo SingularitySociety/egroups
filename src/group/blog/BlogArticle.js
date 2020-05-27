@@ -14,9 +14,6 @@ import Privileges from '../../const/Privileges';
 import { FormattedDate } from 'react-intl';
 import { canEditArticle, isPublished } from '../../common/utils';
 
-import { Button } from '@material-ui/core';
-import { FormattedMessage } from 'react-intl';
-
 import FooterMenu from './FooterMenu';
 
 import useOnCollection from '../../common/useOnCollection';
