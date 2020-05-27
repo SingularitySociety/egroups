@@ -10,11 +10,13 @@ import { FormattedMessage } from 'react-intl';
 import { Grid } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 
+import FooterMenu from './FooterMenu';
+
 const styles = theme => ({
 });
 
 function Articles(props) {
-  const { db, group, user, callbacks, arp, privilege, history } = props;
+  const { db, group, user, callbacks, arp, privilege, history, classes } = props;
   const setTabbar = callbacks.setTabbar;
   const [redirect, setRedirect] = useState(null);
 
@@ -42,16 +44,24 @@ function Articles(props) {
   const context = { user, group, db, history, arp, privilege };
   const canCreateNew = privilege 
         >= ((group.privileges && group.privileges[arp.tabLeaf] && group.privileges[arp.tabLeaf].create) || Privileges.member);
+
+  const enableFooter = group.subscription && (privilege === Privileges.guest);
+
   return (
-    <Grid container justify="center" spacing={1}>
-      <Grid item xs={12} style={{textAlign:"center"}}>
-        { canCreateNew && <CreateNew createNew={ createArticle } 
-            action={<FormattedMessage id="create" />} label={<FormattedMessage id={arp.tabLeaf} />}/> }
+    <React.Fragment>
+      <Grid container justify="center" spacing={1}>
+        <Grid item xs={12} style={{textAlign:"center"}}>
+          { canCreateNew && <CreateNew createNew={ createArticle } 
+                                       action={<FormattedMessage id="create" />} label={<FormattedMessage id={arp.tabLeaf} />}/> }
+        </Grid>
+        <Grid item xs={12}>
+          <ArticleList {...context} />
+        </Grid>
       </Grid>
-      <Grid item xs={12}>
-        <ArticleList {...context} />
-      </Grid>
-    </Grid>
+      {
+        (enableFooter) && <FooterMenu group={group} classes={classes} />
+      }
+    </React.Fragment>
   );
 }
 

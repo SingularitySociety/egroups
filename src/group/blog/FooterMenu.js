@@ -49,8 +49,8 @@ function FooterMenu(props) {
               <div className={classes.footerInner}>
                 <div className={classes.footerButton}>
                   <div className={classes.footerPrice}>
-                    {group.plans ?group.plans.map((plan) => {
-                      return <span>月額{plan.price}円<br/></span>;
+                    {group.plans ?group.plans.map((plan, key) => {
+                      return <span key={key}>月額{plan.price}円<br/></span>;
                     }) : "No Plan" }
                     （税別)
                   </div>

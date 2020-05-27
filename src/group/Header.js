@@ -94,6 +94,8 @@ class MyAppBar extends React.Component {
     let tabs = []; 
     let crams = [];
     //let cramHome = (privilege > 0) ? this.cramHome : this.cramHomePage;
+    const home = user ? this.cramHome : this.cramHomePage;
+
     switch(pageInfo.tabId) {
       case "home":
         tabs = [this.tabHome];
@@ -101,67 +103,67 @@ class MyAppBar extends React.Component {
           tabs.push(this.tabMemberOnly);
         }
         if (!rootGroup) {
-          tabs.push(this.tabExit);
+          // tabs.push(this.tabExit);
         }
         break;
       case "member":
         tabs = [this.tabMember, this.tabChannels, this.tabBlog, this.tabEvents];
         break;
       case "articles":
-        crams = [this.cramHome, this.cramBlog];
+        crams = [home, this.cramBlog];
         break;
       case "article":
-        crams = [this.cramHome, this.cramBlog, this.breadCram(pageInfo.tabId, pageInfo.path)];
+        crams = [home, this.cramBlog, this.breadCram(pageInfo.tabId, pageInfo.path)];
         break;
       case "article.settings":
-        crams = [this.cramHome, this.cramBlog, this.breadCram("article", pageInfo.path),
+        crams = [home, this.cramBlog, this.breadCram("article", pageInfo.path),
                 this.breadCram(pageInfo.tabId, pageInfo.path+"/settings")];
         break;
 
       case "pages":
-        crams = [this.cramHome, this.cramPages];
+        crams = [home, this.cramPages];
         break;
       case "page":
-        crams = [this.cramHome, this.cramPages, this.breadCram(pageInfo.tabId, pageInfo.path)];
+        crams = [home, this.cramPages, this.breadCram(pageInfo.tabId, pageInfo.path)];
         break;
       case "page.settings":
-        crams = [this.cramHome, this.cramPages, this.breadCram("page", pageInfo.path),
+        crams = [home, this.cramPages, this.breadCram("page", pageInfo.path),
                 this.breadCram(pageInfo.tabId, pageInfo.path+"/settings")];
         break;
     
       case "channels":
-        crams = [this.cramHome, this.cramChannels];
+        crams = [home, this.cramChannels];
         break;
       case "channel":
-        crams = [this.cramHome, this.cramChannels, this.breadCram(pageInfo.tabId, pageInfo.path)];
+        crams = [home, this.cramChannels, this.breadCram(pageInfo.tabId, pageInfo.path)];
         break;
       case "channel.settings":
-        crams = [this.cramHome, this.cramChannels, this.breadCram("channel", pageInfo.path),
+        crams = [home, this.cramChannels, this.breadCram("channel", pageInfo.path),
                 this.breadCram(pageInfo.tabId, pageInfo.path+"/settings")];
         break;
       case "events":
-        crams = [this.cramHome, this.cramEvents];
+        crams = [home, this.cramEvents];
         break;
       case "event":
-        crams = [this.cramHome, this.cramEvents, this.breadCram(pageInfo.tabId, pageInfo.path)];
+        crams = [home, this.cramEvents, this.breadCram(pageInfo.tabId, pageInfo.path)];
         break;
       case "account":
-        crams = [this.cramHome, this.cramAccount];
+        crams = [home, this.cramAccount];
         break;
       case "user.payment.log":
-        crams = [this.cramHome, this.cramAccount, this.breadCram(pageInfo.tabId, pageInfo.path)];
+        crams = [home, this.cramAccount, this.breadCram(pageInfo.tabId, pageInfo.path)];
         break;
       case "payment.update":
         crams = [this.cramHome, this.cramAccount, this.breadCram(pageInfo.tabId, pageInfo.path)];
         break;
       case "settings":
-        crams = [this.cramHome, this.cramSettings];
+        crams = [home, this.cramSettings];
         break;
       case "settings.billing":
-          crams = [this.cramHome, this.cramSettings, this.cramSettingsBilling];
+          crams = [home, this.cramSettings, this.cramSettingsBilling];
           break;
       case "settings.bank":
-          crams = [this.cramHome, this.cramSettings, this.cramSettingsBilling, this.cramSettingsBank];
+          crams = [home, this.cramSettings, this.cramSettingsBilling, this.cramSettingsBank];
           break;
       case "join":
         crams = [this.cramHomePage, this.cramJoin];
@@ -170,22 +172,22 @@ class MyAppBar extends React.Component {
           crams = [this.cramHomePage, this.cramSubscribe];
           break;
       case "invite":
-        crams = [this.cramHome, this.cramInvite];
+        crams = [home, this.cramInvite];
         break;
       case "invited":
         crams = [];
         break;
       case "listing":
-        crams = [this.cramHome, this.cramListing];
+        crams = [home, this.cramListing];
         break;
       case "profile":
-        crams = [this.cramHome, this.cramListing, this.breadCram(pageInfo.tabId, pageInfo.path)];
+        crams = [home, this.cramListing, this.breadCram(pageInfo.tabId, pageInfo.path)];
         break;
       case "payment.log":
-        crams = [this.cramHome, this.cramAccount, this.breadCram(pageInfo.tabId, pageInfo.path)];
+        crams = [home, this.cramAccount, this.breadCram(pageInfo.tabId, pageInfo.path)];
         break;
       case "payout.log":
-        crams = [this.cramHome, this.cramSettings, this.breadCram(pageInfo.tabId, pageInfo.path)];
+        crams = [home, this.cramSettings, this.breadCram(pageInfo.tabId, pageInfo.path)];
         break;
       default:
         console.log("### unknown tabId", pageInfo.tabId);
@@ -209,6 +211,10 @@ class MyAppBar extends React.Component {
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h4" color="inherit" className={classes.grow} >
+              <MUILink color="inherit" component={Link} to={`/`}>
+                GluePass
+              </MUILink>
+              / 
               <MUILink color="inherit" component={Link} to={`/g/${group.groupName}`}>
                 {group.title}
               </MUILink>
@@ -243,7 +249,7 @@ class MyAppBar extends React.Component {
         </Menu>
         { subbar }
         {
-          (pageInfo.tabId !== "invited") && 
+          (pageInfo.tabId !== "invited" && !group.subscription)  && 
           <JoinButton privilege={privilege} pageInfo={pageInfo} group={group} />
         }
       </div>
