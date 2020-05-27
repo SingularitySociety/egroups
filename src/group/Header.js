@@ -211,7 +211,7 @@ class MyAppBar extends React.Component {
               <MUILink color="inherit" component={Link} to={`/`}>
                 GluePass
               </MUILink>
-              /
+              / 
               <MUILink color="inherit" component={Link} to={`/g/${group.groupName}`}>
                 {group.title}
               </MUILink>
@@ -246,7 +246,7 @@ class MyAppBar extends React.Component {
         </Menu>
         { subbar }
         {
-          (pageInfo.tabId !== "invited") && 
+          (pageInfo.tabId !== "invited" && !group.subscription)  && 
           <JoinButton privilege={privilege} pageInfo={pageInfo} group={group} />
         }
       </div>

@@ -204,8 +204,7 @@ function BlogArticle(props) {
   const thumbnails = her && her.profile && her.profile.thumbnails;
   const published = isPublished(article);
 
-  // todo 会員じゃない場合に表示 && 金額表示
-  const enableFooter = pageInfo && (pageInfo.tabId !== "invited") && (privilege === Privileges.guest);
+  const enableFooter = group.subscription && pageInfo && (pageInfo.tabId !== "invited") && (privilege === Privileges.guest);
 
   return (
     <React.Fragment>
