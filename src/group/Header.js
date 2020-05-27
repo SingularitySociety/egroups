@@ -89,7 +89,7 @@ class MyAppBar extends React.Component {
     const { classes, user, group, rootGroup, pageInfo, privilege } = this.props;
     const { anchorEl } = this.state;
     const cmd = { cmd:"redirect", path:window.location.pathname };
-    const loginUrl = "/a/login/cmd/"+encodeURIComponent(JSON.stringify(cmd));
+    const loginUrl = `/g/${group.groupName}/login/cmd/` +encodeURIComponent(JSON.stringify(cmd));
 
     let tabs = []; 
     let crams = [];
@@ -153,6 +153,9 @@ class MyAppBar extends React.Component {
       case "user.payment.log":
         crams = [home, this.cramAccount, this.breadCram(pageInfo.tabId, pageInfo.path)];
         break;
+      case "payment.update":
+        crams = [this.cramHome, this.cramAccount, this.breadCram(pageInfo.tabId, pageInfo.path)];
+        break;
       case "settings":
         crams = [home, this.cramSettings];
         break;
@@ -181,7 +184,7 @@ class MyAppBar extends React.Component {
         crams = [home, this.cramListing, this.breadCram(pageInfo.tabId, pageInfo.path)];
         break;
       case "payment.log":
-        crams = [home, this.cramSettings, this.breadCram(pageInfo.tabId, pageInfo.path)];
+        crams = [home, this.cramAccount, this.breadCram(pageInfo.tabId, pageInfo.path)];
         break;
       case "payout.log":
         crams = [home, this.cramSettings, this.breadCram(pageInfo.tabId, pageInfo.path)];

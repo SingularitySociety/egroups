@@ -237,6 +237,7 @@
   
     "payment": "payment",
     "payment.log": "決済ログ",
+    "payment.update": "決済更新",
     "user.payment.log": "決済ログ",
     "payment.user": "ユーザ",
     "payment.created_date": "決済日",

@@ -19,6 +19,7 @@ import Chat from './chat/Chat';
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 import Settings from './Settings';
+import Login from '../Login';
 import Blog from './blog/Blog';
 import Articles from './blog/Articles';
 import Channels from './chat/Channels';
@@ -38,6 +39,7 @@ import PaymentLog from './payment/Log';
 import AccountPaymentLog from './profile/PaymentLog';
 import PaymentIntents from './payment/PaymentIntents';
 import PayoutLog from './payment/PayoutLog';
+import PaymentUpdate from './payment/Update';
 import {themeOptions} from '../theme.js';
 import CustomAccount from './join/CustomAccount';
 
@@ -233,6 +235,7 @@ class GroupRouter extends React.Component {
               <Route exact path={`/g/${group.groupName}/payment/payout`} render={(props) => <PayoutLog {...props} {...context} requirePemission={Privileges.admin} />} />
               <Route exact path={`/g/${group.groupName}/account`} render={(props) => <Account {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/account/payment/log`} render={(props) => <AccountPaymentLog {...props} {...context} />} />
+              <Route exact path={`/g/${group.groupName}/account/payment/update`} render={(props) => <PaymentUpdate {...props} {...context} />} />
               <Route exact path={`/g/${group.groupName}/settings`} render={(props) => <Settings {...props} {...context} requirePemission={Privileges.admin} />} />
               <Route exact path={`/g/${group.groupName}/settings/billing`} render={(props) => <SettingsBilling {...props} {...context} requirePemission={Privileges.admin} />} />
               <Route exact path={`/g/${group.groupName}/settings/bank`}  render={(props) => <CustomAccount {...props} {...context} requirePemission={Privileges.admin} />} />
@@ -246,6 +249,7 @@ class GroupRouter extends React.Component {
               <Route exact path={`/g/${group.groupName}/pages`} render={(props) => <Articles {...props} {...context} arp={arps.pages} />} />
               <Route exact path={`/g/${group.groupName}/pg/:articleId`} render={(props) => <Blog {...props} {...context} arp={arps.pages} />} />
               <Route exact path={`/g/${group.groupName}/pg/:articleId/settings`} render={(props) => <ArticleSettings {...props} {...context} arp={arps.pages} />} />
+              <Route exact path={`/g/${group.groupName}/login/cmd/:encoded`} render={(props) => <Login {...props} disableHeader={true}/>} />
             </Grid>
         </Grid>
         <Grid className={classes.footerSpace}>
