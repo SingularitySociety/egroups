@@ -84,7 +84,7 @@ export const invoice_payment_succeeded = async (event) => {
   const id = [String(event.created), event.id].join("_")
   
   await db.doc(`/users/${userId}/private/stripe/invoice/${id}`).set({
-    groupId,
+    groupId: groupId || "",
     invoiceUrl: object.invoice_pdf,
     created: object.created,
   });
