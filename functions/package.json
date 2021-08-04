@@ -23,7 +23,7 @@
     "watch:mocha": "NODE_ENV=test mocha -w -watch-extensions ts -r ts-node/register --recursive test/*_test.ts"
   },
   "engines": {
-    "node": "10"
+    "node": "12"
   },
   "main": "lib/index.js",
   "dependencies": {
@@ -43,11 +43,11 @@
     "uuid-v4": "^0.1.0"
   },
   "devDependencies": {
-    "@firebase/testing": "^0.11.0",
+    "@firebase/testing": "^0.20.11",
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
-    "firebase-functions-test": "^0.1.6",
+    "firebase-functions-test": "^0.3.1",
     "mocha": "^6.1.4",
     "supertest": "^4.0.2",
     "ts-node": "^8.2.0",
