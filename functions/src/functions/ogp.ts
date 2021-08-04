@@ -1,7 +1,6 @@
 import * as ogpUtil from "../utils/ogp"
 
 export const opg_update = async (change, context) => {
-  console.log("1a");
   const snapshot = change.after;
   const data = await snapshot.data();
   if (data.type === "url" && data.url && data.isNew) { 
