@@ -46,9 +46,9 @@ jobs:
           key: functions-npm-cache-{{ arch }}-{{ .Branch }}-{{ checksum "functions/package.json" }}
           paths:
             - functions/node_modules
-      - run:
-          name: firestore test
-          command: npm run mocha
+#      - run:
+#          name: firestore test
+#          command: npm run mocha
       - run:
           name: funtions tslint
           command: |
