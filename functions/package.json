@@ -23,7 +23,7 @@
     "watch:mocha": "NODE_ENV=test mocha -w -watch-extensions ts -r ts-node/register --recursive test/*_test.ts"
   },
   "engines": {
-    "node": "12"
+    "node": "16"
   },
   "main": "lib/index.js",
   "dependencies": {
@@ -34,11 +34,11 @@
     "deepmerge": "^3.3.0",
     "express": "^4.17.1",
     "firebase-admin": "~8.9.0",
-    "firebase-functions": "^3.14.1",
+    "firebase-functions": "^3.24.1",
     "libphonenumber-js": "^1.7.20",
     "nodemailer": "^6.3.0",
     "ogp-parser": "^0.4.4",
-    "sharp": "^0.22.1",
+    "sharp": "^0.30.7",
     "stripe": "^7.3.0",
     "uuid-v4": "^0.1.0"
   },

@@ -37,7 +37,11 @@ export const api = functions.https.onRequest(express.app);
 // (5) Find the "App Engine default service account" and click the Edit button
 // (6) Click "+ Add Another Role"
 // (7) Select "Service Account Token Creator" and Save
-export const getJWT = functions.https.onCall(async (data, context) => {
+export const getJWT = functions
+  .runWith({
+    memory: "1GB" as "1GB",
+  })
+  .https.onCall(async (data, context) => {
   if (context.auth) {
     const privileges = (await db.doc(`/privileges/${context.auth.uid}`).get()).data();    
     const token = await admin.auth().createCustomToken(context.auth.uid, {privileges});
@@ -46,55 +50,111 @@ export const getJWT = functions.https.onCall(async (data, context) => {
   return { token: null };
 });
 
-export const requestOnetimeSMS = functions.https.onCall(async (data, context) => {
+export const requestOnetimeSMS = functions
+  .runWith({
+    memory: "1GB" as "1GB",
+  })
+  .https.onCall(async (data, context) => {
   return await onetimesmsFunctions.requestOnetimeSMS(db, data, context);
 });
 
-export const confirmOnetimeSMS = functions.https.onCall(async (data, context) => {
+export const confirmOnetimeSMS = functions
+  .runWith({
+    memory: "1GB" as "1GB",
+  })
+  .https.onCall(async (data, context) => {
   return await onetimesmsFunctions.confirmOnetimeSMS(db, data, context);
 });
 
-export const createCustomAccount = functions.https.onCall(async (data, context) => {
+export const createCustomAccount = functions
+  .runWith({
+    memory: "1GB" as "1GB",
+  })
+  .https.onCall(async (data, context) => {
   return await stripeFunctions.createCustomAccount(db, data, context);
 });
 
-export const updateCustomAccount = functions.https.onCall(async (data, context) => {
+export const updateCustomAccount = functions
+  .runWith({
+    memory: "1GB" as "1GB",
+  })
+  .https.onCall(async (data, context) => {
   return await stripeFunctions.updateCustomAccount(db, data, context);
 });
 
-export const createCustomer = functions.https.onCall(async (data, context) => {
+export const createCustomer = functions
+  .runWith({
+    memory: "1GB" as "1GB",
+  })
+  .https.onCall(async (data, context) => {
   return await stripeFunctions.createCustomer(db, data, context);
 });
-export const updateCustomer = functions.https.onCall(async (data, context) => {
+export const updateCustomer = functions
+  .runWith({
+    memory: "1GB" as "1GB",
+  })
+  .https.onCall(async (data, context) => {
   return await stripeFunctions.updateCustomer(db, data, context);
 });
-export const updateCustomerCardExpire = functions.https.onCall(async (data, context) => {
+export const updateCustomerCardExpire = functions
+  .runWith({
+    memory: "1GB" as "1GB",
+  })
+  .https.onCall(async (data, context) => {
   return await stripeFunctions.updateCustomerCardExpire(db, data, context);
 });
 
-export const createSubscription = functions.https.onCall(async (data, context) => {
+export const createSubscription = functions
+  .runWith({
+    memory: "1GB" as "1GB",
+  })
+  .https.onCall(async (data, context) => {
   return await stripeFunctions.createSubscription(db, data, context);
 })
 
-export const cancelSubscription = functions.https.onCall(async (data, context) => {
+export const cancelSubscription = functions
+  .runWith({
+    memory: "1GB" as "1GB",
+  })
+  .https.onCall(async (data, context) => {
   return await stripeFunctions.cancelSubscription(db, data, context);
 })
 
-export const groupDidUpdate = functions.firestore.document('groups/{groupId}').onUpdate(async (change, context) => {
+export const groupDidUpdate = functions
+  .runWith({
+    memory: "1GB" as "1GB",
+  })
+  .firestore.document('groups/{groupId}').onUpdate(async (change, context) => {
   await stripeFunctions.groupDidUpdate(db, change, context);
 });
 
-export const createGroup = functions.https.onCall(async (data, context) => {
+export const createGroup = functions
+  .runWith({
+    memory: "1GB" as "1GB",
+  })
+  .https.onCall(async (data, context) => {
   return await groupFunctions.createGroup(db, data, context);
 });
 
-export const createGroupName = functions.https.onCall(async (data, context) => {
+export const createGroupName = functions
+  .runWith({
+    memory: "1GB" as "1GB",
+  })
+  .https.onCall(async (data, context) => {
   return await groupFunctions.createGroupName(db, data, context);
 });
-export const getPaymentIntentsLog = functions.https.onCall(async (data, context) => {
+export const getPaymentIntentsLog = functions
+  .runWith({
+    memory: "1GB" as "1GB",
+  })
+  .https.onCall(async (data, context) => {
   return await groupFunctions.getPaymentIntentsLog(db, data, context);
 });
-export const getPayoutLog = functions.https.onCall(async (data, context) => {
+export const getPayoutLog = functions
+  .runWith({
+    memory: "1GB" as "1GB",
+  })
+  .https.onCall(async (data, context) => {
   return await groupFunctions.getPayoutLog(db, data, context);
 });
 
@@ -106,7 +166,11 @@ export const memberDidCreate = functions.firestore.document('groups/{groupId}/me
   await groupFunctions.memberDidCreate(db, snapshot, context);
 });
 
-export const processInvite = functions.https.onCall(async (data, context) => {
+export const processInvite = functions
+  .runWith({
+    memory: "1GB" as "1GB",
+  })
+  .https.onCall(async (data, context) => {
   return await groupFunctions.processInvite(db, admin, data, context);
 });
 
@@ -161,7 +225,11 @@ export const tokenDidCreate = functions.firestore.document('users/{userId}/priva
     return messaging.subscribe_group(newTokens, oldTokens, userId, db, messaging.subscribe_topic, messaging.unsubscribe_topic);
   });
 
-export const updateTopicSubscription = functions.https.onCall(async (data, context) => {
+export const updateTopicSubscription = functions
+  .runWith({
+    memory: "1GB" as "1GB",
+  })
+  .https.onCall(async (data, context) => {
   if (context.auth) {
     await messaging.subscribe_all_groups(context.auth.uid, db, messaging.subscribe_topic);
     return {  }
@@ -173,7 +241,11 @@ export const imageProcessing = functions.storage.object().onFinalize(async (obje
   return imageFunctions.imageProcessing(db, object);
 });
 
-export const sendMail = functions.https.onCall(async (data, context) => {
+export const sendMail = functions
+  .runWith({
+    memory: "1GB" as "1GB",
+  })
+  .https.onCall(async (data, context) => {
   return await emailFunctions.sendMail(db, data, context);
 });
 
