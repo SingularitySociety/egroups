@@ -2,7 +2,9 @@ version: 2.1
 orbs:
   node: circleci/node@5.0.0
 jobs:
-  build:
+  build-and-test:
+    executor:
+      name: node/default
     environment:
       JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
     steps:
