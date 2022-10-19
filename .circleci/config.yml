@@ -69,3 +69,11 @@ jobs:
       #- run:
       #    name: deploy to Firebase Hosting
       #    command:  firebase deploy --token=$FIREBASE_TOKEN
+workflows:
+    version: 2.1
+    build-and-test:
+      jobs:
+        - build-and-test:
+            filters:
+              branches:
+                only: master
