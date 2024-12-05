@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StripeProvider, Elements } from 'react-stripe-elements';
-import { stripeConfig } from '../../config.js';
+import { stripeConfig } from '../../config';
 
 
 import CardRegistration from '../join/CardRegistration';
