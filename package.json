@@ -18,7 +18,7 @@
     "react-firebaseui": "^4.0.0",
     "react-intl": "^2.9.0",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "^3.3.0",
+    "react-scripts": "^5.0.1",
     "react-stripe-elements": "^3.0.0",
     "validator": "^11.1.0"
   },
