@@ -40,7 +40,7 @@ import AccountPaymentLog from './profile/PaymentLog';
 import PaymentIntents from './payment/PaymentIntents';
 import PayoutLog from './payment/PayoutLog';
 import PaymentUpdate from './payment/Update';
-import {themeOptions} from '../theme.js';
+import {themeOptions} from '../theme';
 import CustomAccount from './join/CustomAccount';
 
 const colorMap = { red, pink, purple, deepPurple, indigo, 
