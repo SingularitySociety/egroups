@@ -9,7 +9,7 @@ import { StripeProvider, Elements } from 'react-stripe-elements';
 import InjectedCheckoutForm from './CheckoutForm';
 import RegisterSMS from '../../auth/RegisterSMS';
 import useOnDocument from '../../common/useOnDocument';
-import { stripeConfig } from '../../config.js';
+import { stripeConfig } from '../../config';
 import { Redirect } from 'react-router-dom';
 
 const styles = theme => ({
